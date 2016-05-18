@@ -1,0 +1,400 @@
+\documentclass [norsk,a4paper,twoside]{article}
+
+\usepackage[utf8x]{inputenc}
+\usepackage[norsk]{babel}
+\usepackage{Sweave}
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+
+%add rotating for plain tables
+\usepackage{rotating}
+
+%add rotating/landcape for pdf
+\usepackage{pdflscape}
+
+%add long tables
+\usepackage{longtable}
+%\usepackage{afterpage} %\afterpage{\clearpage} unngå sideskift etter floatflsuh
+%\restylefloat{figure} %gjør det mulig å angi H som parameter for plassering av floats
+
+%bytte font
+\renewcommand{\familydefault}{\sfdefault}
+
+%setter grå skrift fremfor sort
+\usepackage{xcolor}
+\definecolor{SKDE}{rgb}{0,0.32,0.61}
+\definecolor{lysblaa}{rgb}{0.27,0.51,0.71}
+\definecolor{moerkblaa}{rgb}{0.0,0.0,0.47}
+\definecolor{lysgraa}{rgb}{0.8,0.8,0.8}
+\definecolor{middelsgraa}{rgb}{0.5,0.5,0.5}
+\definecolor{moerkgraa}{rgb}{0.25,0.25,0.25}
+\color{moerkgraa}
+\usepackage[pdftex, colorlinks, linkcolor=lysblaa, urlcolor=lysblaa]{hyperref}
+
+%bytte overskrifter og luft etter de
+\usepackage[compact]{titlesec}
+\titleformat{\section} {\vspace*{10pt}\color{SKDE}\normalfont\Large\bfseries} {\thesection}{}{}
+\titleformat{\subsection} {\color{middelsgraa}\normalfont\large\bfseries} {\thesection}{}{}
+%\titlespacing{\section}{0pt}{*0}{*0}
+%\titlespacing{\subsection}{0pt}{*0}{*0}  HVOR I HELVETTE FUNKER IKKE DETTE?
+
+%marger og luft mellom avsnitt
+\usepackage[strict]{changepage}
+\usepackage[left=3cm,top=2.7cm,right=4cm, bottom=6cm]{geometry}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{7pt} %1ex plus 0.5 ex minus 0.2ex
+\setlength{\headsep}{2.5cm}
+\setlength{\footskip}{3.7cm}
+
+%topptekst og vertikal sidenummer
+\fancyhead{}\fancyfoot{}  % clear all fields
+\fancyheadoffset[LO, RE]{3cm}
+\fancyfootoffset[LO]{1.5cm}
+\fancyfootoffset[RE]{1.5cm}
+\fancyhead[LO]{\colorbox{SKDE}{\textcolor{white}{\hspace*{2cm}\scshape\small Nasjonalt Kvalitetsregister for Ryggkirurgi}}}
+\fancyhead[RE]{\hspace*{2cm}\colorbox{SKDE}{\textcolor{white}{\scshape\small Nasjonalt Kvalitetsregister for Ryggkirurgi \hspace*{3cm}}}}
+\fancyfoot[LO]{\colorbox{SKDE}{\textcolor{white}{\scshape\small\thepage}} \\ \vspace*{-0.1cm}\colorbox{SKDE}{\textcolor{SKDE}{\scshape\small\thepage}} \\ \vspace*{-0.1cm}\colorbox{SKDE}{\textcolor{SKDE}{\scshape\small\thepage}} } 
+\fancyfoot[RE]{\colorbox{SKDE}{\textcolor{white}{\scshape\small\thepage}} \\ \vspace*{-0.1cm}\colorbox{SKDE}{\textcolor{SKDE}{\scshape\small\thepage}} \\ \vspace*{-0.1cm}\colorbox{SKDE}{\textcolor{SKDE}{\scshape\small\thepage}} \\ \vspace*{-0.1cm}\colorbox{SKDE}{\textcolor{SKDE}{\scshape\small\thepage}}} 
+\renewcommand{\headrulewidth}{0pt} %\iffloatpage{0pt}{0.4pt}
+\renewcommand{\footrulewidth}{0pt}
+%evt. horisontal sidenummer
+%\fancyfoot[LO]{\colorbox{SKDE}{\textcolor{white}{\hspace*{2cm} \small \thepage}}} \fancyfootoffset[LO]{4.4cm}
+%\fancyfoot[RE]{\hspace*{2cm}\colorbox{SKDE}{\textcolor{white}{\small \thepage \hspace*{3cm}}}}  \fancyfootoffset[RE]{5.3cm}
+\setcounter{secnumdepth}{-1} 
+
+
+
+\begin{document}
+
+
+\setcounter{secnumdepth}{-1} 
+\fontsize{13pt}{2pt}\selectfont
+\pagestyle{empty}
+\includegraphics[width=3.5cm]{gfx/NKR} \\
+\includegraphics[width=4cm]{gfx/blank} \\
+\huge
+\vspace*{0.1cm}\hspace*{-3.8cm}\colorbox{SKDE}{\textcolor{white}{\hspace*{3.474cm} Kontroll av datakvalitet}} \\ 
+\includegraphics[width=3cm]{gfx/blank} \\
+\normalsize
+%\includegraphics[height=9cm]{gfx/blank2} \\ \hspace*{-0.2cm}
+\begin{center}\vspace*{11.5cm}
+\includegraphics[width=5cm]{gfx/Servicemiljo}
+\end{center}
+\cleardoublepage
+\setcounter{page}{1}
+\pagenumbering{roman}
+\pagestyle{fancy}
+\tableofcontents
+\newpage
+\listoftables
+\newpage
+\pagenumbering{arabic}
+
+% supress the '+' continuation prompt and adjust width of output
+<<echo=false>>= 
+options(continue=" ")
+options(width=60)  
+@ 
+% remove default spacing between R code and output
+\fvset{listparameters={\setlength{\topsep}{0pt}}}
+\renewenvironment{Schunk}{\vspace{\topsep}}{\vspace{\topsep}}
+
+
+\section*{Informasjonsgrunnlag og ansvarsforhold}
+\addcontentsline{toc}{section}{Informasjonsgrunnlag og ansvarsforhold}
+
+Denne raporten er fremstilt automatisk på grunnlag av en mal laget av
+\textit{Senter for Klinisk Dokumentasjon og Evaluering} (SKDE) på oppdrag
+fra registeret. Alle resultater
+er basert på tall fra registeret og er gyldige per rapportdato. Tilsvarende
+rapport av annen dato kan derfor gi andre resulter siden datagrunnlaget er
+basert på hva som til enhver tid er registrert i databasen.
+
+Alle vurderinger og tolkninger av data, såvel som feil i resultater på
+bakgrunn av feil i datagrunnlaget er det styringsgruppa for
+registeret som er ansvarlige for, ikke SKDE.
+
+Denne rapporten presenterer data på aggregert nivå og inneholder derfor ingen
+data om enkeltpersoner. I tilfeller der utvalget inneholder få registreringer og
+er kombinert med for eksempel demografisk informasjon, kan det ikke utelukkes
+at rapporterte data kan tilbakeføres til enkeltpersoner. Det er registeret sitt ansvar
+å vurdere hvorvidt rapporten skal vurderes som sensitiv eller ikke.
+
+SKDE ønsker å bruke fri og åpen programvare der det er mulig og
+formålstjenelig. Denne rapporten er laget ved bruk av statistikkverktøyet
+\textit{R}, dokumentverktøyet \LaTeX{} og rapporteringsløsningen
+\textit{JasperServer} som alle er programvare basert på åpen kildekode.
+Generering av dokumentet er basert på \textit{R}-pakken \textit{Sweave} \cite{sw} som er inkludert 
+i en standardinstallasjon av \textit{R}. For layout og presentasjon brukes \LaTeX{}. Rapporten 
+distribueres rutinemessig til epostadressene til brukere av databasen, men den kan også genereres 
+av brukere på \textit{helseregister.no} gjennom \textit{Jasper}. Samlerapporten er et 
+\LaTeX{}-dokument som gjøres tilgjengelig som en rapport i PDF-format.
+
+
+\section*{Innledning}
+\addcontentsline{toc}{section}{Innledning}
+Dette er en automatisk generert kvalitetskontroll av utvalgte variabler innrapportert til 
+Norsk Kvalitetsregister for Ryggkirurgi (NKR). Rapporten er ment å være til hjelp under 
+kvalitetssikring av egne data. Rapporten viser registreringskompletthet av data og spredning i
+verdier for enkeltvariabler. Verdier som er ``unormalt'' høye eller lave bør kontrolleres.
+
+\par
+For kategoriske variabler vil ikke feil bli automatisk påpekt; rapporten vil kun avdekke eventuelle
+praksisforskjeller mellom egen avdeling og landet forøvrig. Variablene som er kontrollert i 
+rapporten er derfor i første rekke et utvalg av kontinuerlige variabler.
+
+<<KobleTilDb, echo=FALSE, eval=TRUE>>=
+libkat <- paste(svnRootPath, 'nkr/trunk/lib/r/', sep='')
+funkKat <- paste(svnRootPath, 'nkr/trunk/', sep='')
+
+require(RJDBC)
+drv <- JDBC('com.microsoft.sqlserver.jdbc.SQLServerDriver', 
+	paste(svnRootPath, 'lib/java/sqljdbc4.jar', sep=''))
+conn = dbConnect(drv, 'jdbc:sqlserver://172.19.13.110:1433;databaseName=nkr', 
+'RapportUser_nkr', 'Pitkeep7')
+query = 'select *, right(OpDato, 4) as Aar from Uttrekk_Rapport'
+opdataALLE <- dbGetQuery(conn, query)
+stengDB <- dbDisconnect(conn)
+@
+
+<<LasteOpdataLokalt, echo=FALSE, eval=FALSE>>=
+library(xtable)
+#opdataALLE <- read.table('OpdataArbfil11Kval.csv', header = T, sep = ";")
+opdataALLE <- load('')
+opdataALLE$Aar <- substr(opdataALLE$OpDato,7,11)
+@
+
+<<UtvalgAvData, echo=FALSE>>=
+indAvd <- which(as.numeric(as.character(opdataALLE$AvdReshID))==EgenReshID)   #OBSOBSOBSOBSOBS Allix-code
+opdata <- opdataALLE[indAvd, ]
+Avdeling <- as.character(opdata$AvdNavn)[1]
+NtotAvd <- dim(opdata)[1]
+AarStart <- min(opdata$Aar)
+#Tidsrom	Etterhvert skal vi heller velge start- og sluttdato
+aar <- 0
+aardata <- aarvalg(opdata,aar)
+opdata <- aardata$data
+NAvd <- dim(opdata)[1]
+tidsperiode <- if (aar==0) {'hele registreringsperioden.'} else 
+	{paste(aar, '. I denne perioden har ', Avdeling,  ' registrert ',NAvd, ' inngrep.', sep='')}
+#Start og sluttdato... #indSep09 <- which(strptime(opdata$OpDato, '%d.%m.%Y')	> strptime('31.08.2009', '%d.%m.%Y'))
+@
+
+
+\section*{Resultater}
+\addcontentsline{toc}{section}{Resultater}
+\subsection*{Oppsummeringstall for NKR}
+\addcontentsline{toc}{subsection}{Oppsummeringstall for NKR}
+ 
+<<TabAlleReg, results=tex, echo=FALSE>>=
+#Deler opp i to tabeller
+tabAvdN <- addmargins(as.table(ftable(opdataALLE[c('AvdNavn','Aar')])))	
+antAvd <- dim(tabAvdN)[1]-1
+tabNavn <- cbind(1:antAvd, rownames(tabAvdN)[1:antAvd])
+colnames(tabNavn) <- c('Nummer', 'Avdelingsnavn')
+tabNavnTex <- xtable(tabNavn, align=c('l','c','l'), caption="Avdelinger som har registrert data", label="tab:AvdNavn")
+print(tabNavnTex, include.rownames=FALSE)
+tabAvdN <- cbind(c(1:antAvd, 'Alle avd.:'), tabAvdN)
+colnames(tabAvdN)[c(1,dim(tabAvdN)[2]) ]<- c('Nummer', 'Alle år')
+Ntot <- dim(opdataALLE)[1]
+tabKjPst <- round(table(opdataALLE$Kjonn)/Ntot*100, digits=1)
+tabAvdNTex <- xtable(tabAvdN, digits=0, align=c('l', 'c', rep('r', ncol(tabAvdN)-1)), caption='Antall registreringer per år og avdeling. Se \\mbox{Tabell \\ref{tab:AvdNavn}} for avdelingsnavn.', label='tab:AntReg')
+print(tabAvdNTex, include.rownames=FALSE)
+@
+
+% \textcolor{middelsgraa}{\Sexpr{as.character(opdataALLE$AvdNavn[which(as.numeric(as.character(opdataALLE$AvdReshID))==EgenReshID)[1]])}}\\ 
+
+Registrering av operasjoner i NKR ble startet i september 2006. Tabell \ref{tab:AvdNavn} viser 
+hvilke avdelinger som har bidratt med data, mens Tabell \ref{tab:AntReg} viser antall 
+registreringer for disse avdelingene. Per dags dato er det \Sexpr{dim(tabAvdN)[1]-1} avdelinger 
+som registrerer data og det er totalt registrert \Sexpr{Ntot} operasjoner. Av disse er 
+\Sexpr{tabKjPst[1]}\% utført på menn og \Sexpr{tabKjPst[2]}\% på kvinner. \Sexpr{Avdeling} startet 
+innrapportering inn til NKR i \Sexpr{AarStart} og har til nå registrert \Sexpr{NtotAvd} inngrep. \clearpage
+
+
+\subsection*{Datautvalg}
+\addcontentsline{toc}{subsection}{Datautvalg}
+Kvalitetskontrollen kan gjøres for et utvalg av de registrete dataene. 
+Rapporten viser data for \Sexpr{tidsperiode}
+
+
+\subsection*{Ekstremobservasjoner}
+\addcontentsline{toc}{subsection}{Ekstremobservasjoner}
+Tabell \ref{tab:OppsumKontVar} viser, for utvalgte variabler, følgende nøkkelverdier:  
+antall registreringer, registreringsprosent, minimum, maksimum, median og antall avvikende 
+observasjoner. Her bør man spesielt merke seg variablene \textit{SykemeldVarighPre} og 
+\textit{TidlOprAntall}. Har man vesentlig høyere medianverdier for disse variablene enn resten 
+av landet bør man gjøre ei vurdering av avdelingens rutiner. \newline
+
+<<KontrVar1, results=tex, echo=FALSE>>=
+#Variable som skal tas ut med gj.sn., SD, osv.  #%Husk å få med knivtid!
+
+kontVarNavn <- sort(c('Alder', 'BMI', 'EQ5DPre', 'HelsetilstPre','Hoyde',
+		'OswTotPre','SmBePre', 'SmRyPre','SykemeldVarighPre', 'TidlOprAntall','Vekt','Liggedogn'))
+posAlder <- which(kontVarNavn == 'Alder')
+posLigg <- which(kontVarNavn=='Liggedogn')
+posTidlOpr <- which(kontVarNavn=='TidlOprAntall')
+indtasUt <- which(kontVarNavn %in% c('EQ5DPre','HelsetilstPre','OswTotPre','SmBePre', 'SmRyPre'))
+kontVar <- as.matrix(opdata[,kontVarNavn])
+is.na(opdata$TidlOprAntall) <- 0
+AntReg <- apply(!is.na(kontVar),2,sum)
+GjSn <- apply(kontVar,2,mean, na.rm=TRUE)
+SDkv <- apply(kontVar,2,sd, na.rm=TRUE)
+konstUt <- 3		#Hvor mange SD som defineres som avvik
+grenser <- rbind(GjSn - konstUt*SDkv, GjSn + konstUt*SDkv)
+minAlder <- 15
+grenser[,posAlder] <- c(minAlder,90)
+maxLigg <- 20
+grenser[,posLigg] <- c(0,maxLigg)
+maxOpr <- 4
+grenser[,posTidlOpr] <- c(0,maxOpr)
+
+Avv <- (t(kontVar) > grenser[2,]) | (t(kontVar) < grenser[1,])
+indUt1 <- which(Avv , arr.ind=TRUE)
+ut <- which(indUt1[ ,1] %in% indtasUt)
+if(length(ut) == 0) {indUt <- indUt1} else {indUt <- indUt1[-ut,]}  #OBSOBSOBSOBSOBS Allix-code
+AntAvv= apply(Avv==1, 1, sum, na.rm=TRUE)
+AntAvv[indtasUt] <- ''
+		
+OppsumKontVar <- cbind(AntReg,
+		Min=apply(kontVar, 2, min, na.rm=TRUE),
+		Maks=apply(kontVar, 2, max, na.rm=TRUE), 
+		Median=apply(kontVar,2,median, na.rm=TRUE),
+		#MedAlle=paste('(', round(MedALLE-0.0001,digits=1), ')', sep=''),
+		AntAvvik=AntAvv)
+
+#OBSOBSOBSOBSOBS Allix-code:		
+OppsumKontVar['EQ5DPre',] <- as.character(round(as.numeric(OppsumKontVar['EQ5DPre',]),1))
+OppsumKontVar['BMI',] <- as.character(round(as.numeric(OppsumKontVar['BMI',]),1))
+OppsumKontVar <- as.data.frame(OppsumKontVar)
+OppsumKontVar[,'Min'] <- round(as.numeric(as.character(OppsumKontVar[,'Min'])),1)
+OppsumKontVar[,'Maks'] <- round(as.numeric(as.character(OppsumKontVar[,'Maks'])),1)
+OppsumKontVar[,'Median'] <- round(as.numeric(as.character(OppsumKontVar[,'Median'])),1)
+OppsumKontVar$AntAvvik <- as.character(OppsumKontVar$AntAvvik)
+OppsumKontVar$AntAvvik[which(OppsumKontVar$AntAvvik=='0')] <- ''
+OppsumKontVar[is.na(OppsumKontVar)]	<- ''
+		
+xtable(OppsumKontVar, digits=c(0,0,1,1,1,0), align=c('l','r','r','r','r','r'), 
+		caption='Totalt antall registreringer, minimum, maksimum, median og antall 
+		avvikende observasjoner av utvalgte variabler.',
+		label="tab:OppsumKontVar")
+@
+
+Tabell \ref{tab:UteliggKontVar} viser hvilke PID som har avvikende registreringer. 
+For \textit{Liggedogn} er avvik definert som opphold i \Sexpr{maxLigg} døgn eller mer. 
+Ingen under \Sexpr{minAlder} år skal opereres og lavere registrert alder defineres derfor som avvik. 
+Er en pasient opereret mer enn \Sexpr{maxOpr} ganger defineres det her som et avvik.
+For de andre variablene er et avvik definert som en 
+observasjon \Sexpr{konstUt} ganger standardavviket fra gjennomsnittsverdien. 
+\textit{\textbf{Vennligst sjekk at disse registreringene er riktige!}} 
+Merk dog at relativt store avvik \textit{kan} forekomme 
+uten at det nødvendigvis er feil i registreringene.\\
+\clearpage
+
+<<KontrVar2, results=tex, echo=FALSE>>=
+UtKontTab <- cbind(opdata[indUt[,2], c('PID', 'OpDato')], 
+				Variabel=rownames(indUt),
+				Verdi= kontVar[(indUt[,1]-1)*NAvd+indUt[,2]])	#
+colnames(UtKontTab)[2] <- c('Dato')
+UtKontTabTex <- xtable(UtKontTab[order(UtKontTab[,'PID']), ], 
+		align=c('r','r', 'r', 'r', 'r'),  digits = 0,
+		caption='\"Mistenkelige\"  verdier', label="tab:UteliggKontVar")
+print(UtKontTabTex, include.rownames=FALSE,tabular.environment="longtable")
+@
+\clearpage
+
+
+
+\subsection*{Andelsvariabler}
+\addcontentsline{toc}{subsection}{Andelsvariabler}
+
+<<AndelsVar, results=tex, echo=FALSE>>=
+#Tekstvariable må behandles særskilt...
+#AM <- addNA(opdataALLE$AnnetMorsm, ifany=TRUE)
+sumMorsmALLE <- sum(!is.na(opdataALLE$AnnetMorsm))
+sumMorsm <- sum(!is.na(opdataALLE$AnnetMorsm[indAvd]))
+
+#andelsVar01$AnnetMorsm <- rep(0,Ntot)[which(!is.na(andelsVar01$AnnetMorsm))] <- 1
+opdataALLE$Sykd <- as.numeric(opdataALLE$Sykd)
+opdata$Sykd <- as.numeric(opdata$Sykd)
+andelsVarNavn01 <- c('Antibiotika', 'Dagkirurgi', 'Reop90d','Sykd','Saardren')
+andelsVar01ALLE <- opdataALLE[ ,andelsVarNavn01]
+AntReg01ALLE <- apply(andelsVar01ALLE[which(andelsVar01ALLE==1), ], 2, sum, na.rm=TRUE)
+AndelBruk1ALLE <- round( c(AntReg01ALLE, sumMorsmALLE)/Ntot*100, digits=1)
+andelsVar01 <- opdata[ ,andelsVarNavn01]
+AntReg01 <- apply(andelsVar01[which(andelsVar01==1),], 2, sum, na.rm=TRUE)
+AndelBruk1 <- round( c(AntReg01, sumMorsm)/NAvd*100, digits=1)
+
+#Variable som hvor NA IKKE betyr 0
+andelsVarNavn01NA <- c('Roker','SmStiPre')
+andelsVar01NAalle <- opdataALLE[,andelsVarNavn01NA]
+AntReg01NAalle <- apply(!is.na(andelsVar01NAalle),2,sum)
+AntReg01NA <- apply(!is.na(andelsVar01NAalle[indAvd,]),2,sum)
+AndelBruk2ALLE <- round(apply(andelsVar01NAalle==1,2,sum, na.rm=TRUE)/AntReg01NAalle*100-0.001, digits=1)
+AndelBruk2 <- round(apply(andelsVar01NAalle[indAvd,]==1,2,sum, na.rm=TRUE)/AntReg01NA*100, digits=1)
+
+AndelBruk <- cbind(EgenAvd = c(AndelBruk1, AndelBruk2),
+					HeleLandet = c(AndelBruk1ALLE, AndelBruk2ALLE))
+varNavn <- c(andelsVarNavn01, 'AnnetMorsm', andelsVarNavn01NA)
+rownames(AndelBruk) <- varNavn
+xtable(AndelBruk[order(varNavn),], align=c('l','r', 'r'), digits=c(0,1,1), 
+		caption='Andel (\\%) \"ja\"  av gitte variabler for egen avdeling sammenlignet med hele landet', 
+		label="tab:AndelsVar")
+@	
+
+Tabell \ref{tab:AndelsVar} viser andeler av utvalgte variabler hos \Sexpr{Avdeling} sammenlignet 
+med tilsvarende andeler for resten av landet. Et stort avvik her kan tyde på en under- eller 
+overrapportering eller at \Sexpr{Avdeling} har en annen praksis enn resten av landet. For variabelen 
+\textit{Sykd} kan ulikheter også skyldes ulikheter i pasientmassen. \newline 
+
+<<KategoriskeVar, results=tex, echo=FALSE>>=
+#------Angi utfyllingsgrad på alle variable
+katVarNavn <- c('ArbstatusPre', 'ASA', 'ErstatningPre', 'HovedInngreptxt','Inngreptxt', 
+		'Morsmal', 'ProsKode1', 'SmHyppPre', 'SymptVarighRyggHof','SympVarighUtstr',
+		'TidlOpr','UforetrygdPre','Utd')
+ut <- which(kontVarNavn == 'TidlOprAntall')
+RegPstVarNavn <- sort(c(kontVarNavn[-ut],katVarNavn))
+KatKontVarDataALLE <- opdataALLE[ ,RegPstVarNavn]
+#RegEgenAvdKont=round(AntReg/NAvd*100)	#paste(round(AntReg/NAvd*100),'%', sep=''),
+
+indSep09 <- which(strptime(opdataALLE$OpDato, '%d.%m.%Y')	> strptime('31.08.2009', '%d.%m.%Y'))
+nr <- which(RegPstVarNavn=='ProsKode1')
+RegPstPK1 = round(
+	sum(!is.na(KatKontVarDataALLE[intersect(indAvd, indSep09), nr]))/length(intersect(indAvd, indSep09))*100, 
+		digits=0)
+RegHeleLandetPK1 = round(sum(!is.na(KatKontVarDataALLE[indSep09, 7]))/length(indSep09)*100, 
+		digits=0)
+
+RegPst <- cbind(
+	EgenAvd = round(apply(!is.na(KatKontVarDataALLE[indAvd,]),2,sum)/NAvd*100, digits=0),
+	HeleLandet = round(apply(!is.na(KatKontVarDataALLE),2,sum)/Ntot*100, digits=0) )
+rownames(RegPst) <- RegPstVarNavn
+RegPst[nr,] <- c(RegPstPK1, RegHeleLandetPK1)	#Bytter ut ProsKode1 siden denne gjelder bare fra 1.sept2009
+
+xtable(RegPst, align=c('l','r','r'),  digits=c(0,0,0),
+		caption='Registreringsgrad (\\%) for gitte variabler, egen avdeling sammenlignet med hele landet.', 
+		label="tab:KatVar")
+@ \clearpage
+
+
+\subsection*{Registreringskompletthet}
+\addcontentsline{toc}{subsection}{Registreringskompletthet}
+Det er vanskelig å angi noen kvalitetskontroll for kategoriske variabler, men vi kan se på de ulike 
+variablenes kompletthet. Her kan avvik mellom egen avdeling og resten av landet si noe 
+om praksisforskjeller, men ikke om datakvalitet. Komplettheten kan, til en viss grad, ha 
+ulike tolkninger avhengig av variabeltypene; for eksempel angir kompletthet for 
+\textit{TidlOprAntall} den andelen av pasienter som er oppgitt å ha fått utført tidligere operasjoner.
+
+Tabell \ref{tab:KatVar} viser kompletthet for de oppgitte variablene ved \Sexpr{Avdeling} 
+sammenlignet med hele landet. Komplettheten for hele landet er andelen av totalt 
+\Sexpr{Ntot} inngrep. Ved \Sexpr{Avdeling} er det totale antallet \Sexpr{dim(opdata)[1]} inngrep. 
+For å få best mulig datakvalitet bør registreringsprosenten være nærmest mulig 100\%. \clearpage
+
+
+\begin{thebibliography}{99}
+\bibitem{sw} Friedrich Leisch. Sweave: Dynamic generation of statistical reports using literate data analysis. In Wolfgang Härdle and Bernd Rönz, editors, \textit{Compstat 2002 - Proceedings in Computational Statistics}, pages 575-580. Physica Verlag, Heidelberg, 2002. ISBN 3-7908-1517-9.
+\end{thebibliography}
+
+
+\end{document}
+

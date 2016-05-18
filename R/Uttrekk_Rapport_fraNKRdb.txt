@@ -1,0 +1,307 @@
+SELECT     'PID' = pas.pasID, 'Personnummer' = pas.pasDES, 'Kommunenr' = pas.paskommunenr, 'Andrestudier' = pas.pasForskning, 'SkjemaIDIa' = Ia.ID, 'Alder' = IIa.Alder, 
+                      'Kjonn' = Ia.Kjoenn, 'Roker' = Ia.Roeker, 'Utd' = Ia.Utd, 'SivilStatus' = Ia.SivilStatus, 'AntBarn' = CASE WHEN (Ia.Antbarn > 15) THEN NULL ELSE Ia.Antbarn END, 
+                      'Morsmal' = Ia.Morsmal, 'AnnetMorsm' = Ia.AnnetMorsmal, 'Vekt' = Ia.Vekt, 'Hoyde' = Ia.Høyde, 'BMI' = Ia.BMI, 'ArbstatusPre' = Ia.Arbeidsstatus, 
+                      'SmRyPre' = Ia.SmerteRygg, 'SmBePre' = Ia.SmerteBein, 'OswTotPre' = Ia.Oswestry, 'EqgangePre' = Ia.EqGange, 'EqperstPre' = Ia.EqPersStell, 
+                      'EqvanlgjPre' = Ia.EqVanlGjmaal, 'EqsmertePre' = Ia.EqSmerte, 'EqangstPre' = Ia.EqAngst, 'EQ5DPre' = Ia.EQ5D, 'HelsetilstPre' = Ia.Helsetilstand, 
+                      'SymptVarighRyggHof' = Ia.Symptomvarighet_Ryggsmerter, 'SympVarighUtstr' = Ia.Symptomvarighet_UtstrålendeSmerter, 
+                      'SykemeldVarighPre' = Ia.Symptomvarighet_Sykemelding, 'SmStiPre' = Ia.Smertestillende, 'SmHyppPre' = Ia.SmertestillendeOfte, 'UforetrygdPre' = Ia.SoktUforetrygd, 
+                      'ErstatningPre' = Ia.SoktErstatning, 'SkjemaIDIIa' = IIa.Id, 'Region' = Kobling.Region, 'HFNavn' = Kobling.OrganisasjonsnavnUt, 'HFID' = Org.OrganisasjonID, 
+                      'HFReshID' = org.Reshid, 'AvdNavn' = kobling.AvdelingsNavnUt, 'AvdID' = Avd.AvdelingID, 'AvdReshID' = Avd.Reshid, 'TidlOpr' = TidligereOperert, 
+                      'TidlOprAntall' = TidligereOperert_Antall, 'Sykd' = CASE WHEN ((IIa.ID IS NOT NULL OR
+                      IIa.ID > 0) AND IIa.AndreRelevanteSykdommer = 1) THEN '1' WHEN ((IIa.ID IS NOT NULL OR
+                      IIa.id > 0) AND IIa.AndreRelevanteSykdommer = 0) THEN '0' ELSE NULL END, 'SykdReumatoidartritt' = CASE WHEN ((IIa.ID IS NOT NULL OR
+                      IIa.ID > 0) AND IIa.AndreRelevanteSykdommer_Reumatoidartritt = 1) THEN '1' WHEN ((IIa.ID IS NOT NULL OR
+                      IIa.id > 0) AND IIa.AndreRelevanteSykdommer_Reumatoidartritt = 0) THEN '0' ELSE NULL END, 
+                      'SykdAndreRelevanteSykdBechtrew' = CASE WHEN ((IIa.ID IS NOT NULL OR
+                      IIa.ID > 0) AND IIa.AndreRelevanteSykdommer_Bechtrew = 1) THEN '1' WHEN ((IIa.ID IS NOT NULL OR
+                      IIa.id > 0) AND IIa.AndreRelevanteSykdommer_Bechtrew = 0) THEN '0' ELSE NULL END, 'SykdAnnenreumatisk' = CASE WHEN ((IIa.ID IS NOT NULL OR
+                      IIa.ID > 0) AND IIa.AndreRelevanteSykdommer_Annenreumatisksykdom = 1) THEN '1' WHEN ((IIa.ID IS NOT NULL OR
+                      IIa.id > 0) AND IIa.AndreRelevanteSykdommer_Annenreumatisksykdom = 0) THEN '0' ELSE NULL END, 'SykdHoftekneartose' = CASE WHEN ((IIa.ID IS NOT NULL OR
+                      IIa.ID > 0) AND IIa.AndreRelevanteSykdommer_Hoftekneartose = 1) THEN '1' WHEN ((IIa.ID IS NOT NULL OR
+                      IIa.id > 0) AND IIa.AndreRelevanteSykdommer_Hoftekneartose = 0) THEN '0' ELSE NULL END, 'SykdDepresjonAngst' = CASE WHEN ((IIa.ID IS NOT NULL OR
+                      IIa.ID > 0) AND IIa.AndreRelevanteSykdommer_DepresjonAngst = 1) THEN '1' WHEN ((IIa.ID IS NOT NULL OR
+                      IIa.id > 0) AND IIa.AndreRelevanteSykdommer_DepresjonAngst = 0) THEN '0' ELSE NULL END, 
+                      'SykdKroniskSmerterMuskelSkjelettsyst' = CASE WHEN ((IIa.ID IS NOT NULL OR
+                      IIa.ID > 0) AND IIa.AndreRelevanteSykdommer_Kronisksmertermuskelskjelettsystemet = 1) THEN '1' WHEN ((IIa.ID IS NOT NULL OR
+                      IIa.id > 0) AND IIa.AndreRelevanteSykdommer_Kronisksmertermuskelskjelettsystemet = 0) THEN '0' ELSE NULL END, 
+                      'SykdKroniskNevrologisk' = CASE WHEN ((IIa.ID IS NOT NULL OR
+                      IIa.ID > 0) AND IIa.AndreRelevanteSykdommer_Kronisknevrologisksykdom = 1) THEN '1' WHEN ((IIa.ID IS NOT NULL OR
+                      IIa.id > 0) AND IIa.AndreRelevanteSykdommer_Kronisknevrologisksykdom = 0) THEN '0' ELSE NULL END, 
+                      'SykdCerebrovaskular' = CASE WHEN ((IIa.ID IS NOT NULL OR
+                      IIa.ID > 0) AND IIa.AndreRelevanteSykdommer_Cerebrovaskulærsykdom = 1) THEN '1' WHEN ((IIa.ID IS NOT NULL OR
+                      IIa.id > 0) AND IIa.AndreRelevanteSykdommer_Cerebrovaskulærsykdom = 0) THEN '0' ELSE NULL END, 'SykdHjertekar' = CASE WHEN ((IIa.ID IS NOT NULL OR
+                      IIa.ID > 0) AND IIa.AndreRelevanteSykdommer_Hjertekarsykdom = 1) THEN '1' WHEN ((IIa.ID IS NOT NULL OR
+                      IIa.id > 0) AND IIa.AndreRelevanteSykdommer_Hjertekarsykdom = 0) THEN '0' ELSE NULL END, 'SykdVaskulærClaudicatio' = CASE WHEN ((IIa.ID IS NOT NULL OR
+                      IIa.ID > 0) AND IIa.AndreRelevanteSykdommer_VaskulærClaudicatio = 1) THEN '1' WHEN ((IIa.ID IS NOT NULL OR
+                      IIa.id > 0) AND IIa.AndreRelevanteSykdommer_VaskulærClaudicatio = 0) THEN '0' ELSE NULL END, 'SykdKroniskLunge' = CASE WHEN ((IIa.ID IS NOT NULL OR
+                      IIa.ID > 0) AND IIa.AndreRelevanteSykdommer_Kronisklungesykdom = 1) THEN '1' WHEN ((IIa.ID IS NOT NULL OR
+                      IIa.id > 0) AND IIa.AndreRelevanteSykdommer_Kronisklungesykdom = 0) THEN '0' ELSE NULL END, 'SykdKreft' = CASE WHEN ((IIa.ID IS NOT NULL OR
+                      IIa.ID > 0) AND IIa.AndreRelevanteSykdommer_Kreftsykdom = 1) THEN '1' WHEN ((IIa.ID IS NOT NULL OR
+                      IIa.id > 0) AND IIa.AndreRelevanteSykdommer_Kreftsykdom = 0) THEN '0' ELSE NULL END, 'SykdOsteoporose' = CASE WHEN ((IIa.ID IS NOT NULL OR
+                      IIa.ID > 0) AND IIa.AndreRelevanteSykdommer_Osteoporose = 1) THEN '1' WHEN ((IIa.ID IS NOT NULL OR
+                      IIa.id > 0) AND IIa.AndreRelevanteSykdommer_Osteoporose = 0) THEN '0' ELSE NULL END, 'SykdHypertensjon' = CASE WHEN ((IIa.ID IS NOT NULL OR
+                      IIa.ID > 0) AND IIa.AndreRelevanteSykdommer_Hypertensjon = 1) THEN '1' WHEN ((IIa.ID IS NOT NULL OR
+                      IIa.id > 0) AND IIa.AndreRelevanteSykdommer_Hypertensjon = 0) THEN '0' ELSE NULL END, 'SykDprebetesMellitus' = CASE WHEN ((IIa.ID IS NOT NULL OR
+                      IIa.ID > 0) AND IIa.AndreRelevanteSykdommer_DiabetesMellitus = 1) THEN '1' WHEN ((IIa.ID IS NOT NULL OR
+                      IIa.id > 0) AND IIa.AndreRelevanteSykdommer_DiabetesMellitus = 0) THEN '0' ELSE NULL END, 'SykdAnnenendokrin' = CASE WHEN ((IIa.ID IS NOT NULL OR
+                      IIa.ID > 0) AND IIa.AndreRelevanteSykdommer_Annenendokrinsykdom = 1) THEN '1' WHEN ((IIa.ID IS NOT NULL OR
+                      IIa.id > 0) AND IIa.AndreRelevanteSykdommer_Annenendokrinsykdom = 0) THEN '0' ELSE NULL END, 'SykdAnnet' = CASE WHEN ((IIa.ID IS NOT NULL OR
+                      IIa.ID > 0) AND IIa.SpesifiserAndreRelevanteSykdommer NOT IN ('', ' ')) THEN '1' WHEN ((IIa.ID IS NOT NULL OR
+                      IIa.id > 0) AND IIa.SpesifiserAndreRelevanteSykdommer IN ('', ' ')) THEN '0' ELSE NULL END, 'RvCt' = IIa.RVU_CT, 'RvMr' = IIa.RVU_MR, 'RvRadigr' = IIa.RVU_Radio, 
+                      'RvDiscogr' = IIa.RVU_Disko, 'RvDpregblok' = IIa.RVU_DiagBlokader, 'RvRtgLscol' = IIa.RVU_RtgLSkol, 'RvFunksjo' = IIa.RVU_MedFleksEks, 
+                      'RfNormal' = IIa.RVF_Normal, 'RfSkive' = IIa.RVF_Skivepro, 'RfSentr' = IIa.RVF_SentrSpin, 'RfLateral' = IIa.RVF_Lateral_spinalstenose, 
+                      'RfForamino' = RVF_Foraminal_stenose, 'RfSynovpre' = RVF_Synovial_syste, 'RfPseudom' = RVF_Pseudomeningocele, 'RfDegen' = IIa.RVF_Degen, 
+                      'RfSpondtypeIsmisk' = IIa.RVF_Ismitisk_spondylolitese, 'RfSpondtypeDegen' = IIa.RVF_Degenerativ_sponylolitese, 'RfDegskol' = IIa.RVF_DegenSkoliose, 
+                      'RfAnnet' = IIa.RVFAnnet, 'RfAnnetspes' = IIa.RVFAnnetText, 'OpIndSme' = IIa.Operasjonsindikasjon_Smerter, 'OpIndSmeType' = IIa.OperasjonsindikasjonSmerter, 
+                      'OpIndParese' = IIa.Operasjonsindikasjon_Parese, 'OpIndPareseGrad' = IIa.PareseGrad, 'OpIndCauda' = IIa.Operasjonsindikasjon_Cauda, 
+                      'Reop90d' = IIa.VedReoperasjon, 'ASA' = IIa.ASA, 'OpDato' = CONVERT(nvarchar(30), IIa.Operasjonsdato, 104), 'OpAar' = datepart(yyyy, IIa.Operasjonsdato), 
+                      'OpKat' = IIa.Operasjonskat, 'Dagkirurgi' = IIa.Dagkir, 'Inngrep' = ingrep.Kategori, 'Inngreptxt' = replace(ingrep.Tekst, ';', ','), 'HovedInngrep' = hovingrep.Kategori, 
+                      'HovedInngreptxt' = replace(hovingrep.Tekst, ';', ','), 'OpMikro' = IIa.OperasjonsmetodeMikroskopi, 'OpProlap' = IIa.OperasjonsmetodeProlaps, 
+                      'OpDeUlamin' = IIa.OperasjonsmetodeDekompresjon_UtenLaminektomi, 'OpDeUlaminTilgang' = IIa.OperasjonsmetodeKirurgiskDekompresjon, 
+                      'OpLaminektomi' = IIa.OperasjonsmetodeLaminektomi, 'OpDeFasett' = IIa.OperasjonsmetodeDekompresjon_Fasettektomi, 
+                      'OpDeFasettUniBi' = IIa.OperasjonsmetodeFasettektomi, 'OpAndreSkiveprotese' = IIa.AndreOperasjonsmetoder_Skriveprotese, 
+                      'OpAndreSpes' = IIa.AndreOperasjonsmetoderSpesifisering, 'OpTilgang' = IIa.Operasjonstilgang, 'FusjonKirPlf' = IIa.Posterolateralfusjon, 
+                      'FusjonKirPlfIntr' = IIa.InstrumentellPosterolateralfusjon, 'FusjonKirAlif' = IIa.ALIF, 'FusjonKirAlifBur' = IIa.BurALIF, 'FusjonKirAlifBen' = IIa.BenblokkiskiveromALIF, 
+                      'FusjonKirPlif' = IIa.PLIF, 'FusjonKirTlif' = IIa.TLIF, 'FusjonSpes' = IIa.TypeFusjonskirurgiSpesifisering, 'TypeBen' = IIa.Typebengraft, 
+                      'TypeBenBensub' = IIa.Typebengraft_Bensubstitutt, 'OpL23' = CASE WHEN (IIa.NivåSideL23 = 1 OR
+                      IIa.NivåSideL23H = 1 OR
+                      IIa.NivåSideL23V = 1) THEN 1 ELSE 0 END, 'OpL34' = CASE WHEN (IIa.NivåSideL34 = 1 OR
+                      IIa.NivåSideL34H = 1 OR
+                      IIa.NivåSideL34V = 1) THEN 1 ELSE 0 END, 'OpL45' = CASE WHEN (IIa.NivåSideL45 = 1 OR
+                      IIa.NivåSideL45H = 1 OR
+                      IIa.NivåSideL45V = 1) THEN 1 ELSE 0 END, 'OpL5S1' = CASE WHEN (IIa.NivåSideL5S1 = 1 OR
+                      IIa.NivåSideL5S1H = 1 OR
+                      IIa.NivåSideL5S1V = 1) THEN 1 ELSE 0 END, 'AntNivOpr' = (CASE WHEN (IIa.NivåSideL23 = 1 OR
+                      IIa.NivåSideL23H = 1 OR
+                      IIa.NivåSideL23V = 1) THEN 1 ELSE 0 END) + (CASE WHEN (IIa.NivåSideL34 = 1 OR
+                      IIa.NivåSideL34H = 1 OR
+                      IIa.NivåSideL34V = 1) THEN 1 ELSE 0 END) + (CASE WHEN (IIa.NivåSideL45 = 1 OR
+                      IIa.NivåSideL45H = 1 OR
+                      IIa.NivåSideL45V = 1) THEN 1 ELSE 0 END) + (CASE WHEN (IIa.NivåSideL5S1 = 1 OR
+                      IIa.NivåSideL5S1H = 1 OR
+                      IIa.NivåSideL5S1V = 1) THEN 1 ELSE 0 END), 'Antibiotika' = IIa.Antibiotikaprofylakse, 'Saardren' = IIa.Sårdren, 'KnivtidTot' = CASE WHEN ((SamlKnivtidTimer * 60) 
+                      + SamlKnivtidMinutter) > 480 THEN NULL ELSE (SamlKnivtidTimer * 60) + SamlKnivtidMinutter END, 
+                      'PeropKomp' = CASE WHEN (IIa.PeroperativeKomplikasjoner IN (1) OR
+                      IIb1.Komplikasjoner_Nerveskade IN (1) OR
+                      IIb1.Komplikasjoner_Blødning IN (1) OR
+                      IIb1.Komplikasjoner_Allergisk IN (1)) THEN 1 END, 'PeropKompDura' = IIa.PeroperativeKomplikasjoner_Duralift, 
+                      'PeropKompNerve' = CASE WHEN (IIa.PeroperativeKomplikasjoner_Nevrerotskade IN (1) OR
+                      IIb1.Komplikasjoner_Nerveskade IN (1)) THEN 1 END, 'PeropKompFeilnivSide' = IIa.PeroperativeKomplikasjoner_Operert_Feil_Nivå_Side, 
+                      'PeropKompFeilplassImp' = IIa.PeroperativeKomplikasjoner_Feilplassering_Implantat, 
+                      'PeropKompTransfuBlodning' = CASE WHEN (IIa.PeroperativeKomplikasjoner_Transfusjonkrevende_Blødning = 1 OR
+                      IIb1.Komplikasjoner_Blødning = 1) THEN 1 END, 'PeropKompResp' = IIa.PeroperativeKomplikasjoner_Respiratoriske, 
+                      'PeropKompKardio' = IIa.PeroperativeKomplikasjoner_Kardiovaskulære, 'PeropKompAnafy' = CASE WHEN (IIa.PeroperativeKomplikasjoner_Anafylaktisk IN (1) OR
+                      IIb1.Komplikasjoner_Allergisk IN (1)) THEN 1 END, 'PeropKompAnnet' = IIa.AngiPeroperativeKomplikasjoner, 'ProsKode1' = IIa.Ncsp1, 'ProsKode2' = IIa.Ncsp2, 
+                      'Liggedogn' = IIa.Liggedøgn, 'TideOp3mnd' = Ib1.Tidspunkt, 'Nytte3mnd' = Ib1.NytteAvOperasjon, 'Fornoyd3mnd' = Ib1.HvorFornøyd, 'SmRy3mnd' = Ib1.SmerteRygg, 
+                      'SmBe3mnd' = Ib1.SmerteBein, 'OswTot3mnd' = Ib1.Oswestry, 'Eqgange3mnd' = Ib1.EqGange, 'Eqperst3mnd' = Ib1.EqPersStell, 'Eqvanlgj3mnd' = Ib1.EqVanlGjmaal, 
+                      'Eqsmerte3mnd' = Ib1.EqSmerte, 'Eqangst3mnd' = Ib1.EqAngst, 'EQ5D3mnd' = Ib1.EQ5D, 'Helsetilst3mnd' = Ib1.Helsetilstand, 'SmSti3mnd' = Ib1.Smertestillende, 
+                      'SmHypp3mnd' = Ib1.SmertestillendeOfte, 'Arbstatus3mnd' = IIb1.Arbeidsstatus, 'TideOp12mnd' = Ib12.Tidspunkt, 'Nytte12mnd' = Ib12.NytteAvOperasjon, 
+                      'Fornoyd12mnd' = Ib12.HvorFornøyd, 'SmRy12mnd' = Ib12.SmerteRygg, 'SmBe12mnd' = Ib12.SmerteBein, 'OswTot12mnd' = Ib12.Oswestry, 
+                      'Eqgange12mnd' = Ib12.EqGange, 'Eqperst12mnd' = Ib12.EqPersStell, 'Eqvanlgj12mnd' = Ib12.EqVanlGjmaal, 'Eqsmerte12mnd' = Ib12.EqSmerte, 
+                      'Eqangst12mnd' = Ib12.EqAngst, 'EQ5D12mnd' = Ib12.EQ5D, 'Helsetilst12mnd' = Ib12.Helsetilstand, 'SmSti12mnd' = Ib12.Smertestillende, 
+                      'SmHypp12mnd' = Ib12.SmertestillendeOfte, 'Arbstatus12mnd' = IIb12.Arbeidsstatus, 'KpBlod3Mnd' = IIb1.Komplikasjoner_Blødning, 
+                      'KpDVT3Mnd' = IIb1.Komplikasjoner_Trombose_ben, 'KpInfOverfla3Mnd' = IIb1.Komplikasjoner_infeksjon_Overflate, 
+                      'KpInfDyp3Mnd' = IIb1.Komplikasjoner_Infeksjon_dyp, 'KpInfDyp12Mnd' = IIb12.Komplikasjoner_Infeksjon_dyp, 'KpLE3Mnd' = IIb1.Komplikasjoner_Trombose_Lunge, 
+                      'KpLungebet3Mnd' = IIb1.Komplikasjoner_Lunge, 'KpMiktProb3Mnd' = IIb1.Komplikasjoner_Ufrivillig_Vannlating, 
+                      'KpSarinfUspesType3Mnd' = IIb1.Komplikasjoner_Infeksjon, 'KpUVI3Mnd' = IIb1.Komplikasjoner_Urinvei, 
+                      'Kp3Mnd' = CASE WHEN (/*IIb1.Komplikasjoner_Blødning in(1) or --blødning OBS!! Tore Solberg 25.9.2012, er med i peroperative komplikasjoner*/ IIb1.Komplikasjoner_Trombose_ben
+                       IN (1) OR
+                      /*DVT*/ IIb1.Komplikasjoner_infeksjon_Overflate IN (1) OR
+                      /*overflate*/ IIb1.Komplikasjoner_Infeksjon_dyp IN (1) OR
+                      /* dyp*/ IIb1.Komplikasjoner_Trombose_Lunge IN (1) OR
+                      /*LE*/ IIb1.Komplikasjoner_Lunge IN (1) OR
+                      /* Lunge bet*/ IIb1.Komplikasjoner_Ufrivillig_Vannlating IN (1) OR
+                      /*mikrot*/ IIb1.Komplikasjoner_Infeksjon IN (1) OR
+                      /* uspess*/ IIb1.Komplikasjoner_Urinvei IN (1)/*uvi*/ ) THEN 1 ELSE 0 END, 'KpInf3Mnd' = CASE WHEN (IIb1.Komplikasjoner_infeksjon_Overflate IN (1) OR
+                      /* overflate*/ IIb1.Komplikasjoner_Infeksjon_dyp IN (1) OR
+                      /* dyp*/ IIb1.Komplikasjoner_Infeksjon IN (1)/* uspess*/ ) THEN 1 ELSE 0 END, 'Utfylt3Mnd' = CASE WHEN (Ib1.ID IS NOT NULL OR
+                      IIb1.ID IS NOT NULL) THEN 1 ELSE 0 END, 'Utfylt12Mnd' = CASE WHEN (Ib12.ID IS NOT NULL OR
+                      IIb12.ID IS NOT NULL) THEN 1 ELSE 0 END, 'Sykehustype' = kobling.Sykehustype
+FROM         dbo.skjemaoversikt AS skj INNER JOIN
+                      dbo.Pasienter AS pas ON skj.pasientID = pas.pasID LEFT OUTER JOIN
+                      dbo.vwSkjemaIa_Alle AS Ia ON pas.pasID = Ia.PasientID AND skj.PreOp_ia_id = Ia.ID LEFT OUTER JOIN
+                      dbo.vwSkjemaIIa_Alle AS IIa ON pas.pasID = IIa.PasientID AND skj.Preop_IIa_id = IIa.ID LEFT OUTER JOIN
+                      dbo.vwSkjemaIb_Alle AS Ib1 ON pas.pasID = Ib1.PasientID AND skj.Post_1_Ib_ID = Ib1.ID LEFT OUTER JOIN
+                      dbo.vwSkjemaIIb_Alle AS IIb1 ON pas.pasID = IIb1.PasientID AND skj.Post_1_IIb = IIb1.ID LEFT OUTER JOIN
+                      dbo.vwSkjemaIb_Alle AS Ib2 ON pas.pasID = Ib2.PasientID AND skj.Post_2_Ib_ID = Ib2.ID LEFT OUTER JOIN
+                      dbo.vwSkjemaIIb_Alle AS IIb2 ON pas.pasID = IIb2.PasientID AND skj.Post_2_IIb = IIb2.ID LEFT OUTER JOIN
+                      dbo.vwSkjemaIb_Alle AS Ib12 ON pas.pasID = Ib12.PasientID AND skj.Post_12_Ib_ID = Ib12.ID LEFT OUTER JOIN
+                      dbo.vwSkjemaIIb_Alle AS IIb12 ON pas.pasID = IIb12.PasientID AND 
+                      skj.Post_12_IIb = IIb12.ID /*inner JOIN HregUserDb.dbo.Avdeling AS avd ON IIa.Inst = avd.RESHID */ INNER JOIN
+                          (SELECT DISTINCT a.*
+                            FROM          hreguserdb.dbo.Avdeling a INNER JOIN
+                                                   HregUserDb.dbo.Organisasjon o ON a.FK_OrganisasjonID = o.OrganisasjonID INNER JOIN
+                                                   HregUserDb.dbo.Connection c ON o.OrganisasjonID = c.FK_OrganisasjonID INNER JOIN
+                                                   HregUserDb.dbo.Service s ON s.ServiceID = c.FK_ServiceID INNER JOIN
+                                                   HregUserDb.dbo.Profil p ON p.FK_AvdelingID = a.AvdelingID AND p.FK_ServiceID = c.FK_ServiceID AND c.FK_ServiceID IN (5)) AS avd ON 
+                      IIa.Inst = avd.RESHID /*5.12.2014 slutt*/ INNER JOIN
+                      HregUserDb.dbo.Organisasjon org ON avd.FK_OrganisasjonID = org.Organisasjonid INNER JOIN
+                      dbo.vwKategoriserteOperasjoner_v2_Etter_Konvertering03032010 AS ingrep ON ingrep.ID = IIa.ID INNER JOIN
+                      dbo.vwHoved_OprKat_03032010 AS hovingrep ON 
+                      IIa.ID = hovingrep.ID /*18.6.2014 GA ny kobling lagt inn pga få med alle på oversikt over hvem som rapporterer*/ INNER JOIN
+                      Kobling_Org_Avd_Navn kobling ON IIa.InstID = kobling.OrganisasjonID AND 
+                      IIa.AvdId = kobling.AvdelingID
+/*
+	left join (
+	select distinct k.HFReshID,k.HFNavn,k.AvdReshID,k.AvdNavn,k.NavnUt,k.Region,k.Navn,k.Avd from Kobling_Org_Avd_Navn k
+		inner join HregUserDb.dbo.Organisasjon o on k.HFReshID=o.RESHID
+		left join HregUserDb.dbo.Avdeling a on k.AvdReshID=a.RESHID 
+		inner join HregUserDb.dbo.Connection c on o.OrganisasjonID=c.FK_OrganisasjonID and c.FK_ServiceID in(5)
+	) kobling on IIa.Inst= kobling.AvdReshID
+	*/ WHERE
+                       IIa.Inst IS NOT NULL AND Ia.Inst NOT IN (109046, 109046, 105678, 999997, 999996) AND IIa.Inst NOT IN (109046, 109046, 105678, 999997, 999996) 
+                      /*and datepart(yyyy,IIa.Utfdato )>'2006'*/ AND datepart(yyyy, IIa.Operasjonsdato) > '2006'
+UNION
+SELECT     'PID' = pas.pasID, 'Personnummer' = pas.pasDES, 'Kommunenr' = pas.paskommunenr, 'Andrestudier' = pas.pasForskning, 'SkjemaIDIa' = Ia.ID, 'Alder' = IIa.Alder, 
+                      'Kjonn' = Ia.Kjoenn, 'Roker' = Ia.Roeker, 'Utd' = Ia.Utd, 'SivilStatus' = Ia.SivilStatus, 'AntBarn' = CASE WHEN (Ia.Antbarn > 15) THEN NULL ELSE Ia.Antbarn END, 
+                      'Morsmal' = Ia.Morsmal, 'AnnetMorsm' = Ia.AnnetMorsmal, 'Vekt' = Ia.Vekt, 'Hoyde' = Ia.Høyde, 'BMI' = Ia.BMI, 'ArbstatusPre' = Ia.Arbeidsstatus, 
+                      'SmRyPre' = Ia.SmerteRygg, 'SmBePre' = Ia.SmerteBein, 'OswTotPre' = Ia.Oswestry, 'EqgangePre' = Ia.EqGange, 'EqperstPre' = Ia.EqPersStell, 
+                      'EqvanlgjPre' = Ia.EqVanlGjmaal, 'EqsmertePre' = Ia.EqSmerte, 'EqangstPre' = Ia.EqAngst, 'EQ5DPre' = Ia.EQ5D, 'HelsetilstPre' = Ia.Helsetilstand, 
+                      'SymptVarighRyggHof' = Ia.Symptomvarighet_Ryggsmerter, 'SympVarighUtstr' = Ia.Symptomvarighet_UtstrålendeSmerter, 
+                      'SykemeldVarighPre' = Ia.Symptomvarighet_Sykemelding, 'SmStiPre' = Ia.Smertestillende, 'SmHyppPre' = Ia.SmertestillendeOfte, 'UforetrygdPre' = Ia.SoktUforetrygd, 
+                      'ErstatningPre' = Ia.SoktErstatning, 'SkjemaIDIIa' = IIa.Id, 'Region' = Kobling.Region, 'HFNavn' = Kobling.OrganisasjonsnavnUt, 'HFID' = Org.OrganisasjonID, 
+                      'HFReshID' = org.Reshid, 'AvdNavn' = kobling.AvdelingsNavnUt, 'AvdID' = Avd.AvdelingID, 'AvdReshID' = Avd.Reshid, 'TidlOpr' = TidligereOperert, 
+                      'TidlOprAntall' = TidligereOperert_Antall, 'Sykd' = CASE WHEN ((IIa.ID IS NOT NULL OR
+                      IIa.ID > 0) AND IIa.AndreRelevanteSykdommer = 1) THEN '1' WHEN ((IIa.ID IS NOT NULL OR
+                      IIa.id > 0) AND IIa.AndreRelevanteSykdommer = 0) THEN '0' ELSE NULL END, 'SykdReumatoidartritt' = CASE WHEN ((IIa.ID IS NOT NULL OR
+                      IIa.ID > 0) AND IIa.AndreRelevanteSykdommer_Reumatoidartritt = 1) THEN '1' WHEN ((IIa.ID IS NOT NULL OR
+                      IIa.id > 0) AND IIa.AndreRelevanteSykdommer_Reumatoidartritt = 0) THEN '0' ELSE NULL END, 
+                      'SykdAndreRelevanteSykdBechtrew' = CASE WHEN ((IIa.ID IS NOT NULL OR
+                      IIa.ID > 0) AND IIa.AndreRelevanteSykdommer_Bechtrew = 1) THEN '1' WHEN ((IIa.ID IS NOT NULL OR
+                      IIa.id > 0) AND IIa.AndreRelevanteSykdommer_Bechtrew = 0) THEN '0' ELSE NULL END, 'SykdAnnenreumatisk' = CASE WHEN ((IIa.ID IS NOT NULL OR
+                      IIa.ID > 0) AND IIa.AndreRelevanteSykdommer_Annenreumatisksykdom = 1) THEN '1' WHEN ((IIa.ID IS NOT NULL OR
+                      IIa.id > 0) AND IIa.AndreRelevanteSykdommer_Annenreumatisksykdom = 0) THEN '0' ELSE NULL END, 'SykdHoftekneartose' = CASE WHEN ((IIa.ID IS NOT NULL OR
+                      IIa.ID > 0) AND IIa.AndreRelevanteSykdommer_Hoftekneartose = 1) THEN '1' WHEN ((IIa.ID IS NOT NULL OR
+                      IIa.id > 0) AND IIa.AndreRelevanteSykdommer_Hoftekneartose = 0) THEN '0' ELSE NULL END, 'SykdDepresjonAngst' = CASE WHEN ((IIa.ID IS NOT NULL OR
+                      IIa.ID > 0) AND IIa.AndreRelevanteSykdommer_DepresjonAngst = 1) THEN '1' WHEN ((IIa.ID IS NOT NULL OR
+                      IIa.id > 0) AND IIa.AndreRelevanteSykdommer_DepresjonAngst = 0) THEN '0' ELSE NULL END, 
+                      'SykdKroniskSmerterMuskelSkjelettsyst' = CASE WHEN ((IIa.ID IS NOT NULL OR
+                      IIa.ID > 0) AND IIa.AndreRelevanteSykdommer_Kronisksmertermuskelskjelettsystemet = 1) THEN '1' WHEN ((IIa.ID IS NOT NULL OR
+                      IIa.id > 0) AND IIa.AndreRelevanteSykdommer_Kronisksmertermuskelskjelettsystemet = 0) THEN '0' ELSE NULL END, 
+                      'SykdKroniskNevrologisk' = CASE WHEN ((IIa.ID IS NOT NULL OR
+                      IIa.ID > 0) AND IIa.AndreRelevanteSykdommer_Kronisknevrologisksykdom = 1) THEN '1' WHEN ((IIa.ID IS NOT NULL OR
+                      IIa.id > 0) AND IIa.AndreRelevanteSykdommer_Kronisknevrologisksykdom = 0) THEN '0' ELSE NULL END, 
+                      'SykdCerebrovaskular' = CASE WHEN ((IIa.ID IS NOT NULL OR
+                      IIa.ID > 0) AND IIa.AndreRelevanteSykdommer_Cerebrovaskulærsykdom = 1) THEN '1' WHEN ((IIa.ID IS NOT NULL OR
+                      IIa.id > 0) AND IIa.AndreRelevanteSykdommer_Cerebrovaskulærsykdom = 0) THEN '0' ELSE NULL END, 'SykdHjertekar' = CASE WHEN ((IIa.ID IS NOT NULL OR
+                      IIa.ID > 0) AND IIa.AndreRelevanteSykdommer_Hjertekarsykdom = 1) THEN '1' WHEN ((IIa.ID IS NOT NULL OR
+                      IIa.id > 0) AND IIa.AndreRelevanteSykdommer_Hjertekarsykdom = 0) THEN '0' ELSE NULL END, 'SykdVaskulærClaudicatio' = CASE WHEN ((IIa.ID IS NOT NULL OR
+                      IIa.ID > 0) AND IIa.AndreRelevanteSykdommer_VaskulærClaudicatio = 1) THEN '1' WHEN ((IIa.ID IS NOT NULL OR
+                      IIa.id > 0) AND IIa.AndreRelevanteSykdommer_VaskulærClaudicatio = 0) THEN '0' ELSE NULL END, 'SykdKroniskLunge' = CASE WHEN ((IIa.ID IS NOT NULL OR
+                      IIa.ID > 0) AND IIa.AndreRelevanteSykdommer_Kronisklungesykdom = 1) THEN '1' WHEN ((IIa.ID IS NOT NULL OR
+                      IIa.id > 0) AND IIa.AndreRelevanteSykdommer_Kronisklungesykdom = 0) THEN '0' ELSE NULL END, 'SykdKreft' = CASE WHEN ((IIa.ID IS NOT NULL OR
+                      IIa.ID > 0) AND IIa.AndreRelevanteSykdommer_Kreftsykdom = 1) THEN '1' WHEN ((IIa.ID IS NOT NULL OR
+                      IIa.id > 0) AND IIa.AndreRelevanteSykdommer_Kreftsykdom = 0) THEN '0' ELSE NULL END, 'SykdOsteoporose' = CASE WHEN ((IIa.ID IS NOT NULL OR
+                      IIa.ID > 0) AND IIa.AndreRelevanteSykdommer_Osteoporose = 1) THEN '1' WHEN ((IIa.ID IS NOT NULL OR
+                      IIa.id > 0) AND IIa.AndreRelevanteSykdommer_Osteoporose = 0) THEN '0' ELSE NULL END, 'SykdHypertensjon' = CASE WHEN ((IIa.ID IS NOT NULL OR
+                      IIa.ID > 0) AND IIa.AndreRelevanteSykdommer_Hypertensjon = 1) THEN '1' WHEN ((IIa.ID IS NOT NULL OR
+                      IIa.id > 0) AND IIa.AndreRelevanteSykdommer_Hypertensjon = 0) THEN '0' ELSE NULL END, 'SykDprebetesMellitus' = CASE WHEN ((IIa.ID IS NOT NULL OR
+                      IIa.ID > 0) AND IIa.AndreRelevanteSykdommer_DiabetesMellitus = 1) THEN '1' WHEN ((IIa.ID IS NOT NULL OR
+                      IIa.id > 0) AND IIa.AndreRelevanteSykdommer_DiabetesMellitus = 0) THEN '0' ELSE NULL END, 'SykdAnnenendokrin' = CASE WHEN ((IIa.ID IS NOT NULL OR
+                      IIa.ID > 0) AND IIa.AndreRelevanteSykdommer_Annenendokrinsykdom = 1) THEN '1' WHEN ((IIa.ID IS NOT NULL OR
+                      IIa.id > 0) AND IIa.AndreRelevanteSykdommer_Annenendokrinsykdom = 0) THEN '0' ELSE NULL END, 'SykdAnnet' = CASE WHEN ((IIa.ID IS NOT NULL OR
+                      IIa.ID > 0) AND IIa.SpesifiserAndreRelevanteSykdommer NOT IN ('', ' ')) THEN '1' WHEN ((IIa.ID IS NOT NULL OR
+                      IIa.id > 0) AND IIa.SpesifiserAndreRelevanteSykdommer IN ('', ' ')) THEN '0' ELSE NULL END, 'RvCt' = IIa.RVU_CT, 'RvMr' = IIa.RVU_MR, 'RvRadigr' = IIa.RVU_Radio, 
+                      'RvDiscogr' = IIa.RVU_Disko, 'RvDpregblok' = IIa.RVU_DiagBlokader, 'RvRtgLscol' = IIa.RVU_RtgLSkol, 'RvFunksjo' = IIa.RVU_MedFleksEks, 
+                      'RfNormal' = IIa.RVF_Normal, 'RfSkive' = IIa.RVF_Skivepro, 'RfSentr' = IIa.RVF_SentrSpin, 'RfLateral' = IIa.RVF_Lateral_spinalstenose, 
+                      'RfForamino' = RVF_Foraminal_stenose, 'RfSynovpre' = RVF_Synovial_syste, 'RfPseudom' = RVF_Pseudomeningocele, 'RfDegen' = IIa.RVF_Degen, 
+                      'RfSpondtypeIsmisk' = IIa.RVF_Ismitisk_spondylolitese, 'RfSpondtypeDegen' = IIa.RVF_Degenerativ_sponylolitese, 'RfDegskol' = IIa.RVF_DegenSkoliose, 
+                      'RfAnnet' = IIa.RVFAnnet, 'RfAnnetspes' = IIa.RVFAnnetText, 'OpIndSme' = IIa.Operasjonsindikasjon_Smerter, 'OpIndSmeType' = IIa.OperasjonsindikasjonSmerter, 
+                      'OpIndParese' = IIa.Operasjonsindikasjon_Parese, 'OpIndPareseGrad' = IIa.PareseGrad, 'OpIndCauda' = IIa.Operasjonsindikasjon_Cauda, 
+                      'Reop90d' = IIa.VedReoperasjon, 'ASA' = IIa.ASA, 'OpDato' = CONVERT(nvarchar(30), IIa.Operasjonsdato, 104), 'OpAar' = datepart(yyyy, IIa.Operasjonsdato), 
+                      'OpKat' = IIa.Operasjonskat, 'Dagkirurgi' = IIa.Dagkir, 'Inngrep' = ingrep.Kategori, 'Inngreptxt' = replace(ingrep.Tekst, ';', ','), 'HovedInngrep' = hovingrep.Kategori, 
+                      'HovedInngreptxt' = replace(hovingrep.Tekst, ';', ','), 'OpMikro' = IIa.OperasjonsmetodeMikroskopi, 'OpProlap' = IIa.OperasjonsmetodeProlaps, 
+                      'OpDeUlamin' = IIa.OperasjonsmetodeDekompresjon_UtenLaminektomi, 'OpDeUlaminTilgang' = IIa.OperasjonsmetodeKirurgiskDekompresjon, 
+                      'OpLaminektomi' = IIa.OperasjonsmetodeLaminektomi, 'OpDeFasett' = IIa.OperasjonsmetodeDekompresjon_Fasettektomi, 
+                      'OpDeFasettUniBi' = IIa.OperasjonsmetodeFasettektomi, 'OpAndreSkiveprotese' = IIa.AndreOperasjonsmetoder_Skriveprotese, 
+                      'OpAndreSpes' = IIa.AndreOperasjonsmetoderSpesifisering, 'OpTilgang' = IIa.Operasjonstilgang, 'FusjonKirPlf' = IIa.Posterolateralfusjon, 
+                      'FusjonKirPlfIntr' = IIa.InstrumentellPosterolateralfusjon, 'FusjonKirAlif' = IIa.ALIF, 'FusjonKirAlifBur' = IIa.BurALIF, 'FusjonKirAlifBen' = IIa.BenblokkiskiveromALIF, 
+                      'FusjonKirPlif' = IIa.PLIF, 'FusjonKirTlif' = IIa.TLIF, 'FusjonSpes' = IIa.TypeFusjonskirurgiSpesifisering, 'TypeBen' = IIa.Typebengraft, 
+                      'TypeBenBensub' = IIa.Typebengraft_Bensubstitutt, 'OpL23' = CASE WHEN (IIa.NivåSideL23 = 1 OR
+                      IIa.NivåSideL23H = 1 OR
+                      IIa.NivåSideL23V = 1) THEN 1 ELSE 0 END, 'OpL34' = CASE WHEN (IIa.NivåSideL34 = 1 OR
+                      IIa.NivåSideL34H = 1 OR
+                      IIa.NivåSideL34V = 1) THEN 1 ELSE 0 END, 'OpL45' = CASE WHEN (IIa.NivåSideL45 = 1 OR
+                      IIa.NivåSideL45H = 1 OR
+                      IIa.NivåSideL45V = 1) THEN 1 ELSE 0 END, 'OpL5S1' = CASE WHEN (IIa.NivåSideL5S1 = 1 OR
+                      IIa.NivåSideL5S1H = 1 OR
+                      IIa.NivåSideL5S1V = 1) THEN 1 ELSE 0 END, 'AntNivOpr' = (CASE WHEN (IIa.NivåSideL23 = 1 OR
+                      IIa.NivåSideL23H = 1 OR
+                      IIa.NivåSideL23V = 1) THEN 1 ELSE 0 END) + (CASE WHEN (IIa.NivåSideL34 = 1 OR
+                      IIa.NivåSideL34H = 1 OR
+                      IIa.NivåSideL34V = 1) THEN 1 ELSE 0 END) + (CASE WHEN (IIa.NivåSideL45 = 1 OR
+                      IIa.NivåSideL45H = 1 OR
+                      IIa.NivåSideL45V = 1) THEN 1 ELSE 0 END) + (CASE WHEN (IIa.NivåSideL5S1 = 1 OR
+                      IIa.NivåSideL5S1H = 1 OR
+                      IIa.NivåSideL5S1V = 1) THEN 1 ELSE 0 END), 'Antibiotika' = IIa.Antibiotikaprofylakse, 'Saardren' = IIa.Sårdren, 'KnivtidTot' = CASE WHEN ((SamlKnivtidTimer * 60) 
+                      + SamlKnivtidMinutter) > 480 THEN NULL ELSE (SamlKnivtidTimer * 60) + SamlKnivtidMinutter END, 
+                      'PeropKomp' = CASE WHEN (IIa.PeroperativeKomplikasjoner IN (1) OR
+                      IIb1.Komplikasjoner_Nerveskade IN (1) OR
+                      IIb1.Komplikasjoner_Blødning IN (1) OR
+                      IIb1.Komplikasjoner_Allergisk IN (1)) THEN 1 END, 'PeropKompDura' = IIa.PeroperativeKomplikasjoner_Duralift, 
+                      'PeropKompNerve' = CASE WHEN (IIa.PeroperativeKomplikasjoner_Nevrerotskade IN (1) OR
+                      IIb1.Komplikasjoner_Nerveskade IN (1)) THEN 1 END, 'PeropKompFeilnivSide' = IIa.PeroperativeKomplikasjoner_Operert_Feil_Nivå_Side, 
+                      'PeropKompFeilplassImp' = IIa.PeroperativeKomplikasjoner_Feilplassering_Implantat, 
+                      'PeropKompTransfuBlodning' = CASE WHEN (IIa.PeroperativeKomplikasjoner_Transfusjonkrevende_Blødning = 1 OR
+                      IIb1.Komplikasjoner_Blødning = 1) THEN 1 END, 'PeropKompResp' = IIa.PeroperativeKomplikasjoner_Respiratoriske, 
+                      'PeropKompKardio' = IIa.PeroperativeKomplikasjoner_Kardiovaskulære, 'PeropKompAnafy' = CASE WHEN (IIa.PeroperativeKomplikasjoner_Anafylaktisk IN (1) OR
+                      IIb1.Komplikasjoner_Allergisk IN (1)) THEN 1 END, 'PeropKompAnnet' = IIa.AngiPeroperativeKomplikasjoner, 'ProsKode1' = IIa.Ncsp1, 'ProsKode2' = IIa.Ncsp2, 
+                      'Liggedogn' = IIa.Liggedøgn, 'TideOp3mnd' = Ib1.Tidspunkt, 'Nytte3mnd' = Ib1.NytteAvOperasjon, 'Fornoyd3mnd' = Ib1.HvorFornøyd, 'SmRy3mnd' = Ib1.SmerteRygg, 
+                      'SmBe3mnd' = Ib1.SmerteBein, 'OswTot3mnd' = Ib1.Oswestry, 'Eqgange3mnd' = Ib1.EqGange, 'Eqperst3mnd' = Ib1.EqPersStell, 'Eqvanlgj3mnd' = Ib1.EqVanlGjmaal, 
+                      'Eqsmerte3mnd' = Ib1.EqSmerte, 'Eqangst3mnd' = Ib1.EqAngst, 'EQ5D3mnd' = Ib1.EQ5D, 'Helsetilst3mnd' = Ib1.Helsetilstand, 'SmSti3mnd' = Ib1.Smertestillende, 
+                      'SmHypp3mnd' = Ib1.SmertestillendeOfte, 'Arbstatus3mnd' = IIb1.Arbeidsstatus, 'TideOp12mnd' = Ib12.Tidspunkt, 'Nytte12mnd' = Ib12.NytteAvOperasjon, 
+                      'Fornoyd12mnd' = Ib12.HvorFornøyd, 'SmRy12mnd' = Ib12.SmerteRygg, 'SmBe12mnd' = Ib12.SmerteBein, 'OswTot12mnd' = Ib12.Oswestry, 
+                      'Eqgange12mnd' = Ib12.EqGange, 'Eqperst12mnd' = Ib12.EqPersStell, 'Eqvanlgj12mnd' = Ib12.EqVanlGjmaal, 'Eqsmerte12mnd' = Ib12.EqSmerte, 
+                      'Eqangst12mnd' = Ib12.EqAngst, 'EQ5D12mnd' = Ib12.EQ5D, 'Helsetilst12mnd' = Ib12.Helsetilstand, 'SmSti12mnd' = Ib12.Smertestillende, 
+                      'SmHypp12mnd' = Ib12.SmertestillendeOfte, 'Arbstatus12mnd' = IIb12.Arbeidsstatus, 'KpBlod3Mnd' = IIb1.Komplikasjoner_Blødning, 
+                      'KpDVT3Mnd' = IIb1.Komplikasjoner_Trombose_ben, 'KpInfOverfla3Mnd' = IIb1.Komplikasjoner_infeksjon_Overflate, 
+                      'KpInfDyp3Mnd' = IIb1.Komplikasjoner_Infeksjon_dyp, 'KpInfDyp12Mnd' = IIb12.Komplikasjoner_Infeksjon_dyp, 'KpLE3Mnd' = IIb1.Komplikasjoner_Trombose_Lunge, 
+                      'KpLungebet3Mnd' = IIb1.Komplikasjoner_Lunge, 'KpMiktProb3Mnd' = IIb1.Komplikasjoner_Ufrivillig_Vannlating, 
+                      'KpSarinfUspesType3Mnd' = IIb1.Komplikasjoner_Infeksjon, 'KpUVI3Mnd' = IIb1.Komplikasjoner_Urinvei, 
+                      'Kp3Mnd' = CASE WHEN (/*IIb1.Komplikasjoner_Blødning in(1) or --blødning OBS!! Tore Solberg 25.9.2012, er med i peroperative komplikasjoner*/ IIb1.Komplikasjoner_Trombose_ben
+                       IN (1) OR
+                      /*DVT*/ IIb1.Komplikasjoner_infeksjon_Overflate IN (1) OR
+                      /*overflate*/ IIb1.Komplikasjoner_Infeksjon_dyp IN (1) OR
+                      /* dyp*/ IIb1.Komplikasjoner_Trombose_Lunge IN (1) OR
+                      /*LE*/ IIb1.Komplikasjoner_Lunge IN (1) OR
+                      /* Lunge bet*/ IIb1.Komplikasjoner_Ufrivillig_Vannlating IN (1) OR
+                      /*mikrot*/ IIb1.Komplikasjoner_Infeksjon IN (1) OR
+                      /* uspess*/ IIb1.Komplikasjoner_Urinvei IN (1)/*uvi*/ ) THEN 1 ELSE 0 END, 'KpInf3Mnd' = CASE WHEN (IIb1.Komplikasjoner_infeksjon_Overflate IN (1) OR
+                      /* overflate*/ IIb1.Komplikasjoner_Infeksjon_dyp IN (1) OR
+                      /* dyp*/ IIb1.Komplikasjoner_Infeksjon IN (1)/* uspess*/ ) THEN 1 ELSE 0 END, 'Utfylt3Mnd' = CASE WHEN (Ib1.ID IS NOT NULL OR
+                      IIb1.ID IS NOT NULL) THEN 1 ELSE 0 END, 'Utfylt12Mnd' = CASE WHEN (Ib12.ID IS NOT NULL OR
+                      IIb12.ID IS NOT NULL) THEN 1 ELSE 0 END, 'Sykehustype' = kobling.Sykehustype
+FROM         dbo.skjemaoversikt AS skj INNER JOIN
+                      dbo.Pasienter AS pas ON skj.pasientID = pas.pasID LEFT OUTER JOIN
+                      dbo.vwSkjemaIa_Alle AS Ia ON pas.pasID = Ia.PasientID AND skj.PreOp_ia_id = Ia.ID LEFT OUTER JOIN
+                      dbo.vwSkjemaIIa_Alle AS IIa ON pas.pasID = IIa.PasientID AND skj.Preop_IIa_id = IIa.ID LEFT OUTER JOIN
+                      dbo.vwSkjemaIb_Alle AS Ib1 ON pas.pasID = Ib1.PasientID AND skj.Post_1_Ib_ID = Ib1.ID LEFT OUTER JOIN
+                      dbo.vwSkjemaIIb_Alle AS IIb1 ON pas.pasID = IIb1.PasientID AND skj.Post_1_IIb = IIb1.ID LEFT OUTER JOIN
+                      dbo.vwSkjemaIb_Alle AS Ib2 ON pas.pasID = Ib2.PasientID AND skj.Post_2_Ib_ID = Ib2.ID LEFT OUTER JOIN
+                      dbo.vwSkjemaIIb_Alle AS IIb2 ON pas.pasID = IIb2.PasientID AND skj.Post_2_IIb = IIb2.ID LEFT OUTER JOIN
+                      dbo.vwSkjemaIb_Alle AS Ib12 ON pas.pasID = Ib12.PasientID AND skj.Post_12_Ib_ID = Ib12.ID LEFT OUTER JOIN
+                      dbo.vwSkjemaIIb_Alle AS IIb12 ON pas.pasID = IIb12.PasientID AND 
+                      skj.Post_12_IIb = IIb12.ID /*inner JOIN HregUserDb.dbo.Avdeling AS avd ON IIa.Inst = avd.RESHID */ INNER JOIN
+                          (SELECT DISTINCT a.*
+                            FROM          hreguserdb.dbo.Avdeling a INNER JOIN
+                                                   HregUserDb.dbo.Organisasjon o ON a.FK_OrganisasjonID = o.OrganisasjonID INNER JOIN
+                                                   HregUserDb.dbo.Connection c ON o.OrganisasjonID = c.FK_OrganisasjonID INNER JOIN
+                                                   HregUserDb.dbo.Service s ON s.ServiceID = c.FK_ServiceID INNER JOIN
+                                                   HregUserDb.dbo.Profil p ON p.FK_AvdelingID = a.AvdelingID AND p.FK_ServiceID = c.FK_ServiceID AND c.FK_ServiceID IN (5)) AS avd ON 
+                      IIa.Inst = avd.RESHID /*5.12.2014 slutt*/ INNER JOIN
+                      HregUserDb.dbo.Organisasjon org ON avd.FK_OrganisasjonID = org.Organisasjonid INNER JOIN
+                      dbo.vwIkkeKategoriserteOperasjoner_v2_Etter_Konvertering03032010 AS ingrep ON ingrep.ID = IIa.ID INNER JOIN
+                      dbo.vwHoved_OprKat_NotIn_03032010 AS hovingrep ON 
+                      IIa.ID = hovingrep.ID /*18.6.2014 GA ny kobling lagt inn pga få med alle på oversikt over hvem som rapporterer*/ INNER JOIN
+                      Kobling_Org_Avd_Navn kobling ON IIa.InstID = kobling.OrganisasjonID AND 
+                      IIa.AvdId = kobling.AvdelingID
+/*
+	left join (
+	select distinct k.HFReshID,k.HFNavn,k.AvdReshID,k.AvdNavn,k.NavnUt,k.Region,k.Navn,k.Avd from Kobling_Org_Avd_Navn k
+		inner join HregUserDb.dbo.Organisasjon o on k.HFReshID=o.RESHID
+		left join HregUserDb.dbo.Avdeling a on k.AvdReshID=a.RESHID 
+		inner join HregUserDb.dbo.Connection c on o.OrganisasjonID=c.FK_OrganisasjonID and c.FK_ServiceID in(5)
+	) kobling on IIa.Inst= kobling.AvdReshID
+	*/ WHERE
+                       IIa.Inst IS NOT NULL AND Ia.Inst NOT IN (109046, 109046, 105678, 999997, 999996) AND IIa.Inst NOT IN (109046, 109046, 105678, 999997, 999996) 
+                      /*and datepart(yyyy,IIa.Utfdato )>'2006'*/ AND datepart(yyyy, IIa.Operasjonsdato) > '2006'

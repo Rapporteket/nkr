@@ -1,0 +1,201 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version last-->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="MeanMed" language="groovy" pageWidth="600" pageHeight="842" columnWidth="600" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" scriptletClass="nkrCommonScriptlet" uuid="eaf89f49-3441-4791-a6f6-a6eb19af8125">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<property name="ireport.jasperserver.url" value="https://test.helseregister.no/test.rapporteket/"/>
+	<property name="ireport.jasperserver.report.resource" value="/organizations/NKR/Reports/RyggGjsnTid_files/MainJrxml"/>
+	<property name="ireport.jasperserver.reportUnit" value="/organizations/NKR/Reports/RyggGjsnTid"/>
+	<parameter name="LoggedInUser" class="com.jaspersoft.jasperserver.api.metadata.user.domain.User" isForPrompting="false">
+		<parameterDescription><![CDATA[At server side, gets the User object from the JRS logged in user]]></parameterDescription>
+	</parameter>
+	<parameter name="LoggedInUserFullName" class="java.lang.String" isForPrompting="false">
+		<parameterDescription><![CDATA[Full name of JRS logged in user. Depends on the LoggedInUser parameter]]></parameterDescription>
+		<defaultValueExpression><![CDATA[$P{LoggedInUser}.getFullName()]]></defaultValueExpression>
+	</parameter>
+	<parameter name="LoggedInUserAVD_RESH" class="java.lang.String">
+		<parameterDescription><![CDATA[Provides the AVD_RESH attribute from the user object. Relevant only for users externally defined by helseregister. Depends on the LoggedInUser parameter]]></parameterDescription>
+		<defaultValueExpression><![CDATA[$P{LoggedInUser}.getAttributes().get(1).attrValue]]></defaultValueExpression>
+	</parameter>
+	<parameter name="reportName" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA[new String("RyggGjsnTid")]]></defaultValueExpression>
+	</parameter>
+	<parameter name="rScriptName" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA[new String("RyggFigGjsnTid.R")]]></defaultValueExpression>
+	</parameter>
+	<parameter name="rFunctionCallString" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA[new String("GjsnTid(RegData=RegData, libkat=libkat, outfile=outfile, valgtVar=valgtVar, tidlOp=0, erMann=erMann, hovedkat=hovedkat, minald=minald, maxald=maxald, ktr=ktr, tittel=1, valgtMaal=valgtMaal, enhetsUtvalg=1, reshID=reshID)")]]></defaultValueExpression>
+	</parameter>
+	<parameter name="varName" class="java.lang.String">
+		<defaultValueExpression><![CDATA[new String("Liggedogn")]]></defaultValueExpression>
+	</parameter>
+	<parameter name="statMeasureMethod" class="java.lang.String">
+		<defaultValueExpression><![CDATA[new String("Gjsn")]]></defaultValueExpression>
+	</parameter>
+	<parameter name="minAge" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[new java.lang.Integer(0)]]></defaultValueExpression>
+	</parameter>
+	<parameter name="maxAge" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[new java.lang.Integer(130)]]></defaultValueExpression>
+	</parameter>
+	<parameter name="beginDate" class="java.util.Date">
+		<defaultValueExpression><![CDATA[new SimpleDateFormat("yyyy-MM-dd").parse("2007-01-01")]]></defaultValueExpression>
+	</parameter>
+	<parameter name="endDate" class="java.util.Date">
+		<defaultValueExpression><![CDATA[new Date()]]></defaultValueExpression>
+	</parameter>
+	<parameter name="erMann" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[new Integer(99)]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[select
+	cast(PID as float) as PID,
+	cast(BMI as float) as BMI,
+	cast(Utd as float) as Utd,
+	cast(Alder as float) as Alder,
+	cast(Liggedogn as float) as Liggedogn,
+	cast(Dagkirurgi as float) as Dagkirurgi,
+	cast(TidlOpr as float) as TidlOpr,
+	cast(PeropKomp as float) as PeropKomp,
+        cast(PeropKompAnafy as float) as PeropKompAnafy,
+        PeropKompAnnet,
+        cast(PeropKompDura as float) as PeropKompDura,
+        cast(PeropKompFeilnivSide as float) as PeropKompFeilnivSide,
+        cast(PeropKompFeilplassImp as float) as PeropKompFeilplassImp,
+        cast(PeropKompKardio as float) as PeropKompKardio,
+        cast(PeropKompNerve as float) as PeropKompNerve,
+        cast(PeropKompResp as float) as PeropKompResp,
+        cast(PeropKompTransfuBlodning as float) as PeropKompTransfuBlodning,
+        cast(KpBlod3Mnd as float) as KpBlod3Mnd,
+        cast(KpDVT3Mnd as float) as KpDVT3Mnd,
+        cast(KpInfDyp3Mnd as float) as KpInfDyp3Mnd,
+        cast(KpInfOverfla3Mnd as float) as KpInfOverfla3Mnd,
+        cast(KpLE3Mnd as float) as KpLE3Mnd,
+        cast(KpLungebet3Mnd as float) as KpLungebet3Mnd,
+        cast(KpMiktProb3Mnd as float) as KpMiktProb3Mnd,
+        cast(KpSarinfUspesType3Mnd as float) as KpSarinfUspesType3Mnd,
+        cast(KpUVI3Mnd as float) as KpUVI3Mnd,
+        cast(Utfylt3Mnd as float) as Utfylt3Mnd,
+	cast(Antibiotika as float) as Antibiotika,
+	cast(ASA as float) as ASA,
+	cast(OpKat as float) as OpKat,
+	cast(ArbstatusPre as float) as ArbstatusPre,
+        cast(Arbstatus3mnd as float) as Arbstatus3mnd,
+        cast(Arbstatus12mnd as float) as Arbstatus12mnd,
+	cast(SmBePre as float) as SmBePre,
+        cast(SmBe3mnd as float) as SmBe3mnd,
+        cast(SmBe12mnd as float) as SmBe12mnd,
+        cast(SmRyPre as float) as SmRyPre,
+        cast(SmRy3mnd as float) as SmRy3mnd,
+        cast(SmRy12mnd as float) as SmRy12mnd,
+        cast(OswTotPre as float) as "OswTotPre",
+        cast(OswTot3mnd as float) as "OswTot3mnd",
+        cast(OswTot12mnd as float) as "OswTot12mnd",
+	cast(EQ5DPre as float) as EQ5DPre,
+        cast(EQ5D3mnd as float) as EQ5D3mnd,
+        cast(EQ5D12mnd as float) as EQ5D12mnd,
+	cast(Nytte3mnd as float) as Nytte3mnd,
+        cast(Nytte12mnd as float) as Nytte12mnd,
+        cast(Fornoyd3mnd as float) as Fornoyd3mnd,
+        cast(Fornoyd12mnd as float) as Fornoyd12mnd,
+	cast(Kjonn as float) as Kjonn,
+	cast(HovedInngrep as float) as HovedInngrep,
+	HovedInngreptxt,
+	cast(Inngrep as float) as Inngrep,
+	Inngreptxt,
+	AvdReshID,
+	AvdNavn,
+	OpDato,
+	right(OpDato, 4) as Aar
+from
+	Uttrekk_Rapport]]>
+	</queryString>
+	<field name="PID" class="java.lang.Double"/>
+	<field name="BMI" class="java.lang.Double"/>
+	<field name="Utd" class="java.lang.Double"/>
+	<field name="Alder" class="java.lang.Double"/>
+	<field name="Liggedogn" class="java.lang.Double"/>
+	<field name="Dagkirurgi" class="java.lang.Double"/>
+	<field name="TidlOpr" class="java.lang.Double"/>
+	<field name="PeropKomp" class="java.lang.Double"/>
+	<field name="PeropKompAnafy" class="java.lang.Double"/>
+	<field name="PeropKompAnnet" class="java.lang.String"/>
+	<field name="PeropKompDura" class="java.lang.Double"/>
+	<field name="PeropKompFeilnivSide" class="java.lang.Double"/>
+	<field name="PeropKompFeilplassImp" class="java.lang.Double"/>
+	<field name="PeropKompKardio" class="java.lang.Double"/>
+	<field name="PeropKompNerve" class="java.lang.Double"/>
+	<field name="PeropKompResp" class="java.lang.Double"/>
+	<field name="PeropKompTransfuBlodning" class="java.lang.Double"/>
+	<field name="KpBlod3Mnd" class="java.lang.Double"/>
+	<field name="KpDVT3Mnd" class="java.lang.Double"/>
+	<field name="KpInfDyp3Mnd" class="java.lang.Double"/>
+	<field name="KpInfOverfla3Mnd" class="java.lang.Double"/>
+	<field name="KpLE3Mnd" class="java.lang.Double"/>
+	<field name="KpLungebet3Mnd" class="java.lang.Double"/>
+	<field name="KpMiktProb3Mnd" class="java.lang.Double"/>
+	<field name="KpSarinfUspesType3Mnd" class="java.lang.Double"/>
+	<field name="KpUVI3Mnd" class="java.lang.Double"/>
+	<field name="Utfylt3Mnd" class="java.lang.Double"/>
+	<field name="Antibiotika" class="java.lang.Double"/>
+	<field name="ASA" class="java.lang.Double"/>
+	<field name="OpKat" class="java.lang.Double"/>
+	<field name="ArbstatusPre" class="java.lang.Double"/>
+	<field name="Arbstatus3mnd" class="java.lang.Double"/>
+	<field name="Arbstatus12mnd" class="java.lang.Double"/>
+	<field name="SmBePre" class="java.lang.Double"/>
+	<field name="SmBe3mnd" class="java.lang.Double"/>
+	<field name="SmBe12mnd" class="java.lang.Double"/>
+	<field name="SmRyPre" class="java.lang.Double"/>
+	<field name="SmRy3mnd" class="java.lang.Double"/>
+	<field name="SmRy12mnd" class="java.lang.Double"/>
+	<field name="OswTotPre" class="java.lang.Double"/>
+	<field name="OswTot3mnd" class="java.lang.Double"/>
+	<field name="OswTot12mnd" class="java.lang.Double"/>
+	<field name="EQ5DPre" class="java.lang.Double"/>
+	<field name="EQ5D3mnd" class="java.lang.Double"/>
+	<field name="EQ5D12mnd" class="java.lang.Double"/>
+	<field name="Nytte3mnd" class="java.lang.Double"/>
+	<field name="Nytte12mnd" class="java.lang.Double"/>
+	<field name="Fornoyd3mnd" class="java.lang.Double"/>
+	<field name="Fornoyd12mnd" class="java.lang.Double"/>
+	<field name="Kjonn" class="java.lang.Double"/>
+	<field name="HovedInngrep" class="java.lang.Double"/>
+	<field name="HovedInngreptxt" class="java.lang.String"/>
+	<field name="Inngrep" class="java.lang.Double"/>
+	<field name="Inngreptxt" class="java.lang.String"/>
+	<field name="AvdReshID" class="java.lang.String"/>
+	<field name="AvdNavn" class="java.lang.String"/>
+	<field name="OpDato" class="java.lang.String"/>
+	<field name="Aar" class="java.lang.String"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band/>
+	</title>
+	<pageHeader>
+		<band splitType="Stretch"/>
+	</pageHeader>
+	<columnHeader>
+		<band height="800" splitType="Stretch">
+			<image hAlign="Center" vAlign="Top">
+				<reportElement x="0" y="0" width="600" height="800" uuid="08afac1f-f724-4feb-8744-59bbc2c8ad40"/>
+				<imageExpression><![CDATA["file:" + $P{REPORT_SCRIPTLET}.getFileName()]]></imageExpression>
+			</image>
+		</band>
+	</columnHeader>
+	<detail>
+		<band splitType="Stretch"/>
+	</detail>
+	<columnFooter>
+		<band splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band splitType="Stretch"/>
+	</pageFooter>
+	<summary>
+		<band splitType="Stretch"/>
+	</summary>
+</jasperReport>
