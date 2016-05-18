@@ -45,6 +45,17 @@
 #'     \item Underkat: Fordeling av inngrepstyper. NB: hovedkategori MÅ velges
 #'     \item Utd: Høyeste fullførte utdanning
 #'    }
+#' Argumentet \emph{hovedkat} har følgende valgmuligheter:
+#'    \itemize{
+#'     \item 0: Annet
+#'     \item 1: Prolaps
+#'     \item 2: Foramenotomi
+#'     \item 3: Laminektomi
+#'     \item 4: Eksp. intraspin. impl.
+#'     \item 5: Fusjon
+#'     \item 6: Skiveprotese
+#'     \item 7: Fjerning/revisjon
+#'    }
 #'    				
 #' @param RegData En dataramme med alle nødvendige variabler fra registeret
 #' @param valgtVar Hvilken variabel som skal visualiseres. Se \strong{Details} for oversikt.
@@ -55,8 +66,17 @@
 #'          1: Menn
 #' @param minald Alder, fra og med (Standardverdi: 0)
 #' @param maxald Alder, til og med (Standardverdi: 130)
+#' @param tidlOp Tidligere operert, 
+#'                0: alle, 
+#'                1: Tidl. operert samme nivå, 
+#'                2: Tidl. operert annet nivå, 
+#'			3: Tidl. operert annet og sm. nivå,
+#'			4: Primæroperasjon
+#' @param hovedkat Hvilken type hovedinngrep, numerisk 0-7, standard: 99, dvs. alle
+
 #' @param outfile Navn på fil figuren skrives til. Standard: '' (Figur skrives
 #'    til systemets standard utdataenhet (som regel skjerm))
+#' @param tittel Vise tittel i figuren eller ikke (0/1). standard:1
 #' @param reshID Parameter følger fra innlogging helseregister.no og angir
 #'    hvilken enhet i spesialisthelsetjenesten brukeren tilhører
 #' @param enhetsUtvalg Gjør gruppeutvalg med eller uten sammenlikning for

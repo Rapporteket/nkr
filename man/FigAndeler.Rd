@@ -5,17 +5,26 @@
 \title{Søylediagram som viser andeler av ulike variabler}
 \usage{
 FigAndeler(RegData, valgtVar, datoFra = "2007-01-01",
-  datoTil = "2999-12-31", minald = 0, maxald = 130, erMann = "",
-  hovedkat = 99, tittel = 1, outfile = "", reshID, enhetsUtvalg = 1)
+  datoTil = "2999-12-31", hentData = 0, preprosess = 1, minald = 0,
+  maxald = 130, erMann = "", hovedkat = 99, tittel = 1, outfile = "",
+  reshID, enhetsUtvalg = 1)
 }
 \arguments{
 \item{RegData}{En dataramme med alle nødvendige variabler fra registeret}
 
 \item{valgtVar}{Hvilken variabel som skal visualiseres. Se \strong{Details} for oversikt.}
 
-\item{datoFra}{Tidligste dato i utvalget (vises alltid i figuren).}
+\item{datoFra}{Tidligste operasjonsdato i utvalget (vises alltid i figuren).}
 
-\item{datoTil}{Seneste dato i utvalget (vises alltid i figuren).}
+\item{datoTil}{Seneste operasjonsdato i utvalget (vises alltid i figuren).}
+
+\item{hentData}{Gjør spørring mot database
+0: Nei, RegData gis som input til funksjonen (Standard)
+1: Ja}
+
+\item{preprosess}{Preprosesser data
+FALSE: Nei
+TRUE: Ja (Standard)}
 
 \item{minald}{Alder, fra og med (Standardverdi: 0)}
 
@@ -24,6 +33,10 @@ FigAndeler(RegData, valgtVar, datoFra = "2007-01-01",
 \item{erMann}{Kjønn, standard: alt annet enn 0/1 gir begge kjønn
 0: Kvinner
 1: Menn}
+
+\item{hovedkat}{Hvilken type hovedinngrep, numerisk 0-7, standard: 99, dvs. alle}
+
+\item{tittel}{Vise tittel i figuren eller ikke (0/1). standard:1}
 
 \item{outfile}{Navn på fil figuren skrives til. Standard: '' (Figur skrives
 til systemets standard utdataenhet (som regel skjerm))}
@@ -39,13 +52,12 @@ hvilken enhet i spesialisthelsetjenesten brukeren tilhører}
 7: Egen region 
 8: Egen region mot resten}
 
-\item{preprosess}{Preprosesser data
-FALSE: Nei
-TRUE: Ja (Standard)}
-
-\item{hentData}{Gjør spørring mot database
-0: Nei, RegData gis som input til funksjonen (Standard)
-1: Ja}
+\item{tidlOp}{Tidligere operert, 
+       0: alle, 
+       1: Tidl. operert samme nivå, 
+       2: Tidl. operert annet nivå, 
+3: Tidl. operert annet og sm. nivå,
+4: Primæroperasjon}
 }
 \value{
 Søylediagram (fordeling) av valgt variabel. De enkelte verdiene kan også sendes med.
@@ -96,6 +108,17 @@ Argumentet \emph{valgtVar} har følgende valgmuligheter:
     \item UforetrygdPre: Har pasienten søkt uføretrygd?
     \item Underkat: Fordeling av inngrepstyper. NB: hovedkategori MÅ velges
     \item Utd: Høyeste fullførte utdanning
+   }
+Argumentet \emph{hovedkat} har følgende valgmuligheter:
+   \itemize{
+    \item 0: Annet
+    \item 1: Prolaps
+    \item 2: Foramenotomi
+    \item 3: Laminektomi
+    \item 4: Eksp. intraspin. impl.
+    \item 5: Fusjon
+    \item 6: Skiveprotese
+    \item 7: Fjerning/revisjon
    }
 }
 

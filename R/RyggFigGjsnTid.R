@@ -26,43 +26,25 @@
 #' @param valgtMaal
 #'        'Gjsn': gir middelverdi (standard)
 #'        'Med': gir median
+#' @param ktr Hvilken oppfølging man ønsker å se på. Valg: 3mnd - 3 mnd kontroll(standard), 12mnd - 12 mnd kontroll
 #'          
 #' @return Linjediagram som viser utvikling over tid for valgt variabel
 #'
 #' @export
-FigGjsnTid <- function(RegData, valgtVar, datoFra='2013-01-01', datoTil='3000-12-31', 
-                    minald=0, maxald=130, erMann='',   diagnose='', innl4t='', NIHSSinn='', reshID, outfile='', 
-                    enhetsUtvalg=1, valgtMaal='', preprosess=1, hentData=0){
-
-  
-  if (hentData == 1) {		
-    RegData <- SlagRegDataSQL(datoFra, datoTil)
-  }
-  
-# Hvis RegData ikke har blitt preprosessert. (I samledokument gjøre dette i samledokumentet)
-  if (preprosess){
-    RegData <- SlagPreprosess(RegData=RegData, reshID=reshID)
-  }
-
 GjsnTid <- function(RegData, outfile, valgtVar, tidlOp=0, erMann='', hovedkat=99, 
-		minald=0, maxald=130, ktr=1, tittel=1, datoFra='2007-01-01', datoTil='3000-01-01', 
-		valgtMaal='',enhetsUtvalg=1, reshID){
-
-
-#Inngangsdata: 	
-#		tittel - om man vil ha med tittel i figuren (standard:1) eller ikke. 
-#		tidlOp - tidligere operert, 0:alle, 1:'Tidl. operert samme nivå', 2:'Tidl. operert annet nivå', 
-#									3:'Tidl. operert annet og sm. nivå', 4:'Primæroperasjon'
-#		hovedkat - hovedinngrep, numerisk 0-7, standard: 99, dvs. alle
-					#0-'Annet', 1-'Prolaps', 
-					#2-'Foramenotomi', 
-					#3-'Laminektomi', 
-					#4-'Eksp. intraspin. impl.', 
-					#5-'Fusjon',
-					#6-'Skiveprotese', 
-					#7-'Fjerning/revisjon'
-#		ktr - Velger: 3mnd - 3 mnd kontroll(standard), 12mnd - 12 mnd kontroll
-
+                    minald=0, maxald=130, ktr=1, tittel=1, datoFra='2007-01-01', datoTil='3000-01-01', 
+                    valgtMaal='',enhetsUtvalg=1, hentData=0, preprosess=1, reshID){
+      
+  
+      if (hentData == 1) {		
+            RegData <- RyggRegDataSQL(datoFra, datoTil)
+      }
+      
+      # Hvis RegData ikke har blitt preprosessert. (I samledokument gjøre dette i samledokumentet)
+      if (preprosess == 1){
+            RegData <- RyggPreprosess(RegData=RegData)
+      }
+      
 
 #------------ Figurparametre -------------------------
 grtxt <- ''		#Spesifiseres for hver enkelt variabel
@@ -155,7 +137,7 @@ if (valgtVar %in% c('EQ5DEndr', 'OswEndr', 'SmBeinEndr', 'SmRyggEndr')) {
 #Tar ut de med manglende registrering av valgt variabel og gjør utvalg
 RegData <- RegData[intersect(which(is.na(RegData$Variabel) == FALSE), 
 							 which(is.nan(RegData$Variabel) == FALSE)), ]
-RyggUtvalg <- RyggLibUtvalg(RegData=RegData, datoFra=datoFra, datoTil=datoTil, minald=minald, maxald=maxald, 
+RyggUtvalg <- RyggUtvalg(RegData=RegData, datoFra=datoFra, datoTil=datoTil, minald=minald, maxald=maxald, 
 		erMann=erMann, hovedkat=hovedkat, tidlOp=tidlOp)
 RegData <- RyggUtvalg$RegData
 utvalgTxt <- RyggUtvalg$utvalgTxt
