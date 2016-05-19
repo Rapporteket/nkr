@@ -19,6 +19,7 @@ RyggPreprosess <- function(RegData=RegData)
 	RegData$Aar <- 1900 + strptime(RegData$InnDato, format="%Y")$year
 	#Variabel som identifiserer avdelingas resh
 	names(RegData)[which(names(RegData) == 'AvdReshID')] <- 'ReshId'
+	names(RegData)[which(names(RegData) == 'AvdNavn')] <- 'ShNavn'
 	class(RegData$ReshId) <- 'numeric'
 
 

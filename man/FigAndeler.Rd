@@ -6,8 +6,8 @@
 \usage{
 FigAndeler(RegData, valgtVar, datoFra = "2007-01-01",
   datoTil = "2999-12-31", hentData = 0, preprosess = 1, minald = 0,
-  maxald = 130, erMann = "", hovedkat = 99, tittel = 1, outfile = "",
-  reshID, enhetsUtvalg = 1)
+  maxald = 130, erMann = "", hovedkat = 99, tidlOp = "", tittel = 1,
+  outfile = "", reshID, enhetsUtvalg = 1)
 }
 \arguments{
 \item{RegData}{En dataramme med alle nødvendige variabler fra registeret}
@@ -36,6 +36,13 @@ TRUE: Ja (Standard)}
 
 \item{hovedkat}{Hvilken type hovedinngrep, numerisk 0-7, standard: 99, dvs. alle}
 
+\item{tidlOp}{Tidligere operert, 
+       0: alle, 
+       1: Tidl. operert samme nivå, 
+       2: Tidl. operert annet nivå, 
+3: Tidl. operert annet og sm. nivå,
+4: Primæroperasjon}
+
 \item{tittel}{Vise tittel i figuren eller ikke (0/1). standard:1}
 
 \item{outfile}{Navn på fil figuren skrives til. Standard: '' (Figur skrives
@@ -51,13 +58,6 @@ hvilken enhet i spesialisthelsetjenesten brukeren tilhører}
 6: Egen enhet mot egen region 
 7: Egen region 
 8: Egen region mot resten}
-
-\item{tidlOp}{Tidligere operert, 
-       0: alle, 
-       1: Tidl. operert samme nivå, 
-       2: Tidl. operert annet nivå, 
-3: Tidl. operert annet og sm. nivå,
-4: Primæroperasjon}
 }
 \value{
 Søylediagram (fordeling) av valgt variabel. De enkelte verdiene kan også sendes med.

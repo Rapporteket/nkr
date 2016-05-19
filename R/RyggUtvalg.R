@@ -1,25 +1,17 @@
+#' Funksjon som gjør utvalg i datagrunnlaget til registreringene for Nakke
+#'
+#' Funksjon som gjør utvalg av dataene, returnerer det reduserte datasettet og utvalgsteksten.
+#'
+#' @inheritParams FigAndeler
+#' @param fargepalett - Velge fargepalett, standard:BlaaOff ("offentliggjøringsfargene")
+#'
+#' @export
 RyggUtvalg <- function(RegData, datoFra, datoTil, minald=0, maxald=130, erMann='', hovedkat=99, 
 		tidlOp='', fargepalett='BlaaOff')	#insttype, 
 {
-#Funksjon som gjør utvalg av dataene, returnerer det reduserte datasettet og utvalgsteksten.
-# Inndata:
-#		erMann - kjønn, 1-menn, 0-kvinner, standard: '' (alt annet enn 0 og 1), dvs. begge
-#		minald - alder, fra og med
-#		maxald - alder, til og med
-#		datoFra <- 'YYYY-MM-DD'    # min og max dato i utvalget vises alltid i figuren.
-#		datoTil <- 'YYYY-MM-DD'
-#		hovedkat - 0:annet, 1:Prolapskirurgi, 2:Foramenotomi, 3:Laminektomi, 4:Interspinøst implantat,	
-#					5:Fusjonskirurgi, 6:Skiveprotese, 7:Fjerning/rev. av implantat
-#					standard: 99 (alt annet), dvs. alle
 
 
-#VELGER Å IKKE TA BORT TOMME I valgtVar
-#Hvis "Variabel" ikke definert
-#if (length(which(names(RegData) == 'Variabel')) == 0 ) {RegData$Variabel <- 0}
 Ninn <- dim(RegData)[1]
-#indVarMed <- intersect(intersect(which(RegData$Variabel != 'NA'), which(RegData$Variabel != 'NaN')), 
-#				which(RegData$Variabel != ''))
-#RegData <- RegData[which(is.na(RegData$Variabel) == FALSE), ]
 
 indAld <- which(RegData$Alder >= minald & RegData$Alder <= maxald)
 indDato <- which(RegData$InnDato >= as.POSIXlt(datoFra) & RegData$InnDato <= as.POSIXlt(datoTil))
@@ -28,8 +20,6 @@ indHovedInngr <- if (hovedkat %in% 0:7){which(RegData$HovedInngrep == hovedkat)
 			} else {indHovedInngr <- 1:Ninn}
 indTidlOp <- if (tidlOp %in% 1:4) {which(RegData$TidlOpr==tidlOp)} else {indTidlOp <- 1:Ninn}
 indMed <- intersect(indAld, intersect(indDato, intersect(indKj, intersect(indHovedInngr, indTidlOp))))
-#indMed <- intersect(setdiff(1:dim(RegData)[1], c(indAldUt, indDatoUt, indKjUt,indDiagUt,indInnl4tUt,indNIHSSinnUt)), 
-#		indVarMed)
 RegData <- RegData[indMed,]
 
 

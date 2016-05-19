@@ -98,7 +98,7 @@
 #' @export
 #'
 FigAndeler  <- function(RegData, valgtVar, datoFra='2007-01-01', datoTil='2999-12-31', hentData=0, preprosess=1,
-		minald=0, maxald=130, erMann='', hovedkat=99, tittel=1, outfile='', reshID, enhetsUtvalg=1)
+		minald=0, maxald=130, erMann='', hovedkat=99, tidlOp='', tittel=1, outfile='', reshID, enhetsUtvalg=1)
 {
 
 
@@ -519,7 +519,7 @@ TittelUt <- switch(valgtVar,
 
 #Tar ut de med manglende registrering av valgt variabel og gjør utvalg
 RyggUtvalg <- RyggUtvalg(RegData=RegData, datoFra=datoFra, datoTil=datoTil, minald=minald, maxald=maxald, 
-		erMann=erMann, hovedkat=hovedkat)	#, tidlOp=tidlOp
+		erMann=erMann, hovedkat=hovedkat, tidlOp=tidlOp)
 RegData <- RyggUtvalg$RegData
 utvalgTxt <- RyggUtvalg$utvalgTxt
 
