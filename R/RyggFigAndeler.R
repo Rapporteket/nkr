@@ -56,7 +56,8 @@
 #'     \item 6: Skiveprotese
 #'     \item 7: Fjerning/revisjon
 #'    }
-#'    				
+#'    Velges ingen av disse, vil alle data vises.
+#'    								
 #' @param RegData En dataramme med alle nødvendige variabler fra registeret
 #' @param valgtVar Hvilken variabel som skal visualiseres. Se \strong{Details} for oversikt.
 #' @param datoFra Tidligste operasjonsdato i utvalget (vises alltid i figuren).
@@ -66,8 +67,7 @@
 #'          1: Menn
 #' @param minald Alder, fra og med (Standardverdi: 0)
 #' @param maxald Alder, til og med (Standardverdi: 130)
-#' @param tidlOp Tidligere operert, 
-#'                0: alle, 
+#' @param tidlOp Tidligere operert, numerisk 1-4. Alt annet gir alle data uten utvalg.
 #'                1: Tidl. operert samme nivå, 
 #'                2: Tidl. operert annet nivå, 
 #'			3: Tidl. operert annet og sm. nivå,
@@ -87,8 +87,8 @@
 #'				   7: Egen region 
 #'				   8: Egen region mot resten
 #' @param preprosess Preprosesser data
-#'                 FALSE: Nei
-#'                 TRUE: Ja (Standard)
+#'                 0: Nei
+#'                 1: Ja (Standard)
 #' @param hentData Gjør spørring mot database
 #'                 0: Nei, RegData gis som input til funksjonen (Standard)
 #'                 1: Ja

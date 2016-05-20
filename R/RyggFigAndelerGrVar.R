@@ -39,11 +39,11 @@
 #'		}
 #'
 #' @inheritParams FigAndeler
-#' @param grVar Grupperingsvariabel, dvs. hva skal resultatene grupperes på. 
+#' @param grVar Tekstvariabel som angir hva skal resultatene grupperes på. 
 #'                ShNavn-sykehus/avdeling
-#'                Fylke
-#'                BoHF
-#'                BoRHF
+#'                Fylke- Pasienten bor i det akutelle fylket
+#'                BoHF - Pasienten bor i boområdene til det angitte HF.
+#'                BoRHF - Pasienten bor i boområdene til det angitte RHF.
 #' @param valgtVar Variabelen det skal vises resultat for. Se \strong{Details} for oversikt.
 #'
 #' @return Figur med...
