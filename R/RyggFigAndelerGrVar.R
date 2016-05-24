@@ -285,6 +285,9 @@ FigAndelerGrVar <- function(RegData, valgtVar, datoFra='2007-01-01', datoTil='30
      RegData <- RyggUtvalg$RegData
      utvalgTxt <- RyggUtvalg$utvalgTxt
 
+     
+     #Standardisere mht grupperingsvariabel. Først sykehus.
+     
 
      dummy0 <- -0.001
      N <- dim(RegData)[1]

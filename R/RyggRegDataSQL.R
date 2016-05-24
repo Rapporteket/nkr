@@ -12,6 +12,9 @@ RyggRegDataSQL <- function(datoFra = '2007-01-01', datoTil = '2099-01-01') {
   registryName <- "nkr"
   dbType <- "mssql"
 
+  
+#  query = 'select * from Uttrekk_Rapport'
+  
   query <- paste0('SELECT
 	Andrestudier,
 	Alder,
