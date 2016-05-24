@@ -17,8 +17,7 @@ til systemets standard utdataenhet (som regel skjerm))}
 
 \item{valgtVar}{Hvilken variabel som skal visualiseres. Se \strong{Details} for oversikt.}
 
-\item{tidlOp}{Tidligere operert, 
-       0: alle, 
+\item{tidlOp}{Tidligere operert, numerisk 1-4. Alt annet gir alle data uten utvalg.
        1: Tidl. operert samme nivå, 
        2: Tidl. operert annet nivå, 
 3: Tidl. operert annet og sm. nivå,
@@ -58,8 +57,8 @@ til systemets standard utdataenhet (som regel skjerm))}
 1: Ja}
 
 \item{preprosess}{Preprosesser data
-FALSE: Nei
-TRUE: Ja (Standard)}
+0: Nei
+1: Ja (Standard)}
 
 \item{reshID}{Parameter følger fra innlogging helseregister.no og angir
 hvilken enhet i spesialisthelsetjenesten brukeren tilhører}

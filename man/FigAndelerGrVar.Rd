@@ -28,8 +28,7 @@ FigAndelerGrVar(RegData, valgtVar, datoFra = "2007-01-01",
 
 \item{hovedkat}{Hvilken type hovedinngrep, numerisk 0-7, standard: 99, dvs. alle}
 
-\item{tidlOp}{Tidligere operert, 
-       0: alle, 
+\item{tidlOp}{Tidligere operert, numerisk 1-4. Alt annet gir alle data uten utvalg.
        1: Tidl. operert samme nivå, 
        2: Tidl. operert annet nivå, 
 3: Tidl. operert annet og sm. nivå,
@@ -40,8 +39,8 @@ FigAndelerGrVar(RegData, valgtVar, datoFra = "2007-01-01",
 1: Ja}
 
 \item{preprosess}{Preprosesser data
-FALSE: Nei
-TRUE: Ja (Standard)}
+0: Nei
+1: Ja (Standard)}
 
 \item{enhetsUtvalg}{Gjør gruppeutvalg med eller uten sammenlikning for
  0: Hele landet
@@ -51,11 +50,11 @@ TRUE: Ja (Standard)}
 7: Egen region 
 8: Egen region mot resten}
 
-\item{grVar}{Grupperingsvariabel, dvs. hva skal resultatene grupperes på. 
+\item{grVar}{Tekstvariabel som angir hva skal resultatene grupperes på. 
 ShNavn-sykehus/avdeling
-Fylke
-BoHF
-BoRHF}
+Fylke- Pasienten bor i det akutelle fylket
+BoHF - Pasienten bor i boområdene til det angitte HF.
+BoRHF - Pasienten bor i boområdene til det angitte RHF.}
 
 \item{tittel}{Vise tittel i figuren eller ikke (0/1). standard:1}
 

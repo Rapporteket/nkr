@@ -23,8 +23,8 @@ FigAndeler(RegData, valgtVar, datoFra = "2007-01-01",
 1: Ja}
 
 \item{preprosess}{Preprosesser data
-FALSE: Nei
-TRUE: Ja (Standard)}
+0: Nei
+1: Ja (Standard)}
 
 \item{minald}{Alder, fra og med (Standardverdi: 0)}
 
@@ -36,8 +36,7 @@ TRUE: Ja (Standard)}
 
 \item{hovedkat}{Hvilken type hovedinngrep, numerisk 0-7, standard: 99, dvs. alle}
 
-\item{tidlOp}{Tidligere operert, 
-       0: alle, 
+\item{tidlOp}{Tidligere operert, numerisk 1-4. Alt annet gir alle data uten utvalg.
        1: Tidl. operert samme nivå, 
        2: Tidl. operert annet nivå, 
 3: Tidl. operert annet og sm. nivå,
@@ -120,5 +119,6 @@ Argumentet \emph{hovedkat} har følgende valgmuligheter:
     \item 6: Skiveprotese
     \item 7: Fjerning/revisjon
    }
+   Velges ingen av disse, vil alle data vises.
 }
 

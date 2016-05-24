@@ -24,8 +24,7 @@ RyggUtvalg(RegData, datoFra, datoTil, minald = 0, maxald = 130,
 
 \item{hovedkat}{Hvilken type hovedinngrep, numerisk 0-7, standard: 99, dvs. alle}
 
-\item{tidlOp}{Tidligere operert, 
-       0: alle, 
+\item{tidlOp}{Tidligere operert, numerisk 1-4. Alt annet gir alle data uten utvalg.
        1: Tidl. operert samme nivå, 
        2: Tidl. operert annet nivå, 
 3: Tidl. operert annet og sm. nivå,

@@ -315,7 +315,7 @@ FigAndelerGrVar <- function(RegData, valgtVar, datoFra='2007-01-01', datoTil='30
 
      #-----------Figur---------------------------------------
      if 	( max(Ngr) < Ngrense)	{#Dvs. hvis ALLE er mindre enn grensa.
-          FigTypUt <- figtype(outfile)
+          FigTypUt <- rapbase::figtype(outfile)
           farger <- FigTypUt$farger
           plot.new()
           if (dim(RegData)[1]>0) {

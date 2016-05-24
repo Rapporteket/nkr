@@ -251,7 +251,7 @@ if (valgtMaal=='Med') {maaltxt <- 'Median ' } else {maaltxt <- 'Gjennomsnittlig 
 ytxt <- paste(maaltxt, ytxt1, sep='')
 
 #Plottspesifikke parametre:
-FigTypUt <- figtype(outfile, fargepalett=RyggUtvalg$fargepalett)
+FigTypUt <- rapbase::figtype(outfile, fargepalett=RyggUtvalg$fargepalett)
 #Tilpasse marger for å kunne skrive utvalgsteksten
 NutvTxt <- length(utvalgTxt)
 par('fig'=c(0, 1, 0, 1-0.02*(max((NutvTxt-1),0))))	

@@ -608,7 +608,7 @@ cexgr <- 1	#Kan endres for enkeltvariable
 
 
 #Plottspesifikke parametre:
-FigTypUt <- figtype(outfile, fargepalett=RyggUtvalg$fargepalett)
+FigTypUt <- rapbase::figtype(outfile, fargepalett=RyggUtvalg$fargepalett)
 #Tilpasse marger for å kunne skrive utvalgsteksten
 NutvTxt <- length(utvalgTxt)
 antDesTxt <- paste('%.', antDes, 'f', sep='')
