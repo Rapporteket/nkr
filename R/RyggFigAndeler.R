@@ -103,7 +103,7 @@ FigAndeler  <- function(RegData, valgtVar, datoFra='2007-01-01', datoTil='2999-1
 
 
 if (hentData == 1) {		
-  RegData <- RyggRegDataSQL(datoFra, datoTil)
+  RegData <- RyggRegDataSQL()       #(datoFra, datoTil)
 }
 
 # Hvis RegData ikke har blitt preprosessert. (I samledokument gjøre dette i samledokumentet)

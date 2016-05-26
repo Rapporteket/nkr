@@ -38,7 +38,7 @@ GjsnTid <- function(RegData, outfile, valgtVar, tidlOp='', erMann='', hovedkat=9
       
   
       if (hentData == 1) {		
-            RegData <- RyggRegDataSQL(datoFra, datoTil)
+            RegData <- RyggRegDataSQL()   #(datoFra, datoTil)
       }
       
       # Hvis RegData ikke har blitt preprosessert. (I samledokument gjøre dette i samledokumentet)

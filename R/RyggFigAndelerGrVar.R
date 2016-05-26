@@ -55,7 +55,7 @@ FigAndelerGrVar <- function(RegData, valgtVar, datoFra='2007-01-01', datoTil='30
                             enhetsUtvalg=0, grVar='ShNavn', tittel=1, reshID, outfile='') {
 
 	if (hentData == 1) {		
-	  RegData <- RyggRegDataSQL(datoFra, datoTil)
+	  RegData <- RyggRegDataSQL   #(datoFra, datoTil)
 	}
 
      # Preprosessere data
