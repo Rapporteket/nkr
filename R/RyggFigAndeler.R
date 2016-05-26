@@ -526,7 +526,7 @@ utvalgTxt <- RyggUtvalg$utvalgTxt
 SykehustypeTxt <- c('univ. sykehus', 'lokalsykehus', 'priv. sykehus')				
 indEgen1 <- match(reshID, RegData$ReshId)
 if (enhetsUtvalg %in% c(1,2,3,6)) {	#Involverer egen enhet
-		shtxt <- as.character(RegData$AvdNavn[indEgen1]) } else {
+		shtxt <- as.character(RegData$ShNavn[indEgen1]) } else {
 		shtxt <- switch(as.character(enhetsUtvalg), 	
 			'0' = 'Hele landet',
 			'4' = SykehustypeTxt[RegData$Sykehustype[indEgen1]],

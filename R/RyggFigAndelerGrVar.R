@@ -78,7 +78,6 @@ FigAndelerGrVar <- function(RegData, valgtVar, datoFra='2007-01-01', datoTil='30
           cexShNavn <- 1
      }
 
-     #grVar <- 'AvdNavn'      #Nå input.
      RegData[ ,grVar] <- factor(RegData[ ,grVar])
      Ngrense <- 10		#Minste antall registreringer for at ei gruppe skal bli vist
 
