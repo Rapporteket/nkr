@@ -203,11 +203,11 @@ RyggRegDataSQL <- function() {
 	Utfylt12Mnd,
 	Utfylt3Mnd,
 	Vekt
-FROM Uttrekk_Rapport
+FROM Uttrekk_Rapport')
+
 #                  WHERE OpDato >= \'', datoFra, '\' AND OpDato <= \'', datoTil, '\'')
 
 RegData <- rapbase::LoadRegData(registryName, query, dbType)
-
 
 return(RegData)
 }
