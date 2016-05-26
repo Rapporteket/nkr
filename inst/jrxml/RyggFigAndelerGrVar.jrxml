@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with Jaspersoft Studio version 6.2.0.final using JasperReports Library version 6.2.0  -->
-<!-- 2016-05-24T19:06:10 -->
+<!-- 2016-05-26T12:14:15 -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="RyggFigAndelerGrVar" language="groovy" pageWidth="595" pageHeight="800" whenNoDataType="AllSectionsNoDetail" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" scriptletClass="no.skde.report.nkr.DegenerativRyggCommonScriptletRPackage" isIgnorePagination="true" uuid="5a58074b-3346-4b85-9ac6-dc8f2e57fef6">
 	<property name="ireport.zoom" value="1.0"/>
 	<property name="ireport.x" value="0"/>
@@ -38,7 +38,7 @@
 		<defaultValueExpression><![CDATA[new String("nkr")]]></defaultValueExpression>
 	</parameter>
 	<parameter name="rFunctionCallString" class="java.lang.String" isForPrompting="false">
-		<defaultValueExpression><![CDATA[new String("FigAndelerGrVar(RegData=RegData, valgtVar="Alder", datoFra=datoFra, datoTil=datoTil, minald=minald, maxald=maxald, erMann=erMann, outfile=outfile, reshID=reshID, enhetsUtvalg=enhetsUtvalg, hentData=1, preprosess=1)")]]></defaultValueExpression>
+		<defaultValueExpression><![CDATA[new String("FigAndelerGrVar(RegData=0, valgtVar=valgtVar, datoFra=datoFra, datoTil=datoTil,  minald=minald, maxald=maxald, erMann=erMann, hovedkat=hovedkst, tidlOp='',  tittel=1, grVar='ShNavn', outfile=outfile, reshID=reshID, enhetsUtvalg=enhetsUtvalg, hentData=1, preprosess=1)")]]></defaultValueExpression>
 	</parameter>
 	<parameter name="valgtVar" class="java.lang.String">
 		<defaultValueExpression><![CDATA[new String("Alder")]]></defaultValueExpression>
@@ -59,6 +59,9 @@
 	<parameter name="erMann" class="java.lang.Integer">
 		<defaultValueExpression><![CDATA[new Integer(99)]]></defaultValueExpression>
 	</parameter>
+	<parameter name="mainCat" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[new Integer(99)]]></defaultValueExpression>
+	</parameter>
 	<parameter name="orgUnitSelection" class="java.lang.Integer">
 		<defaultValueExpression><![CDATA[new Integer(1)]]></defaultValueExpression>
 	</parameter>
@@ -75,14 +78,9 @@
 		<band splitType="Stretch"/>
 	</pageHeader>
 	<columnHeader>
-		<band height="760" splitType="Stretch">
+		<band height="555" splitType="Stretch">
 			<image hAlign="Center" vAlign="Top">
-				<reportElement key="" x="0" y="0" width="555" height="760" isRemoveLineWhenBlank="true" uuid="18e8e703-47ea-421e-9251-e3a96e41284b">
-					<property name="local_mesure_unitwidth" value="pixel"/>
-					<property name="com.jaspersoft.studio.unit.width" value="px"/>
-					<property name="local_mesure_unitheight" value="pixel"/>
-					<property name="com.jaspersoft.studio.unit.height" value="px"/>
-				</reportElement>
+				<reportElement x="0" y="0" width="555" height="555" uuid="c3c7fbda-da15-48c6-b23a-612421678334"/>
 				<imageExpression><![CDATA["file:" + $P{REPORT_SCRIPTLET}.getFileName()]]></imageExpression>
 			</image>
 		</band>

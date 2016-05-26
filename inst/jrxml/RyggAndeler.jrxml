@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with Jaspersoft Studio version 6.2.0.final using JasperReports Library version 6.2.0  -->
-<!-- 2016-05-24T17:07:40 -->
+<!-- 2016-05-26T12:17:52 -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="RyggFigAndeler" language="groovy" pageWidth="595" pageHeight="842" whenNoDataType="AllSectionsNoDetail" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" scriptletClass="no.skde.report.nkr.DegenerativRyggCommonScriptletRPackage" isIgnorePagination="true" uuid="5a58074b-3346-4b85-9ac6-dc8f2e57fef6">
 	<property name="ireport.zoom" value="1.0"/>
 	<property name="ireport.x" value="0"/>
@@ -28,7 +28,7 @@
 		<defaultValueExpression><![CDATA[new String("nkr")]]></defaultValueExpression>
 	</parameter>
 	<parameter name="rFunctionCallString" class="java.lang.String" isForPrompting="false">
-		<defaultValueExpression><![CDATA[new String("FigAndeler(RegData=RegData, valgtVar=valgtVar, datoFra=datoFra, datoTil=datoTil, minald=minald, maxald=maxald, erMann=erMann, hovedkat=hovedkat, enhetsUtvalg=enhetsUtvalg, reshID=reshID, hentData=1, preprosess=1, outfile=outfile)")]]></defaultValueExpression>
+		<defaultValueExpression><![CDATA[new String("FigAndeler(RegData=0, valgtVar=valgtVar, datoFra=datoFra, datoTil=datoTil, minald=minald, maxald=maxald, erMann=erMann, hovedkat=hovedkat, enhetsUtvalg=enhetsUtvalg, reshID=reshID, hentData=1, preprosess=1, outfile=outfile)")]]></defaultValueExpression>
 	</parameter>
 	<parameter name="varName" class="java.lang.String">
 		<defaultValueExpression><![CDATA[new String("Alder")]]></defaultValueExpression>

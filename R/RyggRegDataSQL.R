@@ -7,7 +7,10 @@
 #' @return RegData data frame
 #' @export
 #'
-RyggRegDataSQL <- function(datoFra = '2007-01-01', datoTil = '2099-01-01') {
+RyggRegDataSQL <- function() {
+      
+#RyggRegDataSQL <- function(datoFra = '2007-01-01', datoTil = '2099-01-01') 
+#Dette blir feil siden Rygg i staging har datoformat dd.mm.yyyy
 
   registryName <- "nkr"
   dbType <- "mssql"
@@ -201,7 +204,7 @@ RyggRegDataSQL <- function(datoFra = '2007-01-01', datoTil = '2099-01-01') {
 	Utfylt3Mnd,
 	Vekt
 FROM Uttrekk_Rapport
-                  WHERE OpDato >= \'', datoFra, '\' AND OpDato <= \'', datoTil, '\'')
+#                  WHERE OpDato >= \'', datoFra, '\' AND OpDato <= \'', datoTil, '\'')
 
 RegData <- rapbase::LoadRegData(registryName, query, dbType)
 
