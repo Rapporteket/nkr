@@ -4,12 +4,7 @@
 \alias{RyggRegDataSQL}
 \title{Henter data registrert for Degenerativ Rygg}
 \usage{
-RyggRegDataSQL(datoFra = "2007-01-01", datoTil = "2099-01-01")
-}
-\arguments{
-\item{datoFra}{Tidligste operasjonsdato i utvalget (vises alltid i figuren).}
-
-\item{datoTil}{Seneste operasjonsdato i utvalget (vises alltid i figuren).}
+RyggRegDataSQL()
 }
 \value{
 RegData data frame

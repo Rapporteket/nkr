@@ -2,7 +2,7 @@
 #'
 #' Henter data for Degenerativ Rygg fra "staging" (?)
 #'
-#' @inheritParams FigAndeler
+#' @inheritParams RyggFigAndeler
 #'
 #' @return RegData data frame
 #' @export

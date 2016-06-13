@@ -23,7 +23,7 @@
 #'     	\item SmRyPre: Ryggsmerter før operasjon
 #'          \item TidOpReg Ønsker å se på tid fra operasjon til registrering
 #'    }
-#' @inheritParams FigAndeler 
+#' @inheritParams RyggFigAndeler 
 #' @param valgtMaal
 #'        'Gjsn': gir middelverdi (standard)
 #'        'Med': gir median
@@ -32,7 +32,7 @@
 #' @return Linjediagram som viser utvikling over tid for valgt variabel
 #'
 #' @export
-GjsnTid <- function(RegData, outfile, valgtVar, tidlOp='', erMann='', hovedkat=99, 
+RyggFigGjsnTid <- function(RegData, outfile, valgtVar, tidlOp='', erMann='', hovedkat=99, 
                     minald=0, maxald=130, ktr=1, tittel=1, datoFra='2007-01-01', datoTil='3000-01-01', 
                     valgtMaal='',enhetsUtvalg=1, hentData=0, preprosess=1, reshID){
       

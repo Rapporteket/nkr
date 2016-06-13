@@ -57,7 +57,18 @@
 #'     \item 7: Fjerning/revisjon
 #'    }
 #'    Velges ingen av disse, vil alle data vises.
-#'    								
+#' Argumentet \emph{enhetsUtvalg} har følgende valgmuligheter:
+#'    \itemize{
+#'     \item 0: Hele landet
+#'     \item 1: Egen enhet mot resten av landet (Standard)
+#'     \item 2: Egen enhet
+#'     \item 3: Egen enhet mot egen sykehustype
+#'     \item 4: Egen sykehustype
+#'     \item 5: Egen sykehustype mot resten av landet
+#'     \item 6: Egen enhet mot egen region
+#'     \item 7: Egen region
+#'	   \item 8: Egen region mot resten
+#'    	}							
 #' @param RegData En dataramme med alle nødvendige variabler fra registeret
 #' @param valgtVar Hvilken variabel som skal visualiseres. Se \strong{Details} for oversikt.
 #' @param datoFra Tidligste operasjonsdato i utvalget (vises alltid i figuren).
@@ -79,13 +90,7 @@
 #' @param tittel Vise tittel i figuren eller ikke (0/1). standard:1
 #' @param reshID Parameter følger fra innlogging helseregister.no og angir
 #'    hvilken enhet i spesialisthelsetjenesten brukeren tilhører
-#' @param enhetsUtvalg Gjør gruppeutvalg med eller uten sammenlikning for
-#'                 0: Hele landet
-#'                 1: Egen enhet mot resten av landet (Standard)
-#'                 2: Egen enhet
-#'				   6: Egen enhet mot egen region 
-#'				   7: Egen region 
-#'				   8: Egen region mot resten
+#' @param enhetsUtvalg Gjør gruppeutvalg med eller uten sammenlikning. Se \strong{Details} for oversikt.
 #' @param preprosess Preprosesser data
 #'                 0: Nei
 #'                 1: Ja (Standard)
@@ -97,7 +102,7 @@
 #'
 #' @export
 #'
-FigAndeler  <- function(RegData, valgtVar, datoFra='2007-01-01', datoTil='2999-12-31', hentData=0, preprosess=1,
+RyggFigAndeler  <- function(RegData, valgtVar, datoFra='2007-01-01', datoTil='2999-12-31', hentData=0, preprosess=1,
 		minald=0, maxald=130, erMann='', hovedkat=99, tidlOp='', tittel=1, outfile='', reshID, enhetsUtvalg=1)
 {
 

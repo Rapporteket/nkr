@@ -38,7 +38,7 @@
 #'     \item Verre12mnd Mye verre/verre enn noen gang, 12 mnd.
 #'		}
 #'
-#' @inheritParams FigAndeler
+#' @inheritParams RyggFigAndeler
 #' @param grVar Tekstvariabel som angir hva skal resultatene grupperes på. 
 #'                ShNavn-sykehus/avdeling
 #'                Fylke- Pasienten bor i det akutelle fylket
@@ -50,7 +50,7 @@
 #'
 #' @export
 
-FigAndelerGrVar <- function(RegData, valgtVar, datoFra='2007-01-01', datoTil='3000-12-31', 
+RyggFigAndelerGrVar <- function(RegData, valgtVar, datoFra='2007-01-01', datoTil='3000-12-31', 
                             minald=0, maxald=130, erMann='', hovedkat=99, tidlOp='', hentData=0, preprosess=1,
                             enhetsUtvalg=0, grVar='ShNavn', tittel=1, reshID, outfile='') {
 
