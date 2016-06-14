@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with Jaspersoft Studio version 6.2.0.final using JasperReports Library version 6.2.0  -->
-<!-- 2016-06-13T08:38:16 -->
-<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="NIRFigAndelerGrVar" language="groovy" pageWidth="595" pageHeight="842" whenNoDataType="AllSectionsNoDetail" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" scriptletClass="no.skde.report.nkr.DegenerativRyggCommonScriptletRPackage" uuid="45fe8ce0-ff63-4edb-9fe2-e19b7f09ad23">
+<!-- 2016-06-13T13:50:28 -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="RyggFigAndelerGrVar" language="groovy" pageWidth="595" pageHeight="842" whenNoDataType="AllSectionsNoDetail" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" scriptletClass="no.skde.report.nkr.DegenerativRyggCommonScriptletRPackage" uuid="45fe8ce0-ff63-4edb-9fe2-e19b7f09ad23">
 	<property name="ireport.zoom" value="1.0"/>
 	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
@@ -25,19 +25,19 @@
 		<defaultValueExpression><![CDATA[$P{LoggedInUserAttribute_AVD_RESH}]]></defaultValueExpression>
 	</parameter>
 	<parameter name="reportName" class="java.lang.String" isForPrompting="false">
-		<defaultValueExpression><![CDATA[new String("NIRFigAndelerGrVar")]]></defaultValueExpression>
+		<defaultValueExpression><![CDATA[new String("RyggFigAndelerGrVar")]]></defaultValueExpression>
 	</parameter>
 	<parameter name="rPackageName" class="java.lang.String" isForPrompting="false">
-		<defaultValueExpression><![CDATA[new String("intensiv")]]></defaultValueExpression>
+		<defaultValueExpression><![CDATA[new String("nkr")]]></defaultValueExpression>
 	</parameter>
 	<parameter name="rFunctionCallString" class="java.lang.String" isForPrompting="false">
-		<defaultValueExpression><![CDATA[new String("FigAndelerGrVar(RegData=0, valgtVar=valgtVar, datoFra=datoFra, datoTil=datoTil,  minald=minald, maxald=maxald, erMann=erMann, hovedkat=hovedkat, tidlOp='',  tittel=1, grVar='ShNavn', outfile=outfile, reshID=reshID, enhetsUtvalg=enhetsUtvalg, hentData=1, preprosess=1)")]]></defaultValueExpression>
+		<defaultValueExpression><![CDATA[new String("RyggFigAndelerGrVar(RegData=0, valgtVar=valgtVar, datoFra=datoFra, datoTil=datoTil,  minald=minald, maxald=maxald, erMann=erMann, hovedkat=hovedkat, tidlOp='',  tittel=1, grVar='ShNavn', outfile=outfile, reshID=reshID, enhetsUtvalg=enhetsUtvalg, hentData=1, preprosess=1)")]]></defaultValueExpression>
 	</parameter>
 	<parameter name="valgtVar" class="java.lang.String">
 		<defaultValueExpression><![CDATA[new String("Alder")]]></defaultValueExpression>
 	</parameter>
 	<parameter name="beginDate" class="java.util.Date">
-		<defaultValueExpression><![CDATA[new SimpleDateFormat("yyyy-MM-dd").parse("2011-01-01")]]></defaultValueExpression>
+		<defaultValueExpression><![CDATA[new SimpleDateFormat("yyyy-MM-dd").parse("2007-01-01")]]></defaultValueExpression>
 	</parameter>
 	<parameter name="endDate" class="java.util.Date">
 		<defaultValueExpression><![CDATA[new Date()]]></defaultValueExpression>
@@ -53,6 +53,9 @@
 	</parameter>
 	<parameter name="mainCat" class="java.lang.Integer">
 		<defaultValueExpression><![CDATA[new Integer(99)]]></defaultValueExpression>
+	</parameter>
+	<parameter name="orgUnitSelection" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[new Integer(1)]]></defaultValueExpression>
 	</parameter>
 	<queryString language="SQL">
 		<![CDATA[]]>
