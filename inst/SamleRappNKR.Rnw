@@ -87,7 +87,7 @@
 \fvset{listparameters={\setlength{\topsep}{0pt}}}
 \renewenvironment{Schunk}{\vspace{\topsep}}{\vspace{\topsep}}
 
-<<'Oppsett', echo=false>>= 
+<<'Oppsett', echo=FALSE>>=
 library(knitr)
 library(xtable)
 knitr::opts_chunk$set(warnings=FALSE,echo=FALSE)
@@ -103,18 +103,17 @@ options(width=60)
 
 <<'LasteData', echo=FALSE, eval=T>>=
 #Må hente RyggData. Lokalt gjøres dette utenfor.
+if (!exists('RyggDataALLE')){
   RyggDataALLE <- RyggRegDataSQL()
+  }
 @
 
 <<'FellesParamPreProsess', echo=FALSE, eval=T>>=
 # Preprosessere data:  
-SlagData <- SlagPreprosess(RegData=SlagData, reshID=reshID)
+RyggDataALLE <- RyggPreprosess(RegData=RyggDataALLE)  #, reshID=reshID)
 
 
 reshID <- as.numeric(reshID)
-
-#source(paste(libkat, 'fun_LeseInnFun.R', sep=''), encoding="UTF-8")
-#LeseInnFun(server=1, funkat=libkat)
 
 #Felles parametre:
 egenavd <- 1
@@ -282,7 +281,7 @@ miljøene er derfor helt nødvendig for at det skal fungere etter hensikten og o
 
 \section{Oppsummeringstall for NKR}
 
-<<TabAlleReg, results=tex, echo=FALSE>>=
+<<TabAlleReg, results='asis', echo=FALSE>>=
 tabAvdN <- addmargins(as.table(ftable(RyggDataALLE[c('AvdNavn','Aar')])))
 antKol <- ncol(tabAvdN)
 rownames(tabAvdN)[dim(tabAvdN)[1] ]<- 'TOTALT, alle avdelinger:'
@@ -332,7 +331,7 @@ Figur \ref{fig:Alder} viser aldersfordeling for alle pasienter operert ved \Sexp
 sammenlignet med tall fra resten av landet.
 De nøyaktige tallene for aldersfordelinga framgår av Tabell \ref{tab:Alder}. 
 
-<<'ResAlder', results=tex>>=
+<<'ResAlder', results='asis'>>=
 
 AlderFord <- FigAndeler(RegData=RyggDataLand, valgtVar='Alder', datoFra=datoFra, datoTil=datoTil, 
 			reshID=reshID, outfile='FigAlderFord.pdf', tittel=0)
@@ -367,7 +366,7 @@ Andel pasienter over 65 år ved  \Sexpr{Avdeling} var
 Tabell \ref{tab:SivStat} viser sivilstatus for alle som ble operert ved \Sexpr{Avdeling} sammenliknet 
 med resten av landet.
 
-<<'TabSivStat', results=tex, echo=FALSE>>=
+<<'TabSivStat', results='asis', echo=FALSE>>=
 SivStat <- cbind('Egen avdeling' = 
 		c(paste(sprintf('%.1f', table(RyggDataAvd$SivilStatus, useNA='always')/NAvd*100),'%', sep=''), NAvd ),
 			'Landet for øvrig' = 
@@ -381,7 +380,7 @@ xtable(SivStat, caption='Sivilstatus for opererte pasienter', label="tab:SivStat
 Tabell \ref{tab:Morsm} viser fordeling av norske, samiske og andre fremmedsåpråklige pasienter
 for alle som ble operert ved \Sexpr{Avdeling} sammenliknet med landet for øvrig. 
 
-<<'TabMorsm', results=tex, echo=FALSE>>=
+<<'TabMorsm', results='asis', echo=FALSE>>=
 MorsmEgen <- table(RyggDataAvd$Morsmal, useNA='a')/NAvd*100
 MorsmResten <- table(RyggDataRL$Morsmal, useNA='a')/NResten*100
 			
@@ -425,7 +424,7 @@ operert ved \Sexpr{Avdeling} var \Sexpr{AndelHoyUtd[1]} \% mot
 \subsection{Røyking}
 Tabell \ref{tab:Royk} viser andel av røykere fordelt på kvinner og menn.
 
-<<'TabRoyk', results=tex, echo=FALSE>>=
+<<'TabRoyk', results='asis', echo=FALSE>>=
 RoykNum <- cbind('EgenAvd' = table(RyggDataAvd$Roker), 'Resten'= table(RyggDataRL$Roker) )
 #RX <- chisq.test(RoykNum)
 #RF <- fisher.test(RoykNum)	#Velger denne siden den også gjelder for få observasjoner (<5)
@@ -454,7 +453,7 @@ for landet for øvrig (p-verdi: \Sexpr{signif(RoykTest$p.value, 2)}).
 
 Tabell \ref{tab:Arb} viser arbeidsstatus for alle pasienter operert \Sexpr{Avdeling} 
 sammenliknet med landet for øvrig.
-<<'TabArbstat', results=tex, echo=FALSE>>=
+<<'TabArbstat', results='asis', echo=FALSE>>=
 ArbAvd <- table(RyggDataAvd$ArbstatusPre, useNA='a')*100/NAvd
 ArbRL <- table(RyggDataRL$ArbstatusPre, useNA='a')*100/NResten
 Arbstat <- matrix(paste(sprintf('%.1f', c(ArbAvd, ArbRL)), '%', sep=''), ncol=2)
@@ -492,7 +491,7 @@ Tabell \ref{tab:Ufor} viser pasientenes svar på spørsmålet: ``Har du søkt om
 sammenliknet med landet for øvrig. 
 
 
-<<'TabUfor', results=tex, echo=FALSE>>=
+<<'TabUfor', results='asis', echo=FALSE>>=
 UforAvd <- round(table(RyggDataAvd$UforetrygdPre, useNA='a')*100/NAvd, 1)
 UforRL <- round(table(RyggDataRL$UforetrygdPre, useNA='a')*100/NResten, 1)
 
@@ -508,7 +507,7 @@ Tabell \ref{tab:Erst} viser pasientenes svar på spørsmålet: ``Har du søkt om
 sammenliknet med landet for øvrig. 
 
 
-<<'TabErst', results=tex, echo=FALSE>>=
+<<'TabErst', results='asis', echo=FALSE>>=
 ErstAvd <- round(table(RyggDataAvd$ErstatningPre, useNA='a')*100/NAvd, 1)
 ErstRL <- round(table(RyggDataRL$ErstatningPre, useNA='a')*100/NResten, 1)
 
@@ -530,7 +529,7 @@ resten av landet.
 \begin{figure}[ht] 
   \begin{center}
 \scalebox{\Sexpr{s1}}{
-<<'FigTidlOp', fig=TRUE, echo=FALSE>>=
+<<'FigTidlOp', echo=FALSE>>=
 AndelTidlOp <- AndelStabelTid(RyggData=RyggDataLand, outfile='', variabel='TidlOp', 
 		kjonn=kjonn, hovedkat=hovedkat, tidlOp=tidlOp, ktr=ktr, reshID=reshID, tittel=0)	#egenavd=egenavd, 
 TidlOpFordAvd <- rowSums(AndelTidlOp$AndelerAvd)
@@ -584,7 +583,7 @@ ved \Sexpr{Avdeling} er \Sexpr{round(sum(BMIFord$Andeler['HovedRes',4:6]),0)}\% 
 Spørsmålet er besvart av pasienten.
 Tabell \ref{tab:SmRH} viser fordeling av hvor lenge pasientene har hatt rygg-/hoftesmerter.
 
-<<'TabSmRH', results=tex, echo=FALSE>>=
+<<'TabSmRH', results='asis', echo=FALSE>>=
 SmRHAvd <- round(table(RyggDataAvd$SymptVarighRyggHof, useNA='a')*100/NAvd, 1)
 SmRHRL <- round(table(RyggDataRL$SymptVarighRyggHof, useNA='a')*100/NResten, 1)
 
@@ -604,7 +603,7 @@ Ved \Sexpr{Avdeling} har \Sexpr{sum(SmRHAvd[4:5])}\% hatt rygg- eller hoftesmert
 Spørsmålet er besvart av pasienten.
 Tabell \ref{tab:Utstr} viser fordeling av hvor lenge pasientene har hatt utstrålende smerter.
 
-<<'TabUtsRH', results=tex, echo=FALSE>>=
+<<'TabUtsRH', results='asis', echo=FALSE>>=
 UtsRHAvd <- round(table(RyggDataAvd$SympVarighUtstr, useNA='a')*100/NAvd, 1)
 UtsRHRL <- round(table(RyggDataRL$SympVarighUtstr, useNA='a')*100/NResten, 1)
 
@@ -630,7 +629,7 @@ sammenliknet med resten av landet.
 \begin{figure}[ht] 
   \begin{center}
 \scalebox{\Sexpr{s1}}{
-<<'FigASA', fig=TRUE, echo=FALSE>>=
+<<'FigASA', echo=FALSE>>=
 ASA <- AndelStabelEgetLand(RyggData=RyggDataLand, variabel='ASA', outfile='', 
 		reshID=reshID, aar=aar, kjonn=kjonn, hovedkat=hovedkat, tittel=0)
 @
@@ -653,7 +652,7 @@ Tabell \ref{tab:RV} viser hvor stor andel av pasientene som har vært til ulike 
 radiologisk undersøkelse. 
 Spørsmålene er besvart av leger. En pasient kan ha vært til flere undersøkelser.
 
-<<'TabRV', results=tex, echo=FALSE>>=
+<<'TabRV', results='asis', echo=FALSE>>=
 RVvar <- c('RvCt', 'RvMr', 'RvRadigr', 'RvDiscogr', 'RvDpregblok', 'RvRtgLscol', 'RvFunksjo')
 RVAvd <- round(colSums(RyggDataAvd[, RVvar], na.rm=T)*100/NAvd, 1)
 RVRL <- round(colSums(RyggDataRL[, RVvar], na.rm=T)*100/NResten, 1)
@@ -673,7 +672,7 @@ Spørsmålene er besvart av leger.
 En pasient kan ha flere diagnoser/radiologiske funn.
 
 
-<<'TabRF', results=tex, echo=FALSE>>=
+<<'TabRF', results='asis', echo=FALSE>>=
 RFvar <- c("RfNormal", "RfSkive", "RfSentr", "RfLateral", "RfForamino", "RfDegen",                  
 	"RfSpondtypeIsmisk", "RfSpondtypeDegen", "RfDegskol", "RfSynovpre", "RfPseudom")
 RFAvd <- round(colSums(RyggDataAvd[, RFvar], na.rm=T)*100/NAvd, 1)
@@ -713,7 +712,7 @@ Når svarandelene for 3 og 12 måneder beregnet, er det kun tatt med operasjoner
 hhv. 120 og 400 dager før dagens dato for å ta høyde for at pasientene skal ha hatt mulighet 
 til å svare.
 
-<<'Svarandel', results=tex, echo=FALSE, eval=TRUE>>=
+<<'Svarandel', results='asis', echo=FALSE, eval=TRUE>>=
 #Bør se ut fra hhv 4 og 13 mnd før dagens dato
 ind3mndAvd <- which(as.Date(strptime(RyggDataAvd$OpDato, '%d.%m.%Y')) < Sys.Date() - 120)
 ind12mndAvd <- which(as.Date(strptime(RyggDataAvd$OpDato, '%d.%m.%Y')) < Sys.Date() - 400)
@@ -761,7 +760,7 @@ AntOpMndLand <- AntSoyler(RyggData=RyggDataLand, outfile=paste(figKat,'AntOpLand
 \end{figure}
 
 %\scalebox{0.9}{
-<<'TabAntOpMnd', results=tex, echo=FALSE>>=
+<<'TabAntOpMnd', results='asis', echo=FALSE>>=
 AntOpMnd <- rbind('Egen avd.' = AntOpMndAvd$Antall, 'Hele landet' = AntOpMndLand$Antall)
 xtable(AntOpMnd, caption=AntOpMndLand$Tittel[1], label="tab:AntOpMnd", digits=1, align=c('l',rep('c',12)))
 @ 
@@ -792,7 +791,7 @@ ved \Sexpr{Avdeling} og landet for øvrig.
 De nøyaktige tallene for antall registrerte operasjoner for hvert hovedinngrep 
 framgår av Tabell \ref{tab:AntHovedInngrep}. 
 
-<<'ResAntHovedInngrepAvd', results=tex, echo=FALSE>>=	#fig=TRUE, 
+<<'ResAntHovedInngrepAvd', echo=FALSE>>=	#fig=TRUE, 
 
 HovedInngrep <- FigAndeler(RegData=RyggDataLand, valgtVar='HovedInngrep', datoFra=datoFra, datoTil=datoTil, 
 			reshID=reshID, outfile='FigHovedInngrep.pdf', tittel=0)
@@ -837,7 +836,7 @@ synsfremmende midler (mikroskop eller lupebriller), mens makro betyr at det har 
 utført åpen kirurgi.
 
 
-<<'TabInnHinn', results=tex, echo=FALSE>>=
+<<'TabInnHinn', results='asis', echo=FALSE>>=
 AntInngrAvd <- table(RyggDataAvd$Inngrep)
 AntHinngrAvd <- table(RyggDataAvd$HovedInngrep)[HKatdata$inngrHinn$Hnr+1]
 AntInngrRL <- table(RyggDataRL$Inngrep)
@@ -874,7 +873,7 @@ Tall på toppen av søylene viser antall operasjoner.
 \begin{figure}[ht] 
   \begin{center}
 \scalebox{\Sexpr{s1}}{
-<<'FigOpKat', fig=TRUE, echo=FALSE>>=
+<<'FigOpKat', echo=FALSE>>=
 AndelOpKat <- AndelStabelEgetLand(RyggData=RyggDataLand, outfile='', variabel='OpKat',
 		kjonn=kjonn, hovedkat=hovedkat, aar=aar, reshID=reshID, tittel=0)
 		
@@ -943,7 +942,7 @@ framgår av Tabell \ref{tab:AntibiotikaAndel}.
 \begin{figure}[ht] 
   \begin{center}
 \scalebox{\Sexpr{s1}}{
-<<'FigAntibiotika', fig=TRUE, echo=FALSE>>=
+<<'FigAntibiotika', echo=FALSE>>=
 UtData <- AndelTidLinjer(RyggData=RyggDataLand, outfile='', reshID=reshID, 
 kjonn=kjonn, hovedkat=hovedkat, variabel='Antibiotika', tittel=0)	
 @
@@ -955,7 +954,7 @@ kjonn=kjonn, hovedkat=hovedkat, variabel='Antibiotika', tittel=0)
 
 
 %Tabeller og utregninger:
-<<'TabAntibiotika', results=tex, echo=FALSE>>=
+<<'TabAntibiotika', results='asis', echo=FALSE>>=
 xtable(UtData$Andel, caption=UtData$Tittel, label="tab:AntibiotikaAndel", digits=1)
 #xtable(UtData$Ant, caption='Antall pasienter per år som har fått antibiotikaprofylakse', 
 #label="tab:AntibiotikaAnt", digits=0)
@@ -1040,7 +1039,7 @@ dum <- GjsnTid(RegData=RyggDataLand,  outfile=paste(figKat,'SmRyPre.pdf', sep=''
 All informasjon i dette kapitlet er hentet fra pasientskjema.
 
 %Her skal komme svarandel fra pasienter:
-<<'Svarandel', results=tex, echo=FALSE, eval=FALSE>>=
+<<'Svarandel2', results='asis', echo=FALSE, eval=FALSE>>=
 AntHovedInngrep <- cbind('Egen avd.' = AntHovedInngrepAvd$Antall, 
 					' ' = paste('(',round(AntHovedInngrepAvd$Antall/NAvd*100,1),'%)', sep=''),
 					'Hele landet' = AntHovedInngrepLand$Antall,
@@ -1225,7 +1224,7 @@ I figuren er det gjort følgende aggregering av svaralternativene i spørreskjem
 \begin{figure}[h] 
 	\begin{center}
 \scalebox{\Sexpr{s1}}{
-<<'FigNytte', fig=TRUE, echo=FALSE>>=	 
+<<'FigNytte', echo=FALSE>>=
 	Nytte <- AndelStabelTid(RyggData=RyggDataLand, outfile='', variabel='Nytte', 
 	kjonn=kjonn, hovedkat=hovedkat, tidlOp=tidlOp, egenavd=egenavd, ktr=ktr, 
 	reshID=reshID, tittel=0)
@@ -1247,7 +1246,7 @@ etter operasjon ved \Sexpr{Avdeling} fordelt på år. Det hvite merket på søyl
 \begin{figure}[h] 
 	\begin{center}
 \scalebox{\Sexpr{s1}}{
-<<'FigFornoyd', fig=TRUE, echo=FALSE>>=	 
+<<'FigFornoyd', echo=FALSE>>=
 	Fornoyd <- AndelStabelTid(RyggData=RyggDataLand, outfile='', variabel='Fornoyd', kjonn=kjonn, 
 		hovedkat=hovedkat, tidlOp=tidlOp, egenavd=egenavd, ktr=ktr, reshID=reshID, tittel=0)
 @

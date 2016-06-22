@@ -38,7 +38,7 @@
 #'     \item Verre12mnd Mye verre/verre enn noen gang, 12 mnd.
 #'		}
 #'
-#' @inheritParams FigAndeler
+#' @inheritParams RyggFigAndeler
 #' @param grVar Tekstvariabel som angir hva skal resultatene grupperes på. 
 #'                ShNavn-sykehus/avdeling
 #'                Fylke- Pasienten bor i det akutelle fylket
@@ -50,12 +50,12 @@
 #'
 #' @export
 
-FigAndelerGrVar <- function(RegData, valgtVar, datoFra='2007-01-01', datoTil='3000-12-31', 
+RyggFigAndelerGrVar <- function(RegData, valgtVar, datoFra='2007-01-01', datoTil='3000-12-31', 
                             minald=0, maxald=130, erMann='', hovedkat=99, tidlOp='', hentData=0, preprosess=1,
                             enhetsUtvalg=0, grVar='ShNavn', tittel=1, reshID, outfile='') {
 
 	if (hentData == 1) {		
-	  RegData <- RyggRegDataSQL(datoFra, datoTil)
+	  RegData <- RyggRegDataSQL()
 	}
 
      # Preprosessere data
@@ -78,7 +78,6 @@ FigAndelerGrVar <- function(RegData, valgtVar, datoFra='2007-01-01', datoTil='30
           cexShNavn <- 1
      }
 
-     #grVar <- 'AvdNavn'      #Nå input.
      RegData[ ,grVar] <- factor(RegData[ ,grVar])
      Ngrense <- 10		#Minste antall registreringer for at ei gruppe skal bli vist
 
@@ -285,6 +284,9 @@ FigAndelerGrVar <- function(RegData, valgtVar, datoFra='2007-01-01', datoTil='30
      RegData <- RyggUtvalg$RegData
      utvalgTxt <- RyggUtvalg$utvalgTxt
 
+     
+     #Standardisere mht grupperingsvariabel. Først sykehus.
+     
 
      dummy0 <- -0.001
      N <- dim(RegData)[1]
@@ -312,7 +314,7 @@ FigAndelerGrVar <- function(RegData, valgtVar, datoFra='2007-01-01', datoTil='30
 
      #-----------Figur---------------------------------------
      if 	( max(Ngr) < Ngrense)	{#Dvs. hvis ALLE er mindre enn grensa.
-          FigTypUt <- figtype(outfile)
+          FigTypUt <- rapbase::figtype(outfile)
           farger <- FigTypUt$farger
           plot.new()
           if (dim(RegData)[1]>0) {

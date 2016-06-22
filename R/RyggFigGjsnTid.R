@@ -23,7 +23,7 @@
 #'     	\item SmRyPre: Ryggsmerter før operasjon
 #'          \item TidOpReg Ønsker å se på tid fra operasjon til registrering
 #'    }
-#' @inheritParams FigAndeler 
+#' @inheritParams RyggFigAndeler 
 #' @param valgtMaal
 #'        'Gjsn': gir middelverdi (standard)
 #'        'Med': gir median
@@ -32,13 +32,13 @@
 #' @return Linjediagram som viser utvikling over tid for valgt variabel
 #'
 #' @export
-GjsnTid <- function(RegData, outfile, valgtVar, tidlOp='', erMann='', hovedkat=99, 
+RyggFigGjsnTid <- function(RegData, outfile, valgtVar, tidlOp='', erMann='', hovedkat=99, 
                     minald=0, maxald=130, ktr=1, tittel=1, datoFra='2007-01-01', datoTil='3000-01-01', 
                     valgtMaal='',enhetsUtvalg=1, hentData=0, preprosess=1, reshID){
       
   
       if (hentData == 1) {		
-            RegData <- RyggRegDataSQL(datoFra, datoTil)
+            RegData <- RyggRegDataSQL()   #(datoFra, datoTil)
       }
       
       # Hvis RegData ikke har blitt preprosessert. (I samledokument gjøre dette i samledokumentet)
@@ -146,7 +146,7 @@ utvalgTxt <- RyggUtvalg$utvalgTxt
 SykehustypeTxt <- c('universitetssykehus', 'lokalsykehus', 'private sykehus')				
 indEgen1 <- match(reshID, RegData$ReshId)
 if (enhetsUtvalg %in% c(1,2,3,6)) {	#Involverer egen enhet
-		shtxt <- as.character(RegData$AvdNavn[indEgen1]) } else {
+		shtxt <- as.character(RegData$ShNavn[indEgen1]) } else {
 		shtxt <- switch(as.character(enhetsUtvalg), 	
 			'0' = 'Hele landet',
 			'4' = SykehustypeTxt[RegData$Sykehustype[indEgen1]],
@@ -251,7 +251,7 @@ if (valgtMaal=='Med') {maaltxt <- 'Median ' } else {maaltxt <- 'Gjennomsnittlig 
 ytxt <- paste(maaltxt, ytxt1, sep='')
 
 #Plottspesifikke parametre:
-FigTypUt <- figtype(outfile, fargepalett=RyggUtvalg$fargepalett)
+FigTypUt <- rapbase::figtype(outfile, fargepalett=RyggUtvalg$fargepalett)
 #Tilpasse marger for å kunne skrive utvalgsteksten
 NutvTxt <- length(utvalgTxt)
 par('fig'=c(0, 1, 0, 1-0.02*(max((NutvTxt-1),0))))	

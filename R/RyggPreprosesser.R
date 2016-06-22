@@ -2,7 +2,7 @@
 #'
 #' Denne funksjonen definerer og formaterer variabler
 #'
-#' @inheritParams FigAndeler
+#' @inheritParams RyggFigAndeler
 #'
 #' @return RegData En dataramme med det preprosesserte datasettet
 #'
