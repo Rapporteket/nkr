@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Created with Jaspersoft Studio version 6.0.0.final using JasperReports Library version 6.0.0  -->
-<!-- 2015-04-10T13:08:31 -->
-<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="RyggAndeler" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" scriptletClass="no.skde.report.nkr.DegenerativRyggCommonScriptlet" uuid="5a58074b-3346-4b85-9ac6-dc8f2e57fef6">
+<!-- Created with Jaspersoft Studio version 6.2.0.final using JasperReports Library version 6.2.0  -->
+<!-- 2016-06-23T11:25:31 -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="RyggFigGjsnTid" language="groovy" pageWidth="595" pageHeight="842" whenNoDataType="AllSectionsNoDetail" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" scriptletClass="no.skde.report.nkr.DegenerativRyggCommonScriptletRPackage" isIgnorePagination="true" uuid="5a58074b-3346-4b85-9ac6-dc8f2e57fef6">
 	<property name="ireport.zoom" value="1.0"/>
 	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
-	<property name="ireport.jasperserver.url" value="https://test.helseregister.no/test.rapporteket/"/>
+	<property name="ireport.jasperserver.url" value="https://test.helseregister.no/rapporteket_test/"/>
 	<property name="ireport.jasperserver.report.resource" value="/organizations/NKR/Reports/RyggGjsnTid_files/MainJrxml"/>
 	<property name="ireport.jasperserver.reportUnit" value="/organizations/NKR/Reports/RyggGjsnTid"/>
 	<property name="ireport.jasperserver.user" value="superuser"/>
@@ -23,11 +23,11 @@
 	<parameter name="reportName" class="java.lang.String" isForPrompting="false">
 		<defaultValueExpression><![CDATA[new String("RyggGjsnTid")]]></defaultValueExpression>
 	</parameter>
-	<parameter name="rScriptName" class="java.lang.String" isForPrompting="false">
-		<defaultValueExpression><![CDATA[new String("RyggFigGjsnTid.R")]]></defaultValueExpression>
+	<parameter name="rPackageName" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA[new String("nkr")]]></defaultValueExpression>
 	</parameter>
 	<parameter name="rFunctionCallString" class="java.lang.String" isForPrompting="false">
-		<defaultValueExpression><![CDATA[new String("GjsnTid(RegData=RegData, libkat=libkat, outfile=outfile, valgtVar=valgtVar,valgtMaal=valgtMaal, enhetsUtvalg=enhetsUtvalg, datoFra=datoFra, datoTil=datoTil, hovedkat=hovedkat, tidlOp=tidlOp,  ktr=ktr, erMann=erMann, minald=minald, maxald=maxald, reshID=reshID)")]]></defaultValueExpression>
+		<defaultValueExpression><![CDATA[new String("RyggFigGjsnTid(RegData=0, outfile=outfile, valgtVar=valgtVar,valgtMaal=valgtMaal, enhetsUtvalg=enhetsUtvalg, datoFra=datoFra, datoTil=datoTil, hovedkat=hovedkat, tidlOp=tidlOp,  ktr=ktr, erMann=erMann, minald=minald, maxald=maxald, hentData=1, preprosess=1, reshID=reshID)")]]></defaultValueExpression>
 	</parameter>
 	<parameter name="varName" class="java.lang.String">
 		<defaultValueExpression><![CDATA[new String("Liggedogn")]]></defaultValueExpression>
@@ -56,217 +56,9 @@
 	<parameter name="orgUnitSelection" class="java.lang.Integer">
 		<defaultValueExpression><![CDATA[new Integer(1)]]></defaultValueExpression>
 	</parameter>
-	<queryString>
-		<![CDATA[select
-cast(PID as float) as PID,
-cast(BMI as float) as BMI,
-cast(Utd as float) as Utd,
-cast(Alder as float) as Alder,
-cast(Liggedogn as float) as Liggedogn,
-cast(Dagkirurgi as float) as Dagkirurgi,
-cast(TidlOpr as float) as TidlOpr,
-cast(PeropKomp as float) as PeropKomp,
-cast(PeropKompAnafy as float) as PeropKompAnafy,
-PeropKompAnnet,
-cast(PeropKompDura as float) as PeropKompDura,
-cast(PeropKompFeilnivSide as float) as PeropKompFeilnivSide,
-cast(PeropKompFeilplassImp as float) as PeropKompFeilplassImp,
-cast(PeropKompKardio as float) as PeropKompKardio,
-cast(PeropKompNerve as float) as PeropKompNerve,
-cast(PeropKompResp as float) as PeropKompResp,
-cast(PeropKompTransfuBlodning as float) as PeropKompTransfuBlodning,
-cast(KpBlod3Mnd as float) as KpBlod3Mnd,
-cast(KpDVT3Mnd as float) as KpDVT3Mnd,
-cast(KpInfDyp3Mnd as float) as KpInfDyp3Mnd,
-cast(KpInfOverfla3Mnd as float) as KpInfOverfla3Mnd,
-cast(KpLE3Mnd as float) as KpLE3Mnd,
-cast(KpLungebet3Mnd as float) as KpLungebet3Mnd,
-cast(KpMiktProb3Mnd as float) as KpMiktProb3Mnd,
-cast(KpSarinfUspesType3Mnd as float) as KpSarinfUspesType3Mnd,
-cast(KpUVI3Mnd as float) as KpUVI3Mnd,
-cast(Utfylt3Mnd as float) as Utfylt3Mnd,
-cast(Antibiotika as float) as Antibiotika,
-cast(ASA as float) as ASA,
-cast(OpKat as float) as OpKat,
-cast(ArbstatusPre as float) as ArbstatusPre,
-cast(Arbstatus3mnd as float) as Arbstatus3mnd,
-cast(Arbstatus12mnd as float) as Arbstatus12mnd,
-cast(SmBePre as float) as SmBePre,
-cast(SmBe3mnd as float) as SmBe3mnd,
-cast(SmBe12mnd as float) as SmBe12mnd,
-cast(SmRyPre as float) as SmRyPre,
-cast(SmRy3mnd as float) as SmRy3mnd,
-cast(SmRy12mnd as float) as SmRy12mnd,
-cast(OswTotPre as float) as "OswTotPre",
-cast(OswTot3mnd as float) as "OswTot3mnd",
-cast(OswTot12mnd as float) as "OswTot12mnd",
-cast(EQ5DPre as float) as EQ5DPre,
-cast(EQ5D3mnd as float) as EQ5D3mnd,
-cast(EQ5D12mnd as float) as EQ5D12mnd,
-cast(Nytte3mnd as float) as Nytte3mnd,
-cast(Nytte12mnd as float) as Nytte12mnd,
-cast(Fornoyd3mnd as float) as Fornoyd3mnd,
-cast(Fornoyd12mnd as float) as Fornoyd12mnd,
-cast(Kjonn as float) as Kjonn,
-cast(HovedInngrep as float) as HovedInngrep,
-HovedInngreptxt,
-cast(Inngrep as float) as Inngrep,
-Inngreptxt,
-AvdReshID,
-AvdNavn,
-OpDato,
-right(OpDato, 4) as Aar,
-cast(Sykehustype as float) as "Sykehustype",
-cast(OpAar as float) as "OpAar",
-Region,
-cast(EqangstPre as float) as EqangstPre,
-cast(ErstatningPre as float) as ErstatningPre,
-Sykd,
-SykdAndreRelevanteSykdBechtrew,
-SykdAnnenendokrin,
-SykdAnnenreumatisk,
-SykdCerebrovaskular,
-SykdDepresjonAngst,
-SykdHjertekar,
-SykdHoftekneartose,
-SykdHypertensjon,
-SykdKreft,
-SykdKroniskLunge,
-SykdKroniskNevrologisk,
-SykdKroniskSmerterMuskelSkjelettsyst,
-SykdOsteoporose,
-SykDprebetesMellitus,
-SykdReumatoidartritt,
-SykdVaskulærClaudicatio,
-cast(Kp3Mnd as float) as Kp3Mnd,
-cast(Morsmal as float) as Morsmal,
-cast(OpIndCauda as float) as OpIndCauda,
-cast(OpIndParese as float) as OpIndParese,
-cast(OpIndSme as float) as OpIndSme,
-cast(OpIndPareseGrad as float) as OpIndPareseGrad,
-cast(OpIndSmeType as float) as OpIndSmeType,
-cast(RvCt as float) as RvCt,
-cast(RvDiscogr as float) as RvDiscogr,
-cast(RvDpregblok as float) as RvDpregblok,
-cast(RvFunksjo as float) as RvFunksjo,
-cast(RvMr as float) as RvMr,
-cast(RvRadigr as float) as RvRadigr,
-cast(RvRtgLscol as float) as RvRtgLscol,
-cast(Roker as float) as Roker,
-cast(Saardren as float) as Saardren,
-cast(SivilStatus as float) as SivilStatus,
-cast(SmHyppPre as float) as SmHyppPre,
-cast(SmStiPre as float) as SmStiPre,
-cast(SymptVarighRyggHof as float) as SymptVarighRyggHof,
-cast(SympVarighUtstr as float) as SympVarighUtstr,
-cast(TidlOprAntall as float) as TidlOprAntall,
-cast(UforetrygdPre as float) as UforetrygdPre
-from
-Uttrekk_Rapport]]>
+	<queryString language="SQL">
+		<![CDATA[]]>
 	</queryString>
-	<field name="PID" class="java.lang.Double"/>
-	<field name="BMI" class="java.lang.Double"/>
-	<field name="Utd" class="java.lang.Double"/>
-	<field name="Alder" class="java.lang.Double"/>
-	<field name="Liggedogn" class="java.lang.Double"/>
-	<field name="Dagkirurgi" class="java.lang.Double"/>
-	<field name="TidlOpr" class="java.lang.Double"/>
-	<field name="PeropKomp" class="java.lang.Double"/>
-	<field name="PeropKompAnafy" class="java.lang.Double"/>
-	<field name="PeropKompAnnet" class="java.lang.String"/>
-	<field name="PeropKompDura" class="java.lang.Double"/>
-	<field name="PeropKompFeilnivSide" class="java.lang.Double"/>
-	<field name="PeropKompFeilplassImp" class="java.lang.Double"/>
-	<field name="PeropKompKardio" class="java.lang.Double"/>
-	<field name="PeropKompNerve" class="java.lang.Double"/>
-	<field name="PeropKompResp" class="java.lang.Double"/>
-	<field name="PeropKompTransfuBlodning" class="java.lang.Double"/>
-	<field name="KpBlod3Mnd" class="java.lang.Double"/>
-	<field name="KpDVT3Mnd" class="java.lang.Double"/>
-	<field name="KpInfDyp3Mnd" class="java.lang.Double"/>
-	<field name="KpInfOverfla3Mnd" class="java.lang.Double"/>
-	<field name="KpLE3Mnd" class="java.lang.Double"/>
-	<field name="KpLungebet3Mnd" class="java.lang.Double"/>
-	<field name="KpMiktProb3Mnd" class="java.lang.Double"/>
-	<field name="KpSarinfUspesType3Mnd" class="java.lang.Double"/>
-	<field name="KpUVI3Mnd" class="java.lang.Double"/>
-	<field name="Utfylt3Mnd" class="java.lang.Double"/>
-	<field name="Antibiotika" class="java.lang.Double"/>
-	<field name="ASA" class="java.lang.Double"/>
-	<field name="OpKat" class="java.lang.Double"/>
-	<field name="ArbstatusPre" class="java.lang.Double"/>
-	<field name="Arbstatus3mnd" class="java.lang.Double"/>
-	<field name="Arbstatus12mnd" class="java.lang.Double"/>
-	<field name="SmBePre" class="java.lang.Double"/>
-	<field name="SmBe3mnd" class="java.lang.Double"/>
-	<field name="SmBe12mnd" class="java.lang.Double"/>
-	<field name="SmRyPre" class="java.lang.Double"/>
-	<field name="SmRy3mnd" class="java.lang.Double"/>
-	<field name="SmRy12mnd" class="java.lang.Double"/>
-	<field name="OswTotPre" class="java.lang.Double"/>
-	<field name="OswTot3mnd" class="java.lang.Double"/>
-	<field name="OswTot12mnd" class="java.lang.Double"/>
-	<field name="EQ5DPre" class="java.lang.Double"/>
-	<field name="EQ5D3mnd" class="java.lang.Double"/>
-	<field name="EQ5D12mnd" class="java.lang.Double"/>
-	<field name="Nytte3mnd" class="java.lang.Double"/>
-	<field name="Nytte12mnd" class="java.lang.Double"/>
-	<field name="Fornoyd3mnd" class="java.lang.Double"/>
-	<field name="Fornoyd12mnd" class="java.lang.Double"/>
-	<field name="Kjonn" class="java.lang.Double"/>
-	<field name="HovedInngrep" class="java.lang.Double"/>
-	<field name="HovedInngreptxt" class="java.lang.String"/>
-	<field name="Inngrep" class="java.lang.Double"/>
-	<field name="Inngreptxt" class="java.lang.String"/>
-	<field name="AvdReshID" class="java.lang.String"/>
-	<field name="AvdNavn" class="java.lang.String"/>
-	<field name="OpDato" class="java.lang.String"/>
-	<field name="Aar" class="java.lang.String"/>
-	<field name="Sykehustype" class="java.lang.Double"/>
-	<field name="OpAar" class="java.lang.Double"/>
-	<field name="Region" class="java.lang.String"/>
-	<field name="EqangstPre" class="java.lang.Double"/>
-	<field name="ErstatningPre" class="java.lang.Double"/>
-	<field name="Sykd" class="java.lang.String"/>
-	<field name="SykdAndreRelevanteSykdBechtrew" class="java.lang.String"/>
-	<field name="SykdAnnenendokrin" class="java.lang.String"/>
-	<field name="SykdAnnenreumatisk" class="java.lang.String"/>
-	<field name="SykdCerebrovaskular" class="java.lang.String"/>
-	<field name="SykdDepresjonAngst" class="java.lang.String"/>
-	<field name="SykdHjertekar" class="java.lang.String"/>
-	<field name="SykdHoftekneartose" class="java.lang.String"/>
-	<field name="SykdHypertensjon" class="java.lang.String"/>
-	<field name="SykdKreft" class="java.lang.String"/>
-	<field name="SykdKroniskLunge" class="java.lang.String"/>
-	<field name="SykdKroniskNevrologisk" class="java.lang.String"/>
-	<field name="SykdKroniskSmerterMuskelSkjelettsyst" class="java.lang.String"/>
-	<field name="SykdOsteoporose" class="java.lang.String"/>
-	<field name="SykDprebetesMellitus" class="java.lang.String"/>
-	<field name="SykdReumatoidartritt" class="java.lang.String"/>
-	<field name="SykdVaskulærClaudicatio" class="java.lang.String"/>
-	<field name="Kp3Mnd" class="java.lang.Double"/>
-	<field name="Morsmal" class="java.lang.Double"/>
-	<field name="OpIndCauda" class="java.lang.Double"/>
-	<field name="OpIndParese" class="java.lang.Double"/>
-	<field name="OpIndSme" class="java.lang.Double"/>
-	<field name="OpIndPareseGrad" class="java.lang.Double"/>
-	<field name="OpIndSmeType" class="java.lang.Double"/>
-	<field name="RvCt" class="java.lang.Double"/>
-	<field name="RvDiscogr" class="java.lang.Double"/>
-	<field name="RvDpregblok" class="java.lang.Double"/>
-	<field name="RvFunksjo" class="java.lang.Double"/>
-	<field name="RvMr" class="java.lang.Double"/>
-	<field name="RvRadigr" class="java.lang.Double"/>
-	<field name="RvRtgLscol" class="java.lang.Double"/>
-	<field name="Roker" class="java.lang.Double"/>
-	<field name="Saardren" class="java.lang.Double"/>
-	<field name="SivilStatus" class="java.lang.Double"/>
-	<field name="SmHyppPre" class="java.lang.Double"/>
-	<field name="SmStiPre" class="java.lang.Double"/>
-	<field name="SymptVarighRyggHof" class="java.lang.Double"/>
-	<field name="SympVarighUtstr" class="java.lang.Double"/>
-	<field name="TidlOprAntall" class="java.lang.Double"/>
-	<field name="UforetrygdPre" class="java.lang.Double"/>
 	<background>
 		<band splitType="Stretch"/>
 	</background>

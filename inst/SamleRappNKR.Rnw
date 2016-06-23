@@ -162,7 +162,7 @@ RyggDataLand$OpKat <- factor(RyggDataLand$OpKat, levels=1:3)
 
 indAvd <- which(as.numeric(RyggDataLand$AvdReshID)==reshID)
 RyggDataAvd <- RyggDataLand[indAvd, ]
-Avdeling <- as.character(RyggDataAvd$AvdNavn)[1]
+Avdeling <- as.character(RyggDataAvd$ShNavn)[1]
 indResten <- which(as.numeric(RyggDataLand$AvdReshID)!=reshID)
 RyggDataRL <- RyggDataLand[indResten,]
 
@@ -282,7 +282,7 @@ miljøene er derfor helt nødvendig for at det skal fungere etter hensikten og o
 \section{Oppsummeringstall for NKR}
 
 <<TabAlleReg, results='asis', echo=FALSE>>=
-tabAvdN <- addmargins(as.table(ftable(RyggDataALLE[c('AvdNavn','Aar')])))
+tabAvdN <- addmargins(as.table(ftable(RyggDataALLE[c('ShNavn','Aar')])))
 antKol <- ncol(tabAvdN)
 rownames(tabAvdN)[dim(tabAvdN)[1] ]<- 'TOTALT, alle avdelinger:'
 colnames(tabAvdN)[dim(tabAvdN)[2] ]<- 'Alle år'
