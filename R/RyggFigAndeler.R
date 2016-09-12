@@ -542,6 +542,7 @@ if (enhetsUtvalg %in% c(1,2,3,6)) {	#Involverer egen enhet
 			
 if (enhetsUtvalg %in% c(0,2,4,7)) {		#Ikke sammenlikning
 			medSml <- 0
+			smltxt <- 'Ingen sml'
 			indHoved <- 1:dim(RegData)[1]	#Tidligere redusert datasettet for 2,4,7. (+ 3og6)
 			indRest <- NULL
 		} else {						#Skal gjøre sammenlikning
@@ -678,9 +679,9 @@ if ( outfile != '') {dev.off()}
 
 
 AndelerUt <- rbind(Andeler$Hoved, Andeler$Rest)
-rownames(AndelerUt) <- c('Hoved', 'Rest')
+rownames(AndelerUt) <- c(shtxt, smltxt)
 AntallUt <- rbind(AntHoved, AntRest)
-rownames(AntallUt) <- c('Hoved', 'Rest')
+rownames(AntallUt) <- c(shtxt, smltxt)
 
 UtData <- list(paste(toString(Tittel),'.', sep=''), AndelerUt, AntallUt, grtxt )
 names(UtData) <- c('Tittel', 'Andeler', 'Antall', 'GruppeTekst')
