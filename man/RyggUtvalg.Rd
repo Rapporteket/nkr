@@ -5,7 +5,8 @@
 \title{Funksjon som gjør utvalg i datagrunnlaget til registreringene for Nakke}
 \usage{
 RyggUtvalg(RegData, datoFra, datoTil, minald = 0, maxald = 130,
-  erMann = "", hovedkat = 99, tidlOp = "", fargepalett = "BlaaOff")
+  erMann = "", hovedkat = 99, aar = 0, tidlOp = "",
+  fargepalett = "BlaaOff")
 }
 \arguments{
 \item{RegData}{En dataramme med alle nødvendige variabler fra registeret}

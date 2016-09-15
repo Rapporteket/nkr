@@ -71,7 +71,7 @@ Andel som mottar sykepenger er definert som svaralternativene: 'Sykemeldt',
        'Aktiv sykemeldt', 'Delvis sykemeldt', 'Attføring/rehab.', 'Uføretrygdet' 
 Argumentet \emph{valgtVar} har følgende valgmuligheter:
    \itemize{
-    \item Alder: Pasienter over 80år    
+    \item Alder: Pasienter over 75år    
     \item Antibiotika: Er det gitt antibiotikaprofylakse?    
     \item ArbstatusPre: Mottar sykepenger, før operasjon?    
     \item Arbstatus3mnd: Mottar sykepenger, 3 mnd etter operasjon?    

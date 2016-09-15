@@ -522,7 +522,7 @@ TittelUt <- switch(valgtVar,
 				Underkat = 'Fordeling av inngrepstyper',
 				Utd = 'Høyeste fullførte utdanning')
 
-#Tar ut de med manglende registrering av valgt variabel og gjør utvalg
+#Gjør utvalg
 RyggUtvalg <- RyggUtvalg(RegData=RegData, datoFra=datoFra, datoTil=datoTil, minald=minald, maxald=maxald, 
 		erMann=erMann, hovedkat=hovedkat, tidlOp=tidlOp)
 RegData <- RyggUtvalg$RegData
@@ -594,7 +594,7 @@ if (medSml==1) {
 #if (dim(RegData)[1] < 10 | (length(which(RegData$ReshId == reshID))<5 & egenavd==1)) {
 if ((valgtVar=='Underkat' & all(hovedkat != c(1,2,5,7))) | NHoved < 10 | 
 		(medSml ==1 & NRest<10)) {
-FigTypUt <- figtype(outfile)
+FigTypUt <- rapbase::figtype(outfile, fargepalett=RyggUtvalg$fargepalett)
 farger <- FigTypUt$farger
 	plot.new()
 	title(Tittel)	#, line=-6)

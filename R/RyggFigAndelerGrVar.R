@@ -8,7 +8,7 @@
 #'        'Aktiv sykemeldt', 'Delvis sykemeldt', 'Attføring/rehab.', 'Uføretrygdet' 
 #' Argumentet \emph{valgtVar} har følgende valgmuligheter:
 #'    \itemize{
-#'     \item Alder: Pasienter over 80år    
+#'     \item Alder: Pasienter over 75år    
 #'     \item Antibiotika: Er det gitt antibiotikaprofylakse?    
 #'     \item ArbstatusPre: Mottar sykepenger, før operasjon?    
 #'     \item Arbstatus3mnd: Mottar sykepenger, 3 mnd etter operasjon?    
@@ -85,9 +85,9 @@ RyggFigAndelerGrVar <- function(RegData, valgtVar, datoFra='2007-01-01', datoTil
       RegData$Variabel <- 0
 
      if (valgtVar == 'Alder') {
-          #Andel over 80 år
-          RegData$Variabel[which(RegData[ ,valgtVar] >= 80)] <- 1
-          TittelUt <- 'Pasienter over 80 år'
+          #Andel over 75 år
+          RegData$Variabel[which(RegData[ ,valgtVar] >= 75)] <- 1
+          TittelUt <- 'Pasienter over 75 år'
      }
 
      if (valgtVar == 'Antibiotika') {
