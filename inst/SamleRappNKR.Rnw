@@ -7,7 +7,6 @@
 \usepackage[norsk]{babel}
 \usepackage[utf8x]{inputenc}
 \usepackage{textcomp}
-%\usepackage{Sweave}
 %\usepackage[colorlinks]{hyperref}
 \usepackage{fancyhdr}
 \pagestyle{fancy}
@@ -68,13 +67,16 @@
 \setcounter{secnumdepth}{-1} 
 
 
+\begin{document}
+
+% LOGO, Include a department/university logo - this will require the graphicx package
+ \includegraphics[height=2cm]{\Sexpr{system.file(file='NKRlogo.jpg', package='nkr')}}
 
 \title{Samlerapport for data rapportert til NKR}
 \author{NKR, SKDE}
-\fancyhead[R]{\includegraphics[width=1cm]{../NKRlogo.jpg}}
+%\fancyhead[R]{\includegraphics[width=1cm]{../NKRlogo.jpg}}
 %\logo{\includegraphics[height=2cm]{NKRlogo.jpg}}	
 
-\begin{document}
 \maketitle
 \tableofcontents
 %\newpage
@@ -84,8 +86,8 @@
 \newpage
 
 % remove default spacing between R code and output
-\fvset{listparameters={\setlength{\topsep}{0pt}}}
-\renewenvironment{Schunk}{\vspace{\topsep}}{\vspace{\topsep}}
+%\fvset{listparameters={\setlength{\topsep}{0pt}}}
+%\renewenvironment{Schunk}{\vspace{\topsep}}{\vspace{\topsep}}
 
 <<'Oppsett', echo=FALSE>>=
 library(knitr)
@@ -131,11 +133,11 @@ RegData <- RyggPreprosess(RegData=RegData)  #, reshID=reshID)
 reshID <- as.numeric(reshID)
 
 #Felles parametre:
-enhetsUtvalg <- 1
+enhetsUtvalg <- 0
 erMann <- 99
 aar <- 0	#Kan velge flere
-datoFra <- '2007-01-01'
-datoTil <- '3015-11-03'
+datoFra <- '2010-01-01'
+datoTil <- '2015-12-31'
 minald <- 0
 maxald <- 130
 hovedkat <- 99
@@ -210,7 +212,7 @@ if (enhetsUtvalg %in% c(0,2,4,7)) {		#Ikke sammenlikning
 
 RegDataHoved <- RegData[indHoved, ]
 RegDataSml <- RegData[indRest,]
-shtxt <- switch(enhetsUtvalg,
+shtxt <- switch(as.character(enhetsUtvalg),
 		'0' = 'NKR',
 		'1' = as.character(RegDataHoved$ShNavn)[1])
 
@@ -341,6 +343,9 @@ xtable(tabAvdN[,(antKol-5):antKol], digits=0, align=c('l', rep('r', 6)),
 	label = 'tab:AntReg')
 
 tabKjPst <- sprintf('%.1f',table(RegData$Kjonn)/Ntot*100)
+
+txt <- if (medSml==1) {paste0('Siste registrerte inngrep ved ', shtxt,
+' ble utført ', max(strptime(RegDataHoved$OpDato, '%d.%m.%Y')))} else {''}
 @
 
 Registrering av operasjoner i NKR startet i september 2006. Siden det i 2006 var få registreringer, har vi
@@ -350,8 +355,7 @@ registreringer gjort ved de respektive avdelinger hvert år. Vi ser at det per d
 \Sexpr{dim(tabAvdN)[1]-1} avdelinger som registrerer og at det totalt er registrert \Sexpr{Ntot} 
 operasjoner. Av disse er \Sexpr{tabKjPst[1]}\% utført på menn og \Sexpr{tabKjPst[2]}\% på kvinner.
 Siste inngrep registrert i datauttrekket som ligger til grunn for denne rapporten, ble utført 
-\Sexpr{datomax}. \Sexpr{if (enhetsUtvalg==1) {paste0('Siste registrerte inngrep ved ', shtxt,
-'ble utført ', max(strptime(RegDataHoved$OpDato, '%d.%m.%Y')))}}.
+\Sexpr{datomax}. \Sexpr{txt}.
 \par 
 \clearpage
 
@@ -371,12 +375,11 @@ denne rapporten er følgende:\\
 
 \subsection{Aldersfordeling}
 
-Figur \ref{fig:Alder} viser aldersfordeling for alle 
-\Sexpr{if (enhetsUtvalg ==1)  {paste0('pasienter operert ved ', shtxt, 
-'sammenlignet med tall fra resten av landet.'} else {'pasienter.'} }
-De nøyaktige tallene for aldersfordelinga framgår av Tabell \ref{tab:Alder}. 
 
 <<'ResAlder', results='asis'>>=
+
+aldtxt <- if (medSml ==1)  {paste0('pasienter operert ved ', shtxt, 
+' sammenlignet med tall fra resten av landet.')} else {'pasienter.'}
 
 AlderFord <- RyggFigAndeler(RegData=RegData, valgtVar='Alder', datoFra=datoFra, datoTil=datoTil, 
 			reshID=reshID, enhetsUtvalg=enhetsUtvalg, outfile='FigAlderFord.pdf', tittel=0)
@@ -396,6 +399,9 @@ AlderFord <- RyggFigAndeler(RegData=RegData, valgtVar='Alder', datoFra=datoFra, 
 #									sum(RegDataSml$Alder>65, na.rm=T)/NSml))
 @ 
 
+Figur \ref{fig:Alder} viser aldersfordeling for alle 
+\Sexpr{aldtxt}
+De nøyaktige tallene for aldersfordelinga framgår av Tabell \ref{tab:Alder}. 
 
 
 \begin{figure}[ht]
@@ -416,9 +422,9 @@ med resten av landet.
 
 <<'TabSivStat', results='asis', echo=FALSE>>=
 if (medSml ==0) {
-SivStat <- cbind('Antall'= c(table(opdataLand$SivilStatus, useNA='always'), Ntot),
+SivStat <- cbind('Antall'= c(table(RegData$SivilStatus, useNA='always'), Ntot),
 		'Andeler'= 
-		c(paste(round(table(opdataLand$SivilStatus, useNA='always')/Ntot*100,1),'%', sep=''), ''))
+		c(paste(round(table(RegData$SivilStatus, useNA='always')/Ntot*100,1),'%', sep=''), ''))
 rownames(SivStat) <- c('Gift', 'Samboer', 'Enslig', 'Ikke svart', 'Tot. ant.')
 xtable(SivStat, caption='Sivilstatus for opererte pasienter', label="tab:SivStat", align=c('l','r','r'))
 
@@ -441,20 +447,20 @@ Tabell \ref{tab:Morsm} viser fordeling av norske, samiske og andre fremmedsåpr�
 
 <<'TabMorsm', results='asis', echo=FALSE>>=
 if (medSml==0) {
-Morsm <- cbind('Antall' = table(opdataLand$Morsmal, useNA='a'),
-			'Andeler' = 
-		paste(round(table(opdataLand$Morsmal, useNA='a')/Ntot*100, 1), '%', sep=''))
+MorsmAnt <- table(RegData$Morsmal, useNA='a')
+Morsm <- cbind('Antall' = MorsmAnt,
+			'Andeler' = paste0(round(MorsmAnt/Ntot*100, 1), '%'))
 rownames(Morsm) <- c('Norsk', 'Samisk', 'Annet', 'Ikke svart')
 xtable(Morsm, caption='Pasientenes morsmål', label="tab:Morsm", align=c('l','r','r'))
+AndelFremmedspraak <- sprintf('%.1f', sum(MorsmAnt[2:3], na.rm=T)/Ntot*100)
 
-AndelFremmedspraak <- sprintf('%.1f', sum(Morsm[1,2:3], na.rm=T))
 }
 
 if (medSml==1) {
 MorsmEgen <- table(RegDataHoved$Morsmal, useNA='a')/NHoved*100
 MorsmResten <- table(RegDataSml$Morsmal, useNA='a')/NSml*100
 			
-Morsm <- matrix(paste(sprintf('%.1f', c(MorsmEgen, MorsmResten)), '%', sep=''),4)
+Morsm <- matrix(paste0(sprintf('%.1f', c(MorsmEgen, MorsmResten)), '%'),4)
 colnames(Morsm) <- c('Egen avdeling', 'Landet for øvrig')
 rownames(Morsm) <- c('Norsk', 'Samisk', 'Annet', 'Ikke svart')
 xtable(Morsm, caption='Pasientenes morsmål', label="tab:Morsm", align=c('l','r','r'))
@@ -496,8 +502,8 @@ Tabell \ref{tab:Royk} viser andel av røykere fordelt på kvinner og menn.
 
 <<'TabRoyk', results='asis', echo=FALSE>>=
 if (medSml == 0) {
-	RoykTot <- round(sum(opdataLand$Roker, na.rm=T)/sum(table(opdataLand$Roker))*100,0)
-	Royk <- round(prop.table(ftable(opdataLand[,c('Kjonn','Roker')]),1)[,2]*100, 0)
+	RoykTot <- round(sum(RegData$Roker, na.rm=T)/sum(table(RegData$Roker))*100,0)
+	Royk <- round(prop.table(ftable(RegData[,c('Kjonn','Roker')]),1)[,2]*100, 0)
 	names(Royk) <- c('Menn', 'Kvinner')
 }
 if (medSml==1){
@@ -513,10 +519,12 @@ if (medSml==1){
 	rownames(Royk) <- c('Menn', 'Kvinner')
 	xtable(Royk, caption='Røykestatus', label="tab:Royk", align=c('l','r','r'))
 }
+
+txt <- if (medSml==0) {paste0('Det er ', Royk[1], '% av mennene og ', Royk[2], '% av kvinnene som røyker. 
+Total andel røykere er ', RoykTot, '%')} else {''}
 @ 
 
-\Sexpr{if (medSml=0) {paste0('Det er ', Royk[1], '\% av mennene og ', Royk[2], '\% av kvinnene som røyker. 
-Total andel røykere er ', RoykTot, '\%')}}
+\Sexpr{txt}
 %Det er \Sexpr{Royk[1]}\% av mennene og \Sexpr{Royk[2]}\% av kvinnene som røyker. 
 %Total andel røykere er \Sexpr{RoykTot}\%
 
@@ -537,17 +545,17 @@ Tabell \ref{tab:Arb} viser arbeidsstatus for alle opererte pasienter.
 <<'TabArbstat', results='asis', echo=FALSE>>=
 
 if (enhetsUtvalg == 0) {
-NsvarArb <- sum(table(opdataLand$ArbstatusPre))
-ArbNum <- round(table(opdataLand$ArbstatusPre)*100/sum(table(opdataLand$ArbstatusPre)), 1)
+NsvarArb <- sum(table(RegData$ArbstatusPre))
+ArbNum <- round(table(RegData$ArbstatusPre)*100/sum(table(RegData$ArbstatusPre)), 1)
 Arb <- paste(ArbNum, '%', sep='')
 names(Arb) <- c('I arbeid', 'Hjemmeværende', 'Student/skoleelev', 'Pensjonist', 'Arbeidsledig', 
 	'Sykemeldt', 'Aktiv sykemeldt', 'Delvis Sykemeldt', 'Attføring/rehabiliteirng', 'Uføretrygdet')
 xtable(cbind('Andeler'=Arb), caption='Arbeidsstatus', label="tab:Arb", align=c('l','r'))
 
-indSyk <- which(opdataLand$ArbstatusPre %in% 6:10)
-GjsnSyk<- mean(opdataLand$SykemeldVarighPre[indSyk], na.rm=T)
-SdSyk<- sd(opdataLand$SykemeldVarighPre[indSyk], na.rm=T)
-MedSyk<- median(opdataLand$SykemeldVarighPre[indSyk], na.rm=T)
+indSyk <- which(RegData$ArbstatusPre %in% 6:10)
+GjsnSyk<- mean(RegData$SykemeldVarighPre[indSyk], na.rm=T)
+SdSyk<- sd(RegData$SykemeldVarighPre[indSyk], na.rm=T)
+MedSyk<- median(RegData$SykemeldVarighPre[indSyk], na.rm=T)
 
 }
 if (enhetsUtvalg == 1) {
@@ -601,7 +609,7 @@ sammenliknet med landet for øvrig.
 
 <<'TabUfor', results='asis', echo=FALSE>>=
 if (enhetsUtvalg == 0) {
-Ufor <- paste(round(table(opdataLand$UforetrygdPre, useNA='a')*100/Ntot, 1), '%', sep='')
+Ufor <- paste(round(table(RegData$UforetrygdPre, useNA='a')*100/Ntot, 1), '%', sep='')
 names(Ufor) <- c('Ja', 'Nei', 'Planlegger å søke', 'Er innvilget', 'Ikke besvart')	#, 'Tot. ant.')
 xtable(cbind('Andeler'=Ufor), caption='Spm: Har du søkt om uføretrygd?', label="tab:Ufor", 
 align=c('l','r'), digits=1)
@@ -626,7 +634,7 @@ Tabell \ref{tab:Erst} viser pasientenes svar på spørsmålet: ``Har du søkt om
 
 <<'TabErst', results='asis', echo=FALSE>>=
 if (enhetsUtvalg == 0) {
-Erst<- paste(round(table(opdataLand$ErstatningPre, useNA='a')*100/Ntot, 1), '%', sep='')	#, Ntot)
+Erst<- paste(round(table(RegData$ErstatningPre, useNA='a')*100/Ntot, 1), '%', sep='')	#, Ntot)
 names(Erst) <- c('Ja', 'Nei', 'Planlegger å søke', 'Er innvilget', 'Ikke besvart')	#, 'Tot. ant.')
 xtable(cbind('Andeler'=Erst), caption='Spm: Har du søkt om erstatning fra forsikringsselskap eller folketrygden, 
 	eventuelt yrkesskadeerstatning)?', label="tab:Erst", align=c('l','r'))
@@ -643,6 +651,9 @@ rownames(Erst) <- c('Ja', 'Nei', 'Planlegger å søke', 'Er innvilget', 'Ikke be
 xtable(Erst, caption='Spm: Har du søkt om erstatning fra forsikringsselskap eller folketrygden, 
 	eventuelt yrkesskadeerstatning?', label="tab:Erst", align=c('l','r','r'))
 }
+
+txtTidlOp <- if (medSml==1) {', mens det hvite merket angir andel pasienter som har første 
+gangs operasjon i resten av landet'} else {''}
 	@ 
 
 
@@ -651,17 +662,16 @@ Informasjonen er hentet fra legeskjema.
 Figur \ref{fig:TidlOp} viser en prosentvis fordelig mellom primæroperasjon, det vil si første gangs 
 operasjon, og operasjoner hos pasienter som har vært operert tidligere.  
 Søylene representerer hvert år frem til i dag. Tallet på toppen av søylen viser antall operasjoner utført 
-det aktuelle året\Sexpr{if (medSml==1) {', mens det hvite merket angir andel pasienter som har første 
-gangs operasjon i resten av landet'}}.
+det aktuelle året\Sexpr{txtTidlOp}.
 
 <<'FigTidlOp', echo=FALSE>>=
-AndelTidlOp <- RyggAndelStabelTid(RegData=RegData, outfile='TidlOp.pdf', valgtVar='TidlOp', hovedkat=hovedkat,
+AndelTidlOp <- RyggFigAndelStabelTid(RegData=RegData, outfile='TidlOp.pdf', valgtVar='TidlOp', hovedkat=hovedkat,
                    minald = minald, maxald = maxald,
                         erMann=erMann, enhetsUtvalg=enhetsUtvalg, tittel=0, reshID=reshID)
 TidlOpFordHoved <- rowSums(AndelTidlOp$AndelerHoved)
 TidlOpHoved <- round(TidlOpFordHoved[2:4]*100/sum(TidlOpFordHoved[2:4]), 1)
-TidlOpFordRL <- rowSums(AndelTidlOp$AndelerRL)
-TidlOpRL <- round(TidlOpFordRL[2:4]*100/sum(TidlOpFordRL[2:4]), 1)
+TidlOpFordRest <- rowSums(AndelTidlOp$AndelerRest)
+TidlOpRL <- round(TidlOpFordRest[2:4]*100/sum(TidlOpFordRest[2:4]), 1)
 @
 
 \begin{figure}[ht]
@@ -716,16 +726,16 @@ hhv. smerter i rygg/hofte og utstrålende smerter.
 
 <<'TabSmRH', results='asis', echo=FALSE>>=
 if (medSml == 0) {
-SmRHnum <- round(table(opdataLand$SymptVarighRyggHof, useNA='a')*100/Ntot, 1)
+SmRHnum <- round(table(RegData$SymptVarighRyggHof, useNA='a')*100/Ntot, 1)
 SmRH <- paste(SmRHnum, '%', sep='')
 names(SmRH) <- c('Ingen rygg-/hoftesmerter', '< 3 mnd', 
 			'3 - 12 mnd', '1 - 2 år', '> 2 år', 'Ikke besvart')	#, 'Tot. ant.')
 xtable(cbind('Andeler'=SmRH), caption='Varighet av rygg-/hoftesmerter på operasjonstidspunktet', 
 label="tab:SmRH", align=c('l','r'), digits=1)
-MedRH<- median(opdataLand$SymptVarighRyggHof, na.rm=T)
+MedRH<- median(RegData$SymptVarighRyggHof, na.rm=T)
 
 
-UtsRHnum <- round(table(opdataLand$SympVarighUtstr, useNA='a')*100/Ntot, 1)
+UtsRHnum <- round(table(RegData$SympVarighUtstr, useNA='a')*100/Ntot, 1)
 UtsRH <- paste(UtsRHnum, '%', sep='')
 names(UtsRH) <- c('Ingen utstrålende smerter', '< 3 mnd', 
 			'3 - 12 mnd', '1 - 2 år', '> 2 år', 'Ikke besvart')	#, 'Tot. ant.')
@@ -733,9 +743,9 @@ xtable(cbind('Andeler'=UtsRH), caption='Varighet av nåværende utstrålende sme
 			label="tab:Utstr", align=c('l','r'), digits=1)
 
 
-#dum <- LinjerTidRHF(RegData=opdataLand, variabel='VarighUtstr', outfile='VarighUtstrRHF.pdf', hovedkat=99, 
+#dum <- LinjerTidRHF(RegData=RegData, variabel='VarighUtstr', outfile='VarighUtstrRHF.pdf', hovedkat=99, 
 #		kjonn=0, tidlOp=0, tittel=0) 
-#dum <- LinjerTidRHF(RegData=opdataLand, variabel='VarighRyggHof', outfile='VarighRyggHofRHF.pdf', hovedkat=99, 
+#dum <- LinjerTidRHF(RegData=RegData, variabel='VarighRyggHof', outfile='VarighRyggHofRHF.pdf', hovedkat=99, 
 #		kjonn=0, tidlOp=0, tittel=0) 
 
 dum <- RyggFigAndelerGrVar(valgtVar='SympVarighUtstr', RegData=RegData, hovedkat=1,
@@ -779,10 +789,10 @@ Figur \ref{fig:VarighSmerteRHF} andelen som har hatt smerter i mer enn ett år f
 for hvert år i de ulike regionene, samt i hele landet.
 Figur \ref{fig:VarighSmerteAvd} viser andelen pasienter med smerter i mer enn ett år ved de ulike
 helseforetakene.
-Andelen pasienter som har hatt utstrålende smerter i mer enn ett år er \Sexpr{sum(SmRHnum[4:5])}\%, 
-mens \Sexpr{sum(UtsRHnum[4:5])}\% har hatt rygg-/hoftesmerter i mer enn ett år. (Prosentandelen er ut 
-fra totalt antall pasienter, dvs. inklusive de som ikke har svart. Andelen vil derfor være noe lavere
-enn det vi kan lese av Figur \ref{fig:VarighSmerteAvd} hvor andelene er basert på kun de som har svart.)
+%Andelen pasienter som har hatt utstrålende smerter i mer enn ett år er \Sexpr{sum(SmRHnum[4:5])}\%, 
+%mens \Sexpr{sum(UtsRHnum[4:5])}\% har hatt rygg-/hoftesmerter i mer enn ett år. (Prosentandelen er ut 
+%fra totalt antall pasienter, dvs. inklusive de som ikke har svart. Andelen vil derfor være noe lavere
+%enn det vi kan lese av Figur \ref{fig:VarighSmerteAvd} hvor andelene er basert på kun de som har svart.)
 
 
 %\begin{figure}[h] 
@@ -810,7 +820,7 @@ ASA angir pasientens ”sårbarhet” i forhold til å få anestesi og operasjon
 Opplysningene skal hentes fra anestesiskjema som fylles ut av anestesilege/sykepleier før operasjon.
 %For hele landet:
 Tabell \ref{tab:ASA} viser fordeling av ASA grad. Andelen pasienter med ASA grad I-II 
-var \Sexpr{round(sum(table(opdataLand$ASA)[1:2])/Ntot*100, 1)}\%. 
+var \Sexpr{round(sum(table(RegData$ASA)[1:2])/Ntot*100, 1)}\%. 
 
 %Figur \ref{fig:ASA} viser fordeling av ASA-grad hos alle pasienter operert ved \Sexpr{shtxt} 
 %sammenliknet med resten av landet.
@@ -828,8 +838,8 @@ var \Sexpr{round(sum(table(opdataLand$ASA)[1:2])/Ntot*100, 1)}\%.
 %  \label{fig:ASA}
 %\end{figure}
 
-<<TabASA, results=tex, echo=FALSE>>=
-ASAant <- table(opdataLand$ASA, useNA='a')
+<<'TabASA', results='asis', echo=FALSE>>=
+ASAant <- table(RegData$ASA, useNA='a')
 ASApst <- round(ASAant*100/Ntot, 1)
 
 ASA <- cbind('Antall' = ASAant,
@@ -856,7 +866,7 @@ Spørsmålene er besvart av leger. En pasient kan ha vært til flere undersøkel
 RVvar <- c('RvCt', 'RvMr', 'RvRadigr', 'RvDiscogr', 'RvDpregblok', 'RvRtgLscol', 'RvFunksjo')
 if (medSml == 0) {
 RVvar <- c('RvCt', 'RvMr', 'RvRadigr', 'RvDiscogr', 'RvDpregblok', 'RvRtgLscol', 'RvFunksjo')
-	RVant <- colSums(opdataLand[, RVvar], na.rm=T)
+	RVant <- colSums(RegData[, RVvar], na.rm=T)
 	RVpst <- round(RVant*100/Ntot, 1)
 
 RV <- cbind('Antall' = c(RVant, Ntot),
@@ -887,14 +897,14 @@ RFvar <- c("RfNormal", "RfSkive", "RfSentr", "RfLateral", "RfForamino", "RfDegen
 	"RfSpondtypeIsmisk", "RfSpondtypeDegen", "RfDegskol", "RfSynovpre", "RfPseudom")
 
 if (medSml==0) {
-RFant <- colSums(opdataLand[, RFvar], na.rm=T)[-1]
+RFant <- colSums(RegData[, RFvar], na.rm=T)[-1]
 RFpst <- round(RFant*100/Ntot, 1)
 RF <- cbind('Antall' = c(RFant, Ntot),
 			'Andeler' = c(paste(RFpst, '%', sep=''),' '))
 
 #Teller opp de som er diagnostisert som normale:
-RFNorm <- intersect(which(rowSums(opdataLand[, RFvar[2:11]], na.rm=T) == 0), 
-		which(opdataLand$RfNormal == 1))
+RFNorm <- intersect(which(rowSums(RegData[, RFvar[2:11]], na.rm=T) == 0), 
+		which(RegData$RfNormal == 1))
 rownames(RF) <- c('Skiveprolaps', 'Sentral spinalstenose', 'Lateral spinalstenose', 'Foraminal stenose',
 	'Degenerativ rygg/skivedegenerasjon', 'Istmisk spondylolistese', 'Degenerativ spondylolistese',
 	'Degenerativ skoliose', 'Synovial syste', 'Pseudomeningocele', 'Tot.ant.')
@@ -977,23 +987,23 @@ feil/unøyaktig registrering.
 %framgår av Tabell \ref{tab:AntOpMnd}. 
 
 
-<<'TabAntOpMnd', results='asis', echo=FALSE>>=
-AntOpMnd <- AntSoyler(RegData=RegDataHoved, outfile='AntOpMnd.pdf', enhetsUtvalg=enhetsUtvalg,  
-	variabel='Mnd', hovedkat=hovedkat, OpAar=OpAar, erMann=erMann, tittel=0, reshID=reshID)
+%<<'TabAntOpMnd', results='asis', echo=FALSE>>=
+%AntOpMnd <- AntSoyler(RegData=RegDataHoved, outfile='AntOpMnd.pdf', enhetsUtvalg=enhetsUtvalg,  
+%	variabel='Mnd', hovedkat=hovedkat, OpAar=OpAar, erMann=erMann, tittel=0, reshID=reshID)
 
 %AntOpMnd <- rbind('Egen avd.' = AntOpMndAvd$Antall, 'Hele landet' = AntOpMndLand$Antall)
 %xtable(AntOpMnd, caption=AntOpMndLand$Tittel[1], label="tab:AntOpMnd", digits=1, align=c('l',rep('c',12)))
 
-AntOpMnd <- rbind('Antall' = AntOpMnd$Antall, 
+%AntOpMnd <- rbind('Antall' = AntOpMnd$Antall, 
 				'Andeler' = paste(round(AntOpMndLand$Antall/Ntot*100, 1),'%',sep=''))
-xtable(AntOpMnd, caption=AntOpMndLand$Tittel[1], label="tab:AntOpMnd", digits=1, align=c('l',rep('c',12)))
+%xtable(AntOpMnd, caption=AntOpMndLand$Tittel[1], label="tab:AntOpMnd", digits=1, align=c('l',rep('c',12)))
 
-@
+%@
 
-\begin{figure}[ht]
-\centering \includegraphics[width= \Sexpr{0.8}\textwidth]{AntOpMnd.pdf}
-\caption{\label{fig:AntOpMnd} \Sexpr{AntOpMnd$Tittel[1]}}
-\end{figure}
+%\begin{figure}[ht]
+%\centering \includegraphics[width= \Sexpr{0.8}\textwidth]{AntOpMnd.pdf}
+%\caption{\label{fig:AntOpMnd} \Sexpr{AntOpMnd$Tittel[1]}}
+%\end{figure}
 
 
 
@@ -1010,7 +1020,7 @@ definere inn i noen av gruppene.
 Dette skyldes i hovedsak legens utfylling av skjema 2A er mangelfull og/eller unøyaktig. 
 Målsetningen er at antall udefinerbare inngrep skal bli så lavt som mulig.
 
-Totalt er \Sexpr{round(length(which(opdataLand$Inngrep==0))/Ntot*100,1)} \% 
+Totalt er \Sexpr{round(length(which(RegData$Inngrep==0))/Ntot*100,1)} \% 
 av inngrepene udefinerbare. 
 
 #Ved \Sexpr{shtxt} er \Sexpr{round(length(which(RegDataHoved$Inngrep==0))/NHoved*100,1)} \% 
@@ -1029,32 +1039,32 @@ framgår av Tabell \ref{tab:AntHovedInngrep}.
 
 <<'AntHovedInngrepAvd', echo=FALSE>>=	#fig=TRUE, 
 
-#AntHovedInngrepLand <- AntSoyler(RegData=opdataLand, libkat=libkat, outfile='figurer/HinngrLand.pdf', 
+#AntHovedInngrepLand <- AntSoyler(RegData=RegData, libkat=libkat, outfile='figurer/HinngrLand.pdf', 
 #	egenavd=0, aar=aar, reshID=reshID, variabel='HovedInngrep', tittel=0)
 
 HovedInngrep <- RyggFigAndeler(RegData=RegData, valgtVar='HovedInngrep', datoFra=datoFra, datoTil=datoTil, 
-			reshID=reshID, outfile='HovedInngrep.pdf', tittel=0)
+			reshID=reshID, enhetsUtvalg=enhetsUtvalg, outfile='HovedInngrep.pdf', tittel=0)
 
 #AntHovedInngrepAvd <- AntSoyler(RegData=RegDataHoved, outfile=paste(figKat,'HinngrAvd.pdf', sep=''), 
 #	egenavd=1, OpAar=OpAar, reshID=reshID, variabel='HovedInngrep', tittel=0)
 #AntHovedInngrepLand <- AntSoyler(RegData=RegData, outfile=paste(figKat,'HinngrLand.pdf', sep=''), 
 #	egenavd=0, OpAar=OpAar, reshID=reshID, variabel='HovedInngrep', tittel=0)
 if (medSml==0) {
-AntHovedInngrep <- cbind('Antall' = AntHovedInngrepLand$Antall, 
-					'Andeler' = paste(round(AntHovedInngrepLand$Antall/Ntot*100,1),'%', sep='')
+HovedInngrepTab <- cbind('Antall' = HovedInngrep$Antall[1,], 
+					'Andeler' = paste0(round(as.numeric(HovedInngrep$Andeler[1,]),1),'%')
 					)
-xtable(AntHovedInngrep, caption=AntHovedInngrepLand$Tittel[1], label="tab:AntHovedInngrep", 
+xtable(HovedInngrepTab, caption=HovedInngrep$Tittel[1], label="tab:AntHovedInngrep", 
 		align=c('l', 'r', 'r'), digits=1)
 }
 
 if (medSml==1) {
-AntHovedInngrep <- cbind('Egen avd.' = HovedInngrep$Antall[1,], 
+HovedInngrepTab <- cbind('Egen avd.' = HovedInngrep$Antall[1,], 
 					' ' = paste('(',sprintf("%.1f", HovedInngrep$Andeler[1,]),'%)', sep=''),
 					'Landet forøvrig' = HovedInngrep$Antall[2,],
 					'  ' = paste('(',sprintf("%.1f", HovedInngrep$Andeler[2,]),'%)', sep='')
 					)
-rownames(AntHovedInngrep) <- HovedInngrep$GruppeTekst
-xtable(AntHovedInngrep, caption=HovedInngrep$Tittel[1], label="tab:AntHovedInngrep", 
+rownames(HovedInngrepTab) <- HovedInngrep$GruppeTekst
+xtable(HovedInngrepTab, caption=HovedInngrep$Tittel[1], label="tab:AntHovedInngrep", 
 		align=c('l', 'r', 'r', 'r', 'r'), digits=1)
 }
 @
@@ -1085,10 +1095,44 @@ synsfremmende midler (mikroskop eller lupebriller), mens makro betyr at det har 
 utført åpen kirurgi.
 
 
-<<'TabInnHinn', results='asis', echo=FALSE>>=
+<<'TabInnHinn', results='asis', echo=FALSE, eval=FALSE>>=
+hkatnavn <- c(
+      'Operasjonskategori: "annet"',	#hkat=0
+      'Prolapskirurgi',
+      'Foramenotomi',
+      'Laminektomi',
+      'Interspinøst implantat',	
+      'Fusjonskirurgi',
+      'Skiveprotese',
+      'Fjerning/rev. av implantat')	#hkat=7
+      
+      #Dataramme av hovedkategorier og underkategorier			
+      
+      kat_nr <- c(0:19)
+      UnderKat <- c('Annet','Mikro','Makro','Tubekirurgi','Udefinert','Mikro','Makro','Tubekirurgi',
+      	'Udefinert','Laminektomi', 'Interspinøst impl.','PLF','PLIF','TLIF','ALIF',
+      	'Udefinert fusjon', 'Skiveprotese','Fjern interspinøst impl.','Fjerne ostemat.',
+      	'Revisjon ostemat.')
+      hgr <- c(0,1,1,1,1,2,2,2,2,3,4,5,5,5,5,5,6,7,7,7)
+      kat <- data.frame(hgr, hkatnavn[hgr+1], kat_nr, UnderKat)
+	underkattxt <- ''
+	underkat_num <- ''
+
+	#Velge ut riktige underkategorier:
+	if (hovedkat != 99) {
+		underkat_num <- kat$kat_nr[kat$hgr==hovedkat]
+		opdata_ok <- opdata[which(!is.na(match(opdata$Inngrep,underkat_num))),]
+		opdata <- opdata_ok
+		underkattxt <- as.character(kat$txt[underkat_num+1])
+		}
+	names(kat) <- c('Hnr', 'Hnavn', 'Unr', 'Unavn')
+	utdata <- list(opdata, hkattxt, underkattxt, underkat_num, kat) 
+	names(utdata) <- c('data','txt','ukattxt','underkat', 'inngrHinngr')
+
+
 if (medSml==0) {
-AntInngrLand<- table(opdataLand$Inngrep)
-AntHinngrLand <- table(opdataLand$HovedInngrep)[HKatdata$inngrHinn$Hnr+1]
+AntInngrLand<- table(RegData$Inngrep)
+AntHinngrLand <- table(RegData$HovedInngrep)[HKatdata$inngrHinn$Hnr+1]
 hinngr <- as.character(HKatdata$inngrHinn$Hnavn)
 hinngr[c(3:5, 7:9, 13:16, 19:20)] <- c('', ' ', '  ', '   ', '    ', '     ', '      ', '       ', 
 		'        ', '         ', '          ', '           ')
@@ -1125,28 +1169,28 @@ xtable(AndelInngr4, caption='Fordeling av type inngrep innen hver hovedinngrepst
 
 
 
-\subsection{Operasjonskategori, hastegrad}
-Hastegrad er angitt på legeskjema.
-Figur \ref{fig:OpKat} viser fordeling mellom hasteoperasjoner og elektiv kirurgi. 
-Med $\tfrac{1}{2}$-øyeblikkelig  
-%Med {\small 1/2}-øyeblikkelig  
-hjelp menes operasjoner som er gjort utenom vanlig ventetid, for eksempel ved at pasienten har fått 
-rett til ”nødvendig helsehjelp”.
-Tall på toppen av søylene viser antall operasjoner.
+%\subsection{Operasjonskategori, hastegrad}
+%Hastegrad er angitt på legeskjema.
+%Figur \ref{fig:OpKat} viser fordeling mellom hasteoperasjoner og elektiv kirurgi. 
+%Med $\tfrac{1}{2}$-øyeblikkelig  
+%%Med {\small 1/2}-øyeblikkelig  
+%hjelp menes operasjoner som er gjort utenom vanlig ventetid, for eksempel ved at pasienten har fått 
+%rett til ”nødvendig helsehjelp”.
+%Tall på toppen av søylene viser antall operasjoner.
 
 
-\begin{figure}[ht] 
-  \begin{center}
-\scalebox{\Sexpr{s1}}{
-<<'FigOpKat', echo=FALSE>>=
-AndelOpKat <- AndelStabelEgetLand(RegData=RegData, outfile='OpKat.pdf', valgtVar='OpKat',
-		erMann=erMann, hovedkat=hovedkat, OpAar=OpAar, reshID=reshID, tittel=0)
-@
-}
-  \end{center}
-  \caption{\Sexpr{AndelOpKat$Tittel}}
-  \label{fig:OpKat}
-\end{figure}
+%\begin{figure}[ht] 
+%  \begin{center}
+%\scalebox{\Sexpr{s1}}{
+%<<'FigOpKat', echo=FALSE>>=
+%AndelOpKat <- AndelStabelEgetLand(RegData=RegData, outfile='OpKat.pdf', valgtVar='OpKat',
+%		erMann=erMann, hovedkat=hovedkat, OpAar=OpAar, reshID=reshID, tittel=0)
+%@
+%}
+%  \end{center}
+%  \caption{\Sexpr{AndelOpKat$Tittel}}
+%  \label{fig:OpKat}
+%\end{figure}
 
 %Andelen pasienter operert som ”øyeblikkelig hjelp” var \Sexpr{AndelOpKat$Andeler[3,1]}\% 
 %ved \Sexpr{shtxt} sammenliknet med \Sexpr{AndelOpKat$Andeler[3,2]}\% for hele landet
@@ -1189,6 +1233,7 @@ LiggetidBox <- RyggFigGjsnTid(RegData=RegData,  outfile='LiggetidBox.pdf',
 
 
 \subsection{Bruk av antibiotikaprofylakse}
+KOMMER!!
 
 Figur \ref{fig:Antibiotika} viser andelen pasienter som har fått antibiotikaprofylakse
 de respektive år. 
@@ -1196,9 +1241,9 @@ de respektive år.
 De nøyaktige tallene for hvor stor andel av pasientene som har fått antibiotikaprofylakse 
 framgår av Tabell \ref{tab:AntibiotikaAndel}. 
 
-<<'Antibiotika', results='asis', echo=FALSE>>=
-Antibiotika <- AndelTidLinjer(RegData=RegData, outfile='Antibiotika.pdf', reshID=reshID, 
-	erMann=erMann, hovedkat=hovedkat, variabel='Antibiotika', tittel=0)	
+<<'Antibiotika', results='asis', echo=FALSE, eval=FALSE>>=
+Antibiotika <- RyggFigAndelerTid(RegData=RegData, outfile='Antibiotika.pdf', reshID=reshID, enhetsUtvalg=enhetsUtvalg,
+	erMann=erMann, hovedkat=hovedkat, variabel='Antibiotika', tittel=0)	#AndelTidLinjer
 
 if (medSml==0) {
 Antibiotika <- rbind('Andeler' = paste(round(Antibiotika$Andel[1,],1), '%',sep=''),
@@ -1206,7 +1251,7 @@ Antibiotika <- rbind('Andeler' = paste(round(Antibiotika$Andel[1,],1), '%',sep='
 xtable(Antibiotika, caption=Antibiotika$Tittel, label="tab:AntibiotikaAndel", 
 		align=c('l',rep('r', aarRapp-2007+1)))
 #Hele landet:
-NMangel <- Ntot - sum(table(opdataLand$Antibiotika))
+NMangel <- Ntot - sum(table(RegData$Antibiotika))
 AndelAntiLand <- round(Antibiotika$Andeler[1,dim(Antibiotika$Andeler)[2]],1)
 }
 
@@ -1224,10 +1269,10 @@ Antibiotika <- tapply(RegDataHoved$Antibiotika, RegDataHoved$OpAar, FUN=sum, na.
 }
 @ 
 
-\begin{figure}[ht]
-	\centering \includegraphics[width= \Sexpr{s1}\textwidth]{Antibiotika.pdf}
-	\caption{\label{fig:Antibiotika} \Sexpr{Antibiotika$Tittel}}
-\end{figure}
+%\begin{figure}[ht]
+%	\centering \includegraphics[width= \Sexpr{s1}\textwidth]{Antibiotika.pdf}
+%	\caption{\label{fig:Antibiotika} \Sexpr{Antibiotika$Tittel}}
+%\end{figure}
 
 
 %Samlet svarprosent på om det er gitt Antibiotikaprofylakse er 
@@ -1255,13 +1300,13 @@ Prescore gir en pekepinn på hvor streng operasjonsindikasjonen har vært.
 
 <<'FigPre', echo=FALSE>>=	 #fig=TRUE, 
 
-dum <- RyggFigGjsnTid(RegData=RegData,  outfile='EQ5DPre.pdf',
+dum <- RyggFigGjsnBox(RegData=RegData,  outfile='EQ5DPre.pdf',
 		valgtVar='EQ5DPre', ktr=ktr, tittel=0, valgtMaal='', enhetsUtvalg=enhetsUtvalg, reshID=reshID)
-dum <- RyggFigGjsnTid(RegData=RegData,  outfile='OswPre.pdf', 
+dum <- RyggFigGjsnBox(RegData=RegData,  outfile='OswPre.pdf', 
 		valgtVar='OswTotPre', ktr=ktr, tittel=0, valgtMaal='', enhetsUtvalg=enhetsUtvalg, reshID=reshID)
-dum <- RyggFigGjsnTid(RegData=RegData,  outfile='SmBePre.pdf', 
+dum <- RyggFigGjsnBox(RegData=RegData,  outfile='SmBePre.pdf', 
 		valgtVar='SmBePre', ktr=ktr, tittel=0, valgtMaal='', enhetsUtvalg=enhetsUtvalg, reshID=reshID)
-dum <- RyggFigGjsnTid(RegData=RegData,  outfile='SmRyPre.pdf', 
+dum <- RyggFigGjsnBox(RegData=RegData,  outfile='SmRyPre.pdf', 
 		valgtVar='SmRyPre', ktr=ktr, tittel=0, valgtMaal='', enhetsUtvalg=enhetsUtvalg, reshID=reshID)
 @
 
@@ -1310,17 +1355,17 @@ Det er verd å merke seg at hvis pasienten
 har svak indikasjon i utgangspunktet, er det stor sjanse for at han/hun faktisk blir verre.
 
 <<'FigEffPre', echo=FALSE>>=	 #fig=TRUE, 
-dum <- RyggFigGjsnBox(RegData=RegData, outfile='OswEndrPre.pdf', 
-	reshID=reshID, OpAar=OpAar, variabel='Oswestry', erMann=erMann, hovedkat=hovedkat, 
+dum <- RyggFigGjsnBox(RegData=RegData, outfile='OswEndrPre.pdf', enhetsUtvalg=enhetsUtvalg,
+	reshID=reshID, aar=aar, valgtVar='OswEndrPre', erMann=erMann, hovedkat=hovedkat, 
 	ktr=ktr, tittel=0)
-dum <- RyggFigGjsnBox(RegData=RegData, outfile='EQ5DEndrPre.pdf', 
-	reshID=reshID, OpAar=OpAar, variabel='EQ5D', erMann=erMann, hovedkat=hovedkat, 
+dum <- RyggFigGjsnBox(RegData=RegData, outfile='EQ5DEndrPre.pdf', enhetsUtvalg=enhetsUtvalg,
+	reshID=reshID, aar=aar, valgtVar='EQ5DEndrPre', erMann=erMann, hovedkat=hovedkat, 
 	ktr=ktr, tittel=0)
-dum <- RyggFigGjsnBox(RegData=RegData, outfile='SmBeinEndrPre.pdf', 
-	reshID=reshID, OpAar=OpAar, variabel='SmBein', erMann=erMann, hovedkat=hovedkat, 
+dum <- RyggFigGjsnBox(RegData=RegData, outfile='SmBeinEndrPre.pdf', enhetsUtvalg=enhetsUtvalg,
+	reshID=reshID, aar=aar, valgtVar='SmBeinEndrPre', erMann=erMann, hovedkat=hovedkat, 
 	ktr=ktr, tittel=0)
-dum <- RyggFigGjsnBox(RegData=RegData, outfile='SmRyggEndrPre.pdf', 
-	reshID=reshID, OpAar=OpAar, variabel='SmRygg', erMann=erMann, hovedkat=hovedkat, 
+dum <- RyggFigGjsnBox(RegData=RegData, outfile='SmRyggEndrPre.pdf', enhetsUtvalg=enhetsUtvalg,
+	reshID=reshID, aar=aar, valgtVar='SmRyggEndrPre', erMann=erMann, hovedkat=hovedkat, 
 	ktr=ktr, tittel=0)
 @
 
@@ -1349,35 +1394,40 @@ med størst forbedring i ODI. Merk at resultatene \textit{ikke} justert for fors
 \\
 
 <<'FigOsw', echo=FALSE>>=	 #fig=TRUE, 
-dum <- FordPrePost(RegData=RegData, outfile='OswestryPP.pdf', 
-	reshID=reshID, egenavd=egenavd, variabel='Oswestry', plotType='S', OpAar=OpAar, erMann=erMann, hovedkat=hovedkat, ktr=ktr, tittel=0)
-#dum <- BoxTid(RegData=RegData, outfile='OswEndr.pdf', reshID=reshID, 
-#	variabel='OswEndr', erMann=erMann, hovedkat=hovedkat, ktr=ktr, tittel=0)
-dum <- RyggFigGjsnTid(RegData=RegData,  outfile='OswEndr.pdf', 
+#dum <- FordPrePost(RegData=RegData, outfile='OswestryPP.pdf', 
+#	reshID=reshID, valgtVar='Oswestry', plotType='S', OpAar=OpAar, erMann=erMann, hovedkat=hovedkat, ktr=ktr, tittel=0)
+dum <- RyggFigGjsnBox(RegData=RegData,  outfile='OswEndr.pdf', 
 		valgtVar='OswEndr', ktr=ktr, tittel=0, valgtMaal='', enhetsUtvalg=1, reshID=reshID)
-dum <- Osw_over30pst(RegData=RegData, outfile='Osw_over30pst.pdf',
-		hovedkat=hovedkat, ktr=ktr, tidlOp=tidlOp, shgr=0, OpAar=OpAar, erMann=erMann, reshID=reshID, tittel=0)
-dum <- SoyleSml(RegData=RegData, outfile='OswEndrSml.pdf', 
-	reshID=reshID, variabel='OswEndr', tidlOp=tidlOp, OpAar=OpAar, erMann=erMann, shgr=0, 
-	hovedkat=hovedkat, ktr=ktr, just=0, tittel=0)
+#dum <- Osw_over30pst(RegData=RegData, valgtVaroutfile='Osw_over30pst.pdf',
+#		hovedkat=hovedkat, ktr=ktr, tidlOp=tidlOp, shgr=0, OpAar=OpAar, erMann=erMann, reshID=reshID, tittel=0)
+#dum <- SoyleSml(RegData=RegData, outfile='OswEndrSml.pdf', 
+#	reshID=reshID, valgtVar='OswEndr', tidlOp=tidlOp, OpAar=OpAar, erMann=erMann, shgr=0, 
+#	hovedkat=hovedkat, ktr=ktr, just=0, tittel=0)
+dum <- RyggFigAndelerGrVar(RegData=RegData, valgtVar='Osw30_3mnd', datoFra=datoFra, datoTil=datoTil, 
+                            minald=minald, maxald=maxald, erMann=erMann, hovedkat=hovedkat, tidlOp='', preprosess=0,
+                            enhetsUtvalg=enhetsUtvalg, grVar='ShNavn', tittel=0, reshID=reshID, outfile='Osw30Shus.pdf')
+
+
 @
  
 
 \begin{figure}[h] 
 \centerline{
-  \scalebox{\Sexpr{s2}}{\includegraphics{\Sexpr{ 'OswestryPP.pdf'}}}
+%  \scalebox{\Sexpr{s2}}{\includegraphics{\Sexpr{ 'OswestryPP.pdf'}}}
   \scalebox{\Sexpr{s2}}{\includegraphics{\Sexpr{ 'OswEndr.pdf'}}}
+  \scalebox{\Sexpr{s2}}{\includegraphics{\Sexpr{ 'Osw30Shus.pdf'}}}
   }
-  \caption{\Sexpr{paste('Figuren til venstre viser fordeling av Oswestry før og ', ktrtxt, ' etter operasjon, mens figuren til høyre viser gjennomsnittlig endring i Oswestry, ', ktrtxt,  ' etter operasjon.', sep='')}}
+%  \caption{\Sexpr{paste('Figuren til venstre viser fordeling av Oswestry før og ', ktrtxt, ' etter operasjon, mens %figuren til høyre viser gjennomsnittlig endring i Oswestry, ', ktrtxt,  ' etter operasjon.', sep='')}}
+  \caption{\Sexpr{paste0('Figuren til viser gjennomsnittlig endring i Oswestry, ', ktrtxt,  ' etter operasjon og andel pasienter med klinisk signifikant forbedring (30%) av Oswestry-skår.')}}
   \label{fig:OswEndr}
 \end{figure}
 
-\begin{figure}[h] 
-\centerline{
-  \scalebox{\Sexpr{s2}}{\includegraphics{\Sexpr{ 'Osw_over30pst.pdf'}}}
-  \scalebox{\Sexpr{s2}}{\includegraphics{\Sexpr{ 'OswEndrSml.pdf'}}}
-  }
-  \caption{\Sexpr{paste('Endring i Oswestry, ', ktrtxt, ' etter operasjon. Søylediagrammet til venstre viser andel pasienter med minst 30 prosent forbedring i ODI for hele landet, egen avdeling og de tre avdelingene med best resultat. Figuren til høyre viser gjannomsnittlig differanse mellom ODI hhv. før og etter operasjonen for tilsvarende grupper.', sep='')}}
+%\begin{figure}[h] 
+%\centerline{
+%  \scalebox{\Sexpr{s2}}{\includegraphics{\Sexpr{ 'Osw30.pdf'}}}
+%  \scalebox{\Sexpr{s2}}{\includegraphics{\Sexpr{ 'OswEndrSml.pdf'}}}
+%  }
+%  \caption{\Sexpr{paste('Endring i Oswestry, ', ktrtxt, ' etter operasjon. Søylediagrammet til venstre viser andel %pasienter med minst 30 prosent forbedring i ODI for hele landet, egen avdeling og de tre avdelingene med best resultat. Figuren til høyre viser gjannomsnittlig differanse mellom ODI hhv. før og etter operasjonen for tilsvarende grupper.', sep='')}}
   \label{fig:OswEndrSml}
 \end{figure}
 
@@ -1392,68 +1442,74 @@ angir lav livskvalitet.
 #	egenavd=egenavd, variabel='Oswestry', plotType='', OpAar=OpAar, erMann=erMann, hovedkat=hovedkat, ktr=ktr, tittel=0)
 #dum <- BoxTid(RegData=RegData, outfile='EQ5DEndr.pdf', reshID=reshID, 
 #	variabel='EQ5DEndr', erMann=erMann, hovedkat=hovedkat, ktr=ktr, tittel=0)
-dum <- RyggFigGjsnTid(RegData=RegData,  outfile='EQ5DEndr.pdf', 
-		valgtVar='EQ5DEndr', ktr=ktr, tittel=0, valgtMaal='', enhetsUtvalg=1, reshID=reshID)
-dum <- SoyleSml(RegData=RegData, outfile='EQ5DEndrSml.pdf', 
-	reshID=reshID, variabel='EQ5DEndr', tidlOp=tidlOp, OpAar=OpAar, erMann=erMann, shgr=0, hovedkat=hovedkat, ktr=ktr, just=0, tittel=0)
+dum <- RyggFigGjsnBox(RegData=RegData,  outfile='EQ5DEndrTid1.pdf', 
+		valgtVar='EQ5DEndr', ktr=1, tittel=0, valgtMaal='', enhetsUtvalg=1, reshID=reshID)
+dum <- RyggFigGjsnBox(RegData=RegData,  outfile='EQ5DEndrTid2.pdf', 
+		valgtVar='EQ5DEndrPre', ktr=2, tittel=0, valgtMaal='', enhetsUtvalg=1, reshID=reshID)
+#dum <- SoyleSml(RegData=RegData, outfile='EQ5DEndrSml.pdf', 
+#	reshID=reshID, variabel='EQ5DEndr', tidlOp=tidlOp, OpAar=OpAar, erMann=erMann, shgr=0, hovedkat=hovedkat, ktr=ktr, #tittel=0)
 @
 
 \begin{figure}[h] 
 \centerline{
-  \scalebox{\Sexpr{s2}}{\includegraphics{\Sexpr{ 'EQ5DEndr.pdf'}}}
-  \scalebox{\Sexpr{s2}}{\includegraphics{\Sexpr{ 'EQ5DEndrSml.pdf'}}}
+  \scalebox{\Sexpr{s2}}{\includegraphics{\Sexpr{ 'EQ5DEndrTid1.pdf'}}}
+  \scalebox{\Sexpr{s2}}{\includegraphics{\Sexpr{ 'EQ5DEndrTid2.pdf'}}}
   }
-  \caption{\Sexpr{paste('Endring i EQ-5D, ', ktrtxt, 'etter operasjon'}}
+  \caption{\Sexpr{paste0('Endring i EQ-5D, ', ktrtxt, 'etter operasjon')}}
   \label{fig:EQ5DEndr}
 \end{figure}
 
-Figur \ref{fig:EQ5DEndr} viser endring i EQ-5D score 3 og 12 mnd. etter operasjon hos pasienter operert ved \Sexpr{shtxt} og i landet for øvrig for hvert år.
+Figur \ref{fig:EQ5DEndr} viser endring i EQ-5D score 3 og 12 mnd. etter operasjon. 
+%hos pasienter operert ved \Sexpr{shtxt} og i landet for øvrig for hvert år.
 
 
 \subsection{Ryggsmerter}
 Skala for ryggsmerter går fra 0 til 10, hvor 0 betegner ingen smerte.
 <<'FigSmRy', echo=FALSE>>=	 #fig=TRUE, 
-dum <- FordPrePost(RegData=RegData, outfile='SmRyggPP.pdf', 
-	reshID=reshID, egenavd=egenavd, variabel='SmRygg', plotType=plotType, OpAar=OpAar, 
-	erMann=erMann, hovedkat=hovedkat, ktr=ktr, tittel=0)
-#dum <- BoxTid(RegData=RegData, outfile='SmRyggSml.pdf', reshID=reshID, 
-#	variabel='SmRyggEndr', erMann=erMann, hovedkat=hovedkat, ktr=ktr, tittel=0)
-dum <- RyggFigGjsnTid(RegData=RegData,  outfile='SmRyggSml.pdf', 
+#dum <- FordPrePost(RegData=RegData, outfile='SmRyggPP.pdf', reshID=reshID, 
+#                 variabel='SmRygg', aar=aar, erMann=erMann, hovedkat=hovedkat, ktr=ktr, tittel=0)
+dum <- RyggFigGjsnBox(RegData=RegData,  outfile='SmRyggEndrPre.pdf', 
+		valgtVar='SmRyggEndrPre', ktr=ktr, tittel=0, valgtMaal='', enhetsUtvalg=1, reshID=reshID)
+dum <- RyggFigGjsnBox(RegData=RegData,  outfile='SmRyggEndrTid.pdf', 
 		valgtVar='SmRyggEndr', ktr=ktr, tittel=0, valgtMaal='', enhetsUtvalg=1, reshID=reshID)
 @
 
 \begin{figure}[h] 
 \centerline{
-  \scalebox{\Sexpr{s2}}{\includegraphics{\Sexpr{ 'SmRyggPP.pdf'}}}
-  \scalebox{\Sexpr{s2}}{\includegraphics{\Sexpr{ 'SmRyggSml.pdf'}}}
+  \scalebox{\Sexpr{s2}}{\includegraphics{\Sexpr{ 'SmRyggEndrPre.pdf'}}}
+  \scalebox{\Sexpr{s2}}{\includegraphics{\Sexpr{ 'SmRyggEndrTid.pdf'}}}
   }
   \caption{\Sexpr{paste('Endring i ryggsmerter, ', ktrtxt, 'etter operasjon', sep='')}}
   \label{fig:SmRygg}
 \end{figure}
 
-Figur \ref{fig:SmRygg} viser hhv fordeling av ryggsmerter før og etter operasjon, samt endring i ryggsmerter \Sexpr{ktrtxt} etter operasjon hos pasienter operert ved \Sexpr{shtxt} og i landet for øvrig for hvert år.
+Figur \ref{fig:SmRygg} endring av ryggsmerter fra før til etter operasjon, samt endring i ryggsmerter.
 
 
 \subsection{Beinsmerter}
 Skala for beinsmerter går fra 0 til 10, hvor 0 betegner ingen smerte.
 <<'FigSmBe', echo=FALSE>>=	 #fig=TRUE, 
-dum <- FordPrePost(RegData=RegData, outfile='SmBeinPP.pdf', reshID=reshID, egenavd=egenavd, variabel='SmBein', plotType=plotType, OpAar=OpAar, erMann=erMann, hovedkat=hovedkat, ktr=ktr, tittel=0)
+#dum <- FordPrePost(RegData=RegData, outfile='SmBeinPP.pdf', reshID=reshID, egenavd=egenavd, variabel='SmBein', plotType=plotType, OpAar=OpAar, erMann=erMann, hovedkat=hovedkat, ktr=ktr, tittel=0)
 #dum <- BoxTid(RegData=RegData, outfile='SmBeinSml.pdf', reshID=reshID, 
 #	variabel='SmBeinEndr', erMann=erMann, hovedkat=hovedkat, ktr=ktr, tittel=0)
-dum <- RyggFigGjsnTid(RegData=RegData,  outfile='SmBeinSml.pdf', 
+#dum <- RyggFigGjsnB(RegData=RegData,  outfile='SmBeinSml.pdf', 
+#		valgtVar='SmBeinEndr', ktr=ktr, tittel=0, valgtMaal='', enhetsUtvalg=1, reshID=reshID)
+dum <- RyggFigGjsnBox(RegData=RegData,  outfile='SmBeinEndrPre.pdf', 
+		valgtVar='SmBeinEndrPre', ktr=ktr, tittel=0, valgtMaal='', enhetsUtvalg=1, reshID=reshID)
+dum <- RyggFigGjsnBox(RegData=RegData,  outfile='SmBeinEndrTid.pdf', 
 		valgtVar='SmBeinEndr', ktr=ktr, tittel=0, valgtMaal='', enhetsUtvalg=1, reshID=reshID)
 @
 
 \begin{figure}[h] 
 \centerline{
-  \scalebox{\Sexpr{s2}}{\includegraphics{\Sexpr{ 'SmBeinPP.pdf'}}}
-  \scalebox{\Sexpr{s2}}{\includegraphics{\Sexpr{ 'SmBeinSml.pdf'}}}
+  \scalebox{\Sexpr{s2}}{\includegraphics{\Sexpr{ 'SmBeinEndrPre.pdf'}}}
+  \scalebox{\Sexpr{s2}}{\includegraphics{\Sexpr{ 'SmBeinEndrTid.pdf'}}}
   }
-  \caption{\Sexpr{paste('Endring i beinsmerter, ', ktrtxt, 'etter operasjon', sep='')}}
+  \caption{\Sexpr{paste0('Endring i beinsmerter, ', ktrtxt, 'etter operasjon')}}
   \label{fig:SmBein}
 \end{figure}
 
-Figur \ref{fig:SmBein} viser hhv fordeling av ryggsmerter før og etter operasjon, samt endring i ryggsmerter \Sexpr{ktrtxt} etter operasjon hos pasienter operert ved \Sexpr{shtxt} og i landet for øvrig for hvert år.
+Figur \ref{fig:SmBein} viser differansen av ryggsmerter fra før til etter operasjon.
 
 
 \clearpage
@@ -1473,8 +1529,8 @@ I figuren er det gjort følgende aggregering av svaralternativene i spørreskjem
 	\begin{center}
 \scalebox{\Sexpr{s1}}{
 <<'FigNytte', echo=FALSE>>=
-	Nytte <- AndelStabelTid(RegData=RegData, outfile='', variabel='Nytte', 
-	erMann=erMann, hovedkat=hovedkat, tidlOp=tidlOp, egenavd=egenavd, ktr=ktr, 
+	Nytte <- RyggFigAndelStabelTid(RegData=RegData, outfile='', valgtVar='Nytte', 
+	erMann=erMann, hovedkat=hovedkat, tidlOp=tidlOp, ktr=ktr, enhetsUtvalg = enhetsUtvalg,
 	reshID=reshID, tittel=0)
 @
 }
@@ -1495,8 +1551,8 @@ etter operasjon ved \Sexpr{shtxt} fordelt på år. Det hvite merket på søylene
 	\begin{center}
 \scalebox{\Sexpr{s1}}{
 <<'FigFornoyd', echo=FALSE>>=
-	Fornoyd <- AndelStabelTid(RegData=RegData, outfile='', variabel='Fornoyd', erMann=erMann, 
-		hovedkat=hovedkat, tidlOp=tidlOp, egenavd=egenavd, ktr=ktr, reshID=reshID, tittel=0)
+	Fornoyd <- RyggFigAndelStabelTid(RegData=RegData, outfile='', valgtVar='Fornoyd', erMann=erMann, 
+		enhetsUtvalg=enhetsUtvalg, hovedkat=hovedkat, tidlOp=tidlOp, ktr=ktr, reshID=reshID, tittel=0)
 @
 }
 	\end{center}

@@ -38,7 +38,32 @@ RyggPreprosess <- function(RegData=RegData)
 	RegData$SympVarighUtstr <- factor(RegData$SympVarighUtstr, levels=1:5)
 	RegData$OpKat <- factor(RegData$OpKat, levels=1:3)
 
-
+#Legge til underkategori for hovedkategori.
+#	if (is.na(match("Inngrep", names(opdata))) != 'TRUE') {	#Hvis har variabelen Inngrep
+#	      #if (match("Inngrep", names(opdata))) {	#Hvis har variabelen Inngrep
+#	      
+#	      #Dataramme av hovedkategorier og underkategorier			
+#	      gr_nr <- c(0:19)
+#	      txt <- c('Annet','Mikro','Makro','Tubekirurgi','Udefinert','Mikro','Makro','Tubekirurgi',
+#	               'Udefinert','Laminektomi', 'Interspinøst impl.','PLF','PLIF','TLIF','ALIF',
+#	               'Udefinert fusjon', 'Skiveprotese','Fjern interspinøst impl.','Fjerne ostemat.',
+#	               'Revisjon ostemat.')
+#	      hgr <- c(0,1,1,1,1,2,2,2,2,3,4,5,5,5,5,5,6,7,7,7)
+#	      kat <- data.frame(hgr, hkatnavn[hgr+1], gr_nr, txt)
+#	      underkattxt <- ''
+#	      underkat_num <- ''
+#	      
+#	      #Velge ut riktige underkategorier:
+#	      if (hovedkat != 99) {
+#	            underkat_num <- kat$gr_nr[kat$hgr==hovedkat]
+#	            opdata_ok <- opdata[which(!is.na(match(opdata$Inngrep,underkat_num))),]
+#	            opdata <- opdata_ok
+#	            underkattxt <- as.character(kat$txt[underkat_num+1])
+#	      }
+#	      names(kat) <- c('Hnr', 'Hnavn', 'Unr', 'Unavn')
+#	      utdata <- list(opdata, hkattxt, underkattxt, underkat_num, kat) 
+#	      names(utdata) <- c('data','txt','ukattxt','underkat', 'inngrHinngr')
+	      
 
   return(invisible(RegData))
 }

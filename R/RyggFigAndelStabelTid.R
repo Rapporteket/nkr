@@ -164,10 +164,10 @@ RegData <- RegData[which(RegData$OpAar %in% Aartxt), ]
 
 NVarAarRest <- ftable(RegData[indRest, c('Var','OpAar')])	#ftable(list(RegDataRL$Var, RegDataRL$OpAar))
 NAarRest <- colSums(NVarAarRest)
-AndelVarRest <- prop.table(NVarAarRest,2)*100
+AndelerRest <- prop.table(NVarAarRest,2)*100
 NVarAar <- ftable(RegData[indHoved, c('Var','OpAar')])	#ftable(list(RegData$Var, RegData$OpAar))
 NAar <- colSums(NVarAar)
-AndelVarHoved <- prop.table(NVarAar,2)*100
+AndelerHoved <- prop.table(NVarAar,2)*100
 
 #-----------Figur---------------------------------------
 #Hvis for få observasjoner..
@@ -195,7 +195,7 @@ NutvTxt <- length(utvalgTxt)
 #vmarg <- switch(retn, V=0, H=max(0, strwidth(grtxtpst, units='figure', cex=cexgr)*0.7))
 par('fig'=c(0, 1, 0, 1-0.02*(NutvTxt-1)))	#Har alltid datoutvalg med
 
-koord <- barplot(AndelVarHoved, beside=F, las=1, main=Tittel, #names.arg=Aartxt, cex.names=0.95,
+koord <- barplot(AndelerHoved, beside=F, las=1, main=Tittel, #names.arg=Aartxt, cex.names=0.95,
         col=farger, ylab="Andel (%)", ylim=c(0,132),	 #xlim=c(0, length(Aartxt)*1.2), 
 	cex.main=1, font.main=1, axes=F, cex.axis=.9, cex.lab=.95, space=.25, border=NA)
 axis(side=2, at=c(0,20,40,60,80,100))
@@ -206,7 +206,7 @@ mtext(at=koord, cex=0.9, side=1, line=0, adj=0.5, Aartxt)	#
 mtext(side=1, line=1,'Operasjonsår', cex=0.9)
 mtext(at=min(koord)-0.5, cex=0.8, side=1, line=2, adj=0, paste0('Tall over søylene angir antall operasjoner i ', shtxt)) 
 if (medSml==1) {
-	points(koord, AndelVarRest[1,], cex=1.2, lwd=1, col='white', bg='white', pch=21)
+	points(koord, AndelerRest[1,], cex=1.2, lwd=1, col='white', bg='white', pch=21)
 	mtext(at=min(koord)-0.5, cex=0.8, side=1, line=3, adj=0, 
 		paste('Hvitt merke: Andel "', Skala[1], '", resten av landet', sep=''))
 	}
@@ -218,8 +218,8 @@ par('fig'=c(0, 1, 0, 1))
 if ( outfile != '') {dev.off()}
 }
 #------------------------------------------------------------------------------
-rownames(AndelVarHoved) <- Skala
-UtData <- list(toString(TittelUt),'AndelerHoved', 'AndelerRest' )
-names(UtData) <- c('Tittel', shtxt, smltxt)
+rownames(AndelerHoved) <- Skala
+UtData <- list(toString(TittelUt),AndelerHoved, AndelerRest )
+names(UtData) <- c('Tittel', 'AndelerHoved', 'AndelerRest')
 return(invisible(UtData))
 }

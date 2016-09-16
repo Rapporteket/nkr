@@ -119,7 +119,7 @@ if (preprosess == 1){
 #------------Parameterdefinisjon -------------------------
 retn <- 'V'		#Vertikal som standard. 'H' angis evt. for enkeltvariable
 grtxt <- ''		#Spesifiseres for hver enkelt variabel
-grtxt2 <- ''	#Spesifiseres evt. for hver enkelt variabel
+grtxt2 <- NULL	#Spesifiseres evt. for hver enkelt variabel
 subtxt <- ''	#Benevning
 flerevar <- 0
 antDes <- 1
@@ -651,7 +651,7 @@ if (retn == 'H') {
 
 if (retn == 'V' ) {
 #Vertikale søyler eller linje
-	if (grtxt2 == '') {grtxt2 <- paste('(', sprintf(antDesTxt, Andeler$Hoved), '%)', sep='')}
+	if (length(grtxt2) == 0) {grtxt2 <- paste('(', sprintf(antDesTxt, Andeler$Hoved), '%)', sep='')}
 	ymax <- max(c(Andeler$Hoved, Andeler$Rest),na.rm=T)*1.15
 	pos <- barplot(as.numeric(Andeler$Hoved), beside=TRUE, las=1, ylab="Andel pasienter (%)",	
 		xlab=subtxt, col=fargeHoved, border='white', ylim=c(0, ymax))	#sub=subtxt,	
