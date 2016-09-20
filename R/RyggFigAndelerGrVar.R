@@ -12,7 +12,7 @@
 #'     \item Antibiotika: Er det gitt antibiotikaprofylakse?    
 #'     \item ArbstatusPre: Mottar sykepenger, før operasjon?    
 #'     \item Arbstatus3mnd: Mottar sykepenger, 3 mnd etter operasjon?    
-#'     \item Arbstatus12mnd: Mottar sykepenger, 12 mnd. etter operasjon    
+#'     \item Arbstatus12mnd: Mottar sykepenger, 12 mnd. etter operasjon   [UTGÅR]
 #'     \item ASA: ASA-grad > II    
 #'     \item BMI: Pasienter med fedme (BMI>30)    
 #'     \item ErstatningPre: Søkt/planlegger å søke erstatning?    
@@ -22,9 +22,9 @@
 #'     \item Misfor3mnd:  Andel med Misfornøyd/litt misfornøyd, 3 mnd
 #'     \item Misfor12mnd: Andel med Misfornøyd/litt misfornøyd, 12 mnd
 #'     \item Nytte3mnd: Klart bedre, 3 mnd.    
-#'     \item Nytte12mnd: Klart bedre, 12 mnd. 
-#'	 \item Osw30_3mnd: Mer enn 30% forbedring i Oswestry-skår, 3 mnd.
-#'	 \item Osw30_12mnd: Mer enn 30% forbedring i Oswestry-skår, 12 mnd.
+#'     \item Nytte12mnd: Klart bedre, 12 mnd.  [UTGÅR]
+#'	 \item OswEndr30pst: Mer enn 30% forbedring i Oswestry-skår, 3 mnd. [ENDRET fra Osw30_3mnd]
+#'	 \item Osw30_12mnd: Mer enn 30% forbedring i Oswestry-skår, 12 mnd. [UTGÅR]
 #'     \item PeropKomp: Komplikasjon ved operasjon
 #'     \item PeropKompDura: Komplikasjon ved operasjon: Durarift
 #'     \item Roker: Røyker du?    
@@ -34,8 +34,16 @@
 #'     \item SympVarighUtstr: Varighet av utstrålende smerter > 1 år  
 #'     \item UforetrygdPre: Søkt eller planlegger å søke uføretrygd før operasjon?    
 #'     \item Utd: Andel høyskole-/universitetsutdannede    
-#'     \item Verre3mnd Mye verre/verre enn noen gang, 3 mnd.
-#'     \item Verre12mnd Mye verre/verre enn noen gang, 12 mnd.
+#'     \item Verre Mye verre/verre enn noen gang, 3 mnd. [ENDRET fra Verre3mnd
+#'     \item Verre12mnd Mye verre/verre enn noen gang, 12 mnd.  [UTGÅR]
+#'		\item ..
+#'	 	\item BeinsmLavPre: Pasienter med preop. beinsmerte < 2.5 og ikke parese.
+#'		\item BeinsmEndrLav: Forbedring av beinsmerter under 1.5 poeng
+#'     \item DegSponSSSten: Pasienter med Degenerativ spondylolistese og sentral spinal stenose 
+#'	 \item OswEndrLav: Mer enn 20 poeng forbedring i Oswestry-skår, 3 mnd/12mnd.
+#' \item OswEndr20: 
+#' \item Osw48: 
+#' \item KpInf3Mnd: 
 #'		}
 #'
 #' @inheritParams RyggFigAndeler
@@ -52,7 +60,7 @@
 
 RyggFigAndelerGrVar <- function(RegData, valgtVar, datoFra='2007-01-01', datoTil='3000-12-31', 
                             minald=0, maxald=130, erMann='', hovedkat=99, tidlOp='', hentData=0, preprosess=1,
-                            enhetsUtvalg=0, grVar='ShNavn', tittel=1, reshID, outfile='') {
+                            enhetsUtvalg=0, grVar='ShNavn', tittel=1, ktr=0, reshID, outfile='') {
 
 	if (hentData == 1) {		
 	  RegData <- RyggRegDataSQL()
@@ -81,7 +89,10 @@ RyggFigAndelerGrVar <- function(RegData, valgtVar, datoFra='2007-01-01', datoTil
      RegData[ ,grVar] <- factor(RegData[ ,grVar])
      Ngrense <- 10		#Minste antall registreringer for at ei gruppe skal bli vist
 
-
+#if (valgtVar %in% c('OswEndr20', 'OswEndr30pst' )) {
+#ktr kan ha verdiene 0, 1 eller 2
+	ktrtxt <- c(', 3 mnd etter', ', 12 mnd. etter')[ktr]
+#	}
       RegData$Variabel <- 0
 
      if (valgtVar == 'Alder') {
@@ -112,11 +123,31 @@ RyggFigAndelerGrVar <- function(RegData, valgtVar, datoFra='2007-01-01', datoTil
           RegData$Variabel[which(RegData[ ,valgtVar] > 2)] <- 1
           TittelUt <- 'ASA-grad > II'
      }
+     if (valgtVar == 'BeinsmLavPre') {
+          #Lav beinsmerte og ingen parese. (Først og fremst prolaps)
+          RegData$Variabel[which(is.na(RegData$OpIndParese) & (RegData$SmBePre < 2.5))] <- 1
+          TittelUt <- 'Beinsmerte < 2,5 og ingen parese'
+     }
+    if (valgtVar == 'BeinsmEndrLav') {
+          #Mislykkede operasjoner
+ 		  RegData$BeinsmEndr <- switch(as.character(ktr), 
+						'1'= (RegData$SmBePre - RegData$SmBe3mnd),
+						'2'= (RegData$SmBePre - RegData$SmBe12mnd))
+          RegData <- RegData[which(RegData$BeinsmEndr >= -10), ]	#Fjerne tomme og ugyldige
+#          RegData$Variabel[which(RegData$BeinsmEndr <1.5)] <- 1
+          RegData$Variabel[which(is.na(RegData$OpIndParese) & (RegData$BeinsmEndr < 1.5))] <- 1
+          TittelUt <- paste0('Forbedring av beinsmerte-skår < 1.5 poeng', ktrtxt)
+     }
      if (valgtVar == 'BMI') {
           #BMI > 30
           RegData <- RegData[which(RegData[,valgtVar] >10), ]
           RegData$Variabel[which(RegData[ ,valgtVar] > 30)] <- 1
           TittelUt <- 'Pasienter med fedme (BMI>30)'
+     }
+     if (valgtVar == 'DegSponSSSten') {
+          #(Først og fremst fusjonskirurgi)
+          RegData$Variabel[which((RegData$RfSentr==1) & (RegData$RfSpondtypeDegen == 1))] <- 1
+          TittelUt <- 'Degenerativ spondylolistese og sentral spinal stenose'
      }
      if (valgtVar == 'ErstatningPre') {
           #Pasientskjema. Andel med ErstatningPre 1 el 3
@@ -138,6 +169,12 @@ RyggFigAndelerGrVar <- function(RegData, valgtVar, datoFra='2007-01-01', datoTil
                              Fornoyd12mnd = 'Fornøyde pasienter, 12 mnd.')
      }
      if (valgtVar == 'Kp3Mnd') {
+          #Komplikasjoner 0:nei, 1:ja
+          RegData <- RegData[which(RegData[,valgtVar] %in% 0:1), ]
+          RegData$Variabel <- RegData[ ,valgtVar]
+          TittelUt <- 'Pasientrapporterte komplikasjoner'
+     }
+     if (valgtVar == 'KpInf3Mnd') {
           #Komplikasjoner 0:nei, 1:ja
           RegData <- RegData[which(RegData[,valgtVar] %in% 0:1), ]
           RegData$Variabel <- RegData[ ,valgtVar]
@@ -174,19 +211,34 @@ RyggFigAndelerGrVar <- function(RegData, valgtVar, datoFra='2007-01-01', datoTil
                              Nytte12mnd = 'Helt bra eller mye bedre, 12 mnd.')
      }
 
-	 
-     if (valgtVar %in% c('Osw30_3mnd', 'Osw30_12mnd')) {
-          #Andel med klinisk signifikant forbedring i Osweatry-skår
-          RegData$OswPst <- switch(valgtVar,
-                              Osw30_3mnd = (RegData$OswTotPre - RegData$OswTot3mnd)/RegData$OswTotPre*100,
-                              Osw30_12mnd = (RegData$OswTotPre - RegData$OswTot12mnd)/RegData$OswTotPre*100)
-          RegData <- RegData[which(RegData$OswPst>=-1000), ]
-          RegData$Variabel[which(RegData$OswPst >30)] <- 1
-          TittelUt <- switch(valgtVar,
-                             Osw30_3mnd = 'Mer enn 30% forbedring av Oswestry-skår, 3 mnd.' ,
-                             Osw30_12mnd = 'Mer enn 30% forbedring av Oswestry-skår, 12 mnd.')
+    if (valgtVar == 'OswEndrLav') {
+          #Mislykkede operasjoner
+		  RegData$OswEndr <- switch(as.character(ktr), 
+						'1'= (RegData$OswTotPre - RegData$OswTot3mnd),
+						'2'= (RegData$OswTotPre - RegData$OswTot12mnd))
+          RegData <- RegData[which(RegData$OswEndr >= -100), ]
+          RegData$Variabel[which(RegData$OswEndr <13)] <- 1
+          TittelUt <- paste0('Forbedring av Oswestry-skår < 13 poeng', ktrtxt)
      }
-
+if (valgtVar == 'OswEndr30pst') {
+         #Andel med klinisk signifikant forbedring i Oswestry-skår. 
+		 #Forbedring = nedgang
+         RegData$OswPst <- switch(as.character(ktr),
+                             '1' = (RegData$OswTotPre - RegData$OswTot3mnd)/RegData$OswTotPre*100,
+                             '2' = (RegData$OswTotPre - RegData$OswTot12mnd)/RegData$OswTotPre*100)
+         RegData <- RegData[which(RegData$OswPst>=-1000), ]
+        RegData$Variabel[which(RegData$OswPst >30)] <- 1
+         TittelUt <- paste0('Mer enn 30% forbedring av Oswestry-skår', ktrtxt)
+    }
+if (valgtVar == 'Osw48') {
+         #Andel med Oswestry-skår fortsatt over 48. 
+         RegData$OswPost <- switch(as.character(ktr),
+                             '1' = RegData$OswTot3mnd,
+                             '2' = RegData$OswTot12mnd)
+         RegData <- RegData[which(RegData$OswPost>=0), ]
+        RegData$Variabel[which(RegData$OswPost >48)] <- 1
+         TittelUt <- paste0('Oswestry-skår > 48 poeng', ktrtxt)
+    }
 	 
      if (valgtVar=='PeropKomp') {
           #Durarift ved operasjon
@@ -259,24 +311,17 @@ RyggFigAndelerGrVar <- function(RegData, valgtVar, datoFra='2007-01-01', datoTil
           VarTxt <- 'med høyere utdanning'
           TittelUt <- 'Andel høyskole-/universitetsutdannede'
      }
-     if (valgtVar %in% c('Verre3mnd','Verre12mnd')) {
+     if (valgtVar == 'Verre') {		#%in% c('Verre3mnd','Verre12mnd')) {
           #3/12mndSkjema. Andel med helt mye verre og noen sinne (6:7)
           #Kode 1:7,9: ''Helt bra', 'Mye bedre', 'Litt bedre', 'Uendret', 'Litt verre', 'Mye verre',
           #				'Verre enn noen gang', 'Ukjent')
-          indSkjema <- switch(valgtVar,
-                              Verre3mnd = which(RegData$Nytte3mnd %in% 1:7),
-                              Verre12mnd = which(RegData$Nytte12mnd %in% 1:7))
-          RegData <- RegData[indSkjema, ]
-          indVar <- switch(valgtVar,
-                           Verre3mnd = which(RegData$Nytte3mnd %in% 6:7),
-                           Verre12mnd = which(RegData$Nytte12mnd %in% 6:7))
-          RegData$Variabel[indVar] <- 1
-          TittelUt <- switch(valgtVar,
-                             Verre3mnd = 'Mye verre/verre enn noen gang, 3 mnd.' ,
-                             Verre12mnd = 'Mye verre/verre enn noen gang, 12 mnd.')
+          RegData$Nytte <- switch(as.character(ktr), 
+							'1'=RegData$Nytte3mnd,
+							'2'=RegData$Nytte12mnd)
+		  RegData <- RegData[which(RegData$Nytte %in% 1:7), ]
+          RegData$Variabel[RegData$Nytte %in% 6:7] <- 1
+          TittelUt <- paste0('Mye verre/verre enn noen gang' , ktrtxt)
      }
-
-
 
      #Gjør utvalg
      RyggUtvalg <- RyggUtvalg(RegData=RegData, datoFra=datoFra, datoTil=datoTil, minald=minald, maxald=maxald, 

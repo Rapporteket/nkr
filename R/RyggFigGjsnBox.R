@@ -38,7 +38,7 @@
 #'
 #' @export
 RyggFigGjsnBox <- function(RegData, outfile, valgtVar, tidlOp='', erMann='', hovedkat=99, aar=0,
-                    minald=0, maxald=130, ktr=1, tittel=1, datoFra='2007-01-01', datoTil='3000-01-01', 
+                    minald=0, maxald=130, ktr=0, tittel=1, datoFra='2007-01-01', datoTil='3000-01-01', 
                     valgtMaal='',enhetsUtvalg=1, hentData=0, preprosess=1, reshID){
       
   
