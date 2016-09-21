@@ -11,20 +11,15 @@
 #'     \item Alder: Pasienter over 75år    
 #'     \item Antibiotika: Er det gitt antibiotikaprofylakse?    
 #'     \item ArbstatusPre: Mottar sykepenger, før operasjon?    
-#'     \item Arbstatus3mnd: Mottar sykepenger, 3 mnd etter operasjon?    
-#'     \item Arbstatus12mnd: Mottar sykepenger, 12 mnd. etter operasjon   [UTGÅR]
+#'     \item Arbstatus: Mottar sykepenger, 3 mnd etter operasjon?    [ENDRET fra Arbstatus3mnd, Arbstatus12mnd]
 #'     \item ASA: ASA-grad > II    
 #'     \item BMI: Pasienter med fedme (BMI>30)    
 #'     \item ErstatningPre: Søkt/planlegger å søke erstatning?    
-#'     \item Fornoyd3mnd: Fornøyde pasienter, 3 mnd etter operasjon    
-#'     \item Fornoyd12mnd: Fornøyde pasienter, 12 mnd etter operasjon    
+#'     \item Fornoyd: Fornøyde pasienter [ENDRET fra Fornoyd3mnd, Fornoyd12mnd  ]
 #'     \item Kp3Mnd: Pasientrapporterte komplikasjoner    
-#'     \item Misfor3mnd:  Andel med Misfornøyd/litt misfornøyd, 3 mnd
-#'     \item Misfor12mnd: Andel med Misfornøyd/litt misfornøyd, 12 mnd
-#'     \item Nytte3mnd: Klart bedre, 3 mnd.    
-#'     \item Nytte12mnd: Klart bedre, 12 mnd.  [UTGÅR]
-#'	 \item OswEndr30pst: Mer enn 30% forbedring i Oswestry-skår, 3 mnd. [ENDRET fra Osw30_3mnd]
-#'	 \item Osw30_12mnd: Mer enn 30% forbedring i Oswestry-skår, 12 mnd. [UTGÅR]
+#'     \item Misfornoyd:  Andel med Misfornøyd/litt misfornøyd [ENDRET fra Misfor3mnd, Misfor12mnd]
+#'     \item Nytte: Klart bedre    [ENDRET fra Nytte3mnd, Nytte12mnd]
+#'	   \item OswEndr30pst: Mer enn 30% forbedring i Oswestry-skår, 3 mnd. [ENDRET fra Osw30_3mnd, Osw30_12mnd]
 #'     \item PeropKomp: Komplikasjon ved operasjon
 #'     \item PeropKompDura: Komplikasjon ved operasjon: Durarift
 #'     \item Roker: Røyker du?    
@@ -34,8 +29,7 @@
 #'     \item SympVarighUtstr: Varighet av utstrålende smerter > 1 år  
 #'     \item UforetrygdPre: Søkt eller planlegger å søke uføretrygd før operasjon?    
 #'     \item Utd: Andel høyskole-/universitetsutdannede    
-#'     \item Verre Mye verre/verre enn noen gang, 3 mnd. [ENDRET fra Verre3mnd
-#'     \item Verre12mnd Mye verre/verre enn noen gang, 12 mnd.  [UTGÅR]
+#'     \item Verre Mye verre/verre enn noen gang, 3 mnd. [ENDRET fra Verre3mnd, Verre12mnd]
 #'		\item ..
 #'	 	\item BeinsmLavPre: Pasienter med preop. beinsmerte < 2.5 og ikke parese.
 #'		\item BeinsmEndrLav: Forbedring av beinsmerter under 1.5 poeng
@@ -107,15 +101,23 @@ RyggFigAndelerGrVar <- function(RegData, valgtVar, datoFra='2007-01-01', datoTil
           RegData$Variabel <- RegData[ ,valgtVar]
           TittelUt <- 'Fått antibiotika'
      }
-     if (valgtVar %in% c('ArbstatusPre', 'Arbstatus3mnd', 'Arbstatus12mnd')) {
+    if (valgtVar == 'Arbstatus') {
           # Andel i kategori 6 tom 9, mottar sykepenger Av 1-9, (ikke bare de som sykemeldt fra før)
           #  #grtxt <- c('I arbeid','Hjemmeværende', 'Studie/skole', 'Pensjonist', 'Arbeidsledig', 'Sykemeldt',
           #		'Aktiv sykemeldt', 'Delvis sykemeldt', 'Attføring/rehab.', 'Uføretrygdet', 'Ukjent')
-          RegData <- RegData[which(RegData[ ,valgtVar] %in% 1:10), ]
-          TittelUt <- switch(valgtVar,
-                             ArbstatusPre = 'Mottar sykepenger, preoperativt?',
-                             Arbstatus3mnd = 'Mottar sykepenger, 3 mnd etter operasjon?' ,
-                             Arbstatus12mnd = 'Mottar sykepenger, 12 mnd etter operasjon?')
+ 		  RegData$Arbstatus <- switch(as.character(ktr), 
+						'1'= RegData$Arbstatus3mnd,
+						'2'= RegData$Arbstatus12mnd)
+		  RegData <- RegData[which(RegData$Arbstatus %in% 1:10), ]
+          RegData$Variabel[which(RegData[ ,valgtVar] %in% 6:10)] <- 1
+          TittelUt <- paste0('Mottar sykepenger' ,ktrtxt)
+     }
+     if (valgtVar == 'ArbstatusPre') {
+          # Andel i kategori 6 tom 9, mottar sykepenger Av 1-9, (ikke bare de som sykemeldt fra før)
+          #  #grtxt <- c('I arbeid','Hjemmeværende', 'Studie/skole', 'Pensjonist', 'Arbeidsledig', 'Sykemeldt',
+          #		'Aktiv sykemeldt', 'Delvis sykemeldt', 'Attføring/rehab.', 'Uføretrygdet', 'Ukjent')
+		RegData <- RegData[which(RegData[ ,valgtVar] %in% 1:10), ]
+          TittelUt <- 'Mottar sykepenger, preoperativt?'
           RegData$Variabel[which(RegData[ ,valgtVar] %in% 6:10)] <- 1
      }
      if (valgtVar == 'ASA') {
@@ -156,17 +158,15 @@ RyggFigAndelerGrVar <- function(RegData, valgtVar, datoFra='2007-01-01', datoTil
           RegData$Variabel[which(RegData[ ,valgtVar] %in% c(1,3))] <- 1
           TittelUt <- 'Pasienten har søkt/planlegger å søke erstatning'
      }
-     if (valgtVar %in% c('Fornoyd3mnd','Fornoyd12mnd')) {
+     if (valgtVar =='Fornoyd') {	#%in% c('Fornoyd3mnd','Fornoyd12mnd')) {
           #3/12mndSkjema. Andel med Fornøyd/litt fornøyd (1,2)
           #Kode 1:5,9: 'Fornøyd', 'Litt fornøyd', 'Verken eller', 'Litt misfornøyd', 'Misfornøyd', 'Ukjent')
-          indSkjema <- switch(valgtVar,
-                              Fornoyd3mnd = which(RegData$Fornoyd3mnd %in% 1:5),
-                              Fornoyd12mnd = which(RegData$Fornoyd12mnd %in% 1:5))
-          RegData <- RegData[indSkjema, ]
-          RegData$Variabel[which(RegData[ ,valgtVar] %in% 1:2)] <- 1
-          TittelUt <- switch(valgtVar,
-                             Fornoyd3mnd = 'Fornøyde pasienter, 3 mnd.' ,
-                             Fornoyd12mnd = 'Fornøyde pasienter, 12 mnd.')
+ 		  RegData$Fornoyd <- switch(as.character(ktr), 
+						'1'= RegData$FornoydBeh3mnd,
+						'2'= RegData$FornoydBeh12mnd)
+          RegData <- RegData[which(RegData$Fornoyd %in% 1:5), ]
+          RegData$Variabel[which(RegData$Fornoyd %in% 1:2)] <- 1
+          TittelUt <- paste0('Fornøyde pasienter, 3 mnd.' ,ktrtxt)
      }
      if (valgtVar == 'Kp3Mnd') {
           #Komplikasjoner 0:nei, 1:ja
@@ -181,34 +181,27 @@ RyggFigAndelerGrVar <- function(RegData, valgtVar, datoFra='2007-01-01', datoTil
           TittelUt <- 'Pasientrapporterte komplikasjoner'
      }
 
-     if (valgtVar %in% c('Misfor3mnd','Misfor12mnd')) {
+     if (valgtVar == 'Misfornoyd')	#%in% c('Misfor3mnd','Misfor12mnd')) {
           #3/12mndSkjema. Andel med Misfornøyd/litt misfornøyd (1,2)
           #Kode 1:5,9: 'Fornøyd', 'Litt fornøyd', 'Verken eller', 'Litt misfornøyd', 'Misfornøyd', 'Ukjent')
-          indSkjema <- switch(valgtVar,
-                              Misfor3mnd = which(RegData$FornoydBeh3mnd %in% 1:5),
-                              Misfor12mnd = which(RegData$FornoydBeh12mnd %in% 1:5))
-          RegData <- RegData[indSkjema, ]
-          indVar <- switch(valgtVar,
-                           Misfor3mnd = which(RegData$FornoydBeh3mnd %in% 4:5),
-                           Misfor12mnd = which(RegData$FornoydBeh12mnd %in% 4:5))
-          RegData$Variabel[indVar] <- 1
-          TittelUt <- switch(valgtVar,
-                             Misfor3mnd = 'Misfornøyde pasienter, 3 mnd.' ,
-                             Misfor12mnd = 'Misfornøyde pasienter, 12 mnd.')
+		  RegData$Misfornoyd <- switch(as.character(ktr), 
+						'1'= RegData$FornoydBeh3mnd,
+						'2'= RegData$FornoydBeh12mnd)
+          RegData <- RegData[which(RegData$Misfornoyd %in% 1:5), ]
+          RegData$Variabel[which(RegData$Misfornoyd %in% 4:5)] <- 1
+          TittelUt <- paste0('Misfornøyde pasienter, 3 mnd.' ,ktrtxt)
      }
  
-     if (valgtVar %in% c('Nytte3mnd', 'Nytte12mnd')) {
+     if (valgtVar == 'Nytte') {
           #Andel med helt bra/mye bedre (1:2)
           #Kode 1:7: ''Helt bra', 'Mye bedre', 'Litt bedre', 'Uendret', 'Litt verre', 'Mye verre',
           #				'Verre enn noen gang', 'Ukjent')
-          indSkjema <- switch(valgtVar,
-                              Nytte3mnd = which(RegData$Nytte3mnd %in% 1:7),
-                              Nytte12mnd = which(RegData$Nytte12mnd %in% 1:7))
-          RegData <- RegData[indSkjema, ]
-          RegData$Variabel[which(RegData[ ,valgtVar] %in% 1:2)] <- 1
-          TittelUt <- switch(valgtVar,
-                             Nytte3mnd = 'Helt bra eller mye bedre, 3 mnd.' ,
-                             Nytte12mnd = 'Helt bra eller mye bedre, 12 mnd.')
+           RegData$Nytte <- switch(as.character(ktr), 
+							'1'=RegData$Nytte3mnd,
+							'2'=RegData$Nytte12mnd)
+		  RegData <- RegData[which(RegData$Nytte %in% 1:7), ]
+          RegData$Variabel[RegData$Nytte %in% 1:2] <- 1
+          TittelUt <- paste0('Helt bra eller mye bedre' , ktrtxt)
      }
 
     if (valgtVar == 'OswEndrLav') {
