@@ -5,7 +5,7 @@
 \title{Utvikling over tid eller som funksjon av variabelen for gjennomsnitt/median av valgt variabel}
 \usage{
 RyggFigGjsnBox(RegData, outfile, valgtVar, tidlOp = "", erMann = "",
-  hovedkat = 99, aar = 0, minald = 0, maxald = 130, ktr = 1,
+  hovedkat = 99, aar = 0, minald = 0, maxald = 130, ktr = 0,
   tittel = 1, datoFra = "2007-01-01", datoTil = "3000-01-01",
   valgtMaal = "", enhetsUtvalg = 1, hentData = 0, preprosess = 1,
   reshID)
@@ -78,18 +78,18 @@ Argumentet \emph{valgtVar} har følgende valgmuligheter:
    \itemize{
 	\item EQ5DEndr: Endring av EQ5D fra før til 3 eller 12 mnd. etter operasjonen 
 	\item EQ5DPre: EQ5D før operasjon
+         \item EQ5DEndrPre: EQ5D, endring vs. prescore
     	\item Liggedogn: Liggetid på sykehuset
-    	\item OswEndr: Endring i Oswestry-skår fra før til etter operasjon
+    	\item OswEndrPre: Endring i Oswestry-skår fra før til etter operasjon
+         \item OswEndrPre: Oswestry (ODI-Oswestry Disability Index.) Endring vs. prescore.
     	\item OswTotPre: Oswestry-skår før operasjon
     	\item SmBeinEndr: Endring i beinsmerter fra før til etter operasjon
+         \item SmBeinEndrPre: Smerter i beina. Endring vs. prescore
     	\item SmBePre: Grad av beinsmerter før operasjon
     	\item SmRyggEndr: Endring av ryggsmerter fra før til etter operasjon
+         \item SmRyggEndrPre: Smerter i ryggen. Endring vs. prescore 
     	\item SmRyPre: Ryggsmerter før operasjon
      \item TidOpReg Ønsker å se på tid fra operasjon til registrering
-    \item EQ5DEndrPre: Skala fra -0.594 tl 1, jo høyere jo bedre.
-    \item OswEndrPre: Oswestry (ODI-Oswestry Disability Index) Skala fra 0 til 100, hvor lavest er friskest.
-    \item SmBeinEndrPre: Smerter i beina. Skalaen går fra 0 til 10, dvs. at differansen ligger mellom -10 og 10.
-    \item SmRyggEndrPre: Smerter i ryggen Skalaen går fra 0 til 10, dvs. at differansen ligger mellom -10 og 10.
    }
 }
 

@@ -3,6 +3,7 @@
 export(RyggFigAndelStabelTid)
 export(RyggFigAndeler)
 export(RyggFigAndelerGrVar)
+export(RyggFigAndelerGrVarAar)
 export(RyggFigEndrPre)
 export(RyggFigGjsnBox)
 export(RyggFigGjsnTid)

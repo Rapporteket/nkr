@@ -19,7 +19,7 @@
 #'     \item Kp3Mnd: Pasientrapporterte komplikasjoner    
 #'     \item Misfornoyd:  Andel med Misfornøyd/litt misfornøyd [ENDRET fra Misfor3mnd, Misfor12mnd]
 #'     \item Nytte: Klart bedre    [ENDRET fra Nytte3mnd, Nytte12mnd]
-#'	   \item OswEndr30pst: Mer enn 30% forbedring i Oswestry-skår, 3 mnd. [ENDRET fra Osw30_3mnd, Osw30_12mnd]
+#'	 \item OswEndr30pst: Mer enn 30% forbedring i Oswestry-skår, 3 mnd. [ENDRET fra Osw30_3mnd, Osw30_12mnd]
 #'     \item PeropKomp: Komplikasjon ved operasjon
 #'     \item PeropKompDura: Komplikasjon ved operasjon: Durarift
 #'     \item Roker: Røyker du?    
@@ -181,7 +181,7 @@ RyggFigAndelerGrVar <- function(RegData, valgtVar, datoFra='2007-01-01', datoTil
           TittelUt <- 'Pasientrapporterte komplikasjoner'
      }
 
-     if (valgtVar == 'Misfornoyd')	#%in% c('Misfor3mnd','Misfor12mnd')) {
+     if (valgtVar == 'Misfornoyd'){	#%in% c('Misfor3mnd','Misfor12mnd')) {
           #3/12mndSkjema. Andel med Misfornøyd/litt misfornøyd (1,2)
           #Kode 1:5,9: 'Fornøyd', 'Litt fornøyd', 'Verken eller', 'Litt misfornøyd', 'Misfornøyd', 'Ukjent')
 		  RegData$Misfornoyd <- switch(as.character(ktr), 
@@ -330,7 +330,7 @@ if (valgtVar == 'Osw48') {
      N <- dim(RegData)[1]
      Nvar <- tapply(RegData$Variabel, RegData[ ,grVar], sum, na.rm=T)
      if(N > 0) {Ngr <- table(RegData[ ,grVar])}	else {Ngr <- 0}
-     AntGr <- length(which(Ngr >= Ngrense))	#length(which(Midt>0))
+     AntGr <- length(which(Ngr >= Ngrense))	#Alle som har gyldig resultat
      AndelerGr <- round(100*Nvar/Ngr,2)
 
      indGrUt <- as.numeric(which(Ngr < Ngrense))
