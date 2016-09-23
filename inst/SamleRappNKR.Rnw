@@ -4,6 +4,9 @@
 \addtolength{\voffset}{-1cm}
 \addtolength{\textheight}{2cm}
 
+%for nice looking tabs
+\usepackage{booktabs}
+
 \usepackage[norsk]{babel}
 \usepackage[utf8x]{inputenc}
 \usepackage{textcomp}
@@ -92,6 +95,7 @@
 <<'Oppsett', echo=FALSE>>=
 library(knitr)
 library(xtable)
+#options(encoding = "UTF-8")
 knitr::opts_chunk$set(warnings=FALSE,echo=FALSE)
 knitr::opts_knit$set(root.dir = './')
 knitr::opts_chunk$set(fig.path='./', fig.align='center', fig.show='hold', out.width='.8\\textwidth',
@@ -332,14 +336,15 @@ kommentarer eller andre tilbakemeldinger, kontakt: \\
 \section{Oppsummeringstall for NKR}
 
 <<TabAlleReg, results='asis', echo=FALSE>>=
-tabAvdN <- addmargins(as.table(ftable(RegData[c('ShNavn','OpAar')])))
+#tabAvdN <- addmargins(as.table(ftable(RegData[c('ShNavn','OpAar')])))
+tabAvdN <- addmargins(table(RegData[c('ShNavn','OpAar')]))
 antKol <- ncol(tabAvdN)
+tabAvdN5 <- tabAvdN[,(antKol-5):antKol]
 rownames(tabAvdN)[dim(tabAvdN)[1] ]<- 'TOTALT, alle avdelinger:'
 colnames(tabAvdN)[dim(tabAvdN)[2] ]<- 'Alle år'
 
-#xtable(tabAvdN, digits=0, caption="Antall registreringer per år og avdeling", label="tab:AntReg")
-xtable(tabAvdN[,(antKol-5):antKol], digits=0, align=c('l', rep('r', 6)),
-	caption='Antall registreringer ved hver avdeling siste 5 år, samt totalt siden 1.januar 2007.', 
+xtable(tabAvdN5, digits=0, align=c('l', rep('r', 6)),
+	caption=paste0('Antall registreringer ved hver avdeling siste 5 år, samt totalt siden ', min(RegData$OpAar, na.rm=T),'.'), 
 	label = 'tab:AntReg')
 
 tabKjPst <- sprintf('%.1f',table(RegData$Kjonn)/Ntot*100)
@@ -392,7 +397,7 @@ AlderFord <- RyggFigAndeler(RegData=RegData, valgtVar='Alder', datoFra=datoFra, 
 	if (medSml == 1) {Alder <- AlderFord$Andeler}
       #des <- 
 	colnames(Alder) <- AlderFord$GruppeTekst
-	xtable(Alder, caption=AlderFord$Tittel[1], label="tab:Alder", digits=c(1))
+	xtable(Alder, caption=AlderFord$Tittel[1], label="tab:Alder", digits=1)
 
 #round(length(which(RegDataHoved$Alder>65))/NHoved*100, 1)
 #AndelOver65 <- sprintf('%.1f', 100*c(sum(RegDataHoved$Alder>65, na.rm=T)/NHoved, 
@@ -796,16 +801,16 @@ helseforetakene.
 
 
 %\begin{figure}[h] 
-%  \scalebox{\Sexpr{s2}}{\includegraphics{figurer/VarighUtstrRHF.pdf}}
-%  \scalebox{\Sexpr{s2}}{\includegraphics{figurer/VarighRyggHofRHF.pdf}}
+%  \scalebox{\Sexpr{s2}}{\includegraphics{VarighUtstrRHF.pdf}}
+%  \scalebox{\Sexpr{s2}}{\includegraphics{VarighRyggHofRHF.pdf}}
 %  \caption{Andel av alle ryggopererte pasienter som har hatt hhv smerter i rygg-/hofte og utstrålende 
 %  smerter i mer enn ett år før operasjonen for hvert år og for hver region, samt hele landet.}
 %  \label{fig:VarighSmerteRHF}
 %\end{figure}
 
 \begin{figure}[h] 
-  \scalebox{\Sexpr{s2}}{\includegraphics{figurer/VarighUtstrAvd.pdf}}
-  \scalebox{\Sexpr{s2}}{\includegraphics{figurer/VarighRyggHofAvd.pdf}}
+  \scalebox{\Sexpr{s2}}{\includegraphics{VarighUtstrAvd.pdf}}
+  \scalebox{\Sexpr{s2}}{\includegraphics{VarighRyggHofAvd.pdf}}
   \caption{Prolapspasienter som har hatt hhv smerter i rygg-/hofte og utstrålende smerter
 			i mer enn ett år før operasjonen.}
   \label{fig:VarighSmerteAvd}
@@ -886,10 +891,6 @@ xtable(RV, caption='Radiologisk vurdering',
 
 
 \subsubsection{Radiologiske funn/diagnoser}
-Tabell \ref{tab:RF} viser diagnoser basert på radiologiske funn hos alle pasienter 
-operert ved \Sexpr{shtxt} sammenliknet med landet for øvrig. 
-Spørsmålene er besvart av leger.
-En pasient kan ha flere diagnoser/radiologiske funn.
 
 
 <<'TabRF', results='asis', echo=FALSE>>=
@@ -932,6 +933,10 @@ RFNormRL <- intersect(which(rowSums(RegDataSml[, RFvar[2:11]], na.rm=T) == 0),
 }
 @ 
 
+Tabell \ref{tab:RF} viser diagnoser basert på radiologiske funn hos alle pasienter 
+operert ved \Sexpr{shtxt} sammenliknet med landet for øvrig. 
+Spørsmålene er besvart av leger.
+En pasient kan ha flere diagnoser/radiologiske funn.
 
 %Ved \Sexpr{shtxt} er ”Normalt” registrert som eneste billedfunn hos \Sexpr{length(RFNormAvd)}
 %av pasientene og hos \Sexpr{length(RFNormRL)} av pasientene i resten av landet.
@@ -995,7 +1000,7 @@ feil/unøyaktig registrering.
 %xtable(AntOpMnd, caption=AntOpMndLand$Tittel[1], label="tab:AntOpMnd", digits=1, align=c('l',rep('c',12)))
 
 %AntOpMnd <- rbind('Antall' = AntOpMnd$Antall, 
-				'Andeler' = paste(round(AntOpMndLand$Antall/Ntot*100, 1),'%',sep=''))
+%				'Andeler' = paste(round(AntOpMndLand$Antall/Ntot*100, 1),'%',sep=''))
 %xtable(AntOpMnd, caption=AntOpMndLand$Tittel[1], label="tab:AntOpMnd", digits=1, align=c('l',rep('c',12)))
 
 %@
@@ -1023,9 +1028,9 @@ Målsetningen er at antall udefinerbare inngrep skal bli så lavt som mulig.
 Totalt er \Sexpr{round(length(which(RegData$Inngrep==0))/Ntot*100,1)} \% 
 av inngrepene udefinerbare. 
 
-#Ved \Sexpr{shtxt} er \Sexpr{round(length(which(RegDataHoved$Inngrep==0))/NHoved*100,1)} \% 
-#av inngrepene udefinerbare, mot \Sexpr{round(length(which(RegData$Inngrep==0))/Ntot*100,1)} \% 
-#for hele landet. 
+%Ved \Sexpr{shtxt} er \Sexpr{round(length(which(RegDataHoved$Inngrep==0))/NHoved*100,1)} \% 
+%av inngrepene udefinerbare, mot \Sexpr{round(length(which(RegData$Inngrep==0))/Ntot*100,1)} \% 
+%for hele landet. 
 
 
 \subsubsection{Fordeling av hovedinngrep}
@@ -1039,7 +1044,7 @@ framgår av Tabell \ref{tab:AntHovedInngrep}.
 
 <<'AntHovedInngrepAvd', echo=FALSE>>=	#fig=TRUE, 
 
-#AntHovedInngrepLand <- AntSoyler(RegData=RegData, libkat=libkat, outfile='figurer/HinngrLand.pdf', 
+#AntHovedInngrepLand <- AntSoyler(RegData=RegData, libkat=libkat, outfile='HinngrLand.pdf', 
 #	egenavd=0, aar=aar, reshID=reshID, variabel='HovedInngrep', tittel=0)
 
 HovedInngrep <- RyggFigAndeler(RegData=RegData, valgtVar='HovedInngrep', datoFra=datoFra, datoTil=datoTil, 
@@ -1312,12 +1317,12 @@ dum <- RyggFigGjsnBox(RegData=RegData,  outfile='SmRyPre.pdf',
 
 \begin{figure}[h] 
 \centerline{
-  \scalebox{\Sexpr{s2}}{\includegraphics{'EQ5DPre.pdf'}}
-  \scalebox{\Sexpr{s2}}{\includegraphics{'OswPre.pdf'}}
+  \scalebox{\Sexpr{s2}}{\includegraphics{EQ5DPre.pdf}}
+  \scalebox{\Sexpr{s2}}{\includegraphics{OswPre.pdf}}
 	}
   \centerline{
-  \scalebox{\Sexpr{s2}}{\includegraphics{'SmBePre.pdf'}}
-  \scalebox{\Sexpr{s2}}{\includegraphics{'SmRyPre.pdf'}}
+  \scalebox{\Sexpr{s2}}{\includegraphics{SmBePre.pdf}}
+  \scalebox{\Sexpr{s2}}{\includegraphics{SmRyPre.pdf}}
   }
   \caption{\Sexpr{'Prescore for hhv. EQ-5D, ODI, bein- og ryggsmerter.'}}
   \label{fig:Pre}
@@ -1388,9 +1393,10 @@ ODI er en score for fysisk funksjon og et sykdomsspesifit livskvalitetsmål. Ska
 til 100, hvor 0 angir ingen funksjonshemming og følgelig beste livskvalitet.
 Figur \ref{fig:OswEndr} viser hhv. fordeling av ODI før og \Sexpr{ktrtxt} etter operasjon ved \Sexpr{shtxt} og gjennomsnittlig endring i ODI for hvert år hos pasienter 
 operert ved \Sexpr{shtxt} sammenlignet med landet for øvrig.
-Figur \ref{fig:OswEndrSml} viser andel pasienter med klinisk signifikant forbedring av ODI (dvs. minst 30\%) \Sexpr{ktrtxt} etter operasjon. Høyre del av figuren viser gjennomsnittlig endring hos pasienter operert ved \Sexpr{shtxt} 12 måneder
+Figur \ref{fig:OswEndrSml} viser andel pasienter med klinisk signifikant forbedring av ODI (dvs. minst 30$\%$) \Sexpr{ktrtxt} etter operasjon. Høyre del av figuren viser gjennomsnittlig endring hos pasienter operert ved \Sexpr{shtxt} 12 måneder
 etter operasjon sammenliknet med landet for øvrig og de tre avdelingene/sykehusene som har 
 med størst forbedring i ODI. Merk at resultatene \textit{ikke} justert for forskjeller i pasientpopulasjonene.
+
 \\
 
 <<'FigOsw', echo=FALSE>>=	 #fig=TRUE, 
@@ -1418,7 +1424,7 @@ dum <- RyggFigAndelerGrVar(RegData=RegData, valgtVar='Osw30_3mnd', datoFra=datoF
   \scalebox{\Sexpr{s2}}{\includegraphics{\Sexpr{ 'Osw30Shus.pdf'}}}
   }
 %  \caption{\Sexpr{paste('Figuren til venstre viser fordeling av Oswestry før og ', ktrtxt, ' etter operasjon, mens %figuren til høyre viser gjennomsnittlig endring i Oswestry, ', ktrtxt,  ' etter operasjon.', sep='')}}
-  \caption{\Sexpr{paste0('Figuren til viser gjennomsnittlig endring i Oswestry, ', ktrtxt,  ' etter operasjon og andel pasienter med klinisk signifikant forbedring (30%) av Oswestry-skår.')}}
+  \caption{\Sexpr{paste0('Figuren viser gjennomsnittlig endring i Oswestry, ', ktrtxt,  ' etter operasjon og andel pasienter med klinisk signifikant forbedring (30\\%) av Oswestry-skår.')}}
   \label{fig:OswEndr}
 \end{figure}
 
@@ -1428,8 +1434,8 @@ dum <- RyggFigAndelerGrVar(RegData=RegData, valgtVar='Osw30_3mnd', datoFra=datoF
 %  \scalebox{\Sexpr{s2}}{\includegraphics{\Sexpr{ 'OswEndrSml.pdf'}}}
 %  }
 %  \caption{\Sexpr{paste('Endring i Oswestry, ', ktrtxt, ' etter operasjon. Søylediagrammet til venstre viser andel %pasienter med minst 30 prosent forbedring i ODI for hele landet, egen avdeling og de tre avdelingene med best resultat. Figuren til høyre viser gjannomsnittlig differanse mellom ODI hhv. før og etter operasjonen for tilsvarende grupper.', sep='')}}
-  \label{fig:OswEndrSml}
-\end{figure}
+%  \label{fig:OswEndrSml}
+%\end{figure}
 
 
 
@@ -1438,7 +1444,7 @@ EQ-5D er et generelt livskvalitetsmål, tradisjonelt benyttet av helseøkonomer,
 vist seg å fungere som livskvalitetsmål i ryggkirurgi. Skalaen går fra -0.6 til 1, hvor lav verdi
 angir lav livskvalitet.
 <<'FigEQ5D', echo=FALSE>>=	 #fig=TRUE, 
-#FordPrePost(RegData=RegData, outfile='figurer/EQ5DPP.pdf', reshID=reshID,
+#FordPrePost(RegData=RegData, outfile='EQ5DPP.pdf', reshID=reshID,
 #	egenavd=egenavd, variabel='Oswestry', plotType='', OpAar=OpAar, erMann=erMann, hovedkat=hovedkat, ktr=ktr, tittel=0)
 #dum <- BoxTid(RegData=RegData, outfile='EQ5DEndr.pdf', reshID=reshID, 
 #	variabel='EQ5DEndr', erMann=erMann, hovedkat=hovedkat, ktr=ktr, tittel=0)

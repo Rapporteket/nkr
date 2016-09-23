@@ -52,9 +52,9 @@
 #'
 #' @export
 
-RyggFigAndelerGrVar <- function(RegData, valgtVar, datoFra='2007-01-01', datoTil='3000-12-31', 
+RyggFigAndelerGrVarAar <- function(RegData, valgtVar, datoFra='2007-01-01', datoTil='3000-12-31', 
                             minald=0, maxald=130, erMann='', hovedkat=99, tidlOp='', hentData=0, preprosess=1,
-                            enhetsUtvalg=0, grVar='ShNavn', tittel=1, ktr=0, reshID=0, outfile='') {
+                            enhetsUtvalg=0, grVar='ShNavn', tittel=1, ktr=0, reshID, outfile='') {
 
 	if (hentData == 1) {		
 	  RegData <- RyggRegDataSQL()
@@ -181,7 +181,7 @@ RyggFigAndelerGrVar <- function(RegData, valgtVar, datoFra='2007-01-01', datoTil
           TittelUt <- 'Pasientrapporterte komplikasjoner'
      }
 
-     if (valgtVar == 'Misfornoyd'){	#%in% c('Misfor3mnd','Misfor12mnd')) {
+     if (valgtVar == 'Misfornoyd') {	#%in% c('Misfor3mnd','Misfor12mnd')) {
           #3/12mndSkjema. Andel med Misfornøyd/litt misfornøyd (1,2)
           #Kode 1:5,9: 'Fornøyd', 'Litt fornøyd', 'Verken eller', 'Litt misfornøyd', 'Misfornøyd', 'Ukjent')
 		  RegData$Misfornoyd <- switch(as.character(ktr), 
@@ -324,13 +324,51 @@ if (valgtVar == 'Osw48') {
 
      
      #Standardisere mht grupperingsvariabel. Først sykehus.
-     
+	 
+ #----------------------------------------------------------------------------------------------
+         #Lager figur som kan vise resultat for inntil tre år. Mulig at siste år ikke fullstendig.
+	 #grVar kan være sykehus, boområde osv. Egen inputparam. for om skal legge til pkt for år
+	 #Finn siste år og to foregående. Beregn år og gruppevis resultat. Søyla siste år, prikker to foregående
+	 #
+	 if (enhetsUtvalg <- 10) {
+	 AarMax <- max(RegData$OpAar)
+	RegData <- RegData[which(RegData$OpAar %in% c((AarMax-2):AarMax)), ]
 
+
+     N <- dim(RegData)[1] #table(RegData$OpAar)      #Antall per år
+     Nvar <- tapply(RegData$Variabel, RegData[ ,c('OpAar', grVar)], sum, na.rm=T) #Variabel er en 0/1-variabel.
+     if(N > 0) {Ngr <- table(RegData[ ,c('OpAar', grVar)])}	else {Ngr <- 0}
+     AndelerGr <- round(100*Nvar/Ngr,2)
+
+     #Må ta bort punkt/søyler for de som har for få registreringer for det aktuelle året.
+     indGrUt <- as.numeric(which(Ngr < Ngrense)) #indeks er kolonnevis
+     if (length(indGrUt)==0) { indGrUt <- 0}
+     dummy0 <- -0.001
+     AndelerGr[indGrUt] <- dummy0	#Alle andeler med for lav N
+     AndelerSiste <- AndelerGr[as.character(AarMax),]
+     sortInd <- order(as.numeric(AndelerSiste), decreasing=TRUE)
+     #Antall bare for siste år
+     Ngrtxt <- paste0('N=', as.character(Ngr[as.character(AarMax), ]))	
+     Ngrtxt[which(Ngr[as.character(AarMax), ] < Ngrense)] <- paste0('N<', Ngrense)	#paste(' (<', Ngrense,')',sep='')	#
+
+     AndelerGrSort <- AndelerSiste[sortInd] #Bare siste år
+	 Andeler1 <- AndelerGr[as.character(AarMax-1), ]		#Forrige år
+	 Andeler2 <- AndelerGr[as.character(AarMax-2), ]		#To år tilbake
+     AndelHele <- round(100*sum(RegData$Variabel)/N, 2)
+     #	GrNavnSort <- paste0(names(AndelerGrSort), ', ',Ngrtxt[sortInd])
+     GrNavnSort <- names(AndelerGrSort)
+
+     andeltxt <- paste0(sprintf('%.1f',AndelerGrSort), '%') 	
+     AntGrNgr <- length(which(Ngr[as.character(AarMax), ] >= Ngrense))	#length(which(Midt>0))
+     if (length(indGrUt)>0) {andeltxt[(AntGrNgr+1):(length(GrNavnSort))] <- ''}
+#--------------------------------------------------------------
+	 } else {
+	 
      dummy0 <- -0.001
      N <- dim(RegData)[1]
      Nvar <- tapply(RegData$Variabel, RegData[ ,grVar], sum, na.rm=T)
      if(N > 0) {Ngr <- table(RegData[ ,grVar])}	else {Ngr <- 0}
-     AntGr <- length(which(Ngr >= Ngrense))	#Alle som har gyldig resultat
+     AntGrNgr <- length(which(Ngr >= Ngrense))	#length(which(Midt>0))
      AndelerGr <- round(100*Nvar/Ngr,2)
 
      indGrUt <- as.numeric(which(Ngr < Ngrense))
@@ -346,8 +384,8 @@ if (valgtVar == 'Osw48') {
      GrNavnSort <- names(Ngr)[sortInd]
 
      andeltxt <- paste(sprintf('%.1f',AndelerGrSort), '%',sep='') 	#round(as.numeric(AndelerGrSort),1)
-     if (length(indGrUt)>0) {andeltxt[(AntGr+1):(AntGr+length(indGrUt))] <- ''}
-
+     if (length(indGrUt)>0) {andeltxt[(AntGrNgr+1):(AntGrNgr+length(indGrUt))] <- ''}
+}
      if (tittel==0) {Tittel<-''} else {Tittel <- TittelUt}
 
      #-----------Figur---------------------------------------
@@ -378,10 +416,12 @@ if (valgtVar == 'Osw48') {
           par('fig'=c(vmarg, 1, 0, 1-0.02*(NutvTxt-1)))	#Har alltid datoutvalg med
 
           xmax <- min(max(AndelerGrSort),100)*1.15
-          pos <- barplot(as.numeric(AndelerGrSort), horiz=T, border=NA, col=farger[3], #main=Tittel,
-                         xlim=c(0,xmax), ylim=c(0.05, 1.25)*length(Ngr), font.main=1, xlab='Andel (%)', las=1, cex.names=cexShNavn*0.9)
-          ybunn <- 0.1
-          ytopp <- pos[AntGr]+1	#-length(indGrUt)]
+          pos <- barplot(as.numeric(AndelerGrSort), horiz=T, border=NA, col=farger[1], #main=Tittel,
+                         xlim=c(0,xmax), ylim=c(0.05, 1.25)*length(GrNavnSort), font.main=1, xlab='Andel (%)', las=1, cex.names=cexShNavn*0.9)
+          points(y=pos, x=Andeler1, col=farger[2], cex=0.8,pch=19)
+          points(y=pos, x=Andeler2, col=farger[4], cex=0.8,pch=19)
+		  ybunn <- 0.1
+          ytopp <- pos[AntGrNgr]+1	#-length(indGrUt)]
           lines(x=rep(AndelHele, 2), y=c(ybunn, ytopp), col=farger[2], lwd=2)
           legend('topright', xjust=1, cex=1, lwd=2, col=farger[2],
                  legend=paste(smltxt, ' (', sprintf('%.1f',AndelHele), '%), ', 'N=', N,sep='' ),
