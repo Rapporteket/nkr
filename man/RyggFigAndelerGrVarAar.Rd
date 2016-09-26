@@ -100,8 +100,9 @@ Argumentet \emph{valgtVar} har følgende valgmuligheter:
     \item DegSponSSSten: Pasienter med Degenerativ spondylolistese og sentral spinal stenose 
  \item OswEndrLav: Mer enn 20 poeng forbedring i Oswestry-skår, 3 mnd/12mnd.
 \item OswEndr20: 
-\item Osw48: 
-\item KpInf3Mnd: 
+\item Osw48: Oswestry-skår fortsatt over 48
+\item KpInf3Mnd: Sårinfeksjoner
+\item Morsmal: Fremmedspråklige (ikke norsk som morsmål)
 	}
 }
 

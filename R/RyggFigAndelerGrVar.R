@@ -81,7 +81,7 @@ RyggFigAndelerGrVar <- function(RegData, valgtVar, datoFra='2007-01-01', datoTil
      }
 
      RegData[ ,grVar] <- factor(RegData[ ,grVar])
-     Ngrense <- 10		#Minste antall registreringer for at ei gruppe skal bli vist
+     Ngrense <- 50		#Minste antall registreringer for at ei gruppe skal bli vist
 
 #if (valgtVar %in% c('OswEndr20', 'OswEndr30pst' )) {
 #ktr kan ha verdiene 0, 1 eller 2
@@ -181,7 +181,7 @@ RyggFigAndelerGrVar <- function(RegData, valgtVar, datoFra='2007-01-01', datoTil
           TittelUt <- 'Pasientrapporterte komplikasjoner'
      }
 
-     if (valgtVar == 'Misfornoyd'){	#%in% c('Misfor3mnd','Misfor12mnd')) {
+     if (valgtVar == 'Misfornoyd') {	#%in% c('Misfor3mnd','Misfor12mnd')) {
           #3/12mndSkjema. Andel med Misfornøyd/litt misfornøyd (1,2)
           #Kode 1:5,9: 'Fornøyd', 'Litt fornøyd', 'Verken eller', 'Litt misfornøyd', 'Misfornøyd', 'Ukjent')
 		  RegData$Misfornoyd <- switch(as.character(ktr), 
@@ -191,7 +191,13 @@ RyggFigAndelerGrVar <- function(RegData, valgtVar, datoFra='2007-01-01', datoTil
           RegData$Variabel[which(RegData$Misfornoyd %in% 4:5)] <- 1
           TittelUt <- paste0('Misfornøyde pasienter, 3 mnd.' ,ktrtxt)
      }
- 
+      if (valgtVar == 'Morsmal') {
+#           Kode 1:3:'Norsk', 'Samisk', 'Annet'
+            RegData <- RegData[which(RegData$Morsmal %in% 1:3), ]
+            RegData$Variabel[which(RegData$Morsmal %in% 2:3)] <- 1 
+            TittelUt <- 'Fremmedspråklige (ikke norsk som morsmål)'
+      }
+      
      if (valgtVar == 'Nytte') {
           #Andel med helt bra/mye bedre (1:2)
           #Kode 1:7: ''Helt bra', 'Mye bedre', 'Litt bedre', 'Uendret', 'Litt verre', 'Mye verre',
@@ -212,7 +218,17 @@ RyggFigAndelerGrVar <- function(RegData, valgtVar, datoFra='2007-01-01', datoTil
           RegData <- RegData[which(RegData$OswEndr >= -100), ]
           RegData$Variabel[which(RegData$OswEndr <13)] <- 1
           TittelUt <- paste0('Forbedring av Oswestry-skår < 13 poeng', ktrtxt)
-     }
+    }
+      if (valgtVar == 'OswEndr20') {
+            #Mislykkede operasjoner
+            RegData$OswEndr <- switch(as.character(ktr), 
+                                      '1'= (RegData$OswTotPre - RegData$OswTot3mnd),
+                                      '2'= (RegData$OswTotPre - RegData$OswTot12mnd))
+            RegData <- RegData[which(RegData$OswEndr >= -100), ]
+            RegData$Variabel[which(RegData$OswEndr >20)] <- 1
+            TittelUt <- paste0('Forbedring av Oswestry-skår > 20 poeng', ktrtxt)
+      }
+      
 if (valgtVar == 'OswEndr30pst') {
          #Andel med klinisk signifikant forbedring i Oswestry-skår. 
 		 #Forbedring = nedgang
@@ -233,8 +249,14 @@ if (valgtVar == 'Osw48') {
          TittelUt <- paste0('Oswestry-skår > 48 poeng', ktrtxt)
     }
 	 
-     if (valgtVar=='PeropKomp') {
-          #Durarift ved operasjon
+      if (valgtVar=='KpInf3Mnd') {
+            #Infeksjoner
+            #Kode 1:Ja,  0:Nei 
+            RegData$Variabel[which(RegData$PeropKomp == 1)] <- 1
+            TittelUt <- 'Sårinfeksjon'
+      }
+      if (valgtVar=='PeropKomp') {
+          #Komplikasjoner ved operasjon
           #Kode 1:Ja,  tomme:Nei 
           RegData$Variabel[which(RegData$PeropKomp == 1)] <- 1
           TittelUt <- 'Komplikasjoner ved operasjon'
@@ -315,6 +337,7 @@ if (valgtVar == 'Osw48') {
           RegData$Variabel[RegData$Nytte %in% 6:7] <- 1
           TittelUt <- paste0('Mye verre/verre enn noen gang' , ktrtxt)
      }
+
 
      #Gjør utvalg
      RyggUtvalg <- RyggUtvalg(RegData=RegData, datoFra=datoFra, datoTil=datoTil, minald=minald, maxald=maxald, 
