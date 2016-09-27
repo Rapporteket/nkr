@@ -458,8 +458,6 @@ xtable(Morsm, caption='Pasientenes morsmål', label="tab:Morsm", align=c('l','r'
 AndelFremmedspraak <- sprintf('%.1f', sum(MorsmAnt[2:3], na.rm=T)/Ntot*100)
 
 }
-Tabell \ref{tab:Morsm} viser fordeling av norske, samiske og andre fremmedsåpråklige pasienter.
-%for alle som ble operert ved \Sexpr{shtxt} sammenliknet med landet for øvrig. 
 
 if (medSml==1) {
 MorsmEgen <- table(RegDataHoved$Morsmal, useNA='a')/NHoved*100
@@ -474,6 +472,8 @@ AndelFremmedspraak <- sprintf('%.1f', c(sum(MorsmEgen[2:3], na.rm=T), sum(MorsmR
 }
 @ 
 
+Tabell \ref{tab:Morsm} viser fordeling av norske, samiske og andre fremmedsåpråklige pasienter.
+%for alle som ble operert ved \Sexpr{shtxt} sammenliknet med landet for øvrig. 
 Andel fremmedspråklige 
 pasienter (inkl. samisk) var \Sexpr{AndelFremmedspraak[1]}\% for \Sexpr{shtxt}. 
 %, mens den var \Sexpr{AndelFremmedspraak[2]}\% for landet for øvrig.
@@ -863,10 +863,6 @@ xtable(ASA, caption='Fordeling av ASA-grad',
 \subsection{Radiologisk utredning}
 \subsubsection{Radiologisk vurdering}
 
-Tabell \ref{tab:RV} viser hvor stor andel av pasientene som har vært til ulike typer 
-radiologisk undersøkelse. 
-Spørsmålene er besvart av leger. En pasient kan ha vært til flere undersøkelser.
-
 <<'TabRV', results='asis', echo=FALSE>>=
 RVvar <- c('RvCt', 'RvMr', 'RvRadigr', 'RvDiscogr', 'RvDpregblok', 'RvRtgLscol', 'RvFunksjo')
 if (medSml == 0) {
@@ -875,7 +871,7 @@ RVvar <- c('RvCt', 'RvMr', 'RvRadigr', 'RvDiscogr', 'RvDpregblok', 'RvRtgLscol',
 	RVpst <- round(RVant*100/Ntot, 1)
 
 RV <- cbind('Antall' = c(RVant, Ntot),
-		'Andeler' = c(paste0(RVpst, '\%'),' ')
+		'Andeler' = c(paste0(RVpst, '%'),' ')
 		)
 }
 if (medSml == 1) {
@@ -889,6 +885,10 @@ rownames(RV) <- c('CT', 'MR', 'Radikulografi', 'Diskografi', 'Diagnostisk blokad
 xtable(RV, caption='Radiologisk vurdering', 
 			label="tab:RV", align=c('l','r','r'))
 @ 
+
+Tabell \ref{tab:RV} viser hvor stor andel av pasientene som har vært til ulike typer 
+radiologisk undersøkelse. 
+Spørsmålene er besvart av leger. En pasient kan ha vært til flere undersøkelser.
 
 
 \subsubsection{Radiologiske funn/diagnoser}
@@ -1061,7 +1061,7 @@ HovedInngrepTab <- cbind('Antall' = HovedInngrep$Antall[1,],
 					'Andeler' = paste0(round(as.numeric(HovedInngrep$Andeler[1,]),1),'%')
 					)
 rownames(HovedInngrepTab) <- HovedInngrep$GruppeTekst
-print(xtable(HovedInngrepTab, align=c('l','r','r')), caption=HovedInngrep$Tittel[1], label="tab:AntHovedInngrep", digits=1))
+print(xtable(HovedInngrepTab, align=c('l','r','r')), caption=HovedInngrep$Tittel[1], label="tab:AntHovedInngrep", digits=1)
 }
 
 if (medSml==1) {
