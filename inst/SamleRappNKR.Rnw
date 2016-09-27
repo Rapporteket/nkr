@@ -70,7 +70,7 @@
 \setcounter{secnumdepth}{-1} 
 
 
-\begin{document}
+\begin{document}{~}
 
 % LOGO, Include a department/university logo - this will require the graphicx package
  \includegraphics[height=2cm]{\Sexpr{system.file(file='NKRlogo.jpg', package='nkr')}}
@@ -1397,7 +1397,7 @@ Figur \ref{fig:OswEndrSml} viser andel pasienter med klinisk signifikant forbedr
 etter operasjon sammenliknet med landet for øvrig og de tre avdelingene/sykehusene som har 
 med størst forbedring i ODI. Merk at resultatene \textit{ikke} justert for forskjeller i pasientpopulasjonene.
 
-\\
+
 
 <<'FigOsw', echo=FALSE>>=	 #fig=TRUE, 
 #dum <- FordPrePost(RegData=RegData, outfile='OswestryPP.pdf', 
@@ -1603,4 +1603,3 @@ etter operasjon ved \Sexpr{shtxt} fordelt på år. Det hvite merket på søylene
 
 
 \end{document}
-
