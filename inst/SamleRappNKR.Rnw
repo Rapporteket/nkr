@@ -151,7 +151,7 @@ if (ktr==1) {ktrtxt <- '3 mnd.'}
 if (ktr==2) {ktrtxt <- '12 mnd.'} 
 s1 <- 0.85	#Skaleringsparameter for enkeltfigurer
 figKrymp1 <- 0.8
-s2 <- 0.7	#Skaleringsparameter for "dobbeltfigurer"
+s2 <- 0.65	#Skaleringsparameter for "dobbeltfigurer"
 
 #Gjør utvalg
 #Tidsrom	Det vil bare være hensiktsmessig å velge hele år.
@@ -447,8 +447,6 @@ xtable(SivStat, caption='Sivilstatus for opererte pasienter', label="tab:SivStat
 
 
 \subsection{Morsmål / etnisitet}
-Tabell \ref{tab:Morsm} viser fordeling av norske, samiske og andre fremmedsåpråklige pasienter.
-%for alle som ble operert ved \Sexpr{shtxt} sammenliknet med landet for øvrig. 
 
 <<'TabMorsm', results='asis', echo=FALSE>>=
 if (medSml==0) {
@@ -460,6 +458,8 @@ xtable(Morsm, caption='Pasientenes morsmål', label="tab:Morsm", align=c('l','r'
 AndelFremmedspraak <- sprintf('%.1f', sum(MorsmAnt[2:3], na.rm=T)/Ntot*100)
 
 }
+Tabell \ref{tab:Morsm} viser fordeling av norske, samiske og andre fremmedsåpråklige pasienter.
+%for alle som ble operert ved \Sexpr{shtxt} sammenliknet med landet for øvrig. 
 
 if (medSml==1) {
 MorsmEgen <- table(RegDataHoved$Morsmal, useNA='a')/NHoved*100
@@ -503,7 +503,7 @@ AndelHoyUtd <- sprintf('%.1f', rowSums(Utd$Andeler[ ,4:5]))
 
 
 \subsection{Røyking}
-Tabell \ref{tab:Royk} viser andel av røykere fordelt på kvinner og menn.
+%Tabell \ref{tab:Royk} viser andel av røykere fordelt på kvinner og menn.
 
 <<'TabRoyk', results='asis', echo=FALSE>>=
 if (medSml == 0) {
@@ -522,11 +522,12 @@ if (medSml==1){
 				'Landet for øvrig' = 
 			paste(round(prop.table(ftable(RegDataSml[,c('Kjonn','Roker')]),1)[,2]*100, 0), '%', sep=''))
 	rownames(Royk) <- c('Menn', 'Kvinner')
+	
 	xtable(Royk, caption='Røykestatus', label="tab:Royk", align=c('l','r','r'))
 }
 
-txt <- if (medSml==0) {paste0('Det er ', Royk[1], '% av mennene og ', Royk[2], '% av kvinnene som røyker. 
-Total andel røykere er ', RoykTot, '%')} else {''}
+txt <- if (medSml==0) {paste0('Det er ', Royk[1], '\\% av mennene og ', Royk[2], '\\% av kvinnene som røyker. 
+Total andel røykere er ', RoykTot, '\\%')} else {''}
 @ 
 
 \Sexpr{txt}
@@ -687,13 +688,12 @@ TidlOpRL <- round(TidlOpFordRest[2:4]*100/sum(TidlOpFordRest[2:4]), 1)
 
 
 Av de pasientene som hadde vært operert tidligere var \Sexpr{TidlOpHoved[1]}\% 
-%(\Sexpr{TidlOpRL[1]}\%)
-operert i samme nivå, 
-\Sexpr{TidlOpHoved[2]}\% 
-%(\Sexpr{TidlOpRL[2]}\%) operert i annet nivå og
-\Sexpr{TidlOpHoved[3]}\% 
-%(\Sexpr{TidlOpRL[3]}\%) operert i både samme og annet nivå. 
-%Tall i parantes viser fordeling for landet for øvrig.
+operert i samme nivå, \Sexpr{TidlOpHoved[2]}\% 
+%(\Sexpr{TidlOpRL[2]}\%) 
+operert i annet nivå og \Sexpr{TidlOpHoved[3]}\% 
+%(\Sexpr{TidlOpRL[3]}\%) 
+operert i både samme og annet nivå. 
+% Tall i parantes viser fordeling for landet for øvrig.
 
 
 \subsection{Kroppsmasseindex (Body Mass Index, BMI)}
@@ -725,10 +725,6 @@ BMIFord <- RyggFigAndeler(RegData=RegData, valgtVar='BMI', datoFra=datoFra, dato
 
 
 \subsection{Varighet av smerter i rygg-/hofte og av utstrålende smerter på operasjonstidspunktet}
-Spørsmålene er besvart av pasienten.
-Tabellene \ref{tab:SmRH}  og \ref{tab:Utstr} viser fordeling av hvor lenge pasientene har hatt 
-hhv. smerter i rygg/hofte og utstrålende smerter.
-
 <<'TabSmRH', results='asis', echo=FALSE>>=
 if (medSml == 0) {
 SmRHnum <- round(table(RegData$SymptVarighRyggHof, useNA='a')*100/Ntot, 1)
@@ -788,12 +784,16 @@ xtable(UtsRH, caption='Varighet av nåværende utstrålende smerter',
 
 }
 @ 
+Spørsmålene er besvart av pasienten.
+Tabellene \ref{tab:SmRH}  og \ref{tab:Utstr} viser fordeling av hvor lenge pasientene har hatt 
+hhv. smerter i rygg/hofte og utstrålende smerter.
+
 
 %Bare for hele landet:
-Figur \ref{fig:VarighSmerteRHF} andelen som har hatt smerter i mer enn ett år før operasjonen
-for hvert år i de ulike regionene, samt i hele landet.
-Figur \ref{fig:VarighSmerteAvd} viser andelen pasienter med smerter i mer enn ett år ved de ulike
-helseforetakene.
+%Figur \ref{fig:VarighSmerteRHF} viser andelen som har hatt smerter i mer enn ett år før operasjonen
+%for hvert år i de ulike regionene, samt i hele landet.
+%Figur \ref{fig:VarighSmerteAvd} viser andelen pasienter med smerter i mer enn ett år ved de ulike
+%helseforetakene.
 %Andelen pasienter som har hatt utstrålende smerter i mer enn ett år er \Sexpr{sum(SmRHnum[4:5])}\%, 
 %mens \Sexpr{sum(UtsRHnum[4:5])}\% har hatt rygg-/hoftesmerter i mer enn ett år. (Prosentandelen er ut 
 %fra totalt antall pasienter, dvs. inklusive de som ikke har svart. Andelen vil derfor være noe lavere
@@ -875,7 +875,8 @@ RVvar <- c('RvCt', 'RvMr', 'RvRadigr', 'RvDiscogr', 'RvDpregblok', 'RvRtgLscol',
 	RVpst <- round(RVant*100/Ntot, 1)
 
 RV <- cbind('Antall' = c(RVant, Ntot),
-			'Andeler' = c(paste(RVpst, '%', sep=''),' '))
+		'Andeler' = c(paste0(RVpst, '\%'),' ')
+		)
 }
 if (medSml == 1) {
 RVHoved <- round(colSums(RegDataHoved[, RVvar], na.rm=T)*100/NHoved, 1)
@@ -1000,7 +1001,7 @@ feil/unøyaktig registrering.
 %xtable(AntOpMnd, caption=AntOpMndLand$Tittel[1], label="tab:AntOpMnd", digits=1, align=c('l',rep('c',12)))
 
 %AntOpMnd <- rbind('Antall' = AntOpMnd$Antall, 
-%				'Andeler' = paste(round(AntOpMndLand$Antall/Ntot*100, 1),'%',sep=''))
+%				'Andeler' = paste0(round(AntOpMndLand$Antall/Ntot*100, 1),'\%''))
 %xtable(AntOpMnd, caption=AntOpMndLand$Tittel[1], label="tab:AntOpMnd", digits=1, align=c('l',rep('c',12)))
 
 %@
@@ -1042,7 +1043,8 @@ Figur \ref{fig:HovedInngrep} viser fordeling av hovedinngrep av hver type.
 De nøyaktige tallene for antall registrerte operasjoner for hvert hovedinngrep 
 framgår av Tabell \ref{tab:AntHovedInngrep}. 
 
-<<'AntHovedInngrepAvd', echo=FALSE>>=	#fig=TRUE, 
+<<'AntHovedInngrepAvd',results='asis', echo=FALSE>>=	
+#fig=TRUE, 
 
 #AntHovedInngrepLand <- AntSoyler(RegData=RegData, libkat=libkat, outfile='HinngrLand.pdf', 
 #	egenavd=0, aar=aar, reshID=reshID, variabel='HovedInngrep', tittel=0)
@@ -1058,8 +1060,8 @@ if (medSml==0) {
 HovedInngrepTab <- cbind('Antall' = HovedInngrep$Antall[1,], 
 					'Andeler' = paste0(round(as.numeric(HovedInngrep$Andeler[1,]),1),'%')
 					)
-xtable(HovedInngrepTab, caption=HovedInngrep$Tittel[1], label="tab:AntHovedInngrep", 
-		align=c('l', 'r', 'r'), digits=1)
+rownames(HovedInngrepTab) <- HovedInngrep$GruppeTekst
+print(xtable(HovedInngrepTab, align=c('l','r','r')), caption=HovedInngrep$Tittel[1], label="tab:AntHovedInngrep", digits=1))
 }
 
 if (medSml==1) {
@@ -1094,11 +1096,6 @@ xtable(HovedInngrepTab, caption=HovedInngrep$Tittel[1], label="tab:AntHovedInngr
 
 
 \subsubsection{Oversikt over inngrepstyper}
-Tabell \ref{tab:AndelInngrType} viser fordeling av type operasjon for 
-de hovedinngrepene som har underkategorier. Mikro henspeiler her på at operatøren har brukt
-synsfremmende midler (mikroskop eller lupebriller), mens makro betyr at det har blitt 
-utført åpen kirurgi.
-
 
 <<'TabInnHinn', results='asis', echo=FALSE, eval=FALSE>>=
 hkatnavn <- c(
@@ -1172,6 +1169,11 @@ xtable(AndelInngr4, caption='Fordeling av type inngrep innen hver hovedinngrepst
 		align=c('l','l','r','r'), digits=1)
 @ 
 
+Tabell \ref{tab:AndelInngrType} viser fordeling av type operasjon for 
+de hovedinngrepene som har underkategorier. Mikro henspeiler her på at operatøren har brukt
+synsfremmende midler (mikroskop eller lupebriller), mens makro betyr at det har blitt 
+utført åpen kirurgi.
+
 
 
 %\subsection{Operasjonskategori, hastegrad}
@@ -1237,14 +1239,13 @@ LiggetidBox <- RyggFigGjsnTid(RegData=RegData,  outfile='LiggetidBox.pdf',
 
 
 
-\subsection{Bruk av antibiotikaprofylakse}
-KOMMER!!
+%\subsection{Bruk av antibiotikaprofylakse}
 
-Figur \ref{fig:Antibiotika} viser andelen pasienter som har fått antibiotikaprofylakse
-de respektive år. 
+%Figur \ref{fig:Antibiotika} viser andelen pasienter som har fått antibiotikaprofylakse
+%de respektive år. 
 %, både ved egen avdeling og totalt for hele landet.
-De nøyaktige tallene for hvor stor andel av pasientene som har fått antibiotikaprofylakse 
-framgår av Tabell \ref{tab:AntibiotikaAndel}. 
+%De nøyaktige tallene for hvor stor andel av pasientene som har fått antibiotikaprofylakse 
+%framgår av Tabell \ref{tab:AntibiotikaAndel}. 
 
 <<'Antibiotika', results='asis', echo=FALSE, eval=FALSE>>=
 Antibiotika <- RyggFigAndelerTid(RegData=RegData, outfile='Antibiotika.pdf', reshID=reshID, enhetsUtvalg=enhetsUtvalg,

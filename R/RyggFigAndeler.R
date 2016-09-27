@@ -683,7 +683,7 @@ rownames(AndelerUt) <- c(shtxt, smltxt)
 AntallUt <- rbind(AntHoved, AntRest)
 rownames(AntallUt) <- c(shtxt, smltxt)
 
-UtData <- list(paste(toString(Tittel),'.', sep=''), AndelerUt, AntallUt, grtxt )
+UtData <- list(paste(toString(TittelUt),'.', sep=''), AndelerUt, AntallUt, grtxt )
 names(UtData) <- c('Tittel', 'Andeler', 'Antall', 'GruppeTekst')
 return(invisible(UtData))
 
