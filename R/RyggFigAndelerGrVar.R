@@ -81,7 +81,7 @@ RyggFigAndelerGrVar <- function(RegData, valgtVar, datoFra='2007-01-01', datoTil
      }
 
      RegData[ ,grVar] <- factor(RegData[ ,grVar])
-     Ngrense <- 50		#Minste antall registreringer for at ei gruppe skal bli vist
+     Ngrense <- 30		#Minste antall registreringer for at ei gruppe skal bli vist
 
 #if (valgtVar %in% c('OswEndr20', 'OswEndr30pst' )) {
 #ktr kan ha verdiene 0, 1 eller 2

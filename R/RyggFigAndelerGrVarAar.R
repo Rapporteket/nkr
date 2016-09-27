@@ -363,7 +363,6 @@ if (valgtVar == 'Osw48') {
 	 NminTot <- 50 #Ikke i bruk
 	 NminAar <- 30
 
-
      N <- dim(RegData)[1] #table(RegData$OpAar)      #Antall per år
      Nvar <- tapply(RegData$Variabel, RegData[ ,c('OpAar', grVar)], sum, na.rm=T) #Variabel er en 0/1-variabel.
      if(N > 0) {Ngr <- table(RegData[ ,c('OpAar', grVar)])}	else {Ngr <- 0}
@@ -373,12 +372,12 @@ if (valgtVar == 'Osw48') {
      indGrUt <- as.numeric(which(Ngr < NminAar)) #Alle som har for få. Indeks er kolonnevis
      if (length(indGrUt)==0) { indGrUt <- 0}
      AndelerGr[indGrUt] <- NA	#dummy0	#Alle andeler med for lav N
-     AndelerSiste <- AndelerGr[as.character(AarMax),]
-#vent     AndelerSiste[is.na(AndelerSiste)] <- 0
-     sortInd <- order(as.numeric(AndelerSiste), decreasing=TRUE)
-
+     sortInd <- order(as.numeric(AndelerGr[as.character(AarMax),]), decreasing=TRUE)
+     AndelerSiste <- AndelerGr[as.character(AarMax),sortInd]
+     #vent     AndelerSiste[is.na(AndelerSiste)] <- 0
+     
      #AndelerGrSort <- AndelerSiste[sortInd] #Bare siste år
-     AndelerGrSort <- AndelerGr[,sortInd]
+     AndelerGrSort <- AndelerGr[ ,sortInd]
      GrNavnSort <- colnames(AndelerGrSort) #names(AndelerGrSort)    #paste0(names(Ngr)[sortInd], ', ',Ngrtxt[sortInd])
      #Antall bare for siste år 
      AntGrNgr <- length(which(Ngr[as.character(AarMax), ] >= NminAar))	#"Gyldige" grupper
@@ -444,7 +443,7 @@ if (valgtVar == 'Osw48') {
           par('fig'=c(vmarg, 1, 0, 1-0.02*(NutvTxt-1)))	#Har alltid datoutvalg med
 
           xmax <- min(max(AndelerGrSort, na.rm = T),100)*1.15
-          pos <- barplot(as.numeric(AndelerGrSort), horiz=T, border=NA, col=farger[3], #main=Tittel,
+          pos <- barplot(as.numeric(AndelerSiste), horiz=T, border=NA, col=farger[3], #main=Tittel,
                          xlim=c(0,xmax), ylim=c(0.05, 1.25)*length(GrNavnSort), font.main=1, xlab='Andel (%)', las=1, cex.names=cexShNavn*0.9)
  if (enhetsUtvalg == 10) {
 	indMed <- 1:AntGrNgr

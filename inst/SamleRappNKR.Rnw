@@ -737,7 +737,7 @@ names(SmRH) <- c('Ingen rygg-/hoftesmerter', '< 3 mnd',
 			'3 - 12 mnd', '1 - 2 år', '> 2 år', 'Ikke besvart')	#, 'Tot. ant.')
 xtable(cbind('Andeler'=SmRH), caption='Varighet av rygg-/hoftesmerter på operasjonstidspunktet', 
 label="tab:SmRH", align=c('l','r'), digits=1)
-MedRH<- median(RegData$SymptVarighRyggHof, na.rm=T)
+#MedRH<- median(RegData$SymptVarighRyggHof, na.rm=T)
 
 
 UtsRHnum <- round(table(RegData$SympVarighUtstr, useNA='a')*100/Ntot, 1)
