@@ -376,15 +376,16 @@ if (valgtVar == 'Osw48') {
      AndelerSiste <- AndelerGr[as.character(AarMax),]
 #vent     AndelerSiste[is.na(AndelerSiste)] <- 0
      sortInd <- order(as.numeric(AndelerSiste), decreasing=TRUE)
-     #Antall bare for siste år
-     Ngrtxt <- Ngr[as.character(AarMax), ]	#paste0('N=', as.character(Ngr[as.character(AarMax), ]))	
-     Ngrtxt[which(Ngr[as.character(AarMax), ] < NminAar)] <- paste0('<', NminAar) #paste0('N<', NminAar)	
 
      #AndelerGrSort <- AndelerSiste[sortInd] #Bare siste år
      AndelerGrSort <- AndelerGr[,sortInd]
      GrNavnSort <- colnames(AndelerGrSort) #names(AndelerGrSort)    #paste0(names(Ngr)[sortInd], ', ',Ngrtxt[sortInd])
-     andeltxt <- paste0(sprintf('%.1f',AndelerGrSort[as.character(AarMax),]), '%') 	
+     #Antall bare for siste år 
      AntGrNgr <- length(which(Ngr[as.character(AarMax), ] >= NminAar))	#"Gyldige" grupper
+     Ngrtxt <- Ngr[as.character(AarMax), sortInd]	#paste0('N=', as.character(Ngr[as.character(AarMax), ]))	
+     Ngrtxt[which(Ngr[as.character(AarMax), sortInd] < NminAar)] <- paste0('<', NminAar) #paste0('N<', NminAar)	
+
+      andeltxt <- paste0(sprintf('%.1f',AndelerGrSort[as.character(AarMax),]), '%') 	
      if (length(indGrUt)>0) {andeltxt[(AntGrNgr+1):(length(GrNavnSort))] <- ''}
      
      AndelHele <- round(100*sum(RegData$Variabel)/N, 2)
