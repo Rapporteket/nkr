@@ -93,7 +93,7 @@ if (valgtVar %in% c('EQ5DPre', 'OswTotPre', 'SmBePre', 'SmRyPre')) {
 
 	Xlab <- 'Operasjonsår'
 	retn <- 1 #retning på aksetekst
-	gr <- 0:11	
+	gr <- 0:10	
 	GrNavn <- 0:10
 	AntGr <- 11
 	if (valgtVar %in% c('EQ5DEndr', 'EQ5DEndrPre')) {	
@@ -138,14 +138,18 @@ if (valgtVar %in% c('EQ5DPre', 'OswTotPre', 'SmBePre', 'SmRyPre')) {
             retn <- 2}
 	if (valgtVar %in% c('SmBeinEndr', 'SmBeinEndrPre')) {
 		t1 <- 'beinsmerter '
-		RegData$Pre <- -RegData$SmBePre	#Forbedring = lavere smerte
-		RegData$Post3mnd <- -RegData$SmBe3mnd
-		RegData$Post12mnd <- -RegData$SmBe12mnd
+		RegData$Pre <- RegData$SmBePre	#Forbedring = lavere smerte
+		RegData$Post3mnd <- RegData$SmBe3mnd
+		RegData$Post12mnd <- RegData$SmBe12mnd
 		KIekstrem <- c(-10,10)
 		}
       if (valgtVar=='SmBeinEndrPre') {
 			Xlab <- 'Beinsmerter før operasjon'
-            RegData$Gr <- cut(RegData$Pre, gr, right=F)
+            RegData$Gr <- factor(RegData$Pre, levels=gr)
+      }
+      if (valgtVar=='SmRyggEndrPre') {
+			Xlab <- 'Ryggsmerter før operasjon'
+            RegData$Gr <- factor(RegData$Pre, levels=gr)
       }
 	if (valgtVar %in% c('SmRyggEndr', 'SmRyggEndrPre')) {
 		t1 <- 'ryggsmerter '
@@ -154,10 +158,6 @@ if (valgtVar %in% c('EQ5DPre', 'OswTotPre', 'SmBePre', 'SmRyPre')) {
 		RegData$Post12mnd <- RegData$SmRy12mnd
 		KIekstrem <- c(-10,10)
 		}
-      if (valgtVar=='SmRyggEndrPre') {
-			Xlab <- 'Ryggsmerter før operasjon'
-            RegData$Gr <- cut(RegData$Pre, gr, right=F)
-      }
 
 
 if (valgtVar %in% c('EQ5DEndr', 'OswEndr', 'SmBeinEndr', 'SmRyggEndr',
@@ -166,6 +166,7 @@ if (valgtVar %in% c('EQ5DEndr', 'OswEndr', 'SmBeinEndr', 'SmRyggEndr',
 					ktrtxt <- '3 mnd etter'}
 	if (ktr==2) {RegData$Variabel <- (RegData$Post12mnd - RegData$Pre)
 					ktrtxt <- '12 mnd etter'}
+      
 	TittelVar <- paste('Forbedring av ', t1, ktrtxt, ' operasjon,', sep='')
 	ytxt1 <- paste('endring av ', t1 ,sep='')
 	}
@@ -295,8 +296,8 @@ NRest <- tapply(RegData[indRest ,'Variabel'], RegData[indRest, 'Gr'], length)
 #xmin <- 0.5
 #xmax <- AntGr+0.5
 cexgr <- 0.9	#Kan endres for enkeltvariable
-ymin <- 0.9*min(KonfRest, Konf, na.rm=TRUE)	#ymin1 - 2*h
-ymax <- 1.2*max(KonfRest, Konf, na.rm=TRUE)	#ymax1 + 2*h
+ymin <- min(KonfRest, Konf, na.rm=TRUE)	#ymin1 - 2*h
+ymax <- 1.1*max(KonfRest, Konf, na.rm=TRUE)	#ymax1 + 2*h
 if (valgtMaal=='Med') {maaltxt <- 'Median ' } else {maaltxt <- 'Gjennomsnittlig '}
 ytxt <- paste(maaltxt, ytxt1, sep='')
 AntGr <- length(GrNavn)

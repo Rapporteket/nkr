@@ -149,9 +149,9 @@ tidlOp <- 0	# Dvs. alle
 ktr <- 2
 if (ktr==1) {ktrtxt <- '3 mnd.'} 
 if (ktr==2) {ktrtxt <- '12 mnd.'} 
-s1 <- 0.85	#Skaleringsparameter for enkeltfigurer
+s1 <- 0.8	#Skaleringsparameter for enkeltfigurer
 figKrymp1 <- 0.8
-s2 <- 0.65	#Skaleringsparameter for "dobbeltfigurer"
+s2 <- 0.6	#Skaleringsparameter for "dobbeltfigurer"
 
 #Gjør utvalg
 #Tidsrom	Det vil bare være hensiktsmessig å velge hele år.
@@ -451,11 +451,11 @@ xtable(SivStat, caption='Sivilstatus for opererte pasienter', label="tab:SivStat
 <<'TabMorsm', results='asis', echo=FALSE>>=
 if (medSml==0) {
 MorsmAnt <- table(RegData$Morsmal, useNA='a')
+AndelFremmedspraak <- sprintf('%.1f', sum(MorsmAnt[2:3], na.rm=T)/Ntot*100)
 Morsm <- cbind('Antall' = MorsmAnt,
 			'Andeler' = paste0(round(MorsmAnt/Ntot*100, 1), '%'))
 rownames(Morsm) <- c('Norsk', 'Samisk', 'Annet', 'Ikke svart')
 xtable(Morsm, caption='Pasientenes morsmål', label="tab:Morsm", align=c('l','r','r'))
-AndelFremmedspraak <- sprintf('%.1f', sum(MorsmAnt[2:3], na.rm=T)/Ntot*100)
 
 }
 
@@ -473,7 +473,7 @@ AndelFremmedspraak <- sprintf('%.1f', c(sum(MorsmEgen[2:3], na.rm=T), sum(MorsmR
 @ 
 
 Tabell \ref{tab:Morsm} viser fordeling av norske, samiske og andre fremmedsåpråklige pasienter.
-%for alle som ble operert ved \Sexpr{shtxt} sammenliknet med landet for øvrig. 
+% for alle som ble operert ved \Sexpr{shtxt} sammenliknet med landet for øvrig. 
 Andel fremmedspråklige 
 pasienter (inkl. samisk) var \Sexpr{AndelFremmedspraak[1]}\% for \Sexpr{shtxt}. 
 %, mens den var \Sexpr{AndelFremmedspraak[2]}\% for landet for øvrig.
@@ -545,12 +545,16 @@ Total andel røykere er ', RoykTot, '\\%')} else {''}
 
 \subsection{Arbeidsstatus}
 
-Tabell \ref{tab:Arb} viser arbeidsstatus for alle opererte pasienter. 
-%operert \Sexpr{shtxt} sammenliknet med landet for øvrig.
 
 <<'TabArbstat', results='asis', echo=FALSE>>=
 
 if (enhetsUtvalg == 0) {
+
+indSyk <- which(RegData$ArbstatusPre %in% 6:10)
+GjsnSyk<- mean(RegData$SykemeldVarighPre[indSyk], na.rm=T)
+SdSyk<- sd(RegData$SykemeldVarighPre[indSyk], na.rm=T)
+MedSyk<- median(RegData$SykemeldVarighPre[indSyk], na.rm=T)
+
 NsvarArb <- sum(table(RegData$ArbstatusPre))
 ArbNum <- round(table(RegData$ArbstatusPre)*100/sum(table(RegData$ArbstatusPre)), 1)
 Arb <- paste(ArbNum, '%', sep='')
@@ -558,10 +562,6 @@ names(Arb) <- c('I arbeid', 'Hjemmeværende', 'Student/skoleelev', 'Pensjonist',
 	'Sykemeldt', 'Aktiv sykemeldt', 'Delvis Sykemeldt', 'Attføring/rehabiliteirng', 'Uføretrygdet')
 xtable(cbind('Andeler'=Arb), caption='Arbeidsstatus', label="tab:Arb", align=c('l','r'))
 
-indSyk <- which(RegData$ArbstatusPre %in% 6:10)
-GjsnSyk<- mean(RegData$SykemeldVarighPre[indSyk], na.rm=T)
-SdSyk<- sd(RegData$SykemeldVarighPre[indSyk], na.rm=T)
-MedSyk<- median(RegData$SykemeldVarighPre[indSyk], na.rm=T)
 
 }
 if (enhetsUtvalg == 1) {
@@ -594,6 +594,8 @@ if (enhetsUtvalg == 1) {
 }
 
 @ 
+%Tabell \ref{tab:Arb} viser arbeidsstatus for alle opererte pasienter. 
+%operert \Sexpr{shtxt} sammenliknet med landet for øvrig.
 
 Tabell \ref{tab:Arb} viser fordeling av arbeidsstatus for de \Sexpr{round(NsvarArb/Ntot*100, 1)}\% 
 av pasientene som har svart på arbeidsstatus.
@@ -708,7 +710,7 @@ Figur \ref{fig:BMI} viser fordeling av BMI for alle pasienter.
 
 <<'FigBMI', echo=FALSE>>=
 BMIFord <- RyggFigAndeler(RegData=RegData, valgtVar='BMI', datoFra=datoFra, datoTil=datoTil, 
-			reshID=reshID, outfile='FigBMI.pdf', tittel=0)
+			reshID=reshID, outfile='FigBMI.pdf', enhetsUtvalg = 0,  tittel=0)
 @
 
 \begin{figure}[ht]
@@ -720,6 +722,8 @@ BMIFord <- RyggFigAndeler(RegData=RegData, valgtVar='BMI', datoFra=datoFra, dato
 % Total andel pasienter med fedme eller kraftig overvekt (BMI > 30) for pasienter operert
 %ved \Sexpr{shtxt} er \Sexpr{round(sum(BMIFord$Andeler['HovedRes',4:6]),0)}\% mot  
 %\Sexpr{round(sum(BMIFord$Andeler['SmlRes',4:6]),0)}\% for resten av landet. 
+
+\clearpage
 
 
 
@@ -816,8 +820,6 @@ hhv. smerter i rygg/hofte og utstrålende smerter.
   \label{fig:VarighSmerteAvd}
 \end{figure}
 
-
-\clearpage
 
 \subsection{ASA-grad}
 %Tabell, figur eller begge deler?
@@ -1061,7 +1063,7 @@ HovedInngrepTab <- cbind('Antall' = HovedInngrep$Antall[1,],
 					'Andeler' = paste0(round(as.numeric(HovedInngrep$Andeler[1,]),1),'%')
 					)
 rownames(HovedInngrepTab) <- HovedInngrep$GruppeTekst
-print(xtable(HovedInngrepTab, align=c('l','r','r')), caption=HovedInngrep$Tittel[1], label="tab:AntHovedInngrep", digits=1)
+xtable(HovedInngrepTab, align=c('l','r','r'), caption=HovedInngrep$Tittel[1], label="tab:AntHovedInngrep", digits=1)
 }
 
 if (medSml==1) {
@@ -1095,7 +1097,7 @@ xtable(HovedInngrepTab, caption=HovedInngrep$Tittel[1], label="tab:AntHovedInngr
 
 
 
-\subsubsection{Oversikt over inngrepstyper}
+%\subsubsection{Oversikt over inngrepstyper}
 
 <<'TabInnHinn', results='asis', echo=FALSE, eval=FALSE>>=
 hkatnavn <- c(
@@ -1169,10 +1171,10 @@ xtable(AndelInngr4, caption='Fordeling av type inngrep innen hver hovedinngrepst
 		align=c('l','l','r','r'), digits=1)
 @ 
 
-Tabell \ref{tab:AndelInngrType} viser fordeling av type operasjon for 
-de hovedinngrepene som har underkategorier. Mikro henspeiler her på at operatøren har brukt
-synsfremmende midler (mikroskop eller lupebriller), mens makro betyr at det har blitt 
-utført åpen kirurgi.
+%Tabell \ref{tab:AndelInngrType} viser fordeling av type operasjon for 
+%de hovedinngrepene som har underkategorier. Mikro henspeiler her på at operatøren har brukt
+%synsfremmende midler (mikroskop eller lupebriller), mens makro betyr at det har blitt 
+%utført åpen kirurgi.
 
 
 
@@ -1410,7 +1412,7 @@ dum <- RyggFigGjsnBox(RegData=RegData,  outfile='OswEndr.pdf',
 #dum <- SoyleSml(RegData=RegData, outfile='OswEndrSml.pdf', 
 #	reshID=reshID, valgtVar='OswEndr', tidlOp=tidlOp, OpAar=OpAar, erMann=erMann, shgr=0, 
 #	hovedkat=hovedkat, ktr=ktr, just=0, tittel=0)
-dum <- RyggFigAndelerGrVar(RegData=RegData, valgtVar='Osw30_3mnd', datoFra=datoFra, datoTil=datoTil, 
+dum <- RyggFigAndelerGrVar(RegData=RegData, valgtVar='OswEndr30pst', datoFra=datoFra, datoTil=datoTil, 
                             minald=minald, maxald=maxald, erMann=erMann, hovedkat=hovedkat, tidlOp='', preprosess=0,
                             enhetsUtvalg=enhetsUtvalg, grVar='ShNavn', tittel=0, reshID=reshID, outfile='Osw30Shus.pdf')
 
@@ -1470,8 +1472,9 @@ Figur \ref{fig:EQ5DEndr} viser endring i EQ-5D score 3 og 12 mnd. etter operasjo
 %hos pasienter operert ved \Sexpr{shtxt} og i landet for øvrig for hvert år.
 
 
-\subsection{Ryggsmerter}
-Skala for ryggsmerter går fra 0 til 10, hvor 0 betegner ingen smerte.
+\subsection{Rygg- og beinsmerter}
+Skala for rygg-/beinsmerter går fra 0 til 10, hvor 0 betegner ingen smerte.
+
 <<'FigSmRy', echo=FALSE>>=	 #fig=TRUE, 
 #dum <- FordPrePost(RegData=RegData, outfile='SmRyggPP.pdf', reshID=reshID, 
 #                 variabel='SmRygg', aar=aar, erMann=erMann, hovedkat=hovedkat, ktr=ktr, tittel=0)
@@ -1493,8 +1496,6 @@ dum <- RyggFigGjsnBox(RegData=RegData,  outfile='SmRyggEndrTid.pdf',
 Figur \ref{fig:SmRygg} endring av ryggsmerter fra før til etter operasjon, samt endring i ryggsmerter.
 
 
-\subsection{Beinsmerter}
-Skala for beinsmerter går fra 0 til 10, hvor 0 betegner ingen smerte.
 <<'FigSmBe', echo=FALSE>>=	 #fig=TRUE, 
 #dum <- FordPrePost(RegData=RegData, outfile='SmBeinPP.pdf', reshID=reshID, egenavd=egenavd, variabel='SmBein', plotType=plotType, OpAar=OpAar, erMann=erMann, hovedkat=hovedkat, ktr=ktr, tittel=0)
 #dum <- BoxTid(RegData=RegData, outfile='SmBeinSml.pdf', reshID=reshID, 
@@ -1502,9 +1503,9 @@ Skala for beinsmerter går fra 0 til 10, hvor 0 betegner ingen smerte.
 #dum <- RyggFigGjsnB(RegData=RegData,  outfile='SmBeinSml.pdf', 
 #		valgtVar='SmBeinEndr', ktr=ktr, tittel=0, valgtMaal='', enhetsUtvalg=1, reshID=reshID)
 dum <- RyggFigGjsnBox(RegData=RegData,  outfile='SmBeinEndrPre.pdf', 
-		valgtVar='SmBeinEndrPre', ktr=ktr, tittel=0, valgtMaal='', enhetsUtvalg=1, reshID=reshID)
+		valgtVar='SmBeinEndrPre', ktr=ktr, tittel=0, valgtMaal='', enhetsUtvalg=0, reshID=reshID)
 dum <- RyggFigGjsnBox(RegData=RegData,  outfile='SmBeinEndrTid.pdf', 
-		valgtVar='SmBeinEndr', ktr=ktr, tittel=0, valgtMaal='', enhetsUtvalg=1, reshID=reshID)
+		valgtVar='SmBeinEndr', ktr=ktr, tittel=0, valgtMaal='', enhetsUtvalg=0, reshID=reshID)
 @
 
 \begin{figure}[h] 
