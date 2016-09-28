@@ -1294,7 +1294,7 @@ Antibiotika <- tapply(RegDataHoved$Antibiotika, RegDataHoved$OpAar, FUN=sum, na.
 %\Sexpr{round(sum(Antibiotika)/NtotEgen*100, 1)}\%
 %for \Sexpr{shtxt} mot \Sexpr{round((Ntot-NMangel)/Ntot*100,1)}\% for resten av landet
 %\par
-Det anbefales å gi alle pasienter antibiotikaprofylakse. 
+%Det anbefales å gi alle pasienter antibiotikaprofylakse. 
 
 
 \subsection{Prescore}
@@ -1486,9 +1486,9 @@ Skala for rygg-/beinsmerter går fra 0 til 10, hvor 0 betegner ingen smerte.
 #dum <- FordPrePost(RegData=RegData, outfile='SmRyggPP.pdf', reshID=reshID, 
 #                 variabel='SmRygg', aar=aar, erMann=erMann, hovedkat=hovedkat, ktr=ktr, tittel=0)
 dum <- RyggFigGjsnBox(RegData=RegData,  outfile='SmRyggEndrPre.pdf', 
-		valgtVar='SmRyggEndrPre', ktr=ktr, tittel=0, valgtMaal='', enhetsUtvalg=1, reshID=reshID)
+		valgtVar='SmRyggEndrPre', ktr=ktr, tittel=0, valgtMaal='', enhetsUtvalg=enhetsUtvalg, reshID=reshID)
 dum <- RyggFigGjsnBox(RegData=RegData,  outfile='SmRyggEndrTid.pdf', 
-		valgtVar='SmRyggEndr', ktr=ktr, tittel=0, valgtMaal='', enhetsUtvalg=1, reshID=reshID)
+		valgtVar='SmRyggEndr', ktr=ktr, tittel=0, valgtMaal='', enhetsUtvalg=enhetsUtvalg, reshID=reshID)
 @
 
 \begin{figure}[h] 
