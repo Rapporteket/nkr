@@ -151,7 +151,7 @@ if (ktr==1) {ktrtxt <- '3 mnd.'}
 if (ktr==2) {ktrtxt <- '12 mnd.'} 
 s1 <- 0.8	#Skaleringsparameter for enkeltfigurer
 figKrymp1 <- 0.8
-s2 <- 0.6	#Skaleringsparameter for "dobbeltfigurer"
+s2 <- 0.55	#Skaleringsparameter for "dobbeltfigurer"
 
 #Gjør utvalg
 #Tidsrom	Det vil bare være hensiktsmessig å velge hele år.
@@ -814,10 +814,16 @@ hhv. smerter i rygg/hofte og utstrålende smerter.
 
 \begin{figure}[h] 
   \scalebox{\Sexpr{s2}}{\includegraphics{VarighUtstrAvd.pdf}}
-  \scalebox{\Sexpr{s2}}{\includegraphics{VarighRyggHofAvd.pdf}}
-  \caption{Prolapspasienter som har hatt hhv smerter i rygg-/hofte og utstrålende smerter
+  \caption{Prolapspasienter som har utstrålende smerter
 			i mer enn ett år før operasjonen.}
-  \label{fig:VarighSmerteAvd}
+  \label{fig:VarighSmerteUtstrAvd}
+\end{figure}
+
+\begin{figure}[h] 
+  \scalebox{\Sexpr{s2}}{\includegraphics{VarighRyggHofAvd.pdf}}
+  \caption{Prolapspasienter som har hatt smerter i rygg-/hofte
+			i mer enn ett år før operasjonen.}
+  \label{fig:VarighSmerteRyggAvd}
 \end{figure}
 
 
