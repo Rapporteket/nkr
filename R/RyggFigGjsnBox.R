@@ -143,7 +143,14 @@ if (valgtVar %in% c('EQ5DPre', 'OswTotPre', 'SmBePre', 'SmRyPre')) {
 		RegData$Post12mnd <- RegData$SmBe12mnd
 		KIekstrem <- c(-10,10)
 		}
-      if (valgtVar=='SmBeinEndrPre') {
+	if (valgtVar %in% c('SmRyggEndr', 'SmRyggEndrPre')) {
+	      t1 <- 'ryggsmerter '
+	      RegData$Pre <- RegData$SmRyPre
+	      RegData$Post3mnd <- RegData$SmRy3mnd
+	      RegData$Post12mnd <- RegData$SmRy12mnd
+	      KIekstrem <- c(-10,10)
+	}
+	if (valgtVar=='SmBeinEndrPre') {
 			Xlab <- 'Beinsmerter før operasjon'
             RegData$Gr <- factor(RegData$Pre, levels=gr)
       }
@@ -151,13 +158,6 @@ if (valgtVar %in% c('EQ5DPre', 'OswTotPre', 'SmBePre', 'SmRyPre')) {
 			Xlab <- 'Ryggsmerter før operasjon'
             RegData$Gr <- factor(RegData$Pre, levels=gr)
       }
-	if (valgtVar %in% c('SmRyggEndr', 'SmRyggEndrPre')) {
-		t1 <- 'ryggsmerter '
-		RegData$Pre <- RegData$SmRyPre
-		RegData$Post3mnd <- RegData$SmRy3mnd
-		RegData$Post12mnd <- RegData$SmRy12mnd
-		KIekstrem <- c(-10,10)
-		}
 
 
 if (valgtVar %in% c('EQ5DEndr', 'OswEndr', 'SmBeinEndr', 'SmRyggEndr',
