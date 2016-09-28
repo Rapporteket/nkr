@@ -151,7 +151,7 @@ if (ktr==1) {ktrtxt <- '3 mnd.'}
 if (ktr==2) {ktrtxt <- '12 mnd.'} 
 s1 <- 0.8	#Skaleringsparameter for enkeltfigurer
 figKrymp1 <- 0.8
-s2 <- 0.55	#Skaleringsparameter for "dobbeltfigurer"
+s2 <- 0.5	#Skaleringsparameter for "dobbeltfigurer"
 
 #Gjør utvalg
 #Tidsrom	Det vil bare være hensiktsmessig å velge hele år.
@@ -487,7 +487,7 @@ Opplysningene om utdanning er rapportert av pasientene selv.
 
 <<'FigUtd', echo=FALSE>>=
 Utd <- RyggFigAndeler(RegData=RegData, valgtVar='Utd', datoFra=datoFra, datoTil=datoTil, 
-			reshID=reshID, outfile='FigUtd.pdf', tittel=0)
+			reshID=reshID, enhetsUtvalg=enhetsUtvalg, outfile='FigUtd.pdf', tittel=0)
 
 AndelHoyUtd <- sprintf('%.1f', rowSums(Utd$Andeler[ ,4:5]))
 @
@@ -729,6 +729,7 @@ BMIFord <- RyggFigAndeler(RegData=RegData, valgtVar='BMI', datoFra=datoFra, dato
 
 
 \subsection{Varighet av smerter i rygg-/hofte og av utstrålende smerter på operasjonstidspunktet}
+
 <<'TabSmRH', results='asis', echo=FALSE>>=
 if (medSml == 0) {
 SmRHnum <- round(table(RegData$SymptVarighRyggHof, useNA='a')*100/Ntot, 1)
@@ -813,14 +814,14 @@ hhv. smerter i rygg/hofte og utstrålende smerter.
 %\end{figure}
 
 \begin{figure}[h] 
-  \scalebox{\Sexpr{s2}}{\includegraphics{VarighUtstrAvd.pdf}}
+  \scalebox{\Sexpr{s1}}{\includegraphics{VarighUtstrAvd.pdf}}
   \caption{Prolapspasienter som har utstrålende smerter
 			i mer enn ett år før operasjonen.}
   \label{fig:VarighSmerteUtstrAvd}
 \end{figure}
 
 \begin{figure}[h] 
-  \scalebox{\Sexpr{s2}}{\includegraphics{VarighRyggHofAvd.pdf}}
+  \scalebox{\Sexpr{s1}}{\includegraphics{VarighRyggHofAvd.pdf}}
   \caption{Prolapspasienter som har hatt smerter i rygg-/hofte
 			i mer enn ett år før operasjonen.}
   \label{fig:VarighSmerteRyggAvd}
@@ -1222,7 +1223,7 @@ Figur \ref{fig:Liggedogn} viser gjennomsnittlig antall liggedøgn per år og for
 
 <<'FigLiggetid', echo=FALSE>>=	#fig=TRUE, 
 LiggetidFord <- RyggFigAndeler(RegData=RegData, valgtVar='Liggedogn', datoFra=datoFra, datoTil=datoTil, 
-			reshID=reshID, outfile='FigLiggetidFord.pdf', tittel=0)
+			reshID=reshID, enhetsUtvalg=enhetsUtvalg, outfile='FigLiggetidFord.pdf', tittel=0)
 
 #LiggetidFord <- AndelSoyler(RegData=RegData, variabel='Liggedogn', 
 #outfile=paste(figKat,'LiggetidFord.pdf', sep=''), 
@@ -1232,7 +1233,7 @@ LiggetidFord <- RyggFigAndeler(RegData=RegData, valgtVar='Liggedogn', datoFra=da
 #LiggetidBox <- BoxTid(RegData=RegData, outfile=paste(figKat,'LiggetidBox.pdf', sep=''), 
 #reshID=reshID, variabel='Liggedogn', erMann=erMann, hovedkat=hovedkat, ktr=ktr, tittel=0)
 LiggetidBox <- RyggFigGjsnTid(RegData=RegData,  outfile='LiggetidBox.pdf', 
-		valgtVar='Liggedogn', ktr=ktr, tittel=0, valgtMaal='', enhetsUtvalg=1, reshID=reshID)
+		valgtVar='Liggedogn', ktr=ktr, tittel=0, valgtMaal='', enhetsUtvalg=enhetsUtvalg, reshID=reshID)
 @
 
 \begin{figure}[h] 
@@ -1412,14 +1413,14 @@ med størst forbedring i ODI. Merk at resultatene \textit{ikke} justert for fors
 #dum <- FordPrePost(RegData=RegData, outfile='OswestryPP.pdf', 
 #	reshID=reshID, valgtVar='Oswestry', plotType='S', OpAar=OpAar, erMann=erMann, hovedkat=hovedkat, ktr=ktr, tittel=0)
 dum <- RyggFigGjsnBox(RegData=RegData,  outfile='OswEndr.pdf', 
-		valgtVar='OswEndr', ktr=ktr, tittel=0, valgtMaal='', enhetsUtvalg=1, reshID=reshID)
+		valgtVar='OswEndr', ktr=ktr, tittel=0, valgtMaal='', enhetsUtvalg=enhetsUtvalg, reshID=reshID)
 #dum <- Osw_over30pst(RegData=RegData, valgtVaroutfile='Osw_over30pst.pdf',
 #		hovedkat=hovedkat, ktr=ktr, tidlOp=tidlOp, shgr=0, OpAar=OpAar, erMann=erMann, reshID=reshID, tittel=0)
 #dum <- SoyleSml(RegData=RegData, outfile='OswEndrSml.pdf', 
 #	reshID=reshID, valgtVar='OswEndr', tidlOp=tidlOp, OpAar=OpAar, erMann=erMann, shgr=0, 
 #	hovedkat=hovedkat, ktr=ktr, just=0, tittel=0)
-dum <- RyggFigAndelerGrVar(RegData=RegData, valgtVar='OswEndr30pst', datoFra=datoFra, datoTil=datoTil, 
-                            minald=minald, maxald=maxald, erMann=erMann, hovedkat=hovedkat, tidlOp='', preprosess=0,
+dum <- RyggFigAndelerGrVar(RegData=RegData, valgtVar='OswEndr30pst', datoFra=datoFra, datoTil=datoTil, ktr = ktr,
+                            minald=minald, maxald=maxald, erMann=erMann, hovedkat=hovedkat, preprosess=0,
                             enhetsUtvalg=enhetsUtvalg, grVar='ShNavn', tittel=0, reshID=reshID, outfile='Osw30Shus.pdf')
 
 
@@ -1458,9 +1459,9 @@ angir lav livskvalitet.
 #dum <- BoxTid(RegData=RegData, outfile='EQ5DEndr.pdf', reshID=reshID, 
 #	variabel='EQ5DEndr', erMann=erMann, hovedkat=hovedkat, ktr=ktr, tittel=0)
 dum <- RyggFigGjsnBox(RegData=RegData,  outfile='EQ5DEndrTid1.pdf', 
-		valgtVar='EQ5DEndr', ktr=1, tittel=0, valgtMaal='', enhetsUtvalg=1, reshID=reshID)
+		valgtVar='EQ5DEndr', ktr=1, tittel=0, valgtMaal='', enhetsUtvalg=enhetsUtvalg, reshID=reshID)
 dum <- RyggFigGjsnBox(RegData=RegData,  outfile='EQ5DEndrTid2.pdf', 
-		valgtVar='EQ5DEndrPre', ktr=2, tittel=0, valgtMaal='', enhetsUtvalg=1, reshID=reshID)
+		valgtVar='EQ5DEndrPre', ktr=2, tittel=0, valgtMaal='', enhetsUtvalg=enhetsUtvalg, reshID=reshID)
 #dum <- SoyleSml(RegData=RegData, outfile='EQ5DEndrSml.pdf', 
 #	reshID=reshID, variabel='EQ5DEndr', tidlOp=tidlOp, OpAar=OpAar, erMann=erMann, shgr=0, hovedkat=hovedkat, ktr=ktr, #tittel=0)
 @
