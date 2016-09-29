@@ -88,6 +88,7 @@ RyggFigAndelerGrVarAar <- function(RegData, valgtVar, datoFra='2007-01-01', dato
 	ktrtxt <- c(', 3 mnd etter', ', 12 mnd. etter')[ktr]
 #	}
       RegData$Variabel <- 0
+      sortering <- TRUE #dvs. decreasing = TRUE. Størst andel nederst
 
      if (valgtVar == 'Alder') {
           #Andel over 75 år
@@ -100,6 +101,7 @@ RyggFigAndelerGrVarAar <- function(RegData, valgtVar, datoFra='2007-01-01', dato
           RegData <- RegData[which(RegData[,valgtVar] %in% 0:1), ]
           RegData$Variabel <- RegData[ ,valgtVar]
           TittelUt <- 'Fått antibiotika'
+          sortering <- FALSE
      }
     if (valgtVar == 'Arbstatus') {
           # Andel i kategori 6 tom 9, mottar sykepenger Av 1-9, (ikke bare de som sykemeldt fra før)
@@ -127,7 +129,8 @@ RyggFigAndelerGrVarAar <- function(RegData, valgtVar, datoFra='2007-01-01', dato
      }
      if (valgtVar == 'BeinsmLavPre') {
           #Lav beinsmerte og ingen parese. (Først og fremst prolaps)
-          RegData$Variabel[which(is.na(RegData$OpIndParese) & (RegData$SmBePre < 2.5))] <- 1
+           RegData <- RegData[which(RegData$SmBePre %in% 0:10),]
+          RegData$Variabel[intersect(which(is.na(RegData$OpIndParese)), which(RegData$SmBePre < 2.5))] <- 1
           TittelUt <- 'Beinsmerte < 2,5 og ingen parese'
      }
     if (valgtVar == 'BeinsmEndrLav') {
@@ -167,6 +170,7 @@ RyggFigAndelerGrVarAar <- function(RegData, valgtVar, datoFra='2007-01-01', dato
           RegData <- RegData[which(RegData$Fornoyd %in% 1:5), ]
           RegData$Variabel[which(RegData$Fornoyd %in% 1:2)] <- 1
           TittelUt <- paste0('Fornøyde pasienter, 3 mnd.' ,ktrtxt)
+          sortering <- FALSE
      }
      if (valgtVar == 'Kp3Mnd') {
           #Komplikasjoner 0:nei, 1:ja
@@ -208,6 +212,7 @@ RyggFigAndelerGrVarAar <- function(RegData, valgtVar, datoFra='2007-01-01', dato
 		  RegData <- RegData[which(RegData$Nytte %in% 1:7), ]
           RegData$Variabel[RegData$Nytte %in% 1:2] <- 1
           TittelUt <- paste0('Helt bra eller mye bedre' , ktrtxt)
+          sortering <- FALSE
      }
 
     if (valgtVar == 'OswEndrLav') {
@@ -220,13 +225,13 @@ RyggFigAndelerGrVarAar <- function(RegData, valgtVar, datoFra='2007-01-01', dato
           TittelUt <- paste0('Forbedring av Oswestry-skår < 13 poeng', ktrtxt)
     }
       if (valgtVar == 'OswEndr20') {
-            #Mislykkede operasjoner
             RegData$OswEndr <- switch(as.character(ktr), 
                                       '1'= (RegData$OswTotPre - RegData$OswTot3mnd),
                                       '2'= (RegData$OswTotPre - RegData$OswTot12mnd))
             RegData <- RegData[which(RegData$OswEndr >= -100), ]
             RegData$Variabel[which(RegData$OswEndr >20)] <- 1
             TittelUt <- paste0('Forbedring av Oswestry-skår > 20 poeng', ktrtxt)
+            sortering <- FALSE
       }
       
 if (valgtVar == 'OswEndr30pst') {
@@ -238,7 +243,8 @@ if (valgtVar == 'OswEndr30pst') {
          RegData <- RegData[which(RegData$OswPst>=-1000), ]
         RegData$Variabel[which(RegData$OswPst >30)] <- 1
          TittelUt <- paste0('Mer enn 30% forbedring av Oswestry-skår', ktrtxt)
-    }
+         sortering <- FALSE
+}
 if (valgtVar == 'Osw48') {
          #Andel med Oswestry-skår fortsatt over 48. 
          RegData$OswPost <- switch(as.character(ktr),
@@ -281,6 +287,7 @@ if (valgtVar == 'Osw48') {
           RegData <- RegData[which(RegData$Saardren %in% 0:1), ]
           RegData$Variabel <- RegData$Saardren
           TittelUt <- 'Andel som får sårdren'
+          sortering <- FALSE
      }
 
      if (valgtVar == 'SmStiPre') {
@@ -325,6 +332,7 @@ if (valgtVar == 'Osw48') {
           RegData$Variabel[which(RegData[ ,valgtVar] %in% 4:5)] <- 1
           VarTxt <- 'med høyere utdanning'
           TittelUt <- 'Andel høyskole-/universitetsutdannede'
+          sortering <- FALSE
      }
      if (valgtVar == 'Verre') {		#%in% c('Verre3mnd','Verre12mnd')) {
           #3/12mndSkjema. Andel med helt mye verre og noen sinne (6:7)
@@ -338,9 +346,16 @@ if (valgtVar == 'Osw48') {
           TittelUt <- paste0('Mye verre/verre enn noen gang' , ktrtxt)
      }
 
-     #Gjør utvalg
+      #Erstatte med test for datoTil vs år. Eller legg på sjekk når beregner AarMax
+      RyggUtvalg <- RyggUtvalg(RegData=RegData, datoFra=datoFra, datoTil=datoTil, minald=minald, maxald=maxald, 
+                               erMann=erMann, hovedkat=hovedkat, tidlOp=tidlOp)
+      RegData <- RyggUtvalg$RegData
+      utvalgTxt <- RyggUtvalg$utvalgTxt
+      
+      #Gjør utvalg
 	 if (enhetsUtvalg == 10) {
 	 	AarMax <- max(RegData$OpAar)	#Siste år
+	 	AarMaxTxt <- as.character(AarMax)
 		RegData <- RegData[which(RegData$OpAar %in% c((AarMax-2):AarMax)), ]
 		}
 
@@ -372,19 +387,19 @@ if (valgtVar == 'Osw48') {
      indGrUt <- as.numeric(which(Ngr < NminAar)) #Alle som har for få. Indeks er kolonnevis
      if (length(indGrUt)==0) { indGrUt <- 0}
      AndelerGr[indGrUt] <- NA	#dummy0	#Alle andeler med for lav N
-     sortInd <- order(as.numeric(AndelerGr[as.character(AarMax),]), decreasing=TRUE)
-     AndelerSiste <- AndelerGr[as.character(AarMax),sortInd]
-     #vent     AndelerSiste[is.na(AndelerSiste)] <- 0
+     sortInd <- order(as.numeric(AndelerGr[AarMaxTxt,]), decreasing=sortering)
+     AndelerSisteSort <- AndelerGr[AarMaxTxt,sortInd]
+     #vent     AndelerSisteSort[is.na(AndelerSisteSort)] <- 0
      
-     #AndelerGrSort <- AndelerSiste[sortInd] #Bare siste år
+     #AndelerGrSort <- AndelerSisteSort[sortInd] #Bare siste år
      AndelerGrSort <- AndelerGr[ ,sortInd]
      GrNavnSort <- colnames(AndelerGrSort) #names(AndelerGrSort)    #paste0(names(Ngr)[sortInd], ', ',Ngrtxt[sortInd])
      #Antall bare for siste år 
-     AntGrNgr <- length(which(Ngr[as.character(AarMax), ] >= NminAar))	#"Gyldige" grupper
-     Ngrtxt <- Ngr[as.character(AarMax), sortInd]	#paste0('N=', as.character(Ngr[as.character(AarMax), ]))	
-     Ngrtxt[which(Ngr[as.character(AarMax), sortInd] < NminAar)] <- paste0('<', NminAar) #paste0('N<', NminAar)	
+     AntGrNgr <- length(which(Ngr[AarMaxTxt, ] >= NminAar))	#"Gyldige" grupper
+     Ngrtxt <- Ngr[AarMaxTxt, ]	#paste0('N=', as.character(Ngr[AarMaxTxt, ]))	
+     Ngrtxt[which(Ngr[AarMaxTxt, ] < NminAar)] <- paste0('<', NminAar) #paste0('N<', NminAar)	
 
-      andeltxt <- paste0(sprintf('%.1f',AndelerGrSort[as.character(AarMax),]), '%') 	
+      andeltxt <- paste0(sprintf('%.1f',AndelerGrSort[AarMaxTxt,]), '%') 	
      if (length(indGrUt)>0) {andeltxt[(AntGrNgr+1):(length(GrNavnSort))] <- ''}
      
      AndelHele <- round(100*sum(RegData$Variabel)/N, 2)
@@ -406,11 +421,11 @@ if (valgtVar == 'Osw48') {
      Ngrtxt <- Ngr #paste('N=', as.character(Ngr), sep='')	#
      Ngrtxt[indGrUt] <- paste0(' (<', Ngrense,')')	#paste0('N<', Ngrense)	#
 
-     AndelerGrSort <- AndelerGr[,sortInd]
+     AndelerSiste <- AndelerGr[,sortInd]
      AndelHele <- round(100*sum(RegData$Variabel)/N, 2)
-     GrNavnSort <- colnames(AndelerGrSort)   #names(Ngr)[sortInd]    #paste0(names(Ngr)[sortInd], ', ',Ngrtxt[sortInd])
+     GrNavnSort <- colnames(AndelerSiste)   #names(Ngr)[sortInd]    #paste0(names(Ngr)[sortInd], ', ',Ngrtxt[sortInd])
      
-     andeltxt <- paste0(sprintf('%.1f',AndelerGrSort), '%') 	#round(as.numeric(AndelerGrSort),1)
+     andeltxt <- paste0(sprintf('%.1f',AndelerSiste), '%') 	#round(as.numeric(AndelerSiste),1)
      if (length(indGrUt)>0) {andeltxt[(AntGrNgr+1):(AntGrNgr+length(indGrUt))] <- ''}
 }
      if (tittel==0) {Tittel<-''} else {Tittel <- TittelUt}
@@ -443,7 +458,7 @@ if (valgtVar == 'Osw48') {
           par('fig'=c(vmarg, 1, 0, 1-0.02*(NutvTxt-1)))	#Har alltid datoutvalg med
 
           xmax <- min(max(AndelerGrSort, na.rm = T),100)*1.15
-          pos <- barplot(as.numeric(AndelerSiste), horiz=T, border=NA, col=farger[3], #main=Tittel,
+          pos <- barplot(as.numeric(AndelerSisteSort), horiz=T, border=NA, col=farger[3], #main=Tittel,
                          xlim=c(0,xmax), ylim=c(0.05, 1.25)*length(GrNavnSort), font.main=1, xlab='Andel (%)', las=1, cex.names=cexShNavn*0.9)
  if (enhetsUtvalg == 10) {
 	indMed <- 1:AntGrNgr
@@ -451,8 +466,8 @@ if (valgtVar == 'Osw48') {
 	Aar2txt <- as.character(AarMax-2)
 	Naar <- rowSums(Ngr, na.rm=T)
 	ResAar <- 100*rowSums(Nvar, na.rm=T)/Naar
-          points(y=pos[indMed], x=AndelerGr[Aar1txt, indMed], cex=0.8)    #col=farger[2],
-          points(y=pos[indMed], x=AndelerGr[Aar2txt, indMed], cex=0.8 ,pch=19)     #col=farger[4], 
+          points(y=pos[indMed], x=AndelerGrSort[Aar1txt, indMed], cex=0.8)    #col=farger[2],
+          points(y=pos[indMed], x=AndelerGrSort[Aar2txt, indMed], cex=0.8 ,pch=19)     #col=farger[4], 
           legend('topright', xjust=1, cex=0.9, lwd=c(2,NA,NA), col=c(farger[1],'black','black'),
                  legend=c(paste0('Hele landet, ',AarMax, ' (', sprintf('%.1f', ResAar[3]), '%, ', 'N=', Naar[3],')'), 
                           paste0(Aar1txt, ' (Tot: ', sprintf('%.1f', ResAar[2]), '%, ', 'N=', Naar[2],')'),

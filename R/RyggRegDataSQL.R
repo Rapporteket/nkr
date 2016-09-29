@@ -21,7 +21,6 @@ RyggRegDataSQL <- function() {
   query <- paste0('SELECT
 	Andrestudier,
 	Alder,
-	AnnetMorsm,
 	AntBarn,
 	Antibiotika,
 	AntNivOpr,
@@ -33,6 +32,8 @@ RyggRegDataSQL <- function() {
 	AvdNavn,
 	AvdReshID,
 	BMI,
+      Bydelkode,
+      Bydelsted,
 	Dagkirurgi,
 	EQ5D12mnd,
 	EQ5D3mnd,
@@ -62,7 +63,6 @@ RyggRegDataSQL <- function() {
 	FusjonKirPlfIntr,
 	FusjonKirPlif,
 	FusjonKirTlif,
-	FusjonSpes,
 	Helsetilst12mnd,
 	Helsetilst3mnd,
 	HelsetilstPre,
@@ -95,7 +95,6 @@ RyggRegDataSQL <- function() {
 	Nytte3mnd,
 	OpAar,
 	OpAndreSkiveprotese,
-	OpAndreSpes,
 	OpDato,
 	OpDeFasett,
 	OpDeFasettUniBi,
@@ -120,7 +119,6 @@ RyggRegDataSQL <- function() {
 	OswTotPre,
 	PeropKomp,
 	PeropKompAnafy,
-	PeropKompAnnet,
 	PeropKompDura,
 	PeropKompFeilnivSide,
 	PeropKompFeilplassImp,
@@ -134,7 +132,6 @@ RyggRegDataSQL <- function() {
 	Region,
 	Reop90d,
 	RfAnnet,
-	RfAnnetspes,
 	RfDegen,
 	RfDegskol,
 	RfForamino,
@@ -204,6 +201,7 @@ RyggRegDataSQL <- function() {
 	Utfylt3Mnd,
 	Vekt
 FROM Uttrekk_Rapport')
+#  WHERE (OpAar>2009) AND (OpAar<2015)
 #                  WHERE OpDato >= \'', datoFra, '\' AND OpDato <= \'', datoTil, '\'')
 
 RegData <- rapbase::LoadRegData(registryName, query, dbType)
