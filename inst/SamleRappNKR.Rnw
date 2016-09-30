@@ -1384,18 +1384,18 @@ dum <- RyggFigGjsnBox(RegData=RegData, outfile='SmRyggEndrPre.pdf', enhetsUtvalg
 	ktr=ktr, tittel=0)
 @
 
-\begin{figure}[h]
-\centerline{ 
-  \scalebox{\Sexpr{s2}}{\includegraphics{\Sexpr{ 'EQ5DEndrPre.pdf'}}}
-  \scalebox{\Sexpr{s2}}{\includegraphics{\Sexpr{ 'OswEndrPre.pdf'}}}
-}
-  \centerline{ 
-  \scalebox{\Sexpr{s2}}{\includegraphics{\Sexpr{ 'SmBeinEndrPre.pdf'}}}
-  \scalebox{\Sexpr{s2}}{\includegraphics{\Sexpr{ 'SmRyggEndrPre.pdf'}}}
-  }
-  \caption{\Sexpr{paste('Endring vs prescore for hhv EQ-5D, ODI, smerter i bein og rygg ', ktrtxt, ' etter operasjon', sep='')}}
-  \label{fig:EndrPre}
-\end{figure}
+%\begin{figure}[h]
+%\centerline{ 
+%  \scalebox{\Sexpr{s2}}{\includegraphics{\Sexpr{ 'EQ5DEndrPre.pdf'}}}
+%  \scalebox{\Sexpr{s2}}{\includegraphics{\Sexpr{ 'OswEndrPre.pdf'}}}
+%}
+%  \centerline{ 
+%  \scalebox{\Sexpr{s2}}{\includegraphics{\Sexpr{ 'SmBeinEndrPre.pdf'}}}
+%  \scalebox{\Sexpr{s2}}{\includegraphics{\Sexpr{ 'SmRyggEndrPre.pdf'}}}
+%  }
+%  \caption{\Sexpr{paste('Endring vs prescore for hhv EQ-5D, ODI, smerter i bein og rygg ', ktrtxt, ' etter operasjon', sep='')}}
+%  \label{fig:EndrPre}
+%\end{figure}
 
 
 \subsection{Oswestry Disability Index (ODI)}
@@ -1419,9 +1419,9 @@ dum <- RyggFigGjsnBox(RegData=RegData,  outfile='OswEndr.pdf',
 #dum <- SoyleSml(RegData=RegData, outfile='OswEndrSml.pdf', 
 #	reshID=reshID, valgtVar='OswEndr', tidlOp=tidlOp, OpAar=OpAar, erMann=erMann, shgr=0, 
 #	hovedkat=hovedkat, ktr=ktr, just=0, tittel=0)
-dum <- RyggFigAndelerGrVar(RegData=RegData, valgtVar='OswEndr30pst', datoFra=datoFra, datoTil=datoTil, ktr = ktr,
-                            minald=minald, maxald=maxald, erMann=erMann, hovedkat=hovedkat, preprosess=0,
-                            enhetsUtvalg=enhetsUtvalg, grVar='ShNavn', tittel=0, reshID=reshID, outfile='Osw30Shus.pdf')
+#dum <- RyggFigAndelerGrVar(RegData=RegData, valgtVar='OswEndr30pst', datoFra=datoFra, datoTil=datoTil, ktr = ktr,
+ #                           minald=minald, maxald=maxald, erMann=erMann, hovedkat=hovedkat, preprosess=0,
+  #                          enhetsUtvalg=enhetsUtvalg, grVar='ShNavn', tittel=0, reshID=reshID, outfile='Osw30Shus.pdf')
 
 
 @
@@ -1430,11 +1430,11 @@ dum <- RyggFigAndelerGrVar(RegData=RegData, valgtVar='OswEndr30pst', datoFra=dat
 \begin{figure}[h] 
 \centerline{
 %  \scalebox{\Sexpr{s2}}{\includegraphics{\Sexpr{ 'OswestryPP.pdf'}}}
-  \scalebox{\Sexpr{s2}}{\includegraphics{\Sexpr{ 'OswEndr.pdf'}}}
-  \scalebox{\Sexpr{s2}}{\includegraphics{\Sexpr{ 'Osw30Shus.pdf'}}}
+  \scalebox{\Sexpr{s1}}{\includegraphics{\Sexpr{ 'OswEndr.pdf'}}}
+ % \scalebox{\Sexpr{s2}}{\includegraphics{\Sexpr{ 'Osw30Shus.pdf'}}}
   }
 %  \caption{\Sexpr{paste('Figuren til venstre viser fordeling av Oswestry før og ', ktrtxt, ' etter operasjon, mens %figuren til høyre viser gjennomsnittlig endring i Oswestry, ', ktrtxt,  ' etter operasjon.', sep='')}}
-  \caption{\Sexpr{paste0('Figuren viser gjennomsnittlig endring i Oswestry, ', ktrtxt,  ' etter operasjon og andel pasienter med klinisk signifikant forbedring (30\\%) av Oswestry-skår.')}}
+  \caption{\Sexpr{paste0('Figuren viser gjennomsnittlig endring i Oswestry, ', ktrtxt,  ' etter operasjon, per år.')}}
   \label{fig:OswEndr}
 \end{figure}
 

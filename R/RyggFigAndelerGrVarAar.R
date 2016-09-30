@@ -364,28 +364,62 @@ if (valgtVar == 'Osw48') {
      RegData <- RyggUtvalg$RegData
      utvalgTxt <- RyggUtvalg$utvalgTxt
 
-     
-     #Standardisere mht grupperingsvariabel. Først sykehus.
-	 
- #----------------------------------------------------------------------------------------------
      Ngrense <- 10		#Minste antall registreringer for at ei gruppe skal bli vist
-
-	 if (enhetsUtvalg <- 10) {
-        #Lager figur som kan vise resultat for tre år. 
+ #----------------------------------------------------------------------------------------------
+     if (enhetsUtvalg <- 10) { #Vise resultat for tre år. Alders-og kjønnsjustering
+           
+#----------Alders- og kjønnsjustering-----------------------  
+     #Velger 4 aldersgrupper
+     aldKvant <- quantile(RegData$Alder, c(25, 50, 75)/100, na.rm = T)
+     #25% 50% 75% Hele populasjonen gir 43,57,67
+     #37  46  57
+     #aldKvant <- c(36,45,56)
+     aldgr <- c(minald-1,aldKvant,85)
+     RegData$AlderGr <- cut(RegData$Alder,aldgr) #grensene er øverste grense i aldersintervallet
+     
+     #Må finne andel av normalpopulasjonen i disse gruppene ut fra befolkningsfil
+     #For alders-og kjønnsstandardisering:
+     Innb2015aldkj <- read.table('./Innbyggere2015aldkj.csv', sep=';', header = T, encoding = 'UTF-8')
+     Innb2015aldkj$AlderGr <- cut(Innb2015aldkj$Alder,aldgr)
+     PopAldKjGr <- aggregate(AntInnb ~ erMann+AlderGr, data=Innb2015aldkj,FUN=sum)
+     PopAldKjGr$Vekt <- prop.table((PopAldKjGr$AntInnb))#PopAldKjGr$AntInnb/sum(PopAldKjGr$AntInnb) 
+     
+     indMangel <- which(is.na(RegData$BoHF))
+     sort(table(RegData$ShNavn[indMangel]))
+     
+     
+     N <- dim(RegData)[1] #table(RegData$OpAar)      #Antall per år
+     grupperingsVar <- c('OpAar', grVar,'ErMann', 'AlderGr')
+     #grupperingsVar <- with(RegData, OpAar+grVar+ErMann+AlderGr)
+     #Nvar <- tapply(RegData$Variabel, RegData[ ,grupperingsVar], sum, na.rm=T) #Variabel er en 0/1-variabel.
+     Nvar <- aggregate(Variabel ~ OpAar+BoRHF+ErMann+AlderGr, data=RegData, sum) #Variabel er en 0/1-variabel.
+     Nvar <- apply(RegData, MARGIN = grupperingsVar, FUN=sum) #Variabel er en 0/1-variabel.
+     Ngr <- table(RegData[ ,grupperingsVar])
+     #if(N > 0) {Ngr <- table(RegData[ ,grupperingsVar])}	else {Ngr <- 0}
+     AndelerGr <- round(100*Nvar/Ngr,2)
+     
+     ProsjFilKomplAldKj <- merge(ProsjFilMinnbAldKjDum, StandPopAgg, by=AldKjVar) 	#by.x = AldKjVar, by.y = AldKjVar
+     #Standardiserte rater
+     ProsjFilKomplAldKj$RateStand <- ProsjFilKomplAldKj[ ,maaleVar]/ProsjFilKomplAldKj$InnbIF*ProsjFilKomplAldKj$vekt*1000
+     Resultat <- aggregate(ProsjFilKomplAldKj[ ,c('InnbIF', maaleVar, 'RateStand', 'RateStandVar')] ,  
+                           by=ProsjFilKomplAldKj[ ,katVar], FUN=sum)
+     
+     
+#---------Beregninger, årsvariasjon, uten alders- og kjønnsjustering  -------
 	 #grVar kan være sykehus, boområde osv. Egen inputparam. for om skal legge til pkt for år ? Foreløpig 
 	 # valgt å bruke enhetsUtvalg=10
 	 #Hvis siste år for få reg - ta også bort resultater fra foregående år.
 	 NminTot <- 50 #Ikke i bruk
 	 NminAar <- 30
-
+      
      N <- dim(RegData)[1] #table(RegData$OpAar)      #Antall per år
-     Nvar <- tapply(RegData$Variabel, RegData[ ,c('OpAar', grVar)], sum, na.rm=T) #Variabel er en 0/1-variabel.
-     if(N > 0) {Ngr <- table(RegData[ ,c('OpAar', grVar)])}	else {Ngr <- 0}
+     Nvar <- tapply(RegData$Variabel, RegData[ ,c('OpAar', grVar,'erMann', 'AlderGr')], sum, na.rm=T) #Variabel er en 0/1-variabel.
+     if(N > 0) {Ngr <- table(RegData[ ,c('OpAar', grVar, 'erMann', 'AlderGr')])}	else {Ngr <- 0}
      AndelerGr <- round(100*Nvar/Ngr,2)
 
      #Må ta bort punkt/søyler for de som har for få registreringer for det aktuelle året.
      indGrUt <- as.numeric(which(Ngr < NminAar)) #Alle som har for få. Indeks er kolonnevis
-     if (length(indGrUt)==0) { indGrUt <- 0}
+#     if (length(indGrUt)==0) { indGrUt <- NULL}
      AndelerGr[indGrUt] <- NA	#dummy0	#Alle andeler med for lav N
      sortInd <- order(as.numeric(AndelerGr[AarMaxTxt,]), decreasing=sortering)
      AndelerSisteSort <- AndelerGr[AarMaxTxt,sortInd]
@@ -479,9 +513,9 @@ if (valgtVar == 'Osw48') {
               bty='o', bg='white', box.col='white')
  }
 	  ybunn <- 0.1
-          ytopp <- pos[AntGrNgr]+1	#-length(indGrUt)]
+          ytopp <- pos[AntGrNgr]+ 0.4	#-length(indGrUt)]
           lines(x=rep(AndelHele, 2), y=c(ybunn, ytopp), col=farger[1], lwd=2)
-          mtext(at=max(pos)+2, paste0('(N, ', AarMax,')' ), side=2, las=1, cex=cexShNavn, adj=1, line=0.25)	
+          mtext(at=max(pos)+0.5*log(max(pos)), paste0('(N, ', AarMax,')' ), side=2, las=1, cex=cexShNavn, adj=1, line=0.25)	
           mtext(at=pos+max(pos)*0.0045, paste0(GrNavnSort, ' (', Ngrtxt[sortInd],')'), side=2, las=1, cex=cexShNavn, adj=1, line=0.25)	#Legge på navn som eget steg
           #text(x=0.005*xmax, y=pos, Ngrtxt[sortInd], las=1, cex=cexShNavn, adj=0, col=farger[4], lwd=3)	#c(Nshtxt[sortInd],''),
           title(Tittel, line=1, font.main=1, cex.main=1.3)
