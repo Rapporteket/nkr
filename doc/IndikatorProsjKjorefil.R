@@ -7,12 +7,13 @@ Innbyggere2007_2015kjonn <- read.table('./Innbyggere2007_2015kjonn.csv', sep=';'
 Innbyggere2007_2015kjonn$BydelNum <- factor(as.character(Innbyggere2007_2015kjonn$BydelNum), exclude = "")
 BoStederInnb <- aggregate(Innbyggere2007_2015kjonn$AntInnb, 
                           by=Innbyggere2007_2015kjonn[ ,c('Kommune','KommNr', 'BydelNum','BoRHF',"BoHF", 'Fylke', 'Aar')], FUN='sum')#'BoHF',  
+RHFInnb <- aggregate(BoStederInnb$x, by=BoStederInnb[ ,c('KommNr', 'BoRHF','Aar')], FUN='sum')
 #RegData <- merge(NKRdata, BoStederInnb, by.x = c("Kommunenr", "OpAar", "Bydelkode"), by.y = c("KommNr", "Aar", "BydelNum"), all.x = TRUE, all.y = FALSE)
-RegData <- merge(NKRdata, BoStederInnb, by.x = c("Kommunenr", "OpAar", "Bydelkode"), 
-                 by.y = c("KommNr", "Aar", "BydelNum"), all.x = TRUE, all.y = FALSE)
-RegData1 <- merge(NKRdata, BoStederInnb[ ,c('BoHF', 'BoRHF', 'Fylke', "KommNr", "Aar", "BydelNum")], 
+#RegData1 <- merge(NKRdata, BoStederInnb, by.x = c("Kommunenr", "OpAar", "Bydelkode"), 
+ #                by.y = c("KommNr", "Aar", "BydelNum"), all.x = TRUE, all.y = FALSE)
+RegData1 <- merge(NKRdata, BoStederInnb[ ,c('BoHF', 'Fylke', "KommNr", "Aar", "BydelNum")], 
                  by.x = c("Kommunenr", "OpAar", "Bydelkode"), by.y = c("KommNr", "Aar", "BydelNum"), all.x = TRUE, all.y = FALSE)
-RegData <- merge(RegData1, BoStederInnb[ ,c('BoRHF', "KommNr", "Aar")], by.x = c("Kommunenr", "OpAar"), 
+RegData <- merge(RegData1, RHFInnb[ ,c('BoRHF', "KommNr", "Aar")], by.x = c("Kommunenr", "OpAar"), 
                  by.y = c("KommNr", "Aar"), all.x = TRUE, all.y = FALSE)
 
 #write.table(RegData, file='RegDataTilTest.csv', sep=';', row.names = F)

@@ -363,12 +363,14 @@ if (valgtVar == 'Osw48') {
 		erMann=erMann, hovedkat=hovedkat, tidlOp=tidlOp)
      RegData <- RyggUtvalg$RegData
      utvalgTxt <- RyggUtvalg$utvalgTxt
-
+#SJEKK:
+     RegData <- RegData[which(!is.na(RegData[ ,grVar])), ]
      Ngrense <- 10		#Minste antall registreringer for at ei gruppe skal bli vist
  #----------------------------------------------------------------------------------------------
      if (enhetsUtvalg <- 10) { #Vise resultat for tre år. Alders-og kjønnsjustering
            
 #----------Alders- og kjønnsjustering-----------------------  
+#RegData inneholder både alder, kjønn og bo-områder.
      #Velger 4 aldersgrupper
      aldKvant <- quantile(RegData$Alder, c(25, 50, 75)/100, na.rm = T)
      #25% 50% 75% Hele populasjonen gir 43,57,67
@@ -381,28 +383,32 @@ if (valgtVar == 'Osw48') {
      #For alders-og kjønnsstandardisering:
      Innb2015aldkj <- read.table('./Innbyggere2015aldkj.csv', sep=';', header = T, encoding = 'UTF-8')
      Innb2015aldkj$AlderGr <- cut(Innb2015aldkj$Alder,aldgr)
-     PopAldKjGr <- aggregate(AntInnb ~ erMann+AlderGr, data=Innb2015aldkj,FUN=sum)
+     PopAldKjGr <- aggregate(AntInnb ~ ErMann+AlderGr, data=Innb2015aldkj,FUN=sum)
      PopAldKjGr$Vekt <- prop.table((PopAldKjGr$AntInnb))#PopAldKjGr$AntInnb/sum(PopAldKjGr$AntInnb) 
      
-     indMangel <- which(is.na(RegData$BoHF))
-     sort(table(RegData$ShNavn[indMangel]))
+#     indMangel <- which(is.na(RegData[ ,grVar]))
+#     sort(table(RegData$ShNavn[indMangel]))
      
      
      N <- dim(RegData)[1] #table(RegData$OpAar)      #Antall per år
-     grupperingsVar <- c('OpAar', grVar,'ErMann', 'AlderGr')
+     grupperingsVar <- c(grVar, 'OpAar', 'ErMann', 'AlderGr')
      #grupperingsVar <- with(RegData, OpAar+grVar+ErMann+AlderGr)
      #Nvar <- tapply(RegData$Variabel, RegData[ ,grupperingsVar], sum, na.rm=T) #Variabel er en 0/1-variabel.
-     Nvar <- aggregate(Variabel ~ OpAar+BoRHF+ErMann+AlderGr, data=RegData, sum) #Variabel er en 0/1-variabel.
-     Nvar <- apply(RegData, MARGIN = grupperingsVar, FUN=sum) #Variabel er en 0/1-variabel.
-     Ngr <- table(RegData[ ,grupperingsVar])
+     Nvar <- aggregate(Variabel ~ ErMann+AlderGr+OpAar+BoRHF, data=RegData, 
+                       FUN = function(x) AndelStGr = sum(x)/length(x) ) #Variabel er en 0/1-variabel.
+     #Alt: Ngr <- table(RegData[ ,grupperingsVar])
      #if(N > 0) {Ngr <- table(RegData[ ,grupperingsVar])}	else {Ngr <- 0}
-     AndelerGr <- round(100*Nvar/Ngr,2)
+     AndelOgVekt <- cbind(Nvar, Vekt = PopAldKjGr$Vekt)
+     AndelVekt <- cbind(AndelOgVekt, AndelVektGr = AndelOgVekt$Variabel*AndelOgVekt$Vekt)
+     AndelerGrStand <- aggregate(AndelVektGr ~ OpAar+BoRHF, data=AndelVekt, FUN = function(x) 100*sum)
+     #AndelerGr <- round(100*Nvar/Ngr,2)
      
-     ProsjFilKomplAldKj <- merge(ProsjFilMinnbAldKjDum, StandPopAgg, by=AldKjVar) 	#by.x = AldKjVar, by.y = AldKjVar
-     #Standardiserte rater
-     ProsjFilKomplAldKj$RateStand <- ProsjFilKomplAldKj[ ,maaleVar]/ProsjFilKomplAldKj$InnbIF*ProsjFilKomplAldKj$vekt*1000
-     Resultat <- aggregate(ProsjFilKomplAldKj[ ,c('InnbIF', maaleVar, 'RateStand', 'RateStandVar')] ,  
-                           by=ProsjFilKomplAldKj[ ,katVar], FUN=sum)
+#Fra standardiseringsprogram
+#     ProsjFilKomplAldKj <- merge(ProsjFilMinnbAldKjDum, StandPopAgg, by=AldKjVar) 	#by.x = AldKjVar, by.y = AldKjVar
+#     #Standardiserte rater
+#     ProsjFilKomplAldKj$RateStand <- ProsjFilKomplAldKj[ ,maaleVar]/ProsjFilKomplAldKj$InnbIF*ProsjFilKomplAldKj$vekt*1000
+#     Resultat <- aggregate(ProsjFilKomplAldKj[ ,c('InnbIF', maaleVar, 'RateStand', 'RateStandVar')] ,  
+#                           by=ProsjFilKomplAldKj[ ,katVar], FUN=sum)
      
      
 #---------Beregninger, årsvariasjon, uten alders- og kjønnsjustering  -------
@@ -413,8 +419,8 @@ if (valgtVar == 'Osw48') {
 	 NminAar <- 30
       
      N <- dim(RegData)[1] #table(RegData$OpAar)      #Antall per år
-     Nvar <- tapply(RegData$Variabel, RegData[ ,c('OpAar', grVar,'erMann', 'AlderGr')], sum, na.rm=T) #Variabel er en 0/1-variabel.
-     if(N > 0) {Ngr <- table(RegData[ ,c('OpAar', grVar, 'erMann', 'AlderGr')])}	else {Ngr <- 0}
+     Nvar <- tapply(RegData$Variabel, RegData[ ,c('OpAar', grVar)], sum, na.rm=T) #Variabel er en 0/1-variabel.
+     if(N > 0) {Ngr <- table(RegData[ ,c('OpAar', grVar)])}	else {Ngr <- 0}
      AndelerGr <- round(100*Nvar/Ngr,2)
 
      #Må ta bort punkt/søyler for de som har for få registreringer for det aktuelle året.
