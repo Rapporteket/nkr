@@ -386,21 +386,18 @@ if (valgtVar == 'Osw48') {
      PopAldKjGr <- aggregate(AntInnb ~ ErMann+AlderGr, data=Innb2015aldkj,FUN=sum)
      PopAldKjGr$Vekt <- prop.table((PopAldKjGr$AntInnb))#PopAldKjGr$AntInnb/sum(PopAldKjGr$AntInnb) 
      
-#     indMangel <- which(is.na(RegData[ ,grVar]))
-#     sort(table(RegData$ShNavn[indMangel]))
-     
-     
+
      N <- dim(RegData)[1] #table(RegData$OpAar)      #Antall per år
+     names(RegData)[which(names(RegData) == grVar)] <- 'grVar'
      grupperingsVar <- c(grVar, 'OpAar', 'ErMann', 'AlderGr')
-     #grupperingsVar <- with(RegData, OpAar+grVar+ErMann+AlderGr)
      #Nvar <- tapply(RegData$Variabel, RegData[ ,grupperingsVar], sum, na.rm=T) #Variabel er en 0/1-variabel.
-     Nvar <- aggregate(Variabel ~ ErMann+AlderGr+OpAar+BoRHF, data=RegData, 
+     Nvar <- aggregate(Variabel ~ ErMann+AlderGr+OpAar+grVar, data=RegData, 
                        FUN = function(x) AndelStGr = sum(x)/length(x) ) #Variabel er en 0/1-variabel.
      #Alt: Ngr <- table(RegData[ ,grupperingsVar])
      #if(N > 0) {Ngr <- table(RegData[ ,grupperingsVar])}	else {Ngr <- 0}
      AndelOgVekt <- cbind(Nvar, Vekt = PopAldKjGr$Vekt)
      AndelVekt <- cbind(AndelOgVekt, AndelVektGr = AndelOgVekt$Variabel*AndelOgVekt$Vekt)
-     AndelerGrStand <- aggregate(AndelVektGr ~ OpAar+BoRHF, data=AndelVekt, FUN = function(x) 100*sum)
+     AndelerGrStand <- aggregate(AndelVektGr ~ OpAar+grVar, data=AndelVekt, FUN = function(x) 100*sum)
      #AndelerGr <- round(100*Nvar/Ngr,2)
      
 #Fra standardiseringsprogram
