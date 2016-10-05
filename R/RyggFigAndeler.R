@@ -83,6 +83,7 @@
 #'                2: Tidl. operert annet nivå, 
 #'			3: Tidl. operert annet og sm. nivå,
 #'			4: Primæroperasjon
+#' @param opKat Hastegrad av operasjon 1: Elektivt, 2: Akutt, 3: Halvøyeblikkelig
 #' @param hovedkat Hvilken type hovedinngrep, numerisk 0-7, standard: 99, dvs. alle
 
 #' @param outfile Navn på fil figuren skrives til. Standard: '' (Figur skrives

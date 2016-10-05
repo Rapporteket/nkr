@@ -7,8 +7,7 @@
 #'
 #' @export
 RyggUtvalg <- function(RegData, datoFra, datoTil, minald=0, maxald=130, erMann='', hovedkat=99, 
-           aar=0,
-		tidlOp='', fargepalett='BlaaOff')	#insttype, 'BlaaOff'
+           aar=0, opKat=99, tidlOp='', fargepalett='BlaaOff')	#insttype, 'BlaaOff'
 {
 
 # Definer intersect-operator
@@ -28,7 +27,8 @@ indHovedInngr <- if (hovedkat[1] %in% 0:7) {which(RegData$HovedInngrep %in% as.n
 			} else {indHovedInngr <- 1:Ninn}
 
 indTidlOp <- if (tidlOp %in% 1:4) {which(RegData$TidlOpr==tidlOp)} else {indTidlOp <- 1:Ninn}
-indMed <- indAld %i% indDato %i% indAar %i% indKj %i% indHovedInngr %i% indTidlOp 
+indOpKat <- if (opKat %in% 1:3) {which(RegData$OpKat == opKat)} else {1:Ninn}
+indMed <- indAld %i% indDato %i% indAar %i% indKj %i% indHovedInngr %i% indTidlOp %i% indOpKat
 RegData <- RegData[indMed,]
 
 
@@ -43,6 +43,7 @@ hkatnavn <- c(
 	'Fjerning/rev. av implantat')
 
 TidlOprtxt <-	c('Tidl. operert samme nivå', 'Tidl. operert annet nivå', 'Tidl. operert annet og sm. nivå', 'Primæroperasjon')
+OpKatTxt <- paste0('Operasjonskategori: ', c('Elektiv', 'Akutt', '1/2-Akutt'))
 
 N <- dim(RegData)[1]
 
@@ -56,7 +57,8 @@ utvalgTxt <- c(paste('Operasjonsdato: ', if (N>0) {min(RegData$InnDato, na.rm=T)
 						' til ', if (N>0) {max(RegData$Alder, na.rm=T)} else {maxald}, ' år')},
 	if (erMann %in% 0:1) {paste0('Kjønn: ', c('Kvinner', 'Menn')[erMann+1])},
 	if (hovedkat[1] %in% 0:7) {paste0('Hovedinngrep: ', paste(hkatnavn[as.numeric(hovedkat)+1], collapse=','))},
-	if (tidlOp %in% 1:4) {TidlOprtxt[tidlOp]}
+	if (tidlOp %in% 1:4) {TidlOprtxt[tidlOp]},
+      if (opKat %in% 1:3) {OpKatTxt[opKat]}
 	)
 	
 

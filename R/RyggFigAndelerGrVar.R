@@ -54,7 +54,7 @@
 
 RyggFigAndelerGrVar <- function(RegData, valgtVar, datoFra='2007-01-01', datoTil='3000-12-31', 
                             minald=0, maxald=130, erMann='', hovedkat=99, tidlOp='', hentData=0, preprosess=1,
-                            enhetsUtvalg=0, grVar='ShNavn', tittel=1, ktr=0, reshID=0, outfile='') {
+                            opKat=99, enhetsUtvalg=0, grVar='ShNavn', tittel=1, ktr=0, reshID=0, outfile='') {
 
 	if (hentData == 1) {		
 	  RegData <- RyggRegDataSQL()
@@ -341,7 +341,7 @@ if (valgtVar == 'Osw48') {
 
      #Gjør utvalg
      RyggUtvalg <- RyggUtvalg(RegData=RegData, datoFra=datoFra, datoTil=datoTil, minald=minald, maxald=maxald, 
-		erMann=erMann, hovedkat=hovedkat, tidlOp=tidlOp)
+		erMann=erMann, hovedkat=hovedkat, tidlOp=tidlOp, opKat=opKat)
      RegData <- RyggUtvalg$RegData
      utvalgTxt <- RyggUtvalg$utvalgTxt
 

@@ -54,8 +54,8 @@
 #' @export
 
 RyggFigAndelerGrVarAar <- function(RegData, valgtVar, datoFra='2007-01-01', datoTil='3000-12-31', 
-                            minald=0, maxald=130, erMann='', hovedkat=99, tidlOp='', hentData=0, preprosess=1,
-                            enhetsUtvalg=0, grVar='ShNavn', tittel=1, ktr=0, reshID, outfile='') {
+                            minald=0, maxald=130, erMann='', hovedkat=99, tidlOp='', opKat=99, hentData=0, 
+                            preprosess=1,enhetsUtvalg=0, grVar='ShNavn', tittel=1, ktr=0, reshID, outfile='') {
 
 	if (hentData == 1) {		
 	  RegData <- RyggRegDataSQL()
@@ -348,7 +348,7 @@ if (valgtVar == 'Osw48') {
 
       #Erstatte med test for datoTil vs år. Eller legg på sjekk når beregner AarMax
       RyggUtvalg <- RyggUtvalg(RegData=RegData, datoFra=datoFra, datoTil=datoTil, minald=minald, maxald=maxald, 
-                               erMann=erMann, hovedkat=hovedkat, tidlOp=tidlOp)
+                               erMann=erMann, hovedkat=hovedkat, tidlOp=tidlOp, opKat=opKat)
       RegData <- RyggUtvalg$RegData
       utvalgTxt <- RyggUtvalg$utvalgTxt
       
@@ -360,14 +360,14 @@ if (valgtVar == 'Osw48') {
 		}
 
      RyggUtvalg <- RyggUtvalg(RegData=RegData, datoFra=datoFra, datoTil=datoTil, minald=minald, maxald=maxald, 
-		erMann=erMann, hovedkat=hovedkat, tidlOp=tidlOp)
+		erMann=erMann, hovedkat=hovedkat, tidlOp=tidlOp, opKat=opKat)
      RegData <- RyggUtvalg$RegData
      utvalgTxt <- RyggUtvalg$utvalgTxt
 #SJEKK:
      RegData <- RegData[which(!is.na(RegData[ ,grVar])), ]
-     Ngrense <- 10		#Minste antall registreringer for at ei gruppe skal bli vist
+     Ngrense <- 30		#Minste antall registreringer for at ei gruppe skal bli vist
  #----------------------------------------------------------------------------------------------
-     if (enhetsUtvalg <- 10) { #Vise resultat for tre år. Alders-og kjønnsjustering
+     if (enhetsUtvalg == 10) { #Vise resultat for tre år. Alders-og kjønnsjustering
            
 #----------Alders- og kjønnsjustering-----------------------  
 #RegData inneholder både alder, kjønn og bo-områder.
@@ -456,13 +456,14 @@ if (valgtVar == 'Osw48') {
      AndelerGr[indGrUt] <- dummy0
      sortInd <- order(as.numeric(AndelerGr), decreasing=TRUE)
      Ngrtxt <- Ngr #paste('N=', as.character(Ngr), sep='')	#
-     Ngrtxt[indGrUt] <- paste0(' (<', Ngrense,')')	#paste0('N<', Ngrense)	#
+     Ngrtxt[indGrUt] <- paste0('N<', Ngrense)	# paste0(' (<', Ngrense,')')	#
 
-     AndelerSiste <- AndelerGr[,sortInd]
+     AndelerGrSort <- AndelerGr[sortInd]
+     AndelerSisteSort <- AndelerGrSort
      AndelHele <- round(100*sum(RegData$Variabel)/N, 2)
-     GrNavnSort <- colnames(AndelerSiste)   #names(Ngr)[sortInd]    #paste0(names(Ngr)[sortInd], ', ',Ngrtxt[sortInd])
+     GrNavnSort <- names(AndelerSisteSort)   #names(Ngr)[sortInd]    #paste0(names(Ngr)[sortInd], ', ',Ngrtxt[sortInd])
      
-     andeltxt <- paste0(sprintf('%.1f',AndelerSiste), '%') 	#round(as.numeric(AndelerSiste),1)
+     andeltxt <- paste0(sprintf('%.1f',AndelerSisteSort), '%') 	#round(as.numeric(AndelerSiste),1)
      if (length(indGrUt)>0) {andeltxt[(AntGrNgr+1):(AntGrNgr+length(indGrUt))] <- ''}
 }
      if (tittel==0) {Tittel<-''} else {Tittel <- TittelUt}
@@ -510,21 +511,22 @@ if (valgtVar == 'Osw48') {
                           paste0(Aar1txt, ' (Tot: ', sprintf('%.1f', ResAar[2]), '%, ', 'N=', Naar[2],')'),
                           paste0(Aar2txt, ' (Tot: ', sprintf('%.1f', ResAar[1]), '%, ', 'N=', Naar[1],')')),
                           bty='o', bg='white', box.col='white', pch=c(NA,1,19))
+          mtext(at=max(pos)+0.5*log(max(pos)), '(N, ', AarMax, ')', side=2, las=1, cex=cexShNavn, adj=1, line=0.25)	
  } else {
        legend('topright', xjust=1, cex=1, lwd=2, col=farger[2],
               legend=paste0(smltxt, ' (', sprintf('%.1f',AndelHele), '%), ', 'N=', N),
               bty='o', bg='white', box.col='white')
+       mtext(at=max(pos)+0.5*log(max(pos)), paste0('(N)' ), side=2, las=1, cex=cexShNavn, adj=1, line=0.25)	
  }
 	  ybunn <- 0.1
           ytopp <- pos[AntGrNgr]+ 0.4	#-length(indGrUt)]
           lines(x=rep(AndelHele, 2), y=c(ybunn, ytopp), col=farger[1], lwd=2)
-          mtext(at=max(pos)+0.5*log(max(pos)), paste0('(N, ', AarMax,')' ), side=2, las=1, cex=cexShNavn, adj=1, line=0.25)	
           mtext(at=pos+max(pos)*0.0045, paste0(GrNavnSort, ' (', Ngrtxt[sortInd],')'), side=2, las=1, cex=cexShNavn, adj=1, line=0.25)	#Legge på navn som eget steg
           #text(x=0.005*xmax, y=pos, Ngrtxt[sortInd], las=1, cex=cexShNavn, adj=0, col=farger[4], lwd=3)	#c(Nshtxt[sortInd],''),
           title(Tittel, line=1, font.main=1, cex.main=1.3)
 
           text(x=0.01, y=pos+0.1, andeltxt, #x=AndelerGrSort+xmax*0.01
-               las=1, cex=0.9, adj=0, col=farger[1])	#Andeler, hvert sykehus
+               las=1, cex=0.8, adj=0, col=farger[1])	#Andeler, hvert sykehus
 
           #Tekst som angir hvilket utvalg som er gjort
           mtext(utvalgTxt, side=3, las=1, cex=1, adj=0, col=farger[1], line=c(3+0.8*((NutvTxt-1):0)))
