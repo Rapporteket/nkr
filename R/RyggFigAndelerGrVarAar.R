@@ -397,7 +397,7 @@ if (valgtVar == 'Osw48') {
      #if(N > 0) {Ngr <- table(RegData[ ,grupperingsVar])}	else {Ngr <- 0}
      AndelOgVekt <- cbind(Nvar, Vekt = PopAldKjGr$Vekt)
      AndelVekt <- cbind(AndelOgVekt, AndelVektGr = AndelOgVekt$Variabel*AndelOgVekt$Vekt)
-     AndelerGrStand <- aggregate(AndelVektGr ~ OpAar+grVar, data=AndelVekt, FUN = function(x) 100*sum)
+     AndelerGrStand <- aggregate(AndelVektGr ~ OpAar+grVar, data=AndelVekt, FUN = function(x) 100*sum(x))
      #AndelerGr <- round(100*Nvar/Ngr,2)
      
 #Fra standardiseringsprogram
@@ -416,8 +416,8 @@ if (valgtVar == 'Osw48') {
 	 NminAar <- 30
       
      N <- dim(RegData)[1] #table(RegData$OpAar)      #Antall per år
-     Nvar <- tapply(RegData$Variabel, RegData[ ,c('OpAar', grVar)], sum, na.rm=T) #Variabel er en 0/1-variabel.
-     if(N > 0) {Ngr <- table(RegData[ ,c('OpAar', grVar)])}	else {Ngr <- 0}
+     Nvar <- tapply(RegData$Variabel, RegData[ ,c('OpAar', 'grVar')], sum, na.rm=T) #Variabel er en 0/1-variabel.
+     if(N > 0) {Ngr <- table(RegData[ ,c('OpAar', 'grVar')])}	else {Ngr <- 0}
      AndelerGr <- round(100*Nvar/Ngr,2)
 
      #Må ta bort punkt/søyler for de som har for få registreringer for det aktuelle året.
@@ -439,11 +439,12 @@ if (valgtVar == 'Osw48') {
       andeltxt <- paste0(sprintf('%.1f',AndelerGrSort[AarMaxTxt,]), '%') 	
      if (length(indGrUt)>0) {andeltxt[(AntGrNgr+1):(length(GrNavnSort))] <- ''}
      
-     AndelHele <- round(100*sum(RegData$Variabel)/N, 2)
+     #AndelHele <- round(100*sum(RegData$Variabel[which(RegData$OpAar==AarMax)])/
+      #                        length(which(RegData$OpAar==AarMax)), 2) #round(100*sum(RegData$Variabel)/N, 2)
 
 #--------------------------------------------------------------
 	 } else {
-	 #DENNE ER SANNSYNLIGVIS FEIL NÅ....
+	
      dummy0 <- -0.001
      N <- dim(RegData)[1]
      Nvar <- tapply(RegData$Variabel, RegData[ ,grVar], sum, na.rm=T)
@@ -498,29 +499,30 @@ if (valgtVar == 'Osw48') {
           xmax <- min(max(AndelerGrSort, na.rm = T),100)*1.15
           pos <- barplot(as.numeric(AndelerSisteSort), horiz=T, border=NA, col=farger[3], #main=Tittel,
                          xlim=c(0,xmax), ylim=c(0.05, 1.25)*length(GrNavnSort), font.main=1, xlab='Andel (%)', las=1, cex.names=cexShNavn*0.9)
- if (enhetsUtvalg == 10) {
-	indMed <- 1:AntGrNgr
-	Aar1txt <- as.character(AarMax-1)
-	Aar2txt <- as.character(AarMax-2)
-	Naar <- rowSums(Ngr, na.rm=T)
-	ResAar <- 100*rowSums(Nvar, na.rm=T)/Naar
-          points(y=pos[indMed], x=AndelerGrSort[Aar1txt, indMed], cex=0.8)    #col=farger[2],
+          ybunn <- 0.1
+          ytopp <- pos[AntGrNgr]+ 0.4	#-length(indGrUt)]
+      if (enhetsUtvalg == 10) {
+      	indMed <- 1:AntGrNgr
+      	Aar1txt <- as.character(AarMax-1)
+      	Aar2txt <- as.character(AarMax-2)
+      	Naar <- rowSums(Ngr, na.rm=T)
+      	ResAar <- 100*rowSums(Nvar, na.rm=T)/Naar
+               points(y=pos[indMed], x=AndelerGrSort[Aar1txt, indMed], cex=0.8)    #col=farger[2],
           points(y=pos[indMed], x=AndelerGrSort[Aar2txt, indMed], cex=0.8 ,pch=19)     #col=farger[4], 
           legend('topright', xjust=1, cex=0.9, lwd=c(2,NA,NA), col=c(farger[1],'black','black'),
                  legend=c(paste0('Hele landet, ',AarMax, ' (', sprintf('%.1f', ResAar[3]), '%, ', 'N=', Naar[3],')'), 
                           paste0(Aar1txt, ' (Tot: ', sprintf('%.1f', ResAar[2]), '%, ', 'N=', Naar[2],')'),
                           paste0(Aar2txt, ' (Tot: ', sprintf('%.1f', ResAar[1]), '%, ', 'N=', Naar[1],')')),
                           bty='o', bg='white', box.col='white', pch=c(NA,1,19))
-          mtext(at=max(pos)+0.5*log(max(pos)), '(N, ', AarMax, ')', side=2, las=1, cex=cexShNavn, adj=1, line=0.25)	
+          mtext(at=max(pos)+0.5*log(max(pos)), paste0('(N, ', AarMax, ')'), side=2, las=1, cex=cexShNavn, adj=1, line=0.25)	
+          lines(x=rep(ResAar[3], 2), y=c(ybunn, ytopp), col=farger[1], lwd=2)
  } else {
        legend('topright', xjust=1, cex=1, lwd=2, col=farger[2],
               legend=paste0(smltxt, ' (', sprintf('%.1f',AndelHele), '%), ', 'N=', N),
               bty='o', bg='white', box.col='white')
        mtext(at=max(pos)+0.5*log(max(pos)), paste0('(N)' ), side=2, las=1, cex=cexShNavn, adj=1, line=0.25)	
+       lines(x=rep(AndelHele, 2), y=c(ybunn, ytopp), col=farger[1], lwd=2)
  }
-	  ybunn <- 0.1
-          ytopp <- pos[AntGrNgr]+ 0.4	#-length(indGrUt)]
-          lines(x=rep(AndelHele, 2), y=c(ybunn, ytopp), col=farger[1], lwd=2)
           mtext(at=pos+max(pos)*0.0045, paste0(GrNavnSort, ' (', Ngrtxt[sortInd],')'), side=2, las=1, cex=cexShNavn, adj=1, line=0.25)	#Legge på navn som eget steg
           #text(x=0.005*xmax, y=pos, Ngrtxt[sortInd], las=1, cex=cexShNavn, adj=0, col=farger[4], lwd=3)	#c(Nshtxt[sortInd],''),
           title(Tittel, line=1, font.main=1, cex.main=1.3)
