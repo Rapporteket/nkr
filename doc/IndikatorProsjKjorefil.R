@@ -1,5 +1,6 @@
 rm(list = ls())
 setwd("C:/ResultattjenesteGIT/nkr/")
+library(nkr)
 
 NKRdata <-
       read.table('C:/Registre/nkr/data/NKR2010_2015.csv', sep = ';', header = T, encoding = 'UTF-8')
@@ -27,7 +28,6 @@ RegData <-
 #Mister BoHF for registreringer som mangler bydelkode for Oslo. Disse kan få BoRHF. Legger derfor til BoRHF og BoHF separat
 
 
-
 #__Inndata til funksjon:
 reshID <- 601161	#999995	#999999	#100407 (Kristiansand)	#601161(UNN), 100133(Arendal),105783(StOlav),103618(Drammen)	#102949	#   #Må sendes med til funksjon
 datoFra <- '2013-01-01'
@@ -36,7 +36,8 @@ erMann <- ''
 tidlOp <- 99
 minald <- 20
 maxald <- 85
-opKat <- 99
+opKat <- 1  #Bare elektive pasienter
+tidlOp <- 4 #Bare primæroperasjoner
 ktr <- 1
 hovedkat <- 1 		#Hovedinngrep, 0-7, Standard: 99, dvs alle operasjoner
 enhetsUtvalg <- 10 # 0-hele landet, 4–egen shusgruppe, 7–egen region
