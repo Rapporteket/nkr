@@ -40,30 +40,39 @@ opKat <- 1  #Bare elektive pasienter
 tidlOp <- 4 #Bare primæroperasjoner
 ktr <- 1
 hovedkat <- 1 		#Hovedinngrep, 0-7, Standard: 99, dvs alle operasjoner
-enhetsUtvalg <- 10 # 0-hele landet, 4–egen shusgruppe, 7–egen region
+siste3aar <- 1
+AKjust <- 1
+enhetsUtvalg <- 0 # 0-hele landet, 4–egen shusgruppe, 7–egen region
 grVar <- 'BoHF'  #ShNavn, Fylke, BoHF, BoRHF
 valgtVar <- 'BeinsmLavPre'   #BeinsmEndrLav', BeinsmLavPre, OswEndr13, OswEndr20, OswEndr30pst, Osw48, Verre
-outfile <- paste0(valgtVar, '_', grVar,'AarAK.pdf')
+outfile <- paste0(valgtVar, '_', grVar, AKjust,'Aar.pdf')
 
+RyggFigAndelerGrVarAar(
+      RegData = RegData, valgtVar = valgtVar, datoFra = datoFra, datoTil = datoTil,
+      minald = minald, maxald = maxald, erMann = erMann, hovedkat = hovedkat,ktr = ktr, opKat=opKat, tidlOp=tidlOp,
+      preprosess = 1, enhetsUtvalg = 10, reshID = reshID, outfile = outfile, grVar = grVar,  siste3aar=siste3aar, AKjust=AKjust)
 
-variableInd <- c('BeinsmLavPre', 'OswEndr20','SympVarighUtstr')
+AKjustDum <- 0 #Settes automatisk til 0 hvis grVar ulik BoRHF eller BoHF
 grupperingInd <- c('ShNavn', 'BoHF') #c('Fylke', 'ShNavn', 'BoRHF', 'BoHF')
 for (grVar in grupperingInd) {
-      for (valgtVar in variableInd) {
-            outfile <- paste0(valgtVar, '_', grVar, 'Aar.pdf')
+      ifelse (grVar %in% c('BoHF', 'BoRHF'), AKjust <- AKjustDum, AKjust <- 0)
+      for (valgtVar in c('BeinsmLavPre', 'OswEndr20','SympVarighUtstr')) {
+            outfile <- paste0(valgtVar, '_', grVar, AKjust,'Aar.pdf')
             hovedkat <- 1
+            opKat <- 1  #Bare elektive pasienter
+            tidlOp <- 4 #Bare primæroperasjoner
             RyggFigAndelerGrVarAar(
                   RegData = RegData, valgtVar = valgtVar, datoFra = datoFra, datoTil = datoTil, minald = minald, 
-                  maxald = maxald, erMann=erMann, hovedkat = hovedkat, ktr = ktr,preprosess = 1, 
-                  enhetsUtvalg = 10, reshID = reshID, outfile = outfile, grVar = grVar)
+                  maxald = maxald, erMann=erMann, hovedkat = hovedkat, ktr = ktr,preprosess=1, opKat=opKat, tidlOp=tidlOp,
+                  enhetsUtvalg = 10, reshID = reshID, outfile = outfile, grVar = grVar, siste3aar=siste3aar, AKjust=AKjust)
       }
       for (valgtVar in c('PeropKompDura', 'KpInf3Mnd')) {
-            outfile <- paste0(valgtVar, '_', grVar, 'Aar.pdf')
-            hovedkat <- 99
+            #Ingen utvalg
+            outfile <- paste0(valgtVar, '_', grVar, AKjust,'Aar.pdf')
             RyggFigAndelerGrVarAar(
                   RegData = RegData, valgtVar = valgtVar, datoFra = datoFra, datoTil = datoTil,
-                  minald = minald, maxald = maxald, erMann = erMann, hovedkat = hovedkat,ktr = ktr,
-                  preprosess = 1, enhetsUtvalg = 10, reshID = reshID, outfile = outfile, grVar = grVar)
+                  minald = minald, maxald = maxald, erMann = erMann, ktr = ktr,  siste3aar=siste3aar, AKjust=AKjust,
+                  preprosess = 1, reshID = reshID, outfile = outfile, grVar = grVar)
       }
 }
 
