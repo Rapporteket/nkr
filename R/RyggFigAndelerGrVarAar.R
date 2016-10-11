@@ -392,10 +392,13 @@ if (valgtVar == 'Osw48') {
      RegData$OpAar <- factor(RegData$OpAar, exclude = "")
      RegData$ErMann <- factor(RegData$ErMann, exclude = "")
      grupperingsVar <- c(grVar, 'OpAar', 'ErMann', 'AlderGr')
-     #Nvar <- tapply(RegData$Variabel, RegData[ ,grupperingsVar], sum, na.rm=T) #Variabel er en 0/1-variabel.
-     Nvar <- aggregate(Variabel ~ ErMann+AlderGr+OpAar+grVar, data=RegData,
-                       FUN = function(x) AndelStGr = sum(x)/length(x) ) #Variabel er en 0/1-variabel.
-     #Alt: Ngr <- table(RegData[ ,grupperingsVar])
+     grupperingsVar <- c('grVar', 'OpAar', 'ErMann', 'AlderGr')
+     Nvar <- aggregate(Variabel ~ ErMann+AlderGr+OpAar+grVar, data=RegData, drop=FALSE, #Skal ha: 2*3*4*AntGr=504
+                       FUN = function(x) AndelStGr = sum(x)/length(x)) #Variabel er en 0/1-variabel.
+     
+
+     Nvar <- tapply(RegData$Variabel, RegData[ ,grupperingsVar], sum, na.rm=T) #Variabel er en 0/1-variabel.
+     Ngr <- table(RegData[ ,grupperingsVar])
      #if(N > 0) {Ngr <- table(RegData[ ,grupperingsVar])}	else {Ngr <- 0}
      AndelOgVekt <- cbind(Nvar, Vekt = PopAldKjGr$Vekt)
      AndelVekt <- cbind(AndelOgVekt, AndelVektGr = AndelOgVekt$Variabel*AndelOgVekt$Vekt)
