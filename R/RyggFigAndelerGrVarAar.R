@@ -48,6 +48,9 @@
 #'                BoHF - Pasienten bor i boområdene til det angitte HF.
 #'                BoRHF - Pasienten bor i boområdene til det angitte RHF.
 #' @param valgtVar Variabelen det skal vises resultat for. Se \strong{Details} for oversikt.
+#' @param siste3aar 0:Viser resultatat for hele perioden samlet, 1: Viser resultat for hvert av de siste tre år
+#' @param AKjust Alders-og kjønnsjustering når grVar er boområder. Basert på 4 aldersgrupper gruppert ut fra alderskvartilene.
+#'          0:ikke juster, 1:juster for alder og kjønn
 #'
 #' @return Figur med...
 #'
@@ -55,7 +58,8 @@
 
 RyggFigAndelerGrVarAar <- function(RegData, valgtVar, datoFra='2007-01-01', datoTil='3000-12-31', 
                             minald=0, maxald=130, erMann='', hovedkat=99, tidlOp='', opKat=99, hentData=0, 
-                            preprosess=1,enhetsUtvalg=0, grVar='ShNavn', tittel=1, ktr=0, reshID, outfile='') {
+                            preprosess=1,enhetsUtvalg=0, grVar='ShNavn', tittel=1, ktr=0, reshID, outfile='',
+                            siste3aar=0, AKjust=0) {
 
 	if (hentData == 1) {		
 	  RegData <- RyggRegDataSQL()
@@ -69,6 +73,8 @@ RyggFigAndelerGrVarAar <- function(RegData, valgtVar, datoFra='2007-01-01', dato
 
      #----------- Figurparametre ------------------------------
      cexShNavn <- 1 #0.85
+     if ((AKjust==1) & !(grVar %in% c('BoHF', 'BoRHF'))) { AKjust=0}
+           
 
      #Når bare skal sammenlikne med sykehusgruppe eller region, eller ikke sammenlikne,
      #trengs ikke data for hele landet:
@@ -353,8 +359,9 @@ if (valgtVar == 'Osw48') {
       utvalgTxt <- RyggUtvalg$utvalgTxt
       
       #Gjør utvalg
-	 if (enhetsUtvalg == 10) {
+	 if (siste3aar == 1) {
 	 	AarMax <- max(RegData$OpAar)	#Siste år
+	 	#AarMax <- min(max(RegData$OpAar), as.Date(datoTil))	#Siste år
 	 	AarMaxTxt <- as.character(AarMax)
 		RegData <- RegData[which(RegData$OpAar %in% c((AarMax-2):AarMax)), ]
 		}
@@ -366,65 +373,63 @@ if (valgtVar == 'Osw48') {
 #SJEKK:
      RegData <- RegData[which(!is.na(RegData[ ,grVar])), ]
      Ngrense <- 30		#Minste antall registreringer for at ei gruppe skal bli vist
- #----------------------------------------------------------------------------------------------
-     if (enhetsUtvalg == 10) { #Vise resultat for tre år. Alders-og kjønnsjustering
-           
-#----------Alders- og kjønnsjustering-----------------------  
-#RegData inneholder både alder, kjønn og bo-områder.
-     #Velger 4 aldersgrupper
-     aldKvant <- quantile(RegData$Alder, c(25, 50, 75)/100, na.rm = T)
-     #25% 50% 75% Hele populasjonen gir 43,57,67
-     #37  46  57
-     #aldKvant <- c(36,45,56)
-     aldgr <- c(minald-1,aldKvant,85)
-     RegData$AlderGr <- cut(RegData$Alder,aldgr) #grensene er øverste grense i aldersintervallet
-     
-     #Må finne andel av normalpopulasjonen i disse gruppene ut fra befolkningsfil
-     #For alders-og kjønnsstandardisering:
-     Innb2015aldkj <- read.table('./Innbyggere2015aldkj.csv', sep=';', header = T, encoding = 'UTF-8')
-     Innb2015aldkj$AlderGr <- cut(Innb2015aldkj$Alder,aldgr)
-     PopAldKjGr <- aggregate(AntInnb ~ ErMann+AlderGr, data=Innb2015aldkj,FUN=sum)
-     PopAldKjGr$Vekt <- prop.table((PopAldKjGr$AntInnb))#PopAldKjGr$AntInnb/sum(PopAldKjGr$AntInnb) 
-     
-
-     N <- dim(RegData)[1] #table(RegData$OpAar)      #Antall per år
      names(RegData)[which(names(RegData) == grVar)] <- 'grVar'
-     RegData$OpAar <- factor(RegData$OpAar, exclude = "")
-     RegData$ErMann <- factor(RegData$ErMann, exclude = "")
-     grupperingsVar <- c(grVar, 'OpAar', 'ErMann', 'AlderGr')
-     grupperingsVar <- c('grVar', 'OpAar', 'ErMann', 'AlderGr')
-     Nvar <- aggregate(Variabel ~ ErMann+AlderGr+OpAar+grVar, data=RegData, drop=FALSE, #Skal ha: 2*3*4*AntGr=504
-                       FUN = function(x) AndelStGr = sum(x)/length(x)) #Variabel er en 0/1-variabel.
-     
-#Alternativt:
-     #Nvar <- tapply(RegData$Variabel, RegData[ ,grupperingsVar], sum, na.rm=T) #Variabel er en 0/1-variabel.
-     #Ngr <- table(RegData[ ,grupperingsVar])
-     #if(N > 0) {Ngr <- table(RegData[ ,grupperingsVar])}	else {Ngr <- 0}
-     AndelOgVekt <- cbind(Nvar, Vekt = PopAldKjGr$Vekt)
-     AndelVekt <- cbind(AndelOgVekt, AndelVektGr = AndelOgVekt$Variabel*AndelOgVekt$Vekt)
-     AndelerGrStand <- aggregate(AndelVektGr ~ OpAar+grVar, data=AndelVekt, FUN = function(x) 100*sum(x))
-     #AndelerGr <- round(100*Nvar/Ngr,2)
-     
-#Fra standardiseringsprogram
-#     ProsjFilKomplAldKj <- merge(ProsjFilMinnbAldKjDum, StandPopAgg, by=AldKjVar) 	#by.x = AldKjVar, by.y = AldKjVar
-#     #Standardiserte rater
-#     ProsjFilKomplAldKj$RateStand <- ProsjFilKomplAldKj[ ,maaleVar]/ProsjFilKomplAldKj$InnbIF*ProsjFilKomplAldKj$vekt*1000
-#     Resultat <- aggregate(ProsjFilKomplAldKj[ ,c('InnbIF', maaleVar, 'RateStand', 'RateStandVar')] ,  
-#                           by=ProsjFilKomplAldKj[ ,katVar], FUN=sum)
-     
-     
-#---------Beregninger, årsvariasjon, uten alders- og kjønnsjustering  -------
-	 #grVar kan være sykehus, boområde osv. Egen inputparam. for om skal legge til pkt for år ? Foreløpig 
-	 # valgt å bruke enhetsUtvalg=10
-	 #Hvis siste år for få reg - ta også bort resultater fra foregående år.
-	 NminTot <- 50 #Ikke i bruk
-	 NminAar <- 30
-      
+     #grVar kan være sykehus, boområde osv.  
+     #Hvis siste år for få reg - ta også bort resultater fra foregående år.
+     NminTot <- 50 #Ikke i bruk
+     NminAar <- 30
      N <- dim(RegData)[1] #table(RegData$OpAar)      #Antall per år
+     
+     #----------------------------------------------------------------------------------------------
+ #KODEN MÅ KOMPRIMERES!!!!!!!!!:
+if (siste3aar ==1) { #Resultater for hvert av de siste 3 år.
+	 if (AKjust == 1) { #Alders-og kjønnsjustering
+	 #    if (grVar %in% c('BoHF', 'BoRHF')) { #Vise resultat for tre år. Alders-og kjønnsjustering
+      if(N > 0) {Ngr <- table(RegData[ ,c('OpAar', 'grVar')])}	else {Ngr <- 0}
+      Nvar <- tapply(RegData$Variabel, RegData[ ,c('OpAar', 'grVar')], sum, na.rm=T) #Variabel er en 0/1-variabel.
+	       
+	#----------Alders- og kjønnsjustering-----------------------  
+	#RegData inneholder både alder, kjønn og bo-områder.
+		 #Velger 4 aldersgrupper
+		 aldKvant <- quantile(RegData$Alder, c(25, 50, 75)/100, na.rm = T)
+		 #25% 50% 75% Hele populasjonen gir 43,57,67
+		 #37  46  57
+		 #aldKvant <- c(36,45,56)
+		 aldgr <- c(minald-1,aldKvant,85)
+		 RegData$AlderGr <- cut(RegData$Alder,aldgr) #grensene er øverste grense i aldersintervallet
+		 
+		 #Må finne andel av normalpopulasjonen i disse gruppene ut fra befolkningsfil
+		 #For alders-og kjønnsstandardisering:
+		 Innb2015aldkj <- read.table('./Innbyggere2015aldkj.csv', sep=';', header = T, encoding = 'UTF-8')
+		 Innb2015aldkj$AlderGr <- cut(Innb2015aldkj$Alder,aldgr)
+		 PopAldKjGr <- aggregate(AntInnb ~ ErMann+AlderGr, data=Innb2015aldkj,FUN=sum)
+		 PopAldKjGr$Vekt <- prop.table((PopAldKjGr$AntInnb))#PopAldKjGr$AntInnb/sum(PopAldKjGr$AntInnb) 
+		 
+
+		 RegData$OpAar <- factor(RegData$OpAar, exclude = "")
+		 RegData$ErMann <- factor(RegData$ErMann, exclude = "")
+		 grupperingsVar <- c('grVar', 'OpAar', 'ErMann', 'AlderGr')
+		 AndelAKGr <- aggregate(Variabel ~ ErMann+AlderGr+OpAar+grVar, data=RegData, drop=FALSE, #Skal ha: 2*3*4*AntGr=504
+						   FUN = function(x) AndelStGr = sum(x)/length(x)) #Variabel er en 0/1-variabel.
+		 
+		  #Alternativt:
+		 #Nvar <- tapply(RegData$Variabel, RegData[ ,grupperingsVar], sum, na.rm=T) #Variabel er en 0/1-variabel.
+		 #Ngr <- table(RegData[ ,grupperingsVar])
+		 #if(N > 0) {Ngr <- table(RegData[ ,grupperingsVar])}	else {Ngr <- 0}
+		 AndelOgVekt <- cbind(AndelAKGr, Vekt = PopAldKjGr$Vekt)
+		 AndelVekt <- cbind(AndelOgVekt, AndelVektGr = AndelOgVekt$Variabel*AndelOgVekt$Vekt)
+		 AndelerGrStand <- aggregate(AndelVektGr ~ OpAar+grVar, data=AndelVekt, FUN = function(x) 100*sum(x))
+		 AndelerGr <- matrix(AndelerGrStand$AndelVektGr, nrow=3, ncol=length(levels(RegData$grVar)), 
+		                     dimnames=list((AarMax-2):AarMax, levels(RegData$grVar)))
+		 
+		 
+	}  else {	#Sjekk for AK-justering
+#---------Beregninger, årsvariasjon, uten alders- og kjønnsjustering  -------
+      
      Nvar <- tapply(RegData$Variabel, RegData[ ,c('OpAar', 'grVar')], sum, na.rm=T) #Variabel er en 0/1-variabel.
      if(N > 0) {Ngr <- table(RegData[ ,c('OpAar', 'grVar')])}	else {Ngr <- 0}
      AndelerGr <- round(100*Nvar/Ngr,2)
-
+      }
      #Må ta bort punkt/søyler for de som har for få registreringer for det aktuelle året.
      indGrUt <- as.numeric(which(Ngr < NminAar)) #Alle som har for få. Indeks er kolonnevis
 #     if (length(indGrUt)==0) { indGrUt <- NULL}
@@ -448,12 +453,12 @@ if (valgtVar == 'Osw48') {
       #                        length(which(RegData$OpAar==AarMax)), 2) #round(100*sum(RegData$Variabel)/N, 2)
 
 #--------------------------------------------------------------
-	 } else {
+	} else {	#Hvis vi skal ha resultater for perioden totalt
 	
      dummy0 <- -0.001
      N <- dim(RegData)[1]
-     Nvar <- tapply(RegData$Variabel, RegData[ ,grVar], sum, na.rm=T)
-     if(N > 0) {Ngr <- table(RegData[ ,grVar])}	else {Ngr <- 0}
+     Nvar <- tapply(RegData$Variabel, RegData[ ,'grVar'], sum, na.rm=T)
+     if(N > 0) {Ngr <- table(RegData[ ,'grVar'])}	else {Ngr <- 0}
      AntGrNgr <- length(which(Ngr >= Ngrense))	#length(which(Midt>0))
      AndelerGr <- round(100*Nvar/Ngr,2)
 
@@ -476,13 +481,14 @@ if (valgtVar == 'Osw48') {
      if (tittel==0) {Tittel<-''} else {Tittel <- TittelUt}
 
      #-----------Figur---------------------------------------
-     if 	( max(Ngr) < Ngrense)	{#Dvs. hvis ALLE er mindre enn grensa.
+	 # Lager ikke figur hvis ALLE N er mindre enn grensa eller hvis ugyldig parameterkombinasjon.
+     if 	( max(Ngr) < Ngrense) { 
           FigTypUt <- rapbase::figtype(outfile)
           farger <- FigTypUt$farger
           plot.new()
-          if (dim(RegData)[1]>0) {
-               tekst <- paste('Færre enn ', Ngrense, ' registreringer ved hvert av sykehusene', sep='')
-          } else {tekst <- 'Ingen registrerte data for dette utvalget'}
+			  if (dim(RegData)[1]>0) {
+				   tekst <- paste('Færre enn ', Ngrense, ' registreringer ved hvert av sykehusene', sep='')
+			  } else {tekst <- 'Ingen registrerte data for dette utvalget'}
           title(main=Tittel)
           text(0.5, 0.6, tekst, cex=1.2)
           legend('topleft',utvalgTxt, bty='n', cex=0.9, text.col=farger[1])
@@ -494,7 +500,7 @@ if (valgtVar == 'Osw48') {
           #Innparametre: ...
 
 
-          FigTypUt <- figtype(outfile, height=3*800, fargepalett=RyggUtvalg$fargepalett)
+          FigTypUt <- rapbase::figtype(outfile, height=3*800, fargepalett=RyggUtvalg$fargepalett)
           farger <- FigTypUt$farger
           #Tilpasse marger for å kunne skrive utvalgsteksten
           NutvTxt <- length(utvalgTxt)
@@ -503,23 +509,24 @@ if (valgtVar == 'Osw48') {
           par('fig'=c(vmarg, 1, 0, 1-0.02*(NutvTxt-1)))	#Har alltid datoutvalg med
 
           xmax <- min(max(AndelerGrSort, na.rm = T),100)*1.15
+          xaksetxt <- ifelse(AKjust==1, 'Andel (%), justert for alder og kjønn', 'Andel (%)')
           pos <- barplot(as.numeric(AndelerSisteSort), horiz=T, border=NA, col=farger[3], #main=Tittel,
-                         xlim=c(0,xmax), ylim=c(0.05, 1.25)*length(GrNavnSort), font.main=1, xlab='Andel (%)', las=1, cex.names=cexShNavn*0.9)
+                         xlim=c(0,xmax), ylim=c(0.05, 1.25)*length(GrNavnSort), font.main=1, xlab=xaksetxt, las=1, cex.names=cexShNavn*0.9)
           ybunn <- 0.1
           ytopp <- pos[AntGrNgr]+ 0.4	#-length(indGrUt)]
-      if (enhetsUtvalg == 10) {
+      if (siste3aar == 1) {
       	indMed <- 1:AntGrNgr
       	Aar1txt <- as.character(AarMax-1)
       	Aar2txt <- as.character(AarMax-2)
       	Naar <- rowSums(Ngr, na.rm=T)
       	ResAar <- 100*rowSums(Nvar, na.rm=T)/Naar
-      	points(y=pos[indMed], x=AndelerGrSort[Aar2txt, indMed], cex=0.8,pch=19)     #col=farger[4], 
-      	points(y=pos[indMed], x=AndelerGrSort[Aar1txt, indMed], cex=0.8)    #col=farger[2],
-            legend('topright', xjust=1, cex=0.9, lwd=c(2,NA,NA), col=c(farger[1],'black','black'),
+      	points(y=pos[indMed], x=AndelerGrSort[Aar1txt, indMed], cex=0.8,pch=19)    #col=farger[2],
+      	points(y=pos[indMed], x=AndelerGrSort[Aar2txt, indMed], cex=0.8)     #col=farger[4], 
+      	legend('topright', xjust=1, cex=0.9, lwd=c(NA,NA,2), col=c('black','black',farger[1]),
                  legend=c(paste0(Aar2txt, ' (Tot: ', sprintf('%.1f', ResAar[1]), '%, ', 'N=', Naar[1],')'),
                           paste0(Aar1txt, ' (Tot: ', sprintf('%.1f', ResAar[2]), '%, ', 'N=', Naar[2],')'),
-                          paste0('Hele landet, ',AarMax, ' (', sprintf('%.1f', ResAar[3]), '%, ', 'N=', Naar[3],')'), 
-                          bty='o', bg='white', box.col='white', pch=c(NA,1,19))
+                          paste0('Hele landet, ',AarMax, ' (', sprintf('%.1f', ResAar[3]), '%, ', 'N=', Naar[3],')')), 
+                          bty='o', bg='white', box.col='white', pch=c(1,19,NA))
           mtext(at=max(pos)+0.5*log(max(pos)), paste0('(N, ', AarMax, ')'), side=2, las=1, cex=cexShNavn, adj=1, line=0.25)	
           lines(x=rep(ResAar[3], 2), y=c(ybunn, ytopp), col=farger[1], lwd=2)
  } else {
@@ -530,7 +537,7 @@ if (valgtVar == 'Osw48') {
        lines(x=rep(AndelHele, 2), y=c(ybunn, ytopp), col=farger[1], lwd=2)
  }
           mtext(at=pos+max(pos)*0.0045, paste0(GrNavnSort, ' (', Ngrtxt[sortInd],')'), side=2, las=1, cex=cexShNavn, adj=1, line=0.25)	#Legge på navn som eget steg
-          #text(x=0.005*xmax, y=pos, Ngrtxt[sortInd], las=1, cex=cexShNavn, adj=0, col=farger[4], lwd=3)	#c(Nshtxt[sortInd],''),
+          mtext(at=pos+max(pos)*0.0045, paste0(GrNavnSort, ' (', Ngrtxt[sortInd],')'), side=2, las=1, cex=cexShNavn, adj=1, line=0.25)	#Legge på navn som eget steg
           title(Tittel, line=1, font.main=1, cex.main=1.3)
 
           text(x=0.01, y=pos+0.1, andeltxt, #x=AndelerGrSort+xmax*0.01
