@@ -396,9 +396,9 @@ if (valgtVar == 'Osw48') {
      Nvar <- aggregate(Variabel ~ ErMann+AlderGr+OpAar+grVar, data=RegData, drop=FALSE, #Skal ha: 2*3*4*AntGr=504
                        FUN = function(x) AndelStGr = sum(x)/length(x)) #Variabel er en 0/1-variabel.
      
-
-     Nvar <- tapply(RegData$Variabel, RegData[ ,grupperingsVar], sum, na.rm=T) #Variabel er en 0/1-variabel.
-     Ngr <- table(RegData[ ,grupperingsVar])
+#Alternativt:
+     #Nvar <- tapply(RegData$Variabel, RegData[ ,grupperingsVar], sum, na.rm=T) #Variabel er en 0/1-variabel.
+     #Ngr <- table(RegData[ ,grupperingsVar])
      #if(N > 0) {Ngr <- table(RegData[ ,grupperingsVar])}	else {Ngr <- 0}
      AndelOgVekt <- cbind(Nvar, Vekt = PopAldKjGr$Vekt)
      AndelVekt <- cbind(AndelOgVekt, AndelVektGr = AndelOgVekt$Variabel*AndelOgVekt$Vekt)
@@ -471,7 +471,8 @@ if (valgtVar == 'Osw48') {
      
      andeltxt <- paste0(sprintf('%.1f',AndelerSisteSort), '%') 	#round(as.numeric(AndelerSiste),1)
      if (length(indGrUt)>0) {andeltxt[(AntGrNgr+1):(AntGrNgr+length(indGrUt))] <- ''}
-}
+	 }
+     
      if (tittel==0) {Tittel<-''} else {Tittel <- TittelUt}
 
      #-----------Figur---------------------------------------
@@ -512,12 +513,12 @@ if (valgtVar == 'Osw48') {
       	Aar2txt <- as.character(AarMax-2)
       	Naar <- rowSums(Ngr, na.rm=T)
       	ResAar <- 100*rowSums(Nvar, na.rm=T)/Naar
-               points(y=pos[indMed], x=AndelerGrSort[Aar1txt, indMed], cex=0.8)    #col=farger[2],
-          points(y=pos[indMed], x=AndelerGrSort[Aar2txt, indMed], cex=0.8 ,pch=19)     #col=farger[4], 
-          legend('topright', xjust=1, cex=0.9, lwd=c(2,NA,NA), col=c(farger[1],'black','black'),
-                 legend=c(paste0('Hele landet, ',AarMax, ' (', sprintf('%.1f', ResAar[3]), '%, ', 'N=', Naar[3],')'), 
+      	points(y=pos[indMed], x=AndelerGrSort[Aar2txt, indMed], cex=0.8,pch=19)     #col=farger[4], 
+      	points(y=pos[indMed], x=AndelerGrSort[Aar1txt, indMed], cex=0.8)    #col=farger[2],
+            legend('topright', xjust=1, cex=0.9, lwd=c(2,NA,NA), col=c(farger[1],'black','black'),
+                 legend=c(paste0(Aar2txt, ' (Tot: ', sprintf('%.1f', ResAar[1]), '%, ', 'N=', Naar[1],')'),
                           paste0(Aar1txt, ' (Tot: ', sprintf('%.1f', ResAar[2]), '%, ', 'N=', Naar[2],')'),
-                          paste0(Aar2txt, ' (Tot: ', sprintf('%.1f', ResAar[1]), '%, ', 'N=', Naar[1],')')),
+                          paste0('Hele landet, ',AarMax, ' (', sprintf('%.1f', ResAar[3]), '%, ', 'N=', Naar[3],')'), 
                           bty='o', bg='white', box.col='white', pch=c(NA,1,19))
           mtext(at=max(pos)+0.5*log(max(pos)), paste0('(N, ', AarMax, ')'), side=2, las=1, cex=cexShNavn, adj=1, line=0.25)	
           lines(x=rep(ResAar[3], 2), y=c(ybunn, ytopp), col=farger[1], lwd=2)

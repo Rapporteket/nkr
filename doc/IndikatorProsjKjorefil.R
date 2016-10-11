@@ -45,13 +45,9 @@ grVar <- 'BoHF'  #ShNavn, Fylke, BoHF, BoRHF
 valgtVar <- 'BeinsmLavPre'   #BeinsmEndrLav', BeinsmLavPre, OswEndr13, OswEndr20, OswEndr30pst, Osw48, Verre
 outfile <- paste0(valgtVar, '_', grVar,'AarAK.pdf')
 
-RyggFigAndelerGrVarAar(
-      RegData = RegData, valgtVar = valgtVar, datoFra = datoFra, datoTil = datoTil,
-      minald = minald, maxald = maxald, erMann = erMann, ktr = ktr, hovedkat = hovedkat, grVar = grVar,
-      preprosess = 1, enhetsUtvalg = 10, reshID = reshID, outfile = outfile)
 
 variableInd <- c('BeinsmLavPre', 'OswEndr20','SympVarighUtstr')
-grupperingInd <- c('Fylke', 'ShNavn', 'BoRHF', 'BoHF')
+grupperingInd <- c('ShNavn', 'BoHF') #c('Fylke', 'ShNavn', 'BoRHF', 'BoHF')
 for (grVar in grupperingInd) {
       for (valgtVar in variableInd) {
             outfile <- paste0(valgtVar, '_', grVar, 'Aar.pdf')

@@ -57,8 +57,8 @@ utvalgTxt <- c(paste('Operasjonsdato: ', if (N>0) {min(RegData$InnDato, na.rm=T)
 						' til ', if (N>0) {max(RegData$Alder, na.rm=T)} else {maxald}, ' år')},
 	if (erMann %in% 0:1) {paste0('Kjønn: ', c('Kvinner', 'Menn')[erMann+1])},
 	if (hovedkat[1] %in% 0:7) {paste0('Hovedinngrep: ', paste(hkatnavn[as.numeric(hovedkat)+1], collapse=','))},
-	if (tidlOp %in% 1:4) {TidlOprtxt[tidlOp]},
-      if (opKat %in% 1:3) {OpKatTxt[opKat]}
+      if (opKat %in% 1:3) {OpKatTxt[opKat]},
+      if (tidlOp %in% 1:4) {TidlOprtxt[tidlOp]}
 	)
 	
 
