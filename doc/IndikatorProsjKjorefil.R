@@ -36,10 +36,10 @@ erMann <- ''
 tidlOp <- 99
 minald <- 20
 maxald <- 85
-opKat <- 1  #Bare elektive pasienter
-tidlOp <- 4 #Bare primæroperasjoner
+opKat <- 99  #Bare elektive pasienter
+tidlOp <- 99 #Bare primæroperasjoner
 ktr <- 1
-hovedkat <- 1 		#Hovedinngrep, 0-7, Standard: 99, dvs alle operasjoner
+hovedkat <- 99 		#Hovedinngrep, 0-7, Standard: 99, dvs alle operasjoner
 siste3aar <- 1
 AKjust <- 1
 enhetsUtvalg <- 0 # 0-hele landet, 4–egen shusgruppe, 7–egen region
@@ -52,28 +52,27 @@ RyggFigAndelerGrVarAar(
       minald = minald, maxald = maxald, erMann = erMann, hovedkat = hovedkat,ktr = ktr, opKat=opKat, tidlOp=tidlOp,
       preprosess = 1, enhetsUtvalg = 10, reshID = reshID, outfile = outfile, grVar = grVar,  siste3aar=siste3aar, AKjust=AKjust)
 
-AKjustDum <- 0 #Settes automatisk til 0 hvis grVar ulik BoRHF eller BoHF
+AKjustDum <- 1 #Settes automatisk til 0 hvis grVar ulik BoRHF eller BoHF
 grupperingInd <- c('ShNavn', 'BoHF') #c('Fylke', 'ShNavn', 'BoRHF', 'BoHF')
 for (grVar in grupperingInd) {
       ifelse (grVar %in% c('BoHF', 'BoRHF'), AKjust <- AKjustDum, AKjust <- 0)
-      for (valgtVar in c('BeinsmLavPre', 'OswEndr20','SympVarighUtstr')) {
-            outfile <- paste0(valgtVar, '_', grVar, AKjust,'Aar.pdf')
+      for (valgtVar in c('BeinsmLavPre', 'SympVarighUtstr')) {
+            outfile <- paste0(valgtVar, '1_1', grVar, AKjust,'Aar.pdf')
             hovedkat <- 1
             opKat <- 1  #Bare elektive pasienter
-            tidlOp <- 4 #Bare primæroperasjoner
             RyggFigAndelerGrVarAar(
                   RegData = RegData, valgtVar = valgtVar, datoFra = datoFra, datoTil = datoTil, minald = minald, 
                   maxald = maxald, erMann=erMann, hovedkat = hovedkat, ktr = ktr,preprosess=1, opKat=opKat, tidlOp=tidlOp,
                   enhetsUtvalg = 10, reshID = reshID, outfile = outfile, grVar = grVar, siste3aar=siste3aar, AKjust=AKjust)
       }
-      for (valgtVar in c('PeropKompDura', 'KpInf3Mnd')) {
-            #Ingen utvalg
-            outfile <- paste0(valgtVar, '_', grVar, AKjust,'Aar.pdf')
+      valgtVar <- 'KpInf3Mnd'
+            hovedkat <- 1:3
+            outfile <- paste0(valgtVar, '123_', grVar, AKjust,'Aar.pdf')
             RyggFigAndelerGrVarAar(
-                  RegData = RegData, valgtVar = valgtVar, datoFra = datoFra, datoTil = datoTil,
+                  RegData = RegData, valgtVar = valgtVar, datoFra = datoFra, datoTil = datoTil,hovedkat=hovedkat,
                   minald = minald, maxald = maxald, erMann = erMann, ktr = ktr,  siste3aar=siste3aar, AKjust=AKjust,
                   preprosess = 1, reshID = reshID, outfile = outfile, grVar = grVar)
-      }
+     
 }
 
 #Kommune 301 Oslo har fire BoHF. For øvrig kommunenummer bestemmer kommunenummer entydig BoHF.
