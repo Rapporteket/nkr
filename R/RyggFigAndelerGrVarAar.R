@@ -391,11 +391,11 @@ if (siste3aar ==1) { #Resultater for hvert av de siste 3 år.
 	#----------Alders- og kjønnsjustering-----------------------  
 	#RegData inneholder både alder, kjønn og bo-områder.
 		 #Velger 4 aldersgrupper
-		 aldKvant <- quantile(RegData$Alder, c(25, 50, 75)/100, na.rm = T)
+		 aldInndel <- quantile(RegData$Alder, c(33,67)/100, na.rm = T)  #c(25, 50, 75)
 		 #25% 50% 75% Hele populasjonen gir 43,57,67
 		 #37  46  57
 		 #aldKvant <- c(36,45,56)
-		 aldgr <- c(minald-1,aldKvant,85)
+		 aldgr <- c(minald-1,aldInndel,85)
 		 RegData$AlderGr <- cut(RegData$Alder,aldgr) #grensene er øverste grense i aldersintervallet
 		 
 		 #Må finne andel av normalpopulasjonen i disse gruppene ut fra befolkningsfil
@@ -516,17 +516,19 @@ if (siste3aar ==1) { #Resultater for hvert av de siste 3 år.
           ytopp <- pos[AntGrNgr]+ 0.4	#-length(indGrUt)]
       if (siste3aar == 1) {
       	indMed <- 1:AntGrNgr
-      	Aar1txt <- as.character(AarMax-1)
-      	Aar2txt <- as.character(AarMax-2)
+      	Aar1txt <- as.character(AarMax-2)
+      	Aar2txt <- as.character(AarMax-1)
       	Naar <- rowSums(Ngr, na.rm=T)
       	ResAar <- 100*rowSums(Nvar, na.rm=T)/Naar
       	points(y=pos[indMed], x=AndelerGrSort[Aar1txt, indMed], cex=0.8,pch=19)    #col=farger[2],
       	points(y=pos[indMed], x=AndelerGrSort[Aar2txt, indMed], cex=0.8)     #col=farger[4], 
-      	legend('topright', xjust=1, cex=0.9, lwd=c(NA,NA,2), col=c('black','black',farger[1]),
-                 legend=c(paste0(Aar2txt, ' (Tot: ', sprintf('%.1f', ResAar[1]), '%, ', 'N=', Naar[1],')'),
-                          paste0(Aar1txt, ' (Tot: ', sprintf('%.1f', ResAar[2]), '%, ', 'N=', Naar[2],')'),
-                          paste0('Hele landet, ',AarMax, ' (', sprintf('%.1f', ResAar[3]), '%, ', 'N=', Naar[3],')')), 
-                          bty='o', bg='white', box.col='white', pch=c(1,19,NA))
+      	legend('topright', xjust=1, cex=0.9, bty='o', bg='white', box.col='white',
+      	     lwd=c(NA,NA,NA,2), pch=c(1,19,15,NA), pt.cex=c(1,1,2,1), col=c('black','black',farger[3],farger[1]),
+                 legend=c(paste0(Aar1txt, ' (Tot: ', sprintf('%.1f', ResAar[1]), '%, ', 'N=', Naar[1],')'),
+                          paste0(Aar2txt, ' (Tot: ', sprintf('%.1f', ResAar[2]), '%, ', 'N=', Naar[2],')'),
+                          paste0(AarMax, ' (Tot: ', sprintf('%.1f', ResAar[3]), '%, ', 'N=', Naar[3],')'),
+                          paste0('Hele landet, ',AarMax)) 
+                  )
           mtext(at=max(pos)+0.5*log(max(pos)), paste0('(N, ', AarMax, ')'), side=2, las=1, cex=cexShNavn, adj=1, line=0.25)	
           lines(x=rep(ResAar[3], 2), y=c(ybunn, ytopp), col=farger[1], lwd=2)
  } else {

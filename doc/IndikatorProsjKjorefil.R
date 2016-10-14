@@ -56,6 +56,20 @@ AKjustDum <- 1 #Settes automatisk til 0 hvis grVar ulik BoRHF eller BoHF
 grupperingInd <- c('ShNavn', 'BoHF') #c('Fylke', 'ShNavn', 'BoRHF', 'BoHF')
 for (grVar in grupperingInd) {
       ifelse (grVar %in% c('BoHF', 'BoRHF'), AKjust <- AKjustDum, AKjust <- 0)
+      valgtVar <- 'SympVarighUtstr' 
+            outfile <- paste0(valgtVar, '1_1', grVar, AKjust,'Aar.png')
+            hovedkat <- 1
+            opKat <- 1  #Bare elektive pasienter
+            RyggFigAndelerGrVarAar(
+                  RegData = RegData, valgtVar = valgtVar, datoFra = datoFra, datoTil = datoTil, minald = minald, 
+                  maxald = maxald, erMann=erMann, hovedkat = hovedkat, ktr = ktr,preprosess=1, opKat=opKat, tidlOp=tidlOp,
+                  enhetsUtvalg = 10, reshID = reshID, outfile = outfile, grVar = grVar, siste3aar=siste3aar, AKjust=AKjust)
+      }      
+
+AKjustDum <- 1 #Settes automatisk til 0 hvis grVar ulik BoRHF eller BoHF
+grupperingInd <- c('ShNavn', 'BoHF') #c('Fylke', 'ShNavn', 'BoRHF', 'BoHF')
+for (grVar in grupperingInd) {
+      ifelse (grVar %in% c('BoHF', 'BoRHF'), AKjust <- AKjustDum, AKjust <- 0)
       for (valgtVar in c('BeinsmLavPre', 'SympVarighUtstr')) {
             outfile <- paste0(valgtVar, '1_1', grVar, AKjust,'Aar.pdf')
             hovedkat <- 1
