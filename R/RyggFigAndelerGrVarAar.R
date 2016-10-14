@@ -84,7 +84,7 @@ RyggFigAndelerGrVarAar <- function(RegData, valgtVar, datoFra='2007-01-01', dato
      if (enhetsUtvalg == 7) {
           smltxt <- as.character(RegData$Region[indEgen1])
           RegData <- RegData[which(RegData$Region == smltxt), ]	#kun egen region
-          cexShNavn <- 1
+          cexShNavn <- 0.9
      }
 
      RegData[ ,grVar] <- factor(RegData[ ,grVar])
@@ -319,7 +319,7 @@ if (valgtVar == 'Osw48') {
           RegData <- RegData[which(RegData$SympVarighUtstr %in% 1:5), ]
           RegData$Variabel[which(RegData[ ,valgtVar] %in% 4:5)] <- 1
           VarTxt <- 'med varighet minst 1år'
-          TittelUt <- 'Varighet av utstrålende smerter minst ett år'
+          TittelUt <- 'Utstrålende smerter i minst ett år før operasjon'
      }
 
      if (valgtVar == 'UforetrygdPre') {
@@ -438,16 +438,15 @@ if (siste3aar ==1) { #Resultater for hvert av de siste 3 år.
      AndelerSisteSort <- AndelerGr[AarMaxTxt,sortInd]
      #vent     AndelerSisteSort[is.na(AndelerSisteSort)] <- 0
      
-     #AndelerGrSort <- AndelerSisteSort[sortInd] #Bare siste år
-     AndelerGrSort <- AndelerGr[ ,sortInd]
-     GrNavnSort <- colnames(AndelerGrSort) #names(AndelerGrSort)    #paste0(names(Ngr)[sortInd], ', ',Ngrtxt[sortInd])
-     #Antall bare for siste år 
      AntGrNgr <- length(which(Ngr[AarMaxTxt, ] >= NminAar))	#"Gyldige" grupper
      Ngrtxt <- Ngr[AarMaxTxt, ]	#paste0('N=', as.character(Ngr[AarMaxTxt, ]))	
      Ngrtxt[which(Ngr[AarMaxTxt, ] < NminAar)] <- paste0('<', NminAar) #paste0('N<', NminAar)	
-
+     #AndelerGrSort <- AndelerSisteSort[sortInd] #Bare siste år
+     AndelerGrSort <- AndelerGr[ ,sortInd]
+     GrNavnSort <- colnames(AndelerGrSort) #names(AndelerGrSort)    #paste0(names(Ngr)[sortInd], ', ',Ngrtxt[sortInd])
+     
       andeltxt <- paste0(sprintf('%.1f',AndelerGrSort[AarMaxTxt,]), '%') 	
-     if (length(indGrUt)>0) {andeltxt[(AntGrNgr+1):(length(GrNavnSort))] <- ''}
+     if (length(indGrUt)>0) {andeltxt[(AntGrNgr+1):(length(GrNavnSort))] <- 'N<30 siste år'} #''
      
      #AndelHele <- round(100*sum(RegData$Variabel[which(RegData$OpAar==AarMax)])/
       #                        length(which(RegData$OpAar==AarMax)), 2) #round(100*sum(RegData$Variabel)/N, 2)
@@ -472,8 +471,8 @@ if (siste3aar ==1) { #Resultater for hvert av de siste 3 år.
      AndelerGrSort <- AndelerGr[sortInd]
      AndelerSisteSort <- AndelerGrSort
      AndelHele <- round(100*sum(RegData$Variabel)/N, 2)
-     GrNavnSort <- names(AndelerSisteSort)   #names(Ngr)[sortInd]    #paste0(names(Ngr)[sortInd], ', ',Ngrtxt[sortInd])
-     
+     GrNavnSort <-  paste0(names(AndelerSisteSort), ' (', Ngrtxt[sortInd],')')  
+
      andeltxt <- paste0(sprintf('%.1f',AndelerSisteSort), '%') 	#round(as.numeric(AndelerSiste),1)
      if (length(indGrUt)>0) {andeltxt[(AntGrNgr+1):(AntGrNgr+length(indGrUt))] <- ''}
 	 }
@@ -506,12 +505,12 @@ if (siste3aar ==1) { #Resultater for hvert av de siste 3 år.
           NutvTxt <- length(utvalgTxt)
           vmarg <- max(0, strwidth(GrNavnSort, units='figure', cex=cexShNavn)*0.85)
           #NB: strwidth oppfører seg ulikt avh. av device...
-          par('fig'=c(vmarg, 1, 0, 1-0.02*(NutvTxt-1)))	#Har alltid datoutvalg med
+          par('fig'=c(vmarg, 0.9, 0, 1-0.02*(NutvTxt-1)))	#Har alltid datoutvalg med
 
           xmax <- min(max(AndelerGrSort, na.rm = T),100)*1.15
           xaksetxt <- ifelse(AKjust==1, 'Andel (%), justert for alder og kjønn', 'Andel (%)')
           pos <- barplot(as.numeric(AndelerSisteSort), horiz=T, border=NA, col=farger[3], #main=Tittel,
-                         xlim=c(0,xmax), ylim=c(0.05, 1.25)*length(GrNavnSort), font.main=1, xlab=xaksetxt, las=1, cex.names=cexShNavn*0.9)
+                         xlim=c(0,xmax), ylim=c(0.05, 1.27)*length(GrNavnSort), font.main=1, xlab=xaksetxt, las=1, cex.names=cexShNavn*0.9)
           ybunn <- 0.1
           ytopp <- pos[AntGrNgr]+ 0.4	#-length(indGrUt)]
       if (siste3aar == 1) {
@@ -520,16 +519,22 @@ if (siste3aar ==1) { #Resultater for hvert av de siste 3 år.
       	Aar2txt <- as.character(AarMax-1)
       	Naar <- rowSums(Ngr, na.rm=T)
       	ResAar <- 100*rowSums(Nvar, na.rm=T)/Naar
-      	points(y=pos[indMed], x=AndelerGrSort[Aar1txt, indMed], cex=0.8,pch=19)    #col=farger[2],
-      	points(y=pos[indMed], x=AndelerGrSort[Aar2txt, indMed], cex=0.8)     #col=farger[4], 
-      	legend('topright', xjust=1, cex=0.9, bty='o', bg='white', box.col='white',
-      	     lwd=c(NA,NA,NA,2), pch=c(1,19,15,NA), pt.cex=c(1,1,2,1), col=c('black','black',farger[3],farger[1]),
-                 legend=c(paste0(Aar1txt, ' (Tot: ', sprintf('%.1f', ResAar[1]), '%, ', 'N=', Naar[1],')'),
-                          paste0(Aar2txt, ' (Tot: ', sprintf('%.1f', ResAar[2]), '%, ', 'N=', Naar[2],')'),
-                          paste0(AarMax, ' (Tot: ', sprintf('%.1f', ResAar[3]), '%, ', 'N=', Naar[3],')'),
+      	points(y=pos[indMed], x=AndelerGrSort[Aar1txt, indMed], cex=1.4, pch=19)    #col=farger[2],
+      	#points(y=pos[indMed], x=AndelerGrSort[Aar1txt, indMed], cex=1.7, pch='|')    #col=farger[2],
+      	points(y=pos[indMed], x=AndelerGrSort[Aar2txt, indMed], cex=1.4)     #col=farger[4], 
+      	#points(y=pos[indMed], x=AndelerGrSort[Aar2txt, indMed], cex=1.7, pch='|')     #col=farger[4], 
+      	legend('top', inset=c(0.1,0), xjust=1,cex=0.9, bty='o', bg='white', box.col='white',
+      	     lwd=c(NA,NA,NA,2), pch=c(1,19,15,NA), pt.cex=c(1.2, 1.2, 2, 1), col=c('black','black',farger[3],farger[1]),
+                 legend=c(paste0(Aar1txt, ' (', sprintf('%.1f', ResAar[1]), '%, ', 'N=', Naar[1],')'),
+                          paste0(Aar2txt, ' (', sprintf('%.1f', ResAar[2]), '%, ', 'N=', Naar[2],')'),
+                          paste0(AarMax, ' (', sprintf('%.1f', ResAar[3]), '%, ', 'N=', Naar[3],')'),
                           paste0('Hele landet, ',AarMax)) 
                   )
-          mtext(at=max(pos)+0.5*log(max(pos)), paste0('(N, ', AarMax, ')'), side=2, las=1, cex=cexShNavn, adj=1, line=0.25)	
+          overPos <- max(pos)+0.4*log(max(pos))
+          #mtext(at=overPos, paste0('(N, ', AarMax, ')'), side=2, las=1, cex=cexShNavn, adj=1, line=0.25)	
+          mtext(at=c(overPos, pos), c(2013, Ngr[1,sortInd]), line=-0.5, adj=1, cex=0.8, las=1, side=4)
+          mtext(at=c(overPos+0.3*log(max(pos)), overPos, pos), c('N', 2014, Ngr[2,sortInd]), line=2, adj=1, cex=0.8, las=1, side=4)
+          mtext(at=c(overPos, pos), c(2015, Ngr[3,sortInd]), line=4.5, adj=1, cex=0.8, las=1, side=4)
           lines(x=rep(ResAar[3], 2), y=c(ybunn, ytopp), col=farger[1], lwd=2)
  } else {
        legend('topright', xjust=1, cex=1, lwd=2, col=farger[2],
@@ -538,11 +543,10 @@ if (siste3aar ==1) { #Resultater for hvert av de siste 3 år.
        mtext(at=max(pos)+0.5*log(max(pos)), paste0('(N)' ), side=2, las=1, cex=cexShNavn, adj=1, line=0.25)	
        lines(x=rep(AndelHele, 2), y=c(ybunn, ytopp), col=farger[1], lwd=2)
  }
-          mtext(at=pos+max(pos)*0.0045, paste0(GrNavnSort, ' (', Ngrtxt[sortInd],')'), side=2, las=1, cex=cexShNavn, adj=1, line=0.25)	#Legge på navn som eget steg
-          mtext(at=pos+max(pos)*0.0045, paste0(GrNavnSort, ' (', Ngrtxt[sortInd],')'), side=2, las=1, cex=cexShNavn, adj=1, line=0.25)	#Legge på navn som eget steg
+          mtext(at=pos+max(pos)*0.0045, GrNavnSort, side=2, las=1, cex=cexShNavn, adj=1, line=0.25)	#Legge på navn som eget steg
           title(Tittel, line=1, font.main=1, cex.main=1.3)
 
-          text(x=0.01, y=pos+0.1, andeltxt, #x=AndelerGrSort+xmax*0.01
+          text(x=xmax*0.01, y=pos+0.1, andeltxt, #x=AndelerGrSort+xmax*0.01
                las=1, cex=0.8, adj=0, col=farger[1])	#Andeler, hvert sykehus
 
           #Tekst som angir hvilket utvalg som er gjort

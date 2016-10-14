@@ -23,6 +23,7 @@ RegData1 <-
 RegData <-
       merge(RegData1, RHFInnb[,c('BoRHF', "KommNr", "Aar")], by.x = c("Kommunenr", "OpAar"),
             by.y = c("KommNr", "Aar"), all.x = TRUE, all.y = FALSE)
+RegData <- RegData[which(RegData$OpAar %in% 2013:2015),]
 
 #write.table(RegData, file='RegDataTilTest.csv', sep=';', row.names = F)
 #Mister BoHF for registreringer som mangler bydelkode for Oslo. Disse kan få BoRHF. Legger derfor til BoRHF og BoHF separat
@@ -44,8 +45,8 @@ siste3aar <- 1
 AKjust <- 1
 enhetsUtvalg <- 0 # 0-hele landet, 4–egen shusgruppe, 7–egen region
 grVar <- 'BoHF'  #ShNavn, Fylke, BoHF, BoRHF
-valgtVar <- 'BeinsmLavPre'   #BeinsmEndrLav', BeinsmLavPre, OswEndr13, OswEndr20, OswEndr30pst, Osw48, Verre
-outfile <- paste0(valgtVar, '_', grVar, AKjust,'Aar.pdf')
+valgtVar <- 'SympVarighUtstr'   #BeinsmEndrLav', SympVarighUtstr, OswEndr13, OswEndr20, OswEndr30pst, Osw48, Verre
+outfile <- paste0(valgtVar, '_', grVar, AKjust,'Aar.png')
 
 RyggFigAndelerGrVarAar(
       RegData = RegData, valgtVar = valgtVar, datoFra = datoFra, datoTil = datoTil,
