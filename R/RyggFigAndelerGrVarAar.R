@@ -49,7 +49,7 @@
 #'                BoRHF - Pasienten bor i boområdene til det angitte RHF.
 #' @param valgtVar Variabelen det skal vises resultat for. Se \strong{Details} for oversikt.
 #' @param siste3aar 0:Viser resultatat for hele perioden samlet, 1: Viser resultat for hvert av de siste tre år
-#' @param AKjust Alders-og kjønnsjustering når grVar er boområder. Basert på 4 aldersgrupper gruppert ut fra alderskvartilene.
+#' @param AKjust Alders-og kjønnsjustering når grVar er boområder. Basert på 3 aldersgrupper gruppert ut fra alderskvartilene.
 #'          0:ikke juster, 1:juster for alder og kjønn
 #'
 #' @return Figur med...
@@ -383,51 +383,15 @@ if (valgtVar == 'Osw48') {
      #----------------------------------------------------------------------------------------------
  #KODEN MÅ KOMPRIMERES!!!!!!!!!:
 if (siste3aar ==1) { #Resultater for hvert av de siste 3 år.
-	 if (AKjust == 1) { #Alders-og kjønnsjustering
-	 #    if (grVar %in% c('BoHF', 'BoRHF')) { #Vise resultat for tre år. Alders-og kjønnsjustering
-      if(N > 0) {Ngr <- table(RegData[ ,c('OpAar', 'grVar')])}	else {Ngr <- 0}
+	 katVariable <- c('OpAar', 'grVar')
+	   Nvar <- tapply(RegData$Variabel, RegData[ ,katVariable], sum, na.rm=T) #Variabel er en 0/1-variabel.
+      if(N > 0) {Ngr <- table(RegData[ ,katVariable])}	else {Ngr <- 0}
+ 
+ #Sjekk for AK-justering
+ if (AKjust == 1) { #Alders-og kjønnsjustering
       Nvar <- tapply(RegData$Variabel, RegData[ ,c('OpAar', 'grVar')], sum, na.rm=T) #Variabel er en 0/1-variabel.
-	       
-	#----------Alders- og kjønnsjustering-----------------------  
-	#RegData inneholder både alder, kjønn og bo-områder.
-		 #Velger 4 aldersgrupper
-		 aldInndel <- quantile(RegData$Alder, c(33,67)/100, na.rm = T)  #c(25, 50, 75)
-		 #25% 50% 75% Hele populasjonen gir 43,57,67
-		 #37  46  57
-		 #aldKvant <- c(36,45,56)
-		 aldgr <- c(minald-1,aldInndel,85)
-		 RegData$AlderGr <- cut(RegData$Alder,aldgr) #grensene er øverste grense i aldersintervallet
-		 
-		 #Må finne andel av normalpopulasjonen i disse gruppene ut fra befolkningsfil
-		 #For alders-og kjønnsstandardisering:
-		 Innb2015aldkj <- read.table('./Innbyggere2015aldkj.csv', sep=';', header = T, encoding = 'UTF-8')
-		 Innb2015aldkj$AlderGr <- cut(Innb2015aldkj$Alder,aldgr)
-		 PopAldKjGr <- aggregate(AntInnb ~ ErMann+AlderGr, data=Innb2015aldkj,FUN=sum)
-		 PopAldKjGr$Vekt <- prop.table((PopAldKjGr$AntInnb))#PopAldKjGr$AntInnb/sum(PopAldKjGr$AntInnb) 
-		 
-
-		 RegData$OpAar <- factor(RegData$OpAar, exclude = "")
-		 RegData$ErMann <- factor(RegData$ErMann, exclude = "")
-		 grupperingsVar <- c('grVar', 'OpAar', 'ErMann', 'AlderGr')
-		 AndelAKGr <- aggregate(Variabel ~ ErMann+AlderGr+OpAar+grVar, data=RegData, drop=FALSE, #Skal ha: 2*3*4*AntGr=504
-						   FUN = function(x) AndelStGr = sum(x)/length(x)) #Variabel er en 0/1-variabel.
-		 
-		  #Alternativt:
-		 #Nvar <- tapply(RegData$Variabel, RegData[ ,grupperingsVar], sum, na.rm=T) #Variabel er en 0/1-variabel.
-		 #Ngr <- table(RegData[ ,grupperingsVar])
-		 #if(N > 0) {Ngr <- table(RegData[ ,grupperingsVar])}	else {Ngr <- 0}
-		 AndelOgVekt <- cbind(AndelAKGr, Vekt = PopAldKjGr$Vekt)
-		 AndelVekt <- cbind(AndelOgVekt, AndelVektGr = AndelOgVekt$Variabel*AndelOgVekt$Vekt)
-		 AndelerGrStand <- aggregate(AndelVektGr ~ OpAar+grVar, data=AndelVekt, FUN = function(x) 100*sum(x))
-		 AndelerGr <- matrix(AndelerGrStand$AndelVektGr, nrow=3, ncol=length(levels(RegData$grVar)), 
-		                     dimnames=list((AarMax-2):AarMax, levels(RegData$grVar)))
-		 
-		 
-	}  else {	#Sjekk for AK-justering
-#---------Beregninger, årsvariasjon, uten alders- og kjønnsjustering  -------
-      
-     Nvar <- tapply(RegData$Variabel, RegData[ ,c('OpAar', 'grVar')], sum, na.rm=T) #Variabel er en 0/1-variabel.
-     if(N > 0) {Ngr <- table(RegData[ ,c('OpAar', 'grVar')])}	else {Ngr <- 0}
+ 	  AndelerGr <- StandAlderKjonn((RegData=RegData, antAldgr=3, katVariable=katVariable )     
+}  else {	
      AndelerGr <- round(100*Nvar/Ngr,2)
       }
      #Må ta bort punkt/søyler for de som har for få registreringer for det aktuelle året.
@@ -436,12 +400,10 @@ if (siste3aar ==1) { #Resultater for hvert av de siste 3 år.
      AndelerGr[indGrUt] <- NA	#dummy0	#Alle andeler med for lav N
      sortInd <- order(as.numeric(AndelerGr[AarMaxTxt,]), decreasing=sortering)
      AndelerSisteSort <- AndelerGr[AarMaxTxt,sortInd]
-     #vent     AndelerSisteSort[is.na(AndelerSisteSort)] <- 0
      
      AntGrNgr <- length(which(Ngr[AarMaxTxt, ] >= NminAar))	#"Gyldige" grupper
      Ngrtxt <- Ngr[AarMaxTxt, ]	#paste0('N=', as.character(Ngr[AarMaxTxt, ]))	
      Ngrtxt[which(Ngr[AarMaxTxt, ] < NminAar)] <- paste0('<', NminAar) #paste0('N<', NminAar)	
-     #AndelerGrSort <- AndelerSisteSort[sortInd] #Bare siste år
      AndelerGrSort <- AndelerGr[ ,sortInd]
      GrNavnSort <- colnames(AndelerGrSort) #names(AndelerGrSort)    #paste0(names(Ngr)[sortInd], ', ',Ngrtxt[sortInd])
      

@@ -16,7 +16,6 @@ opKat <- 1  #Bare elektive pasienter
 tidlOp <- 4 #Bare primæroperasjoner
 enhetsUtvalg <- 0 # 0-hele landet, 4–egen shusgruppe, 7–egen region
 grVar <- 'ShNavn'  #ShNavn, Fylke, BoHF, BoRHF
-enhetsutvalg <- 0
 #valgtVar <- 'KpInf3Mnd'   #BeinsmEndrLav', BeinsmLavPre, DegSponSSSten,OswEndr13, OswEndr20, OswEndr30pst, Osw48
 #Verre, KpInf3Mnd
 #outfile <- paste0(valgtVar, '_', grVar,'.png')

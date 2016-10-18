@@ -18,7 +18,7 @@ RHFInnb <-
 #RegData1 <- merge(NKRdata, BoStederInnb, by.x = c("Kommunenr", "OpAar", "Bydelkode"),
 #                by.y = c("KommNr", "Aar", "BydelNum"), all.x = TRUE, all.y = FALSE)
 RegData1 <-
-      merge(            NKRdata, BoStederInnb[,c('BoHF', 'Fylke', "KommNr", "Aar", "BydelNum")],
+      merge(NKRdata, BoStederInnb[,c('BoHF', 'Fylke', "KommNr", "Aar", "BydelNum")],
             by.x = c("Kommunenr", "OpAar", "Bydelkode"), by.y = c("KommNr", "Aar", "BydelNum"), all.x = TRUE, all.y = FALSE)
 RegData <-
       merge(RegData1, RHFInnb[,c('BoRHF', "KommNr", "Aar")], by.x = c("Kommunenr", "OpAar"),
@@ -37,8 +37,8 @@ erMann <- ''
 tidlOp <- 99
 minald <- 20
 maxald <- 85
-opKat <- 99  #Bare elektive pasienter
-tidlOp <- 99 #Bare primæroperasjoner
+opKat <- 99  #Hastegrad
+tidlOp <- 99 #
 ktr <- 1
 hovedkat <- 99 		#Hovedinngrep, 0-7, Standard: 99, dvs alle operasjoner
 siste3aar <- 1
