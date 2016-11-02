@@ -6,9 +6,9 @@
 \usage{
 RyggFigAndelerGrVarAar(RegData, valgtVar, datoFra = "2007-01-01",
   datoTil = "3000-12-31", minald = 0, maxald = 130, erMann = "",
-  hovedkat = 99, tidlOp = "", hentData = 0, preprosess = 1,
-  enhetsUtvalg = 0, grVar = "ShNavn", tittel = 1, ktr = 0, reshID,
-  outfile = "")
+  hovedkat = 99, tidlOp = "", opKat = 99, hentData = 0,
+  preprosess = 1, enhetsUtvalg = 0, grVar = "ShNavn", tittel = 1,
+  ktr = 0, reshID, outfile = "", siste3aar = 0, AKjust = 0)
 }
 \arguments{
 \item{RegData}{En dataramme med alle nødvendige variabler fra registeret}
@@ -35,6 +35,8 @@ RyggFigAndelerGrVarAar(RegData, valgtVar, datoFra = "2007-01-01",
 3: Tidl. operert annet og sm. nivå,
 4: Primæroperasjon}
 
+\item{opKat}{Hastegrad av operasjon 1: Elektivt, 2: Akutt, 3: Halvøyeblikkelig}
+
 \item{hentData}{Gjør spørring mot database
 0: Nei, RegData gis som input til funksjonen (Standard)
 1: Ja}
@@ -58,6 +60,11 @@ hvilken enhet i spesialisthelsetjenesten brukeren tilhører}
 
 \item{outfile}{Navn på fil figuren skrives til. Standard: '' (Figur skrives
 til systemets standard utdataenhet (som regel skjerm))}
+
+\item{siste3aar}{0:Viser resultatat for hele perioden samlet, 1: Viser resultat for hvert av de siste tre år}
+
+\item{AKjust}{Alders-og kjønnsjustering når grVar er boområder. Basert på 3 aldersgrupper gruppert ut fra alderskvartilene.
+0:ikke juster, 1:juster for alder og kjønn}
 }
 \value{
 Figur med...

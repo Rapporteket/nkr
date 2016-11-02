@@ -6,9 +6,9 @@
 #' @param fargepalett - Velge fargepalett, standard:BlaaOff ("offentliggjøringsfargene")
 #'
 #' @export
-RyggUtvalg <- function(RegData, datoFra, datoTil, minald=0, maxald=130, erMann='', hovedkat=99, 
-           aar=0, opKat=99, tidlOp='', fargepalett='BlaaOff')	#insttype, 'BlaaOff'
-{
+
+RyggUtvalg <- function(RegData, datoFra, datoTil, minald=0, maxald=130, erMann='', hovedkat=99, #insttype, 'BlaaOff'
+           aar=0, opKat=99, tidlOp='', fargepalett='BlaaOff') {
 
 # Definer intersect-operator
       "%i%" <- intersect
@@ -64,5 +64,5 @@ utvalgTxt <- c(paste('Operasjonsdato: ', if (N>0) {min(RegData$InnDato, na.rm=T)
 
 
 UtData <- list(RegData=RegData, utvalgTxt=utvalgTxt, fargepalett=fargepalett) #GronnHNpms624,
-return(invisible(UtData)) 
+return(invisible(UtData))
 }

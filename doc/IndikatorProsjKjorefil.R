@@ -3,14 +3,14 @@ setwd("C:/ResultattjenesteGIT/nkr/")
 library(nkr)
 
 NKRdata <-
-      read.table('C:/Registre/nkr/data/NKR2010_2015.csv', sep = ';', header = T, encoding = 'UTF-8')
+      read.table('C:/VariasjonKvalitet/NKR2013_2015VarKval.csv', sep = ';', header = T, encoding = 'UTF-8')
 
-Innbyggere2007_2015kjonn <-
-      read.table('./Innbyggere2007_2015kjonn.csv', sep = ';', header = T, encoding = 'UTF-8')
-Innbyggere2007_2015kjonn$BydelNum <-
-      factor(as.character(Innbyggere2007_2015kjonn$BydelNum), exclude = "")
-BoStederInnb <- aggregate(Innbyggere2007_2015kjonn$AntInnb,
-                          by = Innbyggere2007_2015kjonn[,c('Kommune','KommNr', 'BydelNum','BoRHF',"BoHF", 'Fylke', 'Aar')], 
+Innbyggere2013_2015kjonn <-
+      read.table('./Innbyggere2013_2015kjonn.csv', sep = ';', header = T, encoding = 'UTF-8')
+Innbyggere2013_2015kjonn$BydelNum <-
+      factor(as.character(Innbyggere2013_2015kjonn$BydelNum), exclude = "")
+BoStederInnb <- aggregate(Innbyggere2013_2015kjonn$AntInnb,
+                          by = Innbyggere2013_2015kjonn[,c('Kommune','KommNr', 'BydelNum','BoRHF',"BoHF", 'Fylke', 'Aar')], 
                           FUN = 'sum')#'BoHF',
 RHFInnb <-
       aggregate(BoStederInnb$x, by = BoStederInnb[,c('KommNr', 'BoRHF','Aar')], FUN = 'sum')
@@ -23,7 +23,7 @@ RegData1 <-
 RegData <-
       merge(RegData1, RHFInnb[,c('BoRHF', "KommNr", "Aar")], by.x = c("Kommunenr", "OpAar"),
             by.y = c("KommNr", "Aar"), all.x = TRUE, all.y = FALSE)
-RegData <- RegData[which(RegData$OpAar %in% 2013:2015),]
+#RegData <- RegData[which(RegData$OpAar %in% 2013:2015),]
 
 #write.table(RegData, file='RegDataTilTest.csv', sep=';', row.names = F)
 #Mister BoHF for registreringer som mangler bydelkode for Oslo. Disse kan få BoRHF. Legger derfor til BoRHF og BoHF separat
@@ -41,17 +41,10 @@ opKat <- 99  #Hastegrad
 tidlOp <- 99 #
 ktr <- 1
 hovedkat <- 99 		#Hovedinngrep, 0-7, Standard: 99, dvs alle operasjoner
-siste3aar <- 1
 AKjust <- 1
-enhetsUtvalg <- 0 # 0-hele landet, 4–egen shusgruppe, 7–egen region
 grVar <- 'BoHF'  #ShNavn, Fylke, BoHF, BoRHF
 valgtVar <- 'SympVarighUtstr'   #BeinsmEndrLav', SympVarighUtstr, OswEndr13, OswEndr20, OswEndr30pst, Osw48, Verre
 outfile <- paste0(valgtVar, '_', grVar, AKjust,'Aar.png')
-
-RyggFigAndelerGrVarAar(
-      RegData = RegData, valgtVar = valgtVar, datoFra = datoFra, datoTil = datoTil,
-      minald = minald, maxald = maxald, erMann = erMann, hovedkat = hovedkat,ktr = ktr, opKat=opKat, tidlOp=tidlOp,
-      preprosess = 1, enhetsUtvalg = 10, reshID = reshID, outfile = outfile, grVar = grVar,  siste3aar=siste3aar, AKjust=AKjust)
 
 AKjustDum <- 1 #Settes automatisk til 0 hvis grVar ulik BoRHF eller BoHF
 grupperingInd <- c('ShNavn', 'BoHF') #c('Fylke', 'ShNavn', 'BoRHF', 'BoHF')
@@ -61,10 +54,10 @@ for (grVar in grupperingInd) {
             outfile <- paste0(valgtVar, '1_1', grVar, AKjust,'Aar.png')
             hovedkat <- 1
             opKat <- 1  #Bare elektive pasienter
-            RyggFigAndelerGrVarAar(
+            RyggFigAndelerGrVarAarVarKval(
                   RegData = RegData, valgtVar = valgtVar, datoFra = datoFra, datoTil = datoTil, minald = minald, 
                   maxald = maxald, erMann=erMann, hovedkat = hovedkat, ktr = ktr,preprosess=1, opKat=opKat, tidlOp=tidlOp,
-                  enhetsUtvalg = 10, reshID = reshID, outfile = outfile, grVar = grVar, siste3aar=siste3aar, AKjust=AKjust)
+                  reshID = reshID, outfile = outfile, grVar = grVar, AKjust=AKjust)
       }      
 
 AKjustDum <- 1 #Settes automatisk til 0 hvis grVar ulik BoRHF eller BoHF
@@ -75,7 +68,7 @@ for (grVar in grupperingInd) {
             outfile <- paste0(valgtVar, '1_1', grVar, AKjust,'Aar.pdf')
             hovedkat <- 1
             opKat <- 1  #Bare elektive pasienter
-            RyggFigAndelerGrVarAar(
+            RyggFigAndelerGrVarAarVarKval(
                   RegData = RegData, valgtVar = valgtVar, datoFra = datoFra, datoTil = datoTil, minald = minald, 
                   maxald = maxald, erMann=erMann, hovedkat = hovedkat, ktr = ktr,preprosess=1, opKat=opKat, tidlOp=tidlOp,
                   enhetsUtvalg = 10, reshID = reshID, outfile = outfile, grVar = grVar, siste3aar=siste3aar, AKjust=AKjust)
@@ -83,7 +76,7 @@ for (grVar in grupperingInd) {
       valgtVar <- 'KpInf3Mnd'
             hovedkat <- 1:3
             outfile <- paste0(valgtVar, '123_', grVar, AKjust,'Aar.pdf')
-            RyggFigAndelerGrVarAar(
+            RyggFigAndelerGrVarAarVarKval(
                   RegData = RegData, valgtVar = valgtVar, datoFra = datoFra, datoTil = datoTil,hovedkat=hovedkat,
                   minald = minald, maxald = maxald, erMann = erMann, ktr = ktr,  siste3aar=siste3aar, AKjust=AKjust,
                   preprosess = 1, reshID = reshID, outfile = outfile, grVar = grVar)

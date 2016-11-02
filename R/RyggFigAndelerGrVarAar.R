@@ -361,7 +361,6 @@ if (valgtVar == 'Osw48') {
       #Gjør utvalg
 	 if (siste3aar == 1) {
 	 	AarMax <- max(RegData$OpAar)	#Siste år
-	 	#AarMax <- min(max(RegData$OpAar), as.Date(datoTil))	#Siste år
 	 	AarMaxTxt <- as.character(AarMax)
 		RegData <- RegData[which(RegData$OpAar %in% c((AarMax-2):AarMax)), ]
 		}
@@ -372,12 +371,15 @@ if (valgtVar == 'Osw48') {
      utvalgTxt <- RyggUtvalg$utvalgTxt
 #SJEKK:
      RegData <- RegData[which(!is.na(RegData[ ,grVar])), ]
-     Ngrense <- 30		#Minste antall registreringer for at ei gruppe skal bli vist
      names(RegData)[which(names(RegData) == grVar)] <- 'grVar'
      #grVar kan være sykehus, boområde osv.  
      #Hvis siste år for få reg - ta også bort resultater fra foregående år.
      NminTot <- 50 #Ikke i bruk
-     NminAar <- 30
+     Ngrense <- switch(grVar,	#Minste antall registreringer for at ei gruppe skal bli vist
+					ShNavn = 10,
+					BoHF = 30,
+					BehHF = 30) 
+	NminAar <- Ngrense
      N <- dim(RegData)[1] #table(RegData$OpAar)      #Antall per år
      
      #----------------------------------------------------------------------------------------------
@@ -390,7 +392,7 @@ if (siste3aar ==1) { #Resultater for hvert av de siste 3 år.
  #Sjekk for AK-justering
  if (AKjust == 1) { #Alders-og kjønnsjustering
       Nvar <- tapply(RegData$Variabel, RegData[ ,c('OpAar', 'grVar')], sum, na.rm=T) #Variabel er en 0/1-variabel.
- 	  AndelerGr <- StandAlderKjonn((RegData=RegData, antAldgr=3, katVariable=katVariable )     
+ 	  AndelerGr <- StandAlderKjonn(RegData=RegData, antAldgr=3, katVariable=katVariable)     
 }  else {	
      AndelerGr <- round(100*Nvar/Ngr,2)
       }
