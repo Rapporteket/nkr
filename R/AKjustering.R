@@ -54,6 +54,10 @@ StandAlderKjonn  <- function(RegData, stdPop, antAldgr, katVariable) {
 		 #RegData$OpAar <- factor(RegData$OpAar, exclude = "") #Ikke nødvendig å lage faktor?
 		 #RegData$ErMann <- factor(RegData$ErMann, exclude = "")
 		 grupperingsVar <- c(katVariable, 'ErMann', 'AlderGr') #c('grVar', 'OpAar', 'ErMann', 'AlderGr')
+		 teller <- aggregate(RegData$Variabel,  by=RegData[ ,grupperingsVar], drop=FALSE, 
+		           FUN = sum)
+		 nevner <- aggregate(RegData$Variabel,  by=RegData[ ,grupperingsVar], drop=FALSE, 
+		                     FUN = sum)
 		 AndelAKGr <-aggregate(RegData$Variabel,  by=RegData[ ,grupperingsVar], drop=FALSE, 
 						FUN = function(x) AndelStGr = sum(x)/length(x))
 					#	aggregate(Variabel ~ ErMann+AlderGr+OpAar+grVar, data=RegData, drop=FALSE, #Skal ha: 2*3*4*AntGr=504
@@ -66,16 +70,26 @@ StandAlderKjonn  <- function(RegData, stdPop, antAldgr, katVariable) {
 		 #if(N > 0) {Ngr <- table(RegData[ ,grupperingsVar])}	else {Ngr <- 0}
 		 AndelOgVekt <- cbind(AndelAKGr, Vekt = PopAldKjGr$Vekt)
 		 AndelVekt <- cbind(AndelOgVekt, AndelVektGr = AndelOgVekt$Andel*AndelOgVekt$Vekt)
+		 indNAN <- which(is.nan(AndelVekt$AndelVektGr))
+		 AndelVekt$AndelVektGr[indNAN] <- 0
 		 
-	 AndelerGrStand <- if (length(katVariable)==1) { 
-	                          aggregate(AndelVekt$AndelVektGr, by=list(AndelVekt[ ,katVariable]), drop=FALSE, FUN = function(x) 100*sum(x))
+	 antKatVar <- length(katVariable)
+	 if (antKatVar==1) { 
+	       AndelerGrStand <- aggregate(AndelVekt$AndelVektGr, by=list(AndelVekt$OpAar), drop=FALSE, FUN = function(x) 100*sum(x))
+                  names(AndelerGrStand)[1] <- 'OpAar' 
 	                        } else {
-	                          aggregate(AndelVekt$AndelVektGr, by=AndelVekt[ ,katVariable], drop=FALSE, FUN = function(x) 100*sum(x))}
+	       AndelerGrStand <- aggregate(AndelVekt$AndelVektGr, by=AndelVekt[ ,katVariable], drop=FALSE, FUN = function(x) 100*sum(x))}
 	                          
 				#aggregate(AndelVektGr ~ OpAar+grVar, data=AndelVekt, FUN = function(x) 100*sum(x))
-	 AndelerGr <- matrix(AndelerGrStand$x, nrow=3, ncol=length(levels(RegData$grVar)), 
-	                     dimnames=list(min(AndelAKGr$OpAar):max(AndelAKGr$OpAar), levels(RegData$grVar)))
-		                #        dimnames=list((AarMax-2):AarMax, levels(RegData$grVar)))
+	 dimnavn <- names(table(AndelerGrStand[,katVariable[1]]))
+	 teller <- 2
+	 while (teller <= antKatVar ){
+	       dimnavn <- list(dimnavn, names(table(AndelerGrStand[,katVariable[teller]])))
+	       teller <- teller+1}
+	 if (antKatVar ==1 ) dimnavn <- list(dimnavn,'Norge')
+	 AndelerGr <- matrix(AndelerGrStand$x, nrow=3, ncol=dim(AndelerGrStand)[1]/3,  
+	                     dimnames=dimnavn)
+	                           #list(min(AndelAKGr$OpAar):max(AndelAKGr$OpAar), levels(RegData$grVar)))
 		 return(StandAndeler=AndelerGr)
 		 }
 	

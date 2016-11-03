@@ -56,7 +56,7 @@
 
 RyggFigAndelerGrVarAarVarKval <- function(RegData, valgtVar, datoFra='2007-01-01', datoTil='3000-12-31', 
                             minald=0, maxald=130, erMann='', hovedkat=99, tidlOp='', opKat=99, hentData=0, 
-                            preprosess=1,grVar='ShNavn', tittel=1, ktr=0, reshID, outfile='',
+                            preprosess=1,grVar='ShNavn', tittel=1, ktr=0, outfile='',
                             AKjust=0) {
 
 	if (hentData == 1) {		
@@ -124,9 +124,10 @@ RyggFigAndelerGrVarAarVarKval <- function(RegData, valgtVar, datoFra='2007-01-01
  #Sjekk for AK-justering
  if (AKjust == 1) { #Alders-og kjønnsjustering
       #Nvar <- tapply(RegData$Variabel, RegData[ ,c('OpAar', 'grVar')], sum, na.rm=T) #Variabel er en 0/1-variabel.
- 	  AndelerGr <- StandAlderKjonn(RegData=RegData, stdPop='Register', antAldgr=3, katVariable=katVariable)
- 	  StandAlderKjonn(RegData=RegData, stdPop='Register', antAldgr=3, katVariable='OpAar')
-}  else {	
+ 	   StandGrVar <- StandAlderKjonn(RegData=RegData, stdPop='Register', antAldgr=3, katVariable=katVariable)
+ 	   StandNorge <- StandAlderKjonn(RegData=RegData, stdPop='Register', antAldgr=3, katVariable='OpAar')
+ 	    AndelerGr <- cbind(StandGrVar, StandNorge)
+      } else {	
      AndelerGr <- round(100*Nvar/Ngr,2)
       }
      #Må ta bort punkt/søyler for de som har for få registreringer for det aktuelle året.
@@ -178,24 +179,28 @@ RyggFigAndelerGrVarAarVarKval <- function(RegData, valgtVar, datoFra='2007-01-01
           NutvTxt <- length(utvalgTxt)
           vmarg <- max(0, strwidth(GrNavnSort, units='figure', cex=cexShNavn)*0.85)
           #NB: strwidth oppfører seg ulikt avh. av device...
-          par('fig'=c(vmarg, 0.9, 0, 1-0.02*(NutvTxt-1)))	#Har alltid datoutvalg med
+          par('fig'=c(vmarg, 0.85, 0, 1-0.02*(NutvTxt-1)))	#Har alltid datoutvalg med
 
-          xmax <- min(max(AndelerGrSort, na.rm = T),100) #*1.15
+          xmax <- 50    #min(max(AndelerGrSort, na.rm = T),100)*1.05     #1.15
           xaksetxt <- ifelse(AKjust==1, 'Andel (%), justert for alder og kjønn', 'Andel (%)')
-          pos <- barplot(as.numeric(AndelerSisteSort), horiz=T, border=NA, col=farger[3], #main=Tittel,
+          soyleFarger <- rep(farger[3], AntGrNgr)
+          soyleFarger[which(names(AndelerSisteSort)=='Norge')] <- farger[4]
+ 
+          pos <- barplot(as.numeric(AndelerSisteSort), horiz=T, border=NA, col=soyleFarger, #farger[3], #main=Tittel,
                          xlim=c(0,xmax), ylim=c(0.05, 1.27)*length(GrNavnSort), font.main=1, xlab=xaksetxt, las=1, cex.names=cexShNavn*0.9)
           ybunn <- 0.1
           ytopp <- pos[AntGrNgr]+ 0.4	#-length(indGrUt)]
       	indMed <- 1:AntGrNgr
       	Aar1txt <- as.character(AarMax-2)
       	Aar2txt <- as.character(AarMax-1)
-      	Naar <- rowSums(Ngr, na.rm=T)
-      	ResAar <- 100*rowSums(Nvar, na.rm=T)/Naar
-      	points(y=pos[indMed], x=AndelerGrSort[Aar1txt, indMed], cex=1.4, pch=19)    #col=farger[2],
-      	points(y=pos[indMed], x=AndelerGrSort[Aar2txt, indMed], cex=1.4)     #col=farger[4], 
+      	#Naar <- rowSums(Ngr, na.rm=T)
+      	#ResAar <- 100*rowSums(Nvar, na.rm=T)/Naar
+      	points(y=pos[indMed], x=AndelerGrSort[Aar1txt, indMed], cex=1.4)    
+      	points(y=pos[indMed], x=AndelerGrSort[Aar2txt, indMed], cex=1.4, pch=19)      
       	legend('top', inset=c(0.1,0), xjust=1,cex=0.9, bty='o', bg='white', box.col='white',
-      	     lwd=c(NA,NA,NA,2), pch=c(1,19,15,NA), pt.cex=c(1.2, 1.2, 2, 1), col=c('black','black',farger[3],farger[1]),
-                 col=3, legend = c(Aar1txt, Aar2txt, AarMax)
+      	       lwd=c(NA,NA,NA), pch=c(1,19,15), pt.cex=c(1.2, 1.2, 1.8), col=c('black','black',farger[3]),
+      	       #lwd=c(NA,NA,NA,2), pch=c(1,19,15,NA), pt.cex=c(1.2, 1.2, 2, 1), col=c('black','black',farger[3],farger[1]),
+                  ncol=3, legend = c(Aar1txt, Aar2txt, AarMax)
       	     # legend=c(paste0(Aar1txt, ' (', sprintf('%.1f', ResAar[1]), ' %, ', 'N=', Naar[1],')'),
                  #         paste0(Aar2txt, ' (', sprintf('%.1f', ResAar[2]), ' %, ', 'N=', Naar[2],')'),
                   #        paste0(AarMax, ' (', sprintf('%.1f', ResAar[3]), ' %, ', 'N=', Naar[3],')'),
@@ -203,9 +208,9 @@ RyggFigAndelerGrVarAarVarKval <- function(RegData, valgtVar, datoFra='2007-01-01
                   )
           overPos <- max(pos)+0.4*log(max(pos))
           #mtext(at=overPos, paste0('(N, ', AarMax, ')'), side=2, las=1, cex=cexShNavn, adj=1, line=0.25)	
-          mtext(at=c(overPos, pos), c(2013, Ngr[1,sortInd]), line=-0.5, adj=1, cex=0.8, las=1, side=4)
-          mtext(at=c(overPos+0.3*log(max(pos)), overPos, pos), c('N', 2014, Ngr[2,sortInd]), line=2, adj=1, cex=0.8, las=1, side=4)
-          mtext(at=c(overPos, pos), c(2015, Ngr[3,sortInd]), line=4.5, adj=1, cex=0.8, las=1, side=4)
+          mtext(at=c(overPos, pos), c(2013, Ngr[1,sortInd]), line=0.5, adj=1, cex=0.85, las=1, side=4)
+          mtext(at=c(overPos+0.3*log(max(pos)), overPos, pos), c('N', 2014, Ngr[2,sortInd]), line=3, adj=1, cex=0.85, las=1, side=4)
+          mtext(at=c(overPos, pos), c(2015, Ngr[3,sortInd]), line=5.5, adj=1, cex=0.85, las=1, side=4)
           #lines(x=rep(ResAar[3], 2), y=c(ybunn, ytopp), col=farger[1], lwd=2)
 
           mtext(at=pos+max(pos)*0.0045, GrNavnSort, side=2, las=1, cex=cexShNavn, adj=1, line=0.25)	#Legge på navn som eget steg

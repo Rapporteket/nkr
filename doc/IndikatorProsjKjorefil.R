@@ -30,7 +30,7 @@ RegData <-
 
 
 #__Inndata til funksjon:
-reshID <- 601161	#999995	#999999	#100407 (Kristiansand)	#601161(UNN), 100133(Arendal),105783(StOlav),103618(Drammen)	#102949	#   #Må sendes med til funksjon
+#reshID <- 601161	#999995	#999999	#100407 (Kristiansand)	#601161(UNN), 100133(Arendal),105783(StOlav),103618(Drammen)	#102949	#   #Må sendes med til funksjon
 datoFra <- '2013-01-01'
 datoTil <- '2015-12-31'
 erMann <- ''
@@ -57,9 +57,10 @@ for (grVar in grupperingInd) {
             RyggFigAndelerGrVarAarVarKval(
                   RegData = RegData, valgtVar = valgtVar, datoFra = datoFra, datoTil = datoTil, minald = minald, 
                   maxald = maxald, erMann=erMann, hovedkat = hovedkat, ktr = ktr,preprosess=1, opKat=opKat, tidlOp=tidlOp,
-                  reshID = reshID, outfile = outfile, grVar = grVar, AKjust=AKjust)
+                  outfile = outfile, grVar = grVar, AKjust=AKjust)
       }      
 
+#GML:
 AKjustDum <- 1 #Settes automatisk til 0 hvis grVar ulik BoRHF eller BoHF
 grupperingInd <- c('ShNavn', 'BoHF') #c('Fylke', 'ShNavn', 'BoRHF', 'BoHF')
 for (grVar in grupperingInd) {
