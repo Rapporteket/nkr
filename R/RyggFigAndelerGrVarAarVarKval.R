@@ -172,8 +172,8 @@ RyggFigAndelerGrVarAarVarKval <- function(RegData, valgtVar, datoFra='2007-01-01
           #--------------------------FIGUR---------------------------------------------------
           #Innparametre: ...
 
-
-          FigTypUt <- rapbase::figtype(outfile, height=3*800, fargepalett=RyggUtvalg$fargepalett)
+          hoyde <- ifelse(grVar=='BoHF', 3*600, 3*800)
+          FigTypUt <- rapbase::figtype(outfile, height=hoyde, fargepalett=RyggUtvalg$fargepalett)
           farger <- FigTypUt$farger
           #Tilpasse marger for å kunne skrive utvalgsteksten
           NutvTxt <- length(utvalgTxt)
@@ -182,12 +182,18 @@ RyggFigAndelerGrVarAarVarKval <- function(RegData, valgtVar, datoFra='2007-01-01
           par('fig'=c(vmarg, 0.85, 0, 1-0.02*(NutvTxt-1)))	#Har alltid datoutvalg med
 
           xmax <- 50    #min(max(AndelerGrSort, na.rm = T),100)*1.05     #1.15
-          xaksetxt <- ifelse(AKjust==1, 'Andel (%), justert for alder og kjønn', 'Andel (%)')
+          xaksetxt <- 'Andel (%)' #ifelse(AKjust==1, 'Andel (%), justert for alder og kjønn'
+          yaksetxt <- ''
+          yaksetxt <- switch(grVar, 
+                             'BoHF' = 'Boområde/opptaksområde',
+                             'ShNavn' = 'Behandlende sykehus')
           soyleFarger <- rep(farger[3], AntGrNgr)
           soyleFarger[which(names(AndelerSisteSort)=='Norge')] <- farger[4]
  
           pos <- barplot(as.numeric(AndelerSisteSort), horiz=T, border=NA, col=soyleFarger, #farger[3], #main=Tittel,
-                         xlim=c(0,xmax), ylim=c(0.05, 1.27)*length(GrNavnSort), font.main=1, xlab=xaksetxt, las=1, cex.names=cexShNavn*0.9)
+                         xlim=c(0,xmax), ylim=c(0.05, 1.27)*length(GrNavnSort), font.main=1, xlab=xaksetxt, 
+                         las=1, cex.names=cexShNavn*0.9)
+          mtext(yaksetxt, side=2, line=ifelse(grVar=='BoHF',8,11))
           ybunn <- 0.1
           ytopp <- pos[AntGrNgr]+ 0.4	#-length(indGrUt)]
       	indMed <- 1:AntGrNgr
@@ -195,8 +201,8 @@ RyggFigAndelerGrVarAarVarKval <- function(RegData, valgtVar, datoFra='2007-01-01
       	Aar2txt <- as.character(AarMax-1)
       	#Naar <- rowSums(Ngr, na.rm=T)
       	#ResAar <- 100*rowSums(Nvar, na.rm=T)/Naar
-      	points(y=pos[indMed], x=AndelerGrSort[Aar1txt, indMed], cex=1.4)    
-      	points(y=pos[indMed], x=AndelerGrSort[Aar2txt, indMed], cex=1.4, pch=19)      
+      	points(y=pos[indMed], x=AndelerGrSort[Aar1txt, indMed], cex=1.5)    
+      	points(y=pos[indMed], x=AndelerGrSort[Aar2txt, indMed], cex=1.5, pch=19)      
       	legend('top', inset=c(0.1,0), xjust=1,cex=0.9, bty='o', bg='white', box.col='white',
       	       lwd=c(NA,NA,NA), pch=c(1,19,15), pt.cex=c(1.2, 1.2, 1.8), col=c('black','black',farger[3]),
       	       #lwd=c(NA,NA,NA,2), pch=c(1,19,15,NA), pt.cex=c(1.2, 1.2, 2, 1), col=c('black','black',farger[3],farger[1]),

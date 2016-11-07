@@ -28,6 +28,18 @@ RegData <-
 #write.table(RegData, file='RegDataTilTest.csv', sep=';', row.names = F)
 #Mister BoHF for registreringer som mangler bydelkode for Oslo. Disse kan få BoRHF. Legger derfor til BoRHF og BoHF separat
 
+#Endre sykehusnavn:
+  sykehusnavn <- read.table('E:/FELLES/Prosjekter/Indikatorprosjektet/Analyse/sykehusnavn.csv', header=TRUE, sep=";", encoding = 'UFT-8')
+  sykehusnavn <- sykehusnavn[,c(1,3)]
+  names(sykehusnavn) <- c("BehSh_nr","BehSh_navn")
+
+  RegData <- merge(RegData, sykehusnavn,
+                           by.x = "AvdNavnNum", by.y = "BehSh_nr", all.x = TRUE, all.y = FALSE)
+  names(RegData)
+  names(RegData)[which(names(RegData)=='AvdNavn')] <-  'AvdNavnLang'
+  names(RegData)[which(names(RegData)=='BehSh_navn')] <-  'AvdNavn'
+  
+
 
 #__Inndata til funksjon:
 #reshID <- 601161	#999995	#999999	#100407 (Kristiansand)	#601161(UNN), 100133(Arendal),105783(StOlav),103618(Drammen)	#102949	#   #Må sendes med til funksjon
