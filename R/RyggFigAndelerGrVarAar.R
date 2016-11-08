@@ -171,11 +171,11 @@ RyggFigAndelerGrVarAar <- function(RegData, valgtVar, datoFra='2007-01-01', dato
           #3/12mndSkjema. Andel med Fornøyd/litt fornøyd (1,2)
           #Kode 1:5,9: 'Fornøyd', 'Litt fornøyd', 'Verken eller', 'Litt misfornøyd', 'Misfornøyd', 'Ukjent')
  		  RegData$Fornoyd <- switch(as.character(ktr), 
-						'1'= RegData$FornoydBeh3mnd,
-						'2'= RegData$FornoydBeh12mnd)
+						'1'= RegData$Fornoyd3mnd,
+						'2'= RegData$Fornoyd12mnd)
           RegData <- RegData[which(RegData$Fornoyd %in% 1:5), ]
           RegData$Variabel[which(RegData$Fornoyd %in% 1:2)] <- 1
-          TittelUt <- paste0('Fornøyde pasienter, 3 mnd.' ,ktrtxt)
+          TittelUt <- paste0('Fornøyde pasienter' ,ktrtxt)
           sortering <- FALSE
      }
      if (valgtVar == 'Kp3Mnd') {
@@ -228,7 +228,7 @@ RyggFigAndelerGrVarAar <- function(RegData, valgtVar, datoFra='2007-01-01', dato
 						'2'= (RegData$OswTotPre - RegData$OswTot12mnd))
           RegData <- RegData[which(RegData$OswEndr >= -100), ]
           RegData$Variabel[which(RegData$OswEndr <13)] <- 1
-          TittelUt <- paste0('Forbedring av Oswestry-skår < 13 poeng', ktrtxt)
+          TittelUt <- paste0('Forbedring av Oswestry-skår < 13 p.', ktrtxt)
     }
       if (valgtVar == 'OswEndr20') {
             RegData$OswEndr <- switch(as.character(ktr), 
@@ -236,7 +236,7 @@ RyggFigAndelerGrVarAar <- function(RegData, valgtVar, datoFra='2007-01-01', dato
                                       '2'= (RegData$OswTotPre - RegData$OswTot12mnd))
             RegData <- RegData[which(RegData$OswEndr >= -100), ]
             RegData$Variabel[which(RegData$OswEndr >20)] <- 1
-            TittelUt <- paste0('Forbedring av Oswestry-skår > 20 poeng', ktrtxt)
+            TittelUt <- paste0('Forbedring av Oswestry-skår > 20 p.', ktrtxt)
             sortering <- FALSE
       }
       
@@ -363,12 +363,15 @@ if (valgtVar == 'Osw48') {
 	 	AarMax <- max(RegData$OpAar)	#Siste år
 	 	AarMaxTxt <- as.character(AarMax)
 		RegData <- RegData[which(RegData$OpAar %in% c((AarMax-2):AarMax)), ]
+		RegData[,grVar] <- as.character(RegData[,grVar])
+		RegData[,grVar] <- factor(RegData[,grVar])
 		}
 
      RyggUtvalg <- RyggUtvalg(RegData=RegData, datoFra=datoFra, datoTil=datoTil, minald=minald, maxald=maxald, 
 		erMann=erMann, hovedkat=hovedkat, tidlOp=tidlOp, opKat=opKat)
      RegData <- RyggUtvalg$RegData
      utvalgTxt <- RyggUtvalg$utvalgTxt
+     
 #SJEKK:
      RegData <- RegData[which(!is.na(RegData[ ,grVar])), ]
      names(RegData)[which(names(RegData) == grVar)] <- 'grVar'
@@ -376,7 +379,7 @@ if (valgtVar == 'Osw48') {
      #Hvis siste år for få reg - ta også bort resultater fra foregående år.
      NminTot <- 50 #Ikke i bruk
      Ngrense <- switch(grVar,	#Minste antall registreringer for at ei gruppe skal bli vist
-					ShNavn = 10,
+					ShNavn = 30,
 					BoHF = 30,
 					BehHF = 30) 
 	NminAar <- Ngrense
@@ -410,7 +413,7 @@ if (siste3aar ==1) { #Resultater for hvert av de siste 3 år.
      GrNavnSort <- colnames(AndelerGrSort) #names(AndelerGrSort)    #paste0(names(Ngr)[sortInd], ', ',Ngrtxt[sortInd])
      
       andeltxt <- paste0(sprintf('%.1f',AndelerGrSort[AarMaxTxt,]), '%') 	
-     if (length(indGrUt)>0) {andeltxt[(AntGrNgr+1):(length(GrNavnSort))] <- 'N<30 siste år'} #''
+     if (length(indGrUt)>0) {andeltxt[(AntGrNgr+1):(length(GrNavnSort))] <- paste0('N<', Ngrense, ' siste år')} #''
      
      #AndelHele <- round(100*sum(RegData$Variabel[which(RegData$OpAar==AarMax)])/
       #                        length(which(RegData$OpAar==AarMax)), 2) #round(100*sum(RegData$Variabel)/N, 2)
@@ -469,7 +472,7 @@ if (siste3aar ==1) { #Resultater for hvert av de siste 3 år.
           NutvTxt <- length(utvalgTxt)
           vmarg <- max(0, strwidth(GrNavnSort, units='figure', cex=cexShNavn)*0.85)
           #NB: strwidth oppfører seg ulikt avh. av device...
-          par('fig'=c(vmarg, 0.9, 0, 1-0.02*(NutvTxt-1)))	#Har alltid datoutvalg med
+          par('fig'=c(vmarg, ifelse(siste3aar==1,0.9,1), 0, 1-0.02*(NutvTxt-1)))	#Har alltid datoutvalg med
 
           xmax <- min(max(AndelerGrSort, na.rm = T),100)*1.15
           xaksetxt <- ifelse(AKjust==1, 'Andel (%), justert for alder og kjønn', 'Andel (%)')

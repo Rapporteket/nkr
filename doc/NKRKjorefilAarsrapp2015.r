@@ -121,42 +121,48 @@ RyggFigAndelerGrVarAar(RegData=RegData, valgtVar=valgtVar, datoFra=datoFra, dato
                     ktr=ktr, hovedkat=hovedkat, opKat=opKat, tidlOp=tidlOp, enhetsUtvalg=enhetsUtvalg, reshID=reshID, outfile=outfile)
 
 
-#-----------------Årsvariasjon:
+
+
+#-----------------Årsvariasjon, offentliggjøring:
+rm(list=ls())
+RegData <- read.table('C:/Registre/nkr/data/NKR2010_2015.csv', sep=';', header=T, encoding = 'UTF-8')
 reshID <- 601161	#999995	#999999	#100407 (Kristiansand)	#601161(UNN), 100133(Arendal),105783(StOlav),103618(Drammen)	#102949	#   #Må sendes med til funksjon
 datoFra <- '2010-01-01'
 datoTil <- '2015-12-31'
-ktr <- 2
-enhetsUtvalg <- 10 # 0-hele landet, 4–egen shusgruppe, 7–egen region
+hovedkat <- 1 		#Hovedinngrep, 0-7, Standard: 99, dvs alle operasjoner
+opKat <- 1  #Bare elektive pasienter
+tidlOp <- 4 #Bare primæroperasjoner
+ktr <- 1
+enhetsUtvalg <- 0 # 0-hele landet, 4–egen shusgruppe, 7–egen region
+siste3aar <- 0 # siste 3 år, årsvariasjon
 grVar <- 'ShNavn'  #ShNavn, Fylke, BoHF, BoRHF
+setwd('C:/ResultattjenesteGIT/nkr/aarsrapp/Offentliggjoring')
 
 
-#Lav beinsmerte
-valgtVar <- 'BeinsmLavPre'   #BeinsmEndrLav', BeinsmLavPre, DegSponSSSten,OswEndr13, OswEndr20, OswEndr30pst, Osw48
-outfile <- paste0(valgtVar, '_1', grVar,'Aar.png')
+valgtVar <- 'Fornoyd'
+outfile <- paste0(valgtVar, hovedkat, grVar,'.pdf')
 RyggFigAndelerGrVarAar(RegData=RegData, valgtVar=valgtVar, datoFra=datoFra, datoTil=datoTil, 
                       ktr=ktr, hovedkat=hovedkat, opKat=opKat, tidlOp=tidlOp, grVar=grVar,
-                       preprosess=1, enhetsUtvalg=enhetsUtvalg, reshID=reshID, outfile=outfile)
+                       preprosess=1, enhetsUtvalg=enhetsUtvalg, reshID=reshID, outfile=outfile,
+                      siste3aar=siste3aar) 
 
 
-#Oswestryforbedring
-valgtVar <- 'OswEndr20'   
-ktr <- 1
-outfile <- paste0(valgtVar, '_1', grVar,'Aar.png')
+
+
+
+siste3aar <- 1 # siste 3 år, årsvariasjon
+variabelvalg <- c('BeinsmLavPre', 'Fornoyd', 'KpInf3Mnd', 'Morsmal', 'PeropKompDura', 'OswEndr20', 
+                  'OswEndr30pst','SympVarighUtstr')
+#Lav beinsmerte, fig 9
+for (valgtVar in variabelvalg) {
+outfile <- paste0(valgtVar, hovedkat, grVar,'AarN20.png')
 RyggFigAndelerGrVarAar(RegData=RegData, valgtVar=valgtVar, datoFra=datoFra, datoTil=datoTil, 
-                       ktr=ktr, hovedkat=hovedkat, opKat=opKat, tidlOp=tidlOp, grVar=grVar,
-                       preprosess=1, enhetsUtvalg=enhetsUtvalg, reshID=reshID, outfile=outfile)
-
-#Oswestryforbedring
-valgtVar <- 'OswEndr30pst'   
-ktr <- 1
-outfile <- paste0(valgtVar, '_1', grVar,'Aar.png')
-RyggFigAndelerGrVarAar(RegData=RegData, valgtVar=valgtVar, datoFra=datoFra, datoTil=datoTil, 
-                       ktr=ktr, hovedkat=hovedkat, opKat=opKat, tidlOp=tidlOp, grVar=grVar,
-                       preprosess=1, enhetsUtvalg=enhetsUtvalg, reshID=reshID, outfile=outfile)
-
-#Lang symptomvarighet
-valgtVar <- 'SympVarighUtstr'   
-outfile <- paste0(valgtVar, '_1', grVar,'Aar.png')
-RyggFigAndelerGrVarAar(RegData=RegData, valgtVar=valgtVar, datoFra=datoFra, datoTil=datoTil, 
-                       ktr=ktr, hovedkat=hovedkat, opKat=opKat, tidlOp=tidlOp, grVar=grVar,
-                       preprosess=1, enhetsUtvalg=enhetsUtvalg, reshID=reshID, outfile=outfile)
+                      ktr=ktr, hovedkat=hovedkat, opKat=opKat, tidlOp=tidlOp, grVar=grVar,
+                       preprosess=1, enhetsUtvalg=enhetsUtvalg, reshID=reshID, outfile=outfile,
+                      siste3aar=siste3aar) }
+                  
+#Fornøydhet, ny fig
+#Sårinfeksjon, fig 12
+#Morsmål, fig 14
+#Durarift, fig 13
+#Oswestryforbedring, fig 11

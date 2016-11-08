@@ -108,9 +108,9 @@ RyggFigAndelerGrVarAarVarKval <- function(RegData, valgtVar, datoFra='2007-01-01
      #Hvis siste år for få reg - ta også bort resultater fra foregående år.
      NminTot <- 50 #Ikke i bruk
      Ngrense <- switch(grVar,	#Minste antall registreringer for at ei gruppe skal bli vist
-					ShNavn = 30,
+					ShNavn = 10,
 					BoHF = 30,
-					BehHF = 30) 
+					BehHF = 10) 
      N <- dim(RegData)[1] #table(RegData$OpAar)      #Antall per år
      
      #----------------------------------------------------------------------------------------------
@@ -181,7 +181,7 @@ RyggFigAndelerGrVarAarVarKval <- function(RegData, valgtVar, datoFra='2007-01-01
           #NB: strwidth oppfører seg ulikt avh. av device...
           par('fig'=c(vmarg, 0.85, 0, 1-0.02*(NutvTxt-1)))	#Har alltid datoutvalg med
 
-          xmax <- 50    #min(max(AndelerGrSort, na.rm = T),100)*1.05     #1.15
+          xmax <- min(max(AndelerGrSort, na.rm = T),100)*1.05     #1.15
           xaksetxt <- 'Andel (%)' #ifelse(AKjust==1, 'Andel (%), justert for alder og kjønn'
           yaksetxt <- ''
           yaksetxt <- switch(grVar, 
