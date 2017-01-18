@@ -110,7 +110,7 @@ RyggFigAndelerGrVarAarVarKval <- function(RegData, valgtVar, datoFra='2007-01-01
      Ngrense <- switch(grVar,	#Minste antall registreringer for at ei gruppe skal bli vist
 					ShNavn = 10,
 					BoHF = 30,
-					BehHF = 10) 
+					BehHF = 30) 
      N <- dim(RegData)[1] #table(RegData$OpAar)      #Antall per år
      
      #----------------------------------------------------------------------------------------------
@@ -179,9 +179,9 @@ RyggFigAndelerGrVarAarVarKval <- function(RegData, valgtVar, datoFra='2007-01-01
           NutvTxt <- length(utvalgTxt)
           vmarg <- max(0, strwidth(GrNavnSort, units='figure', cex=cexShNavn)*0.85)
           #NB: strwidth oppfører seg ulikt avh. av device...
-          par('fig'=c(vmarg, 0.85, 0, 1-0.02*(NutvTxt-1)))	#Har alltid datoutvalg med
+          par('fig'=c(vmarg, 0.85, 0, 1)) #1-0.02*(NutvTxt-1)))	#Har alltid datoutvalg med
 
-          xmax <- min(max(AndelerGrSort, na.rm = T),100)*1.05     #1.15
+          xmax <- min(max(AndelerGrSort, na.rm = T),100)*1.1     #1.15
           xaksetxt <- 'Andel (%)' #ifelse(AKjust==1, 'Andel (%), justert for alder og kjønn'
           yaksetxt <- ''
           yaksetxt <- switch(grVar, 
@@ -220,13 +220,13 @@ RyggFigAndelerGrVarAarVarKval <- function(RegData, valgtVar, datoFra='2007-01-01
           #lines(x=rep(ResAar[3], 2), y=c(ybunn, ytopp), col=farger[1], lwd=2)
 
           mtext(at=pos+max(pos)*0.0045, GrNavnSort, side=2, las=1, cex=cexShNavn, adj=1, line=0.25)	#Legge på navn som eget steg
-          title(Tittel, line=1, font.main=1, cex.main=1.3)
+#          title(Tittel, line=1, font.main=1, cex.main=1.3)
 
           text(x=xmax*0.01, y=pos+0.1, andeltxt, #x=AndelerGrSort+xmax*0.01
-               las=1, cex=0.8, adj=0, col=farger[1])	#Andeler, hvert sykehus
+               las=1, cex=0.8, adj=0) #, col=farger[1])	#Andeler, hvert sykehus
 
           #Tekst som angir hvilket utvalg som er gjort
-          mtext(utvalgTxt, side=3, las=1, cex=1, adj=0, col=farger[1], line=c(3+0.8*((NutvTxt-1):0)))
+#          mtext(utvalgTxt, side=3, las=1, cex=1, adj=0, col=farger[1], line=c(3+0.8*((NutvTxt-1):0)))
 
 
           par('fig'=c(0, 1, 0, 1))

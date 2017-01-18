@@ -29,13 +29,13 @@ RegData <-
 #Mister BoHF for registreringer som mangler bydelkode for Oslo. Disse kan få BoRHF. Legger derfor til BoRHF og BoHF separat
 
 #Endre sykehusnavn:
-  sykehusnavn <- read.table('E:/FELLES/Prosjekter/Indikatorprosjektet/Analyse/sykehusnavn.csv', header=TRUE, sep=";", encoding = 'UFT-8')
+  sykehusnavn <- read.table('E:/FELLES/Prosjekter/Indikatorprosjektet/Analyse/Figurer/Sykehusnavn.csv', header=TRUE, sep=";", encoding = 'UFT-8')
   sykehusnavn <- sykehusnavn[,c(1,3)]
   names(sykehusnavn) <- c("BehSh_nr","BehSh_navn")
 
   RegData <- merge(RegData, sykehusnavn,
                            by.x = "AvdNavnNum", by.y = "BehSh_nr", all.x = TRUE, all.y = FALSE)
-  names(RegData)
+#  names(RegData)
   names(RegData)[which(names(RegData)=='AvdNavn')] <-  'AvdNavnLang'
   names(RegData)[which(names(RegData)=='BehSh_navn')] <-  'AvdNavn'
   
@@ -63,7 +63,7 @@ grupperingInd <- c('ShNavn', 'BoHF') #c('Fylke', 'ShNavn', 'BoRHF', 'BoHF')
 for (grVar in grupperingInd) {
       ifelse (grVar %in% c('BoHF', 'BoRHF'), AKjust <- AKjustDum, AKjust <- 0)
       valgtVar <- 'SympVarighUtstr' 
-            outfile <- paste0(valgtVar, '1_1', grVar, AKjust,'Aar.png')
+            outfile <- paste0(valgtVar, '1_1', grVar, AKjust,'Aar.pdf')
             hovedkat <- 1
             opKat <- 1  #Bare elektive pasienter
             RyggFigAndelerGrVarAarVarKval(
@@ -149,3 +149,27 @@ PopAldKjGr$Vekt <-
 
 #Beregne kjønns- og aldersstandardisert resultat, dvs. vekte resultatene i gruppene
 #ut fra normal-populasjon
+
+
+#Andel over 70 år
+
+NKRdata <-
+      read.table('C:/Registre/nkr/HUNT/RyggAlle.csv', sep = ';', header = T, encoding = 'UTF-8')
+nevner <- table(NKRdata[, 'OpAar'])
+teller <- table(NKRdata[which(NKRdata$Alder>=70), 'OpAar'])
+andelAlle <- 100*teller/nevner
+round(tapply(NKRdata$Alder, NKRdata$OpAar, 'mean', na.rm=T),1)
+tapply(NKRdata$Alder, NKRdata$OpAar, 'median', na.rm=T)
+
+'%i%' <- intersect
+ind <- which(NKRdata$HovedInngrep==1) %i% which(NKRdata$OpKat==1)
+NKRdata <- NKRdata[ind,]
+nevner <- table(NKRdata[, 'OpAar'])
+teller <- table(NKRdata[which(NKRdata$Alder>=70), 'OpAar'])
+andel <- 100*teller/nevner
+plot(andel)
+round(tapply(NKRdata$Alder, NKRdata$OpAar, 'mean', na.rm=T),1)
+tapply(NKRdata$Alder, NKRdata$OpAar, 'median', na.rm=T)
+tapply(NKRdata$Alder, NKRdata$OpAar, 'summary', na.rm=T)
+summary(NKRdata$Alder)
+
