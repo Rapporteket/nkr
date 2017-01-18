@@ -925,8 +925,8 @@ xtable(RF, caption='Radiologiske diagnoser',
 if (medSml==1) {
 RFAvd <- round(colSums(RegDataHoved[, RFvar], na.rm=T)*100/NHoved, 1)
 RFRL <- round(colSums(RegDataSml[, RFvar], na.rm=T)*100/NSml, 1)
-AnnetAvd <- round(length(which(RegDataHoved$RfAnnetspes != 'NA'))*100/NHoved, 1)
-AnnetRL <- round(length(which(RegDataSml$RfAnnetspes != 'NA'))*100/NSml, 1)
+AnnetAvd <- round(length(which(RegDataHoved$RfAnnet != 'NA'))*100/NHoved, 1)
+AnnetRL <- round(length(which(RegDataSml$RfAnnet != 'NA'))*100/NSml, 1)
 RF <- cbind('Egen avdeling' = c(paste(c(RFAvd, AnnetAvd), '%', sep=''), NHoved),
 			'Landet for øvrig' = c(paste(c(RFRL, AnnetRL), '%', sep=''), NSml))
 rownames(RF) <- c('Normal', 'Skiveprolaps', 'Sentral spinalstenose', 'Lateral spinalstenose', 'Foraminal stenose',
