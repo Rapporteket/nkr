@@ -19,6 +19,8 @@ RyggRegDataSQL <- function() {
 #  query = 'select * from Uttrekk_Rapport'
   
   query <- paste0('SELECT
+      SymptVarighRyggHof
+      SympVarighUtstr
 	Alder,
 	AntBarn,
 	Antibiotika,
