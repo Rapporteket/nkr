@@ -70,7 +70,7 @@ RyggRegDataSQL <- function() {
 	Nytte12mnd,
 	Nytte3mnd,
 	OpAar,
-	OpDato,
+	CAST(OpDato AS date),
 	OpIndCauda,
 	OpIndParese,
 	OpIndPareseGrad,
