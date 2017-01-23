@@ -160,7 +160,7 @@ RyggRegDataSQL <- function() {
 	Utfylt12Mnd,
 	Utfylt3Mnd,
 	Vekt
-FROM Uttrekk_Rapport
+FROM Uttrekk_RapportRapportekproblem
   WHERE (OpAar==2012) ') #
 #                  WHERE OpDato >= \'', datoFra, '\' AND OpDato <= \'', datoTil, '\'')
 
