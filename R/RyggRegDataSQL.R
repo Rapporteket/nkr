@@ -161,7 +161,7 @@ RyggRegDataSQL <- function() {
 	Utfylt3Mnd,
 	Vekt
 FROM Uttrekk_Rapport
-  WHERE (OpAar<2016) ') #
+  WHERE (OpAar<2012) ') #
 #                  WHERE OpDato >= \'', datoFra, '\' AND OpDato <= \'', datoTil, '\'')
 
 RegData <- rapbase::LoadRegData(registryName, query, dbType)
