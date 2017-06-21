@@ -32,4 +32,3 @@ Funksjonen er delvis skrevet for å kunne brukes til andre grupperingsvariable e
 Andel som mottar sykepenger er definert som svaralternativene: 'Sykemeldt',
        'Aktiv sykemeldt', 'Delvis sykemeldt', 'Attføring/rehab.', 'Uføretrygdet'
 }
-

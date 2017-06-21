@@ -7,8 +7,8 @@
 RyggFigAndelerGrVarAarVarKval(RegData, valgtVar, datoFra = "2007-01-01",
   datoTil = "3000-12-31", minald = 0, maxald = 130, erMann = "",
   hovedkat = 99, tidlOp = "", opKat = 99, hentData = 0,
-  preprosess = 1, grVar = "ShNavn", tittel = 1, ktr = 0, reshID,
-  outfile = "", AKjust = 0)
+  preprosess = 1, grVar = "ShNavn", tittel = 1, ktr = 0, outfile = "",
+  AKjust = 0)
 }
 \arguments{
 \item{RegData}{En dataramme med alle nødvendige variabler fra registeret}
@@ -53,9 +53,6 @@ BoRHF - Pasienten bor i boområdene til det angitte RHF.}
 
 \item{tittel}{Vise tittel i figuren eller ikke (0/1). standard:1}
 
-\item{reshID}{Parameter følger fra innlogging helseregister.no og angir
-hvilken enhet i spesialisthelsetjenesten brukeren tilhører}
-
 \item{outfile}{Navn på fil figuren skrives til. Standard: '' (Figur skrives
 til systemets standard utdataenhet (som regel skjerm))}
 
@@ -96,15 +93,14 @@ Argumentet \emph{valgtVar} har følgende valgmuligheter:
     \item UforetrygdPre: Søkt eller planlegger å søke uføretrygd før operasjon?    
     \item Utd: Andel høyskole-/universitetsutdannede    
     \item Verre Mye verre/verre enn noen gang, 3 mnd. [ENDRET fra Verre3mnd, Verre12mnd]
-	\item ..
- 	\item BeinsmLavPre: Pasienter med preop. beinsmerte < 2.5 og ikke parese.
-	\item BeinsmEndrLav: Forbedring av beinsmerter under 1.5 poeng
-    \item DegSponSSSten: Pasienter med Degenerativ spondylolistese og sentral spinal stenose 
- \item OswEndrLav: Mer enn 20 poeng forbedring i Oswestry-skår, 3 mnd/12mnd.
+ \item ..
+ \item BeinsmLavPre: Pasienter med preop. beinsmerte < 2.5 og ikke parese.
+\item BeinsmEndrLav: Forbedring av beinsmerter under 1.5 poeng
+\item DegSponSSSten: Pasienter med Degenerativ spondylolistese og sentral spinal stenose 
+\item OswEndrLav: Mer enn 20 poeng forbedring i Oswestry-skår, 3 mnd/12mnd.
 \item OswEndr20: 
 \item Osw48: Oswestry-skår fortsatt over 48
 \item KpInf3Mnd: Sårinfeksjoner
 \item Morsmal: Fremmedspråklige (ikke norsk som morsmål)
 	}
 }
-

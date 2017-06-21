@@ -112,4 +112,3 @@ Argumentet \emph{valgtVar} har følgende valgmuligheter:
 \item Morsmal: Fremmedspråklige (ikke norsk som morsmål)
 	}
 }
-

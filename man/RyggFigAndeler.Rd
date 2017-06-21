@@ -7,7 +7,7 @@
 RyggFigAndeler(RegData, valgtVar, datoFra = "2007-01-01",
   datoTil = "2999-12-31", hentData = 0, preprosess = 1, minald = 0,
   maxald = 130, erMann = "", hovedkat = 99, tidlOp = "", tittel = 1,
-  outfile = "", reshID, enhetsUtvalg = 1)
+  outfile = "", reshID = 0, enhetsUtvalg = 1)
 }
 \arguments{
 \item{RegData}{En dataramme med alle nødvendige variabler fra registeret}
@@ -129,4 +129,3 @@ Argumentet \emph{enhetsUtvalg} har følgende valgmuligheter:
    \item 8: Egen region mot resten
    	}
 }
-

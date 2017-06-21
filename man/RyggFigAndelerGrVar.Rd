@@ -106,4 +106,3 @@ Argumentet \emph{valgtVar} har følgende valgmuligheter:
 \item KpInf3Mnd: 
 	}
 }
-

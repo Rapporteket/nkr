@@ -86,4 +86,3 @@ Argumentet \emph{valgtVar} har følgende valgmuligheter:
          \item TidOpReg Ønsker å se på tid fra operasjon til registrering
    }
 }
-

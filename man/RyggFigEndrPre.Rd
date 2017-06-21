@@ -94,4 +94,3 @@ Argumentet \emph{enhetsUtvalg} har følgende valgmuligheter:
    \item 8: Egen region mot resten
    	}
 }
-

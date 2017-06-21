@@ -5,8 +5,8 @@
 \title{Søylediagram med en søyle for hvert år hvor variabelens kategorier er stablet oppå hverandre.}
 \usage{
 RyggFigAndelStabelTid(RegData, outfile, valgtVar, hovedkat = 99,
-  preprosess = 0, hentData = 0, minald = 0, maxald = 130, erMann = 0,
-  ktr = 1, tidlOp = 0, enhetsUtvalg = 1, tittel = 1, reshID)
+  preprosess = 0, hentData = 0, minald = 0, maxald = 130, erMann = 99,
+  ktr = 1, tidlOp = 0, enhetsUtvalg = 1, tittel = 1, reshID = 0)
 }
 \arguments{
 \item{RegData}{En dataramme med alle nødvendige variabler fra registeret}
@@ -89,4 +89,3 @@ Argumentet \emph{enhetsUtvalg} har følgende valgmuligheter:
    \item 8: Egen region mot resten
    	}
 }
-

@@ -8,7 +8,7 @@ RyggFigGjsnBox(RegData, outfile, valgtVar, tidlOp = "", erMann = "",
   hovedkat = 99, aar = 0, minald = 0, maxald = 130, ktr = 0,
   tittel = 1, datoFra = "2007-01-01", datoTil = "3000-01-01",
   valgtMaal = "", enhetsUtvalg = 1, hentData = 0, preprosess = 1,
-  reshID)
+  reshID = 0)
 }
 \arguments{
 \item{RegData}{En dataramme med alle nødvendige variabler fra registeret}
@@ -92,4 +92,3 @@ Argumentet \emph{valgtVar} har følgende valgmuligheter:
      \item TidOpReg Ønsker å se på tid fra operasjon til registrering
    }
 }
-

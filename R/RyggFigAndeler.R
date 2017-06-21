@@ -104,7 +104,7 @@
 #' @export
 #'
 RyggFigAndeler  <- function(RegData, valgtVar, datoFra='2007-01-01', datoTil='2999-12-31', hentData=0, preprosess=1,
-		minald=0, maxald=130, erMann='', hovedkat=99, tidlOp='', tittel=1, outfile='', reshID, enhetsUtvalg=1)
+		minald=0, maxald=130, erMann='', hovedkat=99, tidlOp='', tittel=1, outfile='', reshID=0, enhetsUtvalg=1)
 {
 
 
@@ -124,19 +124,6 @@ grtxt2 <- NULL	#Spesifiseres evt. for hver enkelt variabel
 subtxt <- ''	#Benevning
 flerevar <- 0
 antDes <- 1
-
-#Når bare skal sammenlikne med sykehusgruppe eller region, eller ikke sammenlikne, 
-#trengs ikke data for hele landet:
-reshID <- as.numeric(reshID)
-indEgen1 <- match(reshID, RegData$ReshId)
-if (enhetsUtvalg %in% c(2,3,4,6,7)) {	#Ta med 2,4 og 7? Oppr. 3 og 6
-		RegData <- switch(as.character(enhetsUtvalg),
-						'2' = RegData[which(RegData$ReshId == reshID),],	#kun egen enhet
-						'3' = RegData[which(RegData$Sykehustype == RegData$Sykehustype[indEgen1]),],	#sml. shgruppe
-						'4' = RegData[which(RegData$Sykehustype == RegData$Sykehustype[indEgen1]),],	#kun egen shgruppe
-						'6' = RegData[which(RegData$Region == as.character(RegData$Region[indEgen1])),],	#sml region
-						'7' = RegData[which(RegData$Region == as.character(RegData$Region[indEgen1])),])	#kun egen region
-	}
 
 #Noen variable settes som "Variabel" for å standardisere beregninga ytterligere:
 if (valgtVar %in% c('Alder', 'BMI', 'HovedInngrep', 'Liggedogn', 'Utd', 
@@ -524,48 +511,17 @@ TittelUt <- switch(valgtVar,
 				Utd = 'Høyeste fullførte utdanning')
 
 #Gjør utvalg
-RyggUtvalg <- RyggUtvalg(RegData=RegData, datoFra=datoFra, datoTil=datoTil, minald=minald, maxald=maxald, 
-		erMann=erMann, hovedkat=hovedkat, tidlOp=tidlOp)
+RyggUtvalg <- RyggUtvalgEnh(RegData=RegData, datoFra=datoFra, datoTil=datoTil, minald=minald, maxald=maxald, 
+		erMann=erMann, hovedkat=hovedkat, tidlOp=tidlOp, enhetsUtvalg=enhetsUtvalg, reshID=0)
 RegData <- RyggUtvalg$RegData
 utvalgTxt <- RyggUtvalg$utvalgTxt
+indHoved <- RyggUtvalg$indHoved
+indRest <- RyggUtvalg$indRest
+medSml <- RyggUtvalg$medSml
+shtxt <- RyggUtvalg$shtxt
+smltxt <- RyggUtvalg$smltxt
+#Skal endres til ind$Hoved og ind$Rest
 
-SykehustypeTxt <- c('univ. sykehus', 'lokalsykehus', 'priv. sykehus')				
-indEgen1 <- match(reshID, RegData$ReshId)
-if (enhetsUtvalg %in% c(1,2,3,6)) {	#Involverer egen enhet
-		shtxt <- as.character(RegData$ShNavn[indEgen1]) } else {
-		shtxt <- switch(as.character(enhetsUtvalg), 	
-			'0' = 'Hele landet',
-			'4' = SykehustypeTxt[RegData$Sykehustype[indEgen1]],
-			'5' = SykehustypeTxt[RegData$Sykehustype[indEgen1]],
-			'7' = as.character(RegData$Region[indEgen1]),
-			'8' = as.character(RegData$Region[indEgen1]))
-			}
-			
-if (enhetsUtvalg %in% c(0,2,4,7)) {		#Ikke sammenlikning
-			medSml <- 0
-			smltxt <- 'Ingen sml'
-			indHoved <- 1:dim(RegData)[1]	#Tidligere redusert datasettet for 2,4,7. (+ 3og6)
-			indRest <- NULL
-		} else {						#Skal gjøre sammenlikning
-			medSml <- 1
-			if (enhetsUtvalg %in% c(1,3,6)) {	#Involverer egen enhet
-				indHoved <-which(as.numeric(RegData$ReshId)==reshID) } else {
-				indHoved <- switch(as.character(enhetsUtvalg),
-						'5' = which(RegData$Sykehustype == RegData$Sykehustype[indEgen1]),	#shgr
-						'8' = which(RegData$Region == RegData$Region[indEgen1]))}	#region
-			smltxt <- switch(as.character(enhetsUtvalg),
-				'1' = 'landet forøvrig',
-				'3' = paste('andre ', SykehustypeTxt[RegData$Sykehustype[indEgen1]], sep=''),	#RegData inneh. kun egen shgruppe
-				'5' = 'andre typer sykehus',
-				'6' = paste(RegData$Region[indEgen1], ' forøvrig', sep=''),	#RegData inneh. kun egen region
-				'8' = 'andre regioner')
-			indRest <- switch(as.character(enhetsUtvalg),
-				'1' = which(as.numeric(RegData$ReshId) != reshID),
-				'3' = which(as.numeric(RegData$ReshId) != reshID),	#RegData inneh. kun egen shgruppe
-				'5' = which(RegData$Sykehustype != RegData$Sykehustype[indEgen1]),
-				'6' = which(as.numeric(RegData$ReshId)!=reshID),	#RegData inneh. kun egen region
-				'8' = which(RegData$Region != RegData$Region[indEgen1]))
-			}								
 if (tittel==0) {Tittel<-''} else {Tittel <- TittelUt} 
 			
 #--------------- Gjøre beregninger ------------------------------
@@ -618,8 +574,8 @@ cexgr <- 1	#Kan endres for enkeltvariable
 FigTypUt <- rapbase::figtype(outfile, fargepalett=RyggUtvalg$fargepalett)
 #Tilpasse marger for å kunne skrive utvalgsteksten
 NutvTxt <- length(utvalgTxt)
-antDesTxt <- paste('%.', antDes, 'f', sep='')
-grtxtpst <- paste(rev(grtxt), ' (', rev(sprintf(antDesTxt, Andeler$Hoved)), '%)', sep='')
+antDesTxt <- paste0('%.', antDes, 'f')
+grtxtpst <- paste0(rev(grtxt), ' (', rev(sprintf(antDesTxt, Andeler$Hoved)), '%)')
 vmarg <- switch(retn, V=0, H=max(0, strwidth(grtxtpst, units='figure', cex=cexgr)*0.7))
 #vmarg <- max(0, strwidth(grtxtpst, units='figure', cex=cexgr)*0.7)
 par('fig'=c(vmarg, 1, 0, 1-0.02*(NutvTxt-1)))	#Har alltid datoutvalg med
@@ -640,19 +596,19 @@ if (retn == 'H') {
 
 	if (medSml == 1) {
 		points(as.numeric(rev(Andeler$Rest)), pos, col=fargeRest,  cex=2, pch=18) #c("p","b","o"), 
-		legend('top', c(paste(shtxt, ' (N=', NHoved,')', sep=''), 
-						paste(smltxt, ' (N=', NRest,')', sep='')), 
+		legend('top', c(paste0(shtxt, ' (N=', NHoved,')'), 
+						paste0(smltxt, ' (N=', NRest,')')), 
 			border=c(fargeHoved,NA), col=c(fargeHoved,fargeRest), bty='n', pch=c(15,18), pt.cex=2, 
 			lwd=lwdRest,	lty=NA, ncol=1, cex=cexleg)
 		} else {	
-		legend('top', paste(shtxt, ' (N=', NHoved,')', sep=''), 
+		legend('top', paste0(shtxt, ' (N=', NHoved,')'), 
 			border=NA, fill=fargeHoved, bty='n', ncol=1, cex=cexleg)
 		}
 }
 
 if (retn == 'V' ) {
 #Vertikale søyler eller linje
-	if (length(grtxt2) == 0) {grtxt2 <- paste('(', sprintf(antDesTxt, Andeler$Hoved), '%)', sep='')}
+	if (length(grtxt2) == 0) {grtxt2 <- paste0('(', sprintf(antDesTxt, Andeler$Hoved), '%)')}
 	ymax <- max(c(Andeler$Hoved, Andeler$Rest),na.rm=T)*1.15
 	pos <- barplot(as.numeric(Andeler$Hoved), beside=TRUE, las=1, ylab="Andel pasienter (%)",	
 		xlab=subtxt, col=fargeHoved, border='white', ylim=c(0, ymax))	#sub=subtxt,	
@@ -660,11 +616,11 @@ if (retn == 'V' ) {
 	mtext(at=pos, grtxt2, side=1, las=1, cex=cexgr, adj=0.5, line=1.5)
 if (medSml == 1) {
 	points(pos, as.numeric(Andeler$Rest), col=fargeRest,  cex=2, pch=18) #c("p","b","o"), 
-	legend('top', c(paste(shtxt, ' (N=', NHoved,')', sep=''), paste(smltxt, ' (N=', NRest,')', sep='')), 
+	legend('top', c(paste0(shtxt, ' (N=', NHoved,')'), paste0(smltxt, ' (N=', NRest,')')), 
 		border=c(fargeHoved,NA), col=c(fargeHoved,fargeRest), bty='n', pch=c(15,18), pt.cex=2, lty=c(NA,NA), 
 		lwd=lwdRest, ncol=2, cex=cexleg)
 	} else {	
-	legend('top', paste(shtxt, ' (N=', NHoved,')', sep=''), 
+	legend('top', paste0(shtxt, ' (N=', NHoved,')'), 
 		border=NA, fill=fargeHoved, bty='n', ncol=1, cex=cexleg)
 	}
 } 
