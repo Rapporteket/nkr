@@ -1,13 +1,13 @@
 #**************************************************
 #********************* Årsrapport, 2016****************************
 rm(list=ls())
-RegData <- read.table('C:/Registre/nkr/data/NKR2010-2016aarsrapp.csv', sep=';', header=T, encoding = 'UTF-8')
+load('A:/Rygg/NKR2010-2016aarsrapp.Rdata')
 #save(RegData, file='C:/Registre/nkr/data/NKR2010-2016aarsrapp.Rdata')
 setwd('C:/ResultattjenesteGIT//nkr/aarsrapp')
 #__Inndata til funksjon:
 datoFra <- '2010-01-01'
 datoTil <- '2016-12-31'
-ktr <- 2
+aar <- 2016
 minald <- 0
 maxald <- 130
 hovedkat <- 99 		#Hovedinngrep, 0-7, Standard: 99, dvs alle operasjoner
@@ -15,12 +15,15 @@ opKat <- 99  #Bare elektive pasienter
 tidlOp <- 99 #4 - Bare primæroperasjoner
 enhetsUtvalg <- 0 # 0-hele landet, 4–egen shusgruppe, 7–egen region
 grVar <- 'ShNavn'  #ShNavn, Fylke, BoHF, BoRHF
+ktr <- 2
+#aar <- 0	#Kan velge flere
 #valgtVar <- 'KpInf3Mnd'   #BeinsmEndrLav', BeinsmLavPre, DegSponSSSten,OswEndr13, OswEndr20, OswEndr30pst, Osw48
 #Verre, KpInf3Mnd
 #outfile <- paste0(valgtVar, '_', grVar,'.png')
 
 #------------------Resultatkapittel--------------------------------
-
+library(knitr)
+library(tools)
 knit('ResultaterAarsrapp.Rnw', encoding = 'UTF-8')
 texi2pdf('ResultaterAarsrapp.tex')
 #--------------------------------------N>30: ---------------------------

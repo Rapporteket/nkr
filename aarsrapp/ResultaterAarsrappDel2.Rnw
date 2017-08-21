@@ -1,0 +1,39 @@
+\documentclass [norsk,a4paper,twoside]{article}
+\addtolength{\hoffset}{-0.5cm}
+\addtolength{\textwidth}{1cm}
+\addtolength{\voffset}{-1cm}
+\addtolength{\textheight}{2cm}
+
+
+\%for nice looking tabs
+\usepackage{booktabs}
+
+\usepackage[norsk]{babel}
+\usepackage[utf8x]{inputenc}
+\usepackage{textcomp}
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\usepackage{amsmath}
+\usepackage{rotating} %add rotating for plain tables
+\usepackage{pdflscape} %add rotating/landcape for pdf
+
+\begin{document}
+
+<<Oppsett, echo=FALSE>>=
+library(knitr)
+library(xtable)
+#options(encoding = "UTF-8")
+knitr::opts_chunk$set(warnings=FALSE,echo=FALSE)
+knitr::opts_knit$set(root.dir = './')
+knitr::opts_chunk$set(fig.path='./', fig.align='center', fig.show='hold', out.width='.8\\textwidth',
+	cache=FALSE)
+
+# supress the '+' continuation prompt
+options(continue=" ")
+# adjust the width of R in/output in the document
+options(width=60)
+@
+
+
+
+\end{document}

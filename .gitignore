@@ -4,7 +4,8 @@
 *.png
 nkr.Rproj
 *.csv
-aarsrapp2015
-aarsrapp
 *.pdf
 *.xlsx
+*.aux
+*.log
+*.out
