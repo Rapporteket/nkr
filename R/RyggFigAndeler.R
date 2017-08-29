@@ -153,7 +153,7 @@ if (valgtVar=='Utd') {
 	}
 
 if (valgtVar=='HovedInngrep'){
-	grtxt <- c('Annet', 'Prolapskirurgi', 'Foramenotomi', 'Laminektomi',
+	grtxt <- c('Udefinerbart', 'Prolapskirurgi', 'Foramenotomi', 'Laminektomi',
 	'Interspin. implantat', 'Fusjonskirurgi', 'Skiveprotese', 'Rev. av implantat')
 	RegData$VariabelGr <- factor(RegData$HovedInngrep, levels = 0:7) 
 	retn <- 'H'

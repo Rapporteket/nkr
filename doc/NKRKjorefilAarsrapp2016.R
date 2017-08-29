@@ -1,5 +1,13 @@
 #**************************************************
 #********************* Årsrapport, 2016****************************
+
+#------------------Resultatkapittel--------------------------------
+library(knitr)
+library(tools)
+knit('ResultaterAarsrapp.Rnw', encoding = 'UTF-8')
+texi2pdf('ResultaterAarsrapp.tex')
+
+
 rm(list=ls())
 load('A:/Rygg/NKR2010-2016aarsrapp.Rdata')
 #save(RegData, file='C:/Registre/nkr/data/NKR2010-2016aarsrapp.Rdata')
@@ -21,11 +29,32 @@ ktr <- 2
 #Verre, KpInf3Mnd
 #outfile <- paste0(valgtVar, '_', grVar,'.png')
 
-#------------------Resultatkapittel--------------------------------
-library(knitr)
-library(tools)
-knit('ResultaterAarsrapp.Rnw', encoding = 'UTF-8')
-texi2pdf('ResultaterAarsrapp.tex')
+
+
+#Definifjon av spinal stenose:
+#      COMPUTE filter_$=((RfSentr = 1 or RfLateral = 1) 
+#                        & (RfSpondtypeIsmisk = 0)  
+#                        & (OpDeUlamin=1 or OpLaminektomi=1 or OpDeFasett=1) 
+#                        & (HovedInngrep=2 or HovedInngrep=3 or HovedInngrep=4  or HovedInngrep=5 or HovedInngrep=7) )
+
+#Spinal stenose:
+attach(RegData)
+indSS <-which((RfSentr == 1 | RfLateral == 1)
+                  & is.na(RfSpondtypeIsmisk)
+                  & (OpDeUlamin==1 | OpLaminektomi==1 | OpDeFasett==1)
+                  & (HovedInngrep %in% c(2:5,7)))
+#Degenerativ spondylolistese:
+indDegenSpondy <- intersect(indSS, which(RfSpondtypeDegen==1))
+indDegenSpondyFusj <- intersect(indDegenSpondy, which(HovedInngrep==5))
+
+detach(RegData)
+#Ut av de som er definert ovenfor (som har spinal stenose) er det i tillegg ønskelig å se 
+#spesielt på subgruppen som har degenerativ spondylolistese (RfSpondtypeDegen= 1) og 
+#andelen av dem som er operert med fusjonskirurgi (HovedInngrep = 5), 
+#per år og 
+#per sykehus for 2016.
+
+
 #--------------------------------------N>30: ---------------------------
 
 #Andel fusjonskirurgi over 75 år. Andel foramenotomi over 75 år

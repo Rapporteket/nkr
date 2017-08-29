@@ -46,7 +46,7 @@
 #' @export
 #'
 RyggFigAndelStabelTid <- function(RegData, outfile, valgtVar, hovedkat=99, preprosess=0, hentData=0,minald=0, maxald=130,
-                               erMann=99, ktr=1, tidlOp=0, enhetsUtvalg=1, tittel=1, reshID=0) 
+                               erMann=99, ktr=1, tidlOp=0, aar=0, enhetsUtvalg=1, tittel=1, reshID=0) 
       {
       
 if (hentData == 1) {		
