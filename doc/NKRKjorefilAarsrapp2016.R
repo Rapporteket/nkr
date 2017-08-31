@@ -2,20 +2,20 @@
 #********************* Årsrapport, 2016****************************
 
 #------------------Resultatkapittel--------------------------------
+rm(list=ls())
+setwd('C:/ResultattjenesteGIT//nkr/aarsrapp')
+
 library(knitr)
 library(tools)
 knit('ResultaterAarsrapp.Rnw', encoding = 'UTF-8')
 texi2pdf('ResultaterAarsrapp.tex')
 
-
-rm(list=ls())
 load('A:/Rygg/NKR2010-2016aarsrapp.Rdata')
 #save(RegData, file='C:/Registre/nkr/data/NKR2010-2016aarsrapp.Rdata')
-setwd('C:/ResultattjenesteGIT//nkr/aarsrapp')
 #__Inndata til funksjon:
 datoFra <- '2010-01-01'
 datoTil <- '2016-12-31'
-aar <- 2016
+aar <- 2010:2016
 minald <- 0
 maxald <- 130
 hovedkat <- 99 		#Hovedinngrep, 0-7, Standard: 99, dvs alle operasjoner

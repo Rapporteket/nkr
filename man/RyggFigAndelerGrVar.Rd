@@ -5,10 +5,10 @@
 \title{Søylediagram med andeler for hver grupperingsenhet (sykehus, RHF, ...)}
 \usage{
 RyggFigAndelerGrVar(RegData, valgtVar, datoFra = "2007-01-01",
-  datoTil = "3000-12-31", minald = 0, maxald = 130, erMann = "",
-  hovedkat = 99, tidlOp = "", hentData = 0, preprosess = 1,
-  opKat = 99, enhetsUtvalg = 0, grVar = "ShNavn", tittel = 1, ktr = 0,
-  reshID = 0, outfile = "")
+  datoTil = "3000-12-31", aar = 0, minald = 0, maxald = 130,
+  erMann = "", hovedkat = 99, tidlOp = "", hentData = 0,
+  preprosess = 1, opKat = 99, enhetsUtvalg = 0, grVar = "ShNavn",
+  tittel = 1, ktr = 0, reshID = 0, outfile = "")
 }
 \arguments{
 \item{RegData}{En dataramme med alle nødvendige variabler fra registeret}

@@ -103,8 +103,9 @@
 #'
 #' @export
 #'
-RyggFigAndeler  <- function(RegData, valgtVar, datoFra='2007-01-01', datoTil='2999-12-31', hentData=0, preprosess=1,
-		minald=0, maxald=130, erMann='', hovedkat=99, tidlOp='', tittel=1, outfile='', reshID=0, enhetsUtvalg=1)
+RyggFigAndeler  <- function(RegData, valgtVar, datoFra='2007-01-01', datoTil='2999-12-31', aar=0, 
+                            hentData=0, preprosess=1,minald=0, maxald=130, erMann='', hovedkat=99, 
+                            tidlOp='', tittel=1, outfile='', reshID=0, enhetsUtvalg=0)
 {
 
 
@@ -179,8 +180,6 @@ if (valgtVar=='Underkat'){
 	
 if (valgtVar=='Alder') {
 	gr <- c(0,seq(20,90,10),150)
-	#AndelSh <- table(cut(RegData$Alder[ind_sh], gr, right=F))/NSh*100
-	#AndelLand <- table(cut(RegData$Alder[ind_resten], gr, right=F))/NLand*100
 	RegData$VariabelGr <- cut(RegData$Variabel, breaks=gr, include.lowest=TRUE, right=FALSE)
 	grtxt <- c('0-19', '20-29', '30-39', '40-49', '50-59', '60-69', '70-79', '80-89', '90+')	#c(levels(RegData$VariabelGr)[-length(gr)], '90+')	#c(names(AndelLand)[-length(gr)], '90+')
 	subtxt <- 'Aldersgruppe'
@@ -511,14 +510,14 @@ TittelUt <- switch(valgtVar,
 				Utd = 'Høyeste fullførte utdanning')
 
 #Gjør utvalg
-RyggUtvalg <- RyggUtvalgEnh(RegData=RegData, datoFra=datoFra, datoTil=datoTil, minald=minald, maxald=maxald, 
-		erMann=erMann, hovedkat=hovedkat, tidlOp=tidlOp, enhetsUtvalg=enhetsUtvalg, reshID=0)
+RyggUtvalg <- RyggUtvalgEnh(RegData=RegData, reshID=reshID, datoFra=datoFra, datoTil=datoTil, 
+                            minald=minald, maxald=maxald, erMann=erMann, aar=aar,
+                            hovedkat=hovedkat, opKat=opKat, tidlOp=tidlOp,enhetsUtvalg=enhetsUtvalg)
 RegData <- RyggUtvalg$RegData
 utvalgTxt <- RyggUtvalg$utvalgTxt
-indHoved <- RyggUtvalg$indHoved
-indRest <- RyggUtvalg$indRest
+ind <- RyggUtvalg$ind
 medSml <- RyggUtvalg$medSml
-shtxt <- RyggUtvalg$shtxt
+hovedgrTxt <- RyggUtvalg$hovedgrTxt
 smltxt <- RyggUtvalg$smltxt
 #Skal endres til ind$Hoved og ind$Rest
 
@@ -530,20 +529,20 @@ Andeler <- list(Hoved = 0, Rest =0)
 NRest <- 0
 AntRest <- 0
 AntHoved <- switch(as.character(flerevar), 
-				'0' = table(RegData$VariabelGr[indHoved]),
-				'1' = colSums(sapply(RegData[indHoved ,variable], as.numeric), na.rm=T))
+				'0' = table(RegData$VariabelGr[ind$Hoved]),
+				'1' = colSums(sapply(RegData[ind$Hoved ,variable], as.numeric), na.rm=T))
 NHoved <- switch(as.character(flerevar), 
-				'0' = sum(AntHoved),	#length(indHoved)- Kan inneholde NA
-				'1' = length(indHoved))
+				'0' = sum(AntHoved),	#length(ind$Hoved)- Kan inneholde NA
+				'1' = length(ind$Hoved))
 Andeler$Hoved <- 100*AntHoved/NHoved
 
 if (medSml==1) {
 	AntRest <- switch(as.character(flerevar), 
-					'0' = table(RegData$VariabelGr[indRest]),
-					'1' = colSums(sapply(RegData[indRest ,variable], as.numeric), na.rm=T))
+					'0' = table(RegData$VariabelGr[ind$Rest]),
+					'1' = colSums(sapply(RegData[ind$Rest ,variable], as.numeric), na.rm=T))
 	NRest <- switch(as.character(flerevar), 
-					'0' = sum(AntRest),	#length(indRest)- Kan inneholde NA
-					'1' = length(indRest))
+					'0' = sum(AntRest),	#length(ind$Rest)- Kan inneholde NA
+					'1' = length(ind$Rest))
 	Andeler$Rest <- 100*AntRest/NRest
 }
 #-----------Figur---------------------------------------
@@ -575,7 +574,7 @@ FigTypUt <- rapbase::figtype(outfile, fargepalett=RyggUtvalg$fargepalett)
 #Tilpasse marger for å kunne skrive utvalgsteksten
 NutvTxt <- length(utvalgTxt)
 antDesTxt <- paste0('%.', antDes, 'f')
-grtxtpst <- paste0(rev(grtxt), ' (', rev(sprintf(antDesTxt, Andeler$Hoved)), '%)')
+grtxtpst <- paste0(rev(grtxt), ' \n(', rev(sprintf(antDesTxt, Andeler$Hoved)), '%)')
 vmarg <- switch(retn, V=0, H=max(0, strwidth(grtxtpst, units='figure', cex=cexgr)*0.7))
 #vmarg <- max(0, strwidth(grtxtpst, units='figure', cex=cexgr)*0.7)
 par('fig'=c(vmarg, 1, 0, 1-0.02*(NutvTxt-1)))	#Har alltid datoutvalg med
@@ -596,12 +595,12 @@ if (retn == 'H') {
 
 	if (medSml == 1) {
 		points(as.numeric(rev(Andeler$Rest)), pos, col=fargeRest,  cex=2, pch=18) #c("p","b","o"), 
-		legend('top', c(paste0(shtxt, ' (N=', NHoved,')'), 
+		legend('top', c(paste0(hovedgrTxt, ' (N=', NHoved,')'), 
 						paste0(smltxt, ' (N=', NRest,')')), 
 			border=c(fargeHoved,NA), col=c(fargeHoved,fargeRest), bty='n', pch=c(15,18), pt.cex=2, 
 			lwd=lwdRest,	lty=NA, ncol=1, cex=cexleg)
 		} else {	
-		legend('top', paste0(shtxt, ' (N=', NHoved,')'), 
+		legend('top', paste0(hovedgrTxt, ' (N=', NHoved,')'), 
 			border=NA, fill=fargeHoved, bty='n', ncol=1, cex=cexleg)
 		}
 }
@@ -616,11 +615,11 @@ if (retn == 'V' ) {
 	mtext(at=pos, grtxt2, side=1, las=1, cex=cexgr, adj=0.5, line=1.5)
 if (medSml == 1) {
 	points(pos, as.numeric(Andeler$Rest), col=fargeRest,  cex=2, pch=18) #c("p","b","o"), 
-	legend('top', c(paste0(shtxt, ' (N=', NHoved,')'), paste0(smltxt, ' (N=', NRest,')')), 
+	legend('top', c(paste0(hovedgrTxt, ' (N=', NHoved,')'), paste0(smltxt, ' (N=', NRest,')')), 
 		border=c(fargeHoved,NA), col=c(fargeHoved,fargeRest), bty='n', pch=c(15,18), pt.cex=2, lty=c(NA,NA), 
 		lwd=lwdRest, ncol=2, cex=cexleg)
 	} else {	
-	legend('top', paste0(shtxt, ' (N=', NHoved,')'), 
+	legend('top', paste0(hovedgrTxt, ' (N=', NHoved,')'), 
 		border=NA, fill=fargeHoved, bty='n', ncol=1, cex=cexleg)
 	}
 } 
@@ -636,9 +635,9 @@ if ( outfile != '') {dev.off()}
 
 
 AndelerUt <- rbind(Andeler$Hoved, Andeler$Rest)
-rownames(AndelerUt) <- c(shtxt, smltxt)
+rownames(AndelerUt) <- c(hovedgrTxt, smltxt)
 AntallUt <- rbind(AntHoved, AntRest)
-rownames(AntallUt) <- c(shtxt, smltxt)
+rownames(AntallUt) <- c(hovedgrTxt, smltxt)
 
 UtData <- list(paste(toString(TittelUt),'.', sep=''), AndelerUt, AntallUt, grtxt )
 names(UtData) <- c('Tittel', 'Andeler', 'Antall', 'GruppeTekst')

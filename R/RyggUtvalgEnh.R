@@ -2,13 +2,28 @@
 #'
 #' Funksjon som gjør utvalg av dataene, returnerer det reduserte datasettet og utvalgsteksten.
 #'
+#'    Velges ingen av disse, vil alle data vises.
+#' Argumentet \emph{enhetsUtvalg} har følgende valgmuligheter:
+#'    \itemize{
+#'     \item 0: Hele landet
+#'     \item 1: Egen enhet mot resten av landet (Standard)
+#'     \item 2: Egen enhet
+#'     \item 3: Egen enhet mot egen sykehustype
+#'     \item 4: Egen sykehustype
+#'     \item 5: Egen sykehustype mot resten av landet
+#'     \item 6: Egen enhet mot egen region
+#'     \item 7: Egen region
+#'	   \item 8: Egen region mot resten
+#'    	}							
 #' @inheritParams RyggFigAndeler
+#' @param aar - Operasjonsår 
 #' @param fargepalett - Velge fargepalett, standard:BlaaOff ("offentliggjøringsfargene")
 #'
 #' @export
 
-RyggUtvalgEnh <- function(RegData, datoFra, datoTil, minald=0, maxald=130, erMann='', hovedkat=99, #insttype, 'BlaaOff'
-           aar=0, opKat=99, tidlOp='', enhetsUtvalg=0, reshID=0, fargepalett='BlaaOff') {
+RyggUtvalgEnh <- function(RegData, datoFra='2009-01-01', datoTil='3000-01-01', minald=0, maxald=130, 
+                          erMann='', hovedkat=99, aar=0, opKat=99, tidlOp='', enhetsUtvalg=0, 
+                          reshID=0, fargepalett='BlaaOff') {
 
 # Definer intersect-operator
       "%i%" <- intersect
@@ -35,15 +50,20 @@ indDato <- which(RegData$InnDato >= as.POSIXlt(datoFra) & RegData$InnDato <= as.
 indKj <- if (erMann %in% 0:1) {which(RegData$ErMann == erMann)} else {indKj <- 1:Ninn}
 #Hovedkategori, flervalgsutvalg
       indHovedInngr <- if (hovedkat[1] %in% 0:7) {which(RegData$HovedInngrep %in% as.numeric(hovedkat))
-            } else {indHovedInngr <- 1:Ninn}
+            } else {indHovedInngr <- 0}
+           
       ##Spinal stenose, beregnes for 8 og 9:
-      if (length(intersect(c(8:9), a)>0)) {indSS <- which((RfSentr == 1 | RfLateral == 1) & is.na(RfSpondtypeIsmisk)
+      #attach(RegData)
+      if (length(intersect(c(8:9), hovedkat)>0)) {indSS <- with(RegData, which((RfSentr == 1 | RfLateral == 1) 
+                                                                 & is.na(RfSpondtypeIsmisk)
                     & (OpDeUlamin==1 | OpLaminektomi==1 | OpDeFasett==1)
-                    & (HovedInngrep %in% c(2:5,7)))} 
+                    & (HovedInngrep %in% c(2:5,7))))} 
       if (is.element(8, hovedkat)) {indHovedInngr <- union(indHovedInngr, indSS)}
       #Degenerativ spondylolistese:
-      if (is.element(9, hovedkat)) {indHovedInngr <- union(indHovedInngr, intersect(indSS, which(RfSpondtypeDegen==1)))}
-      
+      if (is.element(9, hovedkat)) {indHovedInngr <- union(indHovedInngr, 
+                                                           intersect(indSS, which(RegData$RfSpondtypeDegen==1)))}
+      #detach(RegData)
+      if (!(hovedkat %in% 0:9)) {indHovedInngr <- 1:Ninn}
 
 indTidlOp <- if (tidlOp %in% 1:4) {which(RegData$TidlOpr==tidlOp)} else {indTidlOp <- 1:Ninn}
 indOpKat <- if (opKat %in% 1:3) {which(RegData$OpKat == opKat)} else {1:Ninn}
@@ -51,7 +71,7 @@ indMed <- indAld %i% indDato %i% indAar %i% indKj %i% indHovedInngr %i% indTidlO
 RegData <- RegData[indMed,]
 
 
-hkatnavn <- c(
+hkatnavn <- c( #0:9
 	'Operasjonskategori: "ukjent"',	#hkat=0
 	'Prolapskirurgi',
 	'Foramenotomi',
@@ -85,8 +105,8 @@ utvalgTxt <- c(paste0('Operasjonsdato: ', if (N>0) {min(RegData$InnDato, na.rm=T
 SykehustypeTxt <- c('univ. sykehus', 'lokalsykehus', 'priv. sykehus')				
 indEgen1 <- match(reshID, RegData$ReshId)
 if (enhetsUtvalg %in% c(1,2,3,6)) {	#Involverer egen enhet
-		shtxt <- as.character(RegData$ShNavn[indEgen1]) } else {
-		shtxt <- switch(as.character(enhetsUtvalg), 	
+		hovedgrTxt <- as.character(RegData$ShNavn[indEgen1]) } else {
+		hovedgrTxt <- switch(as.character(enhetsUtvalg), 	
 			'0' = 'Hele landet',
 			'4' = SykehustypeTxt[RegData$Sykehustype[indEgen1]],
 			'5' = SykehustypeTxt[RegData$Sykehustype[indEgen1]],
@@ -94,16 +114,17 @@ if (enhetsUtvalg %in% c(1,2,3,6)) {	#Involverer egen enhet
 			'8' = as.character(RegData$Region[indEgen1]))
 			}
 			
-if (enhetsUtvalg %in% c(0,2,4,7)) {		#Ikke sammenlikning
+	ind <- list(Hoved=0, Rest=0)
+	if (enhetsUtvalg %in% c(0,2,4,7)) {		#Ikke sammenlikning
 			medSml <- 0
 			smltxt <- 'Ingen sml'
-			indHoved <- 1:dim(RegData)[1]	#Tidligere redusert datasettet for 2,4,7. (+ 3og6)
-			indRest <- NULL
+			ind$Hoved <- 1:dim(RegData)[1]	#Tidligere redusert datasettet for 2,4,7. (+ 3og6)
+			ind$Rest <- NULL
 		} else {						#Skal gjøre sammenlikning
 			medSml <- 1
 			if (enhetsUtvalg %in% c(1,3,6)) {	#Involverer egen enhet
-				indHoved <-which(as.numeric(RegData$ReshId)==reshID) } else {
-				indHoved <- switch(as.character(enhetsUtvalg),
+				ind$Hoved <-which(as.numeric(RegData$ReshId)==reshID) } else {
+				ind$Hoved <- switch(as.character(enhetsUtvalg),
 						'5' = which(RegData$Sykehustype == RegData$Sykehustype[indEgen1]),	#shgr
 						'8' = which(RegData$Region == RegData$Region[indEgen1]))}	#region
 			smltxt <- switch(as.character(enhetsUtvalg),
@@ -112,7 +133,7 @@ if (enhetsUtvalg %in% c(0,2,4,7)) {		#Ikke sammenlikning
 				'5' = 'andre typer sykehus',
 				'6' = paste0(RegData$Region[indEgen1], ' forøvrig'),	#RegData inneh. kun egen region
 				'8' = 'andre regioner')
-			indRest <- switch(as.character(enhetsUtvalg),
+			ind$Rest <- switch(as.character(enhetsUtvalg),
 				'1' = which(as.numeric(RegData$ReshId) != reshID),
 				'3' = which(as.numeric(RegData$ReshId) != reshID),	#RegData inneh. kun egen shgruppe
 				'5' = which(RegData$Sykehustype != RegData$Sykehustype[indEgen1]),
@@ -122,6 +143,6 @@ if (enhetsUtvalg %in% c(0,2,4,7)) {		#Ikke sammenlikning
 
 
 UtData <- list(RegData=RegData, utvalgTxt=utvalgTxt, fargepalett=fargepalett, 
-			indHoved=indHoved, indRest=indRest, medSml=medSml, smltxt=smltxt, shtxt=shtxt) #GronnHNpms624,
+			ind=ind, medSml=medSml, smltxt=smltxt, hovedgrTxt=hovedgrTxt) #shtxt=shtxt, grTypeTxt=grTypeTxt
 return(invisible(UtData))
 }

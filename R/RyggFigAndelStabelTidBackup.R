@@ -45,9 +45,8 @@
 #'
 #' @export
 #'
-RyggFigAndelStabelTid <- function(RegData, outfile, valgtVar, hovedkat=99, preprosess=0, hentData=0,
-                                  minald=0, maxald=130,
-                               erMann=99, ktr=1, tidlOp=0, aar=0, enhetsUtvalg=0, tittel=1, reshID=0) 
+RyggFigAndelStabelTidBackup <- function(RegData, outfile, valgtVar, hovedkat=99, preprosess=0, hentData=0,minald=0, maxald=130,
+                               erMann=99, ktr=1, tidlOp=0, aar=0, enhetsUtvalg=1, tittel=1, reshID=0) 
       {
       
 if (hentData == 1) {		
@@ -65,6 +64,15 @@ ktrtxt <- NULL
 #Når bare skal sammenlikne med sykehusgruppe eller region, eller ikke sammenlikne, 
 #trengs ikke data for hele landet:
 reshID <- as.numeric(reshID)
+if (enhetsUtvalg %in% c(2,3,4,6,7)) {	#Ta med 2,4 og 7? Oppr. 3 og 6
+		indEgen1 <- match(reshID, RegData$ReshId)
+		RegData <- switch(as.character(enhetsUtvalg),
+						'2' = RegData[which(RegData$ReshId == reshID),],	#kun egen enhet
+						'3' = RegData[which(RegData$Sykehustype == RegData$Sykehustype[indEgen1]),],	#sml. shgruppe
+						'4' = RegData[which(RegData$Sykehustype == RegData$Sykehustype[indEgen1]),],	#kun egen shgruppe
+						'6' = RegData[which(RegData$Region == as.character(RegData$Region[indEgen1])),],	#sml region
+						'7' = RegData[which(RegData$Region == as.character(RegData$Region[indEgen1])),])	#kun egen region
+	}
 
 	if (valgtVar=='Fornoyd') {
 		t1 <- 'Hvor fornøyd er du med behandlinga du har fått på sykehuset?'
@@ -99,20 +107,50 @@ reshID <- as.numeric(reshID)
 	}
 
 #Gjør utvalg
-RyggUtvalg <- RyggUtvalgEnh(RegData=RegData, reshID=reshID, #datoFra=datoFra, datoTil=datoTil, 
-                            minald=minald, maxald=maxald, erMann=erMann, aar=aar, 
-                            hovedkat = hovedkat, tidlOp=tidlOp, 
-                            enhetsUtvalg=enhetsUtvalg) #, grType=grType
-smltxt <- RyggUtvalg$smltxt
-medSml <- RyggUtvalg$medSml 
-utvalgTxt <- RyggUtvalg$utvalgTxt
-ind <- RyggUtvalg$ind
+RyggUtvalg <- RyggUtvalg(RegData=RegData, datoFra='2009-01-01', datoTil='2100-12-31', minald=minald, maxald=maxald, 
+                         erMann=erMann, hovedkat=hovedkat, tidlOp=tidlOp)
 RegData <- RyggUtvalg$RegData
-hovedgrTxt <- RyggUtvalg$hovedgrTxt
+utvalgTxt <- RyggUtvalg$utvalgTxt
 
 RegData$OpAar <- factor(RegData$OpAar)
 
 		
+SykehustypeTxt <- c('univ. sykehus', 'lokalsykehus', 'priv. sykehus')				
+indEgen1 <- match(reshID, RegData$ReshId)
+if (enhetsUtvalg %in% c(1,2,3,6)) {	#Involverer egen enhet
+		shtxt <- as.character(RegData$ShNavn[indEgen1]) } else {
+		shtxt <- switch(as.character(enhetsUtvalg), 	
+			'0' = 'Hele landet',
+			'4' = SykehustypeTxt[RegData$Sykehustype[indEgen1]],
+			'5' = SykehustypeTxt[RegData$Sykehustype[indEgen1]],
+			'7' = as.character(RegData$Region[indEgen1]),
+			'8' = as.character(RegData$Region[indEgen1]))
+			}
+if (enhetsUtvalg %in% c(0,2,4,7)) {		#Ikke sammenlikning
+			medSml <- 0
+			smltxt <- 'Ingen sml'
+			indHoved <- 1:dim(RegData)[1]	#Tidligere redusert datasettet for 2,4,7. (+ 3og6)
+			indRest <- NULL
+		} else {						#Skal gjøre sammenlikning
+			medSml <- 1
+			if (enhetsUtvalg %in% c(1,3,6)) {	#Involverer egen enhet
+				indHoved <-which(as.numeric(RegData$ReshId)==reshID) } else {
+				indHoved <- switch(as.character(enhetsUtvalg),
+						'5' = which(RegData$Sykehustype == RegData$Sykehustype[indEgen1]),	#shgr
+						'8' = which(RegData$Region == RegData$Region[indEgen1]))}	#region
+			smltxt <- switch(as.character(enhetsUtvalg),
+				'1' = 'landet forøvrig',
+				'3' = paste('andre ', SykehustypeTxt[RegData$Sykehustype[indEgen1]], sep=''),	#RegData inneh. kun egen shgruppe
+				'5' = 'andre typer sykehus',
+				'6' = paste(RegData$Region[indEgen1], ' forøvrig', sep=''),	#RegData inneh. kun egen region
+				'8' = 'andre regioner')
+			indRest <- switch(as.character(enhetsUtvalg),
+				'1' = which(as.numeric(RegData$ReshId) != reshID),
+				'3' = which(as.numeric(RegData$ReshId) != reshID),	#RegData inneh. kun egen shgruppe
+				'5' = which(RegData$Sykehustype != RegData$Sykehustype[indEgen1]),
+				'6' = which(as.numeric(RegData$ReshId)!=reshID),	#RegData inneh. kun egen region
+				'8' = which(RegData$Region != RegData$Region[indEgen1]))
+			}								
 
 TittelUt <- c(t1, ktrtxt)
 if (tittel==0) {Tittel<-''} else {Tittel <- TittelUt} 
@@ -121,20 +159,20 @@ if (tittel==0) {Tittel<-''} else {Tittel <- TittelUt}
 
 #-------------------------Beregninger-----------------------------------------
 #if (egenavd==1) {
-Aartxt <- as.numeric(levels(RegData$OpAar))	#as.numeric(names(table(RegData$OpAar[ind$Hoved])))
+Aartxt <- as.numeric(levels(RegData$OpAar))	#as.numeric(names(table(RegData$OpAar[indHoved])))
 RegData <- RegData[which(RegData$OpAar %in% Aartxt), ]
 
-NVarAarRest <- ftable(RegData[ind$Rest, c('Var','OpAar')])	#ftable(list(RegDataRL$Var, RegDataRL$OpAar))
+NVarAarRest <- ftable(RegData[indRest, c('Var','OpAar')])	#ftable(list(RegDataRL$Var, RegDataRL$OpAar))
 NAarRest <- colSums(NVarAarRest)
 AndelerRest <- prop.table(NVarAarRest,2)*100
-NVarAar <- ftable(RegData[ind$Hoved, c('Var','OpAar')])	#ftable(list(RegData$Var, RegData$OpAar))
+NVarAar <- ftable(RegData[indHoved, c('Var','OpAar')])	#ftable(list(RegData$Var, RegData$OpAar))
 NAar <- colSums(NVarAar)
 AndelerHoved <- prop.table(NVarAar,2)*100
 
 #-----------Figur---------------------------------------
 #Hvis for få observasjoner..
 #if (dim(RegData)[1] < 10 | (length(which(RegData$ReshId == reshID))<5 & egenavd==1)) {
-if ((length(ind$Hoved) < 10) | (medSml ==1 & length(ind$Rest)<10)) {
+if ((length(indHoved) < 10) | (medSml ==1 & length(indRest)<10)) {
 FigTypUt <- rapbase::figtype(outfile, fargepalett=RyggUtvalg$fargepalett)
 farger <- FigTypUt$farger
 	plot.new()
@@ -166,7 +204,7 @@ legend('top', legend=rev(Skala), bty='n', cex=.8, 	#max(koord+0.5)*1.35, y=80,
 text(koord, 102.7, NAar, cex=0.75)
 mtext(at=koord, cex=0.9, side=1, line=0, adj=0.5, Aartxt)	#
 mtext(side=1, line=1,'Operasjonsår', cex=0.9)
-mtext(at=min(koord)-0.5, cex=0.8, side=1, line=2, adj=0, paste0('Tall over søylene angir antall operasjoner i ', hovedgrTxt)) 
+mtext(at=min(koord)-0.5, cex=0.8, side=1, line=2, adj=0, paste0('Tall over søylene angir antall operasjoner i ', shtxt)) 
 if (medSml==1) {
 	points(koord, AndelerRest[1,], cex=1.2, lwd=1, col='white', bg='white', pch=21)
 	mtext(at=min(koord)-0.5, cex=0.8, side=1, line=3, adj=0, 

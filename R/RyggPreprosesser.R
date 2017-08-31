@@ -19,6 +19,9 @@ RyggPreprosess <- function(RegData=RegData)
 	RegData$InnDato <- as.POSIXlt(RegData$OpDato, format="%d.%m.%Y")
 	#RegData$Aar <- 1900 + strptime(RegData$InnDato, format="%Y")$year
 
+	#Endre variabelnavn:
+	#names(RegData)[which(names(RegData) == 'OpAar')] <- 'Aar'
+	
 	#Variabel som identifiserer avdelingas resh
 	names(RegData)[which(names(RegData) == 'AvdReshID')] <- 'ReshId'
 	names(RegData)[which(names(RegData) == 'AvdNavn')] <- 'ShNavn'

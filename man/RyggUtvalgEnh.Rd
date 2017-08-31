@@ -4,9 +4,10 @@
 \alias{RyggUtvalgEnh}
 \title{Funksjon som gjør utvalg i datagrunnlaget til registreringene for Nakke}
 \usage{
-RyggUtvalgEnh(RegData, datoFra, datoTil, minald = 0, maxald = 130,
-  erMann = "", hovedkat = 99, aar = 0, opKat = 99, tidlOp = "",
-  enhetsUtvalg = 0, reshID = 0, fargepalett = "BlaaOff")
+RyggUtvalgEnh(RegData, datoFra = "2009-01-01", datoTil = "3000-01-01",
+  minald = 0, maxald = 130, erMann = "", hovedkat = 99, aar = 0,
+  opKat = 99, tidlOp = "", enhetsUtvalg = 0, reshID = 0,
+  fargepalett = "BlaaOff")
 }
 \arguments{
 \item{RegData}{En dataramme med alle nødvendige variabler fra registeret}
@@ -25,6 +26,8 @@ RyggUtvalgEnh(RegData, datoFra, datoTil, minald = 0, maxald = 130,
 
 \item{hovedkat}{Hvilken type hovedinngrep, numerisk 0-7, standard: 99, dvs. alle}
 
+\item{aar}{- Operasjonsår}
+
 \item{opKat}{Hastegrad av operasjon 1: Elektivt, 2: Akutt, 3: Halvøyeblikkelig}
 
 \item{tidlOp}{Tidligere operert, numerisk 1-4. Alt annet gir alle data uten utvalg.
@@ -42,4 +45,19 @@ hvilken enhet i spesialisthelsetjenesten brukeren tilhører}
 }
 \description{
 Funksjon som gjør utvalg av dataene, returnerer det reduserte datasettet og utvalgsteksten.
+}
+\details{
+Velges ingen av disse, vil alle data vises.
+Argumentet \emph{enhetsUtvalg} har følgende valgmuligheter:
+   \itemize{
+    \item 0: Hele landet
+    \item 1: Egen enhet mot resten av landet (Standard)
+    \item 2: Egen enhet
+    \item 3: Egen enhet mot egen sykehustype
+    \item 4: Egen sykehustype
+    \item 5: Egen sykehustype mot resten av landet
+    \item 6: Egen enhet mot egen region
+    \item 7: Egen region
+   \item 8: Egen region mot resten
+   	}
 }

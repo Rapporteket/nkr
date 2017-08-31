@@ -5,18 +5,20 @@
 #'
 #' Argumentet \emph{valgtVar} har følgende valgmuligheter:
 #'    \itemize{
-#'     \item alder_u18: Pasienter under 18 år 
-#'     \item reinn: Andel reinnlagte (kun hvor dette er registrert, dvs. fjerner ukjente)
+#'     \item alder70: Alder over 70år, 
+#'     \item saarinf: Pasientrapportert sårinfeksjon, alle typer 
+#'     \item degSponFusj: Andel av degenerativ spondylolistese er operert  med fusjonskirurgi (hovedinngr=5)
 #'    }
 #'
-#' @inheritParams RyggAndeler 
+#' @inheritParams RyggFigAndeler 
 #' @param tidsenhet Oppløsning på tidsaksen. Verdier: 'Aar' (standard), 'Halvaar', 'Kvartal','Mnd'
 #'
 #' @return Figur som viser tidstrend, dvs. andel av valgt variabel for hvert år. 
 #'
 #' @export
-RyggAndelTid <- function(RegData, valgtVar, datoFra='2011-01-01', datoTil='3000-12-31', tidsenhet='aar',
-                        minald=0, maxald=130, erMann='', reshID=0, outfile='', 
+RyggFigAndelTid <- function(RegData, valgtVar, datoFra='2011-01-01', datoTil='3000-12-31', aar=0,
+                            tidsenhet='Aar', hovedkat = 99, ktr = 2, tidlOp = 99, tittel = 1,
+                        minald=0, maxald=130, erMann='', reshID=0, outfile='', opKat=99, 
                         enhetsUtvalg=1, preprosess=1, hentData=0, lagFig=1, offData=0) {
       
       if (hentData == 1) {		
@@ -56,7 +58,8 @@ RyggAndelTid <- function(RegData, valgtVar, datoFra='2011-01-01', datoTil='3000-
       if (offData == 0) {
             if (reshID==0) {enhetsUtvalg <- 0}
             RyggUtvalg <- RyggUtvalgEnh(RegData=RegData, reshID=reshID, datoFra=datoFra, datoTil=datoTil, 
-                                      minald=minald, maxald=maxald, erMann=erMann, #aar=0, 
+                                      minald=minald, maxald=maxald, erMann=erMann, aar=aar, 
+                                      hovedkat = hovedkat, opKat=opKat, tidlOp=tidlOp, 
                                       enhetsUtvalg=enhetsUtvalg) #, grType=grType
             smltxt <- RyggUtvalg$smltxt
             medSml <- RyggUtvalg$medSml 
@@ -75,29 +78,29 @@ RyggAndelTid <- function(RegData, valgtVar, datoFra='2011-01-01', datoTil='3000-
       
       #Brukes til sortering
       RegData$TidsEnhet <- switch(tidsenhet,
-                                  Aar = RegData$Aar-min(RegData$Aar)+1,
-                                  Mnd = RegData$Mnd-min(RegData$Mnd[RegData$Aar==min(RegData$Aar)])+1
-                                  +(RegData$Aar-min(RegData$Aar))*12,
-                                  Kvartal = RegData$Kvartal-min(RegData$Kvartal[RegData$Aar==min(RegData$Aar)])+1+
-                                        (RegData$Aar-min(RegData$Aar))*4,
-                                  Halvaar = RegData$Halvaar-min(RegData$Halvaar[RegData$Aar==min(RegData$Aar)])+1+
-                                        (RegData$Aar-min(RegData$Aar))*2
+                                  Aar = RegData$OpAar-min(RegData$OpAar)+1,
+                                  Mnd = RegData$Mnd-min(RegData$Mnd[RegData$OpAar==min(RegData$OpAar)])+1
+                                  +(RegData$OpAar-min(RegData$OpAar))*12,
+                                  Kvartal = RegData$Kvartal-min(RegData$Kvartal[RegData$OpAar==min(RegData$OpAar)])+1+
+                                        (RegData$OpAar-min(RegData$OpAar))*4,
+                                  Halvaar = RegData$Halvaar-min(RegData$Halvaar[RegData$OpAar==min(RegData$OpAar)])+1+
+                                        (RegData$OpAar-min(RegData$OpAar))*2
       )
       
       tidtxt <- switch(tidsenhet,
-                       Mnd = paste(substr(RegData$Aar[match(1:max(RegData$TidsEnhet), RegData$TidsEnhet)], 3,4),
+                       Mnd = paste(substr(RegData$OpAar[match(1:max(RegData$TidsEnhet), RegData$TidsEnhet)], 3,4),
                                    sprintf('%02.0f', RegData$Mnd[match(1:max(RegData$TidsEnhet), RegData$TidsEnhet)]), sep='.'),
-                       Kvartal = paste(substr(RegData$Aar[match(1:max(RegData$TidsEnhet), RegData$TidsEnhet)], 3,4),
+                       Kvartal = paste(substr(RegData$OpAar[match(1:max(RegData$TidsEnhet), RegData$TidsEnhet)], 3,4),
                                        sprintf('%01.0f', RegData$Kvartal[match(1:max(RegData$TidsEnhet), RegData$TidsEnhet)]), sep='-'),
-                       Halvaar = paste(substr(RegData$Aar[match(1:max(RegData$TidsEnhet), RegData$TidsEnhet)], 3,4),
+                       Halvaar = paste(substr(RegData$OpAar[match(1:max(RegData$TidsEnhet), RegData$TidsEnhet)], 3,4),
                                        sprintf('%01.0f', RegData$Halvaar[match(1:max(RegData$TidsEnhet), RegData$TidsEnhet)]), sep='-'),
-                       Aar = as.character(RegData$Aar[match(1:max(RegData$TidsEnhet), RegData$TidsEnhet)]))
+                       Aar = as.character(RegData$OpAar[match(1:max(RegData$TidsEnhet), RegData$TidsEnhet)]))
       
       #RegData$TidsEnhet <- factor(RegData$TidsEnhet, levels=1:max(RegData$TidsEnhet))
       RegData$TidsEnhet <- factor(RegData$TidsEnhet, levels=1:max(RegData$TidsEnhet)) #evt. levels=tidtxt
       
-      #tidtxt <- min(RegData$Aar):max(RegData$Aar)
-      #RegData$Aar <- factor(RegData$Aar, levels=tidtxt)
+      #tidtxt <- min(RegData$OpAar):max(RegData$OpAar)
+      #RegData$OpAar <- factor(RegData$OpAar, levels=tidtxt)
       
       #--------------- Gjøre beregninger ------------------------------
       
@@ -113,24 +116,14 @@ RyggAndelTid <- function(RegData, valgtVar, datoFra='2011-01-01', datoTil='3000-
       AggVerdier$Rest <- NAarHendRest/NAarRest*100
       Ngr <- list(Hoved = NAarHendHoved, Rest = NAarHendRest)
       
-      if (valgtVar %in% c('liggetidDod','respiratortidDod')) {
-            #Kommentar: for liggetid og respiratortid vises antall pasienter og ikke antall liggedøgn for døde
-            Ngr$Hoved<-tapply(RegData[ind$Hoved, 'DischargedIntensiveStatus'], RegData[ind$Hoved ,'TidsEnhet'],sum, na.rm=T)    #         liggetid i døgn, navnene blir litt villedende men enklest å gjøre dette på denne måten 
-            Ngr$Rest<- tapply(RegData$DischargedIntensiveStatus[ind$Rest], RegData$TidsEnhet[ind$Rest], sum)      
-            SUMAarHoved <- tapply(RegData[ind$Hoved, 'Variabel'], RegData[ind$Hoved ,'TidsEnhet'], sum,na.rm=T)
-            SUMAarHendHoved <- tapply(RegData[ind$Hoved, 'Variabel2'], RegData[ind$Hoved ,'TidsEnhet'],sum, na.rm=T)
-            AggVerdier$Hoved <- SUMAarHendHoved/SUMAarHoved*100
-            SUMAarRest <- tapply(RegData$Variabel[ind$Rest], RegData$TidsEnhet[ind$Rest], sum,na.rm=T)  
-            SUMAarHendRest <- tapply(RegData$Variabel2[ind$Rest], RegData$TidsEnhet[ind$Rest],sum, na.rm=T)
-            AggVerdier$Rest <- SUMAarHendRest/SUMAarRest*100
-      }  
-      
       #grtxt <- paste0(rev(RyggVarSpes$grtxt), ' (', rev(sprintf('%.1f',AggVerdier$Hoved)), '%)') 
       grtxt2 <- paste0('(', sprintf('%.1f',AggVerdier$Hoved), '%)')
       yAkseTxt <- 'Andel (%)'
       vektor <- c('Aar','Halvaar','Kvartal','Mnd')
       xAkseTxt <- paste0(c('Innleggelsesår', 'Innleggelsesår', 'Innleggelseskvartal', 'Innleggelsesmåned')
                          [which(tidsenhet==vektor)])
+      
+      hovedgrTxt <- RyggUtvalg$hovedgrTxt
       
       FigDataParam <- list(AggVerdier=AggVerdier, N=N, 
                            Ngr=Ngr,	
@@ -146,7 +139,7 @@ RyggAndelTid <- function(RegData, valgtVar, datoFra='2011-01-01', datoTil='3000-
                            utvalgTxt=RyggUtvalg$utvalgTxt, 
                            fargepalett=RyggUtvalg$fargepalett, 
                            medSml=medSml,
-                           hovedgrTxt=RyggUtvalg$hovedgrTxt,
+                           hovedgrTxt=hovedgrTxt,
                            smltxt=RyggUtvalg$smltxt)
       
       
@@ -173,7 +166,7 @@ RyggAndelTid <- function(RegData, valgtVar, datoFra='2011-01-01', datoTil='3000-
                   } else {
                         
                         #Plottspesifikke parametre:
-                        FigTypUt <- figtype(outfile, fargepalett=fargepalett)
+                        FigTypUt <- figtype(outfile, fargepalett=RyggUtvalg$fargepalett)
                         farger <- FigTypUt$farger
                         fargeHoved <- farger[3]
                         fargeRest <- farger[1]
@@ -189,7 +182,7 @@ RyggAndelTid <- function(RegData, valgtVar, datoFra='2011-01-01', datoTil='3000-
                         ymax <- min(119, 1.25*max(c(AggVerdier$Hoved, AggVerdier$Rest),na.rm=T))
                         plot(xskala, AggVerdier$Hoved,  font.main=1,  type='o', pch="'", col='white', #type='o', 
                              xlim= c(0.9,xmax+0.1), xaxt='n', frame.plot = FALSE,  #xaxp=c(min(tidtxt), max(tidtxt),length(tidtxt)-1)
-                             cex=2, xlab='Innleggelsesår', ylab="Andel (%)", ylim=c(0,ymax), yaxs = 'i') 	
+                             cex=2, xlab='Operasjonsår', ylab="Andel (%)", ylim=c(0,ymax), yaxs = 'i') 	
                         
                         #Legge på linjer i plottet. 
                         grid(nx = NA, ny = NULL, col = farger[4], lty = "solid")
