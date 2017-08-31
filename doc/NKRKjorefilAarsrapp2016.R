@@ -18,6 +18,7 @@ datoTil <- '2016-12-31'
 aar <- 2010:2016
 minald <- 0
 maxald <- 130
+erMann <- 99
 hovedkat <- 99 		#Hovedinngrep, 0-7, Standard: 99, dvs alle operasjoner
 opKat <- 99  #Bare elektive pasienter
 tidlOp <- 99 #4 - Bare primæroperasjoner

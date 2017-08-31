@@ -55,7 +55,7 @@
 
 RyggFigAndelerGrVar <- function(RegData, valgtVar, datoFra='2007-01-01', datoTil='3000-12-31', aar=0,
                             minald=0, maxald=130, erMann='', hovedkat=99, tidlOp='', hentData=0, preprosess=1,
-                            opKat=99, enhetsUtvalg=0, grVar='ShNavn', tittel=1, ktr=0, reshID=0, outfile='') {
+                            opKat=99, enhetsUtvalg=0, grVar='ShNavn', tittel=1, ktr=0, Ngrense=10, reshID=0, outfile='') {
 
 	if (hentData == 1) {		
 	  RegData <- RyggRegDataSQL()
@@ -66,7 +66,7 @@ RyggFigAndelerGrVar <- function(RegData, valgtVar, datoFra='2007-01-01', datoTil
           RegData <- RyggPreprosess(RegData=RegData)
      }
       #------- Tilrettelegge variable
-            RyggVarSpes <- RyggVarTilrettelegg(RegData=RegData, valgtVar=valgtVar, ktr=ktr, figurtype = 'andelGrVar')
+            RyggVarSpes <- RyggVarTilrettelegg(RegData=RegData, valgtVar=valgtVar, ktr=ktr) #, figurtype = 'andelGrVar')
             RegData <- RyggVarSpes$RegData
             sortAvtagende <- RyggVarSpes$sortAvtagende
             varTxt <- RyggVarSpes$varTxt
@@ -78,7 +78,7 @@ RyggFigAndelerGrVar <- function(RegData, valgtVar, datoFra='2007-01-01', datoTil
      cexShNavn <- 1 #0.85
 
      RegData[ ,grVar] <- factor(RegData[ ,grVar])
-     Ngrense <- 10		#Minste antall registreringer for at ei gruppe skal bli vist
+     #Ngrense <- 10		#Minste antall registreringer for at ei gruppe skal bli vist
 
      #------- Gjøre utvalg
      smltxt <- ''
@@ -88,7 +88,6 @@ RyggFigAndelerGrVar <- function(RegData, valgtVar, datoFra='2007-01-01', datoTil
      RyggUtvalg <- RyggUtvalgEnh(RegData=RegData, reshID=reshID, datoFra=datoFra, datoTil=datoTil, 
                                  minald=minald, maxald=maxald, erMann=erMann, aar=aar,
                                  hovedkat=hovedkat, opKat=opKat, tidlOp=tidlOp,enhetsUtvalg=enhetsUtvalg)
-     
      smltxt <- RyggUtvalg$smltxt
      medSml <- RyggUtvalg$medSml 
      hovedgrTxt <- RyggUtvalg$hovedgrTxt
@@ -111,15 +110,15 @@ RyggFigAndelerGrVar <- function(RegData, valgtVar, datoFra='2007-01-01', datoTil
      if (length(indGrUt)==0) { indGrUt <- 0}
      AndelerGr[indGrUt] <- dummy0
      sortInd <- order(as.numeric(AndelerGr), decreasing=TRUE)
-     Ngrtxt <- paste('N=', as.character(Ngr), sep='')	#
-     Ngrtxt[indGrUt] <- paste('N<', Ngrense,sep='')	#paste(' (<', Ngrense,')',sep='')	#
+     Ngrtxt <- paste0('N=', as.character(Ngr))	#
+     Ngrtxt[indGrUt] <- paste0('N<', Ngrense)	#paste(' (<', Ngrense,')',sep='')	#
 
      AndelerGrSort <- AndelerGr[sortInd]
      AndelHele <- round(100*sum(RegData$Variabel)/N, 2)
      #	GrNavnSort <- paste(names(Ngr)[sortInd], ', ',Ngrtxt[sortInd], sep='')
      GrNavnSort <- names(Ngr)[sortInd]
 
-     andeltxt <- paste(sprintf('%.1f',AndelerGrSort), '%',sep='') 	#round(as.numeric(AndelerGrSort),1)
+     andeltxt <- paste0(sprintf('%.1f',AndelerGrSort), '%') 	#round(as.numeric(AndelerGrSort),1)
      if (length(indGrUt)>0) {andeltxt[(AntGr+1):(AntGr+length(indGrUt))] <- ''}
 
      if (tittel==0) {Tittel<-''} else {Tittel <- RyggVarSpes$tittel}

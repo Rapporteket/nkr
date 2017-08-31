@@ -296,7 +296,7 @@ RyggVarTilrettelegg  <- function(RegData, valgtVar, grVar='', ktr=0, figurtype='
             #Kode 1:5,tom: 'Ingen', '<3 mnd', '3-12 mnd', '1-2 år', '>2 år', 'Ukjent'
             RegData <- RegData[which(RegData$SymptVarighRyggHof %in% 1:5), ]
             RegData$Variabel[which(RegData[ ,valgtVar] %in% 4:5)] <- 1
-            VarTxt <- 'med varighet minst 1 år'
+            varTxt <- 'med varighet minst 1 år'
             tittel <- 'Varighet av rygg-/hoftesmerter minst ett år'
       }
       
@@ -305,16 +305,20 @@ RyggVarTilrettelegg  <- function(RegData, valgtVar, grVar='', ktr=0, figurtype='
             #Kode 1:5,tom: 'Ingen', '<3 mnd', '3-12 mnd', '1-2 år', '>2 år', 'Ukjent'
             RegData <- RegData[which(RegData$SympVarighUtstr %in% 1:5), ]
             RegData$Variabel[which(RegData[ ,valgtVar] %in% 4:5)] <- 1
-            VarTxt <- 'med varighet minst 1år'
+            varTxt <- 'med varighet minst 1år'
             tittel <- 'Varighet av utstrålende smerter minst ett år'
       }
-      
+      if (valgtVar == 'tidlOp3'){
+            RegData$Variabel[RegData$TidlOprAntall>2] <- 1
+            varTxt <- 'med >2 tidl. operasjoner'
+            tittel <- 'Flere enn to tidligere operasjoner'
+            }
       if (valgtVar == 'UforetrygdPre') { #AndelGrVar, AndelTid
             #PasientSkjema. Andel med UforetrygdPre 1 og 3
             #Kode 1:4,tom: 'Ja', 'Nei', 'Planlegger søknad', 'Innvilget', 'Ukjent')
             RegData <- RegData[which(RegData$UforetrygdPre %in% 1:4), ]
             RegData$Variabel[which(RegData[ ,valgtVar] %in% c(1,3))] <- 1
-            VarTxt <- 'søkt/planlagt å søke'
+            varTxt <- 'søkt/planlagt å søke'
             tittel <- 'Har søkt eller planlegger å søke uføretrygd'
       }
       if (valgtVar == 'Utd') { #AndelGrVar
@@ -323,7 +327,7 @@ RyggVarTilrettelegg  <- function(RegData, valgtVar, grVar='', ktr=0, figurtype='
             #Høyskole/universitet, <4 år', 'Høyskole/universitet, 4år+', 'Ukjent'
             RegData <- RegData[which(RegData$Utd %in% 1:5), ]
             RegData$Variabel[which(RegData[ ,valgtVar] %in% 4:5)] <- 1
-            VarTxt <- 'med høyere utdanning'
+            varTxt <- 'med høyere utdanning'
             tittel <- 'Andel høyskole-/universitetsutdannede'
       }
       if (valgtVar == 'Verre') { #AndelGrVar		#%in% c('Verre3mnd','Verre12mnd')) {
