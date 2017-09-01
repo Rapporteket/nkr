@@ -7,7 +7,7 @@
 RyggFigAndelTid(RegData, valgtVar, datoFra = "2011-01-01",
   datoTil = "3000-12-31", aar = 0, tidsenhet = "Aar", hovedkat = 99,
   ktr = 2, tidlOp = 99, tittel = 1, minald = 0, maxald = 130,
-  erMann = "", reshID = 0, outfile = "", enhetsUtvalg = 1,
+  erMann = "", reshID = 0, outfile = "", opKat = 99, enhetsUtvalg = 1,
   preprosess = 1, hentData = 0, lagFig = 1, offData = 0)
 }
 \arguments{
@@ -44,6 +44,8 @@ hvilken enhet i spesialisthelsetjenesten brukeren tilhører}
 
 \item{outfile}{Navn på fil figuren skrives til. Standard: '' (Figur skrives
 til systemets standard utdataenhet (som regel skjerm))}
+
+\item{opKat}{Hastegrad av operasjon 1: Elektivt, 2: Akutt, 3: Halvøyeblikkelig}
 
 \item{enhetsUtvalg}{Gjør gruppeutvalg med eller uten sammenlikning. Se \strong{Details} for oversikt.}
 

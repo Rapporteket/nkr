@@ -8,7 +8,7 @@ RyggFigAndelerGrVar(RegData, valgtVar, datoFra = "2007-01-01",
   datoTil = "3000-12-31", aar = 0, minald = 0, maxald = 130,
   erMann = "", hovedkat = 99, tidlOp = "", hentData = 0,
   preprosess = 1, opKat = 99, enhetsUtvalg = 0, grVar = "ShNavn",
-  tittel = 1, ktr = 0, reshID = 0, outfile = "")
+  tittel = 1, ktr = 0, Ngrense = 10, reshID = 0, outfile = "")
 }
 \arguments{
 \item{RegData}{En dataramme med alle nødvendige variabler fra registeret}
@@ -80,6 +80,7 @@ Argumentet \emph{valgtVar} har følgende valgmuligheter:
     \item Arbstatus: Mottar sykepenger, 3 mnd etter operasjon?    [ENDRET fra Arbstatus3mnd, Arbstatus12mnd]
     \item ASA: ASA-grad > II    
     \item BMI: Pasienter med fedme (BMI>30)    
+    \item degSponFusj: Degenerativ spondylolistese operert  med fusjonskirurgi 
     \item ErstatningPre: Søkt/planlegger å søke erstatning?    
     \item Fornoyd: Fornøyde pasienter [ENDRET fra Fornoyd3mnd, Fornoyd12mnd  ]
     \item Kp3Mnd: Pasientrapporterte komplikasjoner    
@@ -103,6 +104,6 @@ Argumentet \emph{valgtVar} har følgende valgmuligheter:
  \item OswEndrLav: Mer enn 20 poeng forbedring i Oswestry-skår, 3 mnd/12mnd.
 \item OswEndr20: 
 \item Osw48: 
-\item KpInf3Mnd: 
+\item KpInf3Mnd: Sårinfeksjon
 	}
 }

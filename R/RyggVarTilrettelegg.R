@@ -215,6 +215,29 @@ RyggVarTilrettelegg  <- function(RegData, valgtVar, grVar='', ktr=0, figurtype='
             RegData$Variabel[RegData$Nytte %in% 1:2] <- 1
             tittel <- paste0('Helt bra eller mye bedre' , ktrtxt)
       }
+      if (valgtVar=='Liggedogn') {#gjsnGrVar, andeler
+            #For opphold registrert som dagkirurgi uten at liggedogn er reg., settes liggedogn=0
+            dagind <- which( (is.na(RegData$Liggedogn) | is.nan(RegData$Liggedogn))  & RegData$Dagkirurgi==1)
+            RegData$Liggedogn[dagind]<-0
+            RegData$Variabel <- RegData$Liggedogn #gjsnGrVar
+            gr <- c(0:7,100)	
+            RegData$VariabelGr <- cut(RegData$Liggedogn, breaks=gr, include.lowest=TRUE, right=FALSE)
+            grtxt <- c(0:6, '7+')
+            xAkseTxt <- 'Antall liggedøgn' #(subtxt
+            tittel <- 'liggetid' #gjsnGrVar
+      }
+#      if (valgtVar == 'liggetid') { #Andeler #GjsnGrVar
+#            #Liggetid bare >0
+#            RegData$Variabel  <- as.numeric(RegData$liggetid)
+#            RegData <- RegData[which(RegData$Variabel>0), ] 
+#            tittel <- 'Liggetid'
+#            if (figurtype %in% c('gjsnGrVar', 'gjsnTid')) {
+#                  tittel <- 'liggetid'}
+#            gr <- c(0, 1, 2, 3, 4, 5, 6, 7, 14, 1000)
+#            RegData$VariabelGr <- cut(RegData$liggetid, breaks=gr, include.lowest=TRUE, right=FALSE)	
+#            grtxt <- c('(0-1)','[1-2)','[2-3)','[3-4)','[4-5)','[5-6)','[6-7)','[7-14)','14+')
+#            xAkseTxt <- 'Liggetid (døgn)'
+#      }
       
       if (valgtVar == 'OswEndrLav') { #AndelGrVar
             #Mislykkede operasjoner
@@ -225,25 +248,27 @@ RyggVarTilrettelegg  <- function(RegData, valgtVar, grVar='', ktr=0, figurtype='
             RegData$Variabel[which(RegData$OswEndr <13)] <- 1
             tittel <- paste0('Forbedring av Oswestry-skår < 13 poeng', ktrtxt)
       }
-      if (valgtVar == 'OswEndr20') { #AndelGrVar
+      if (valgtVar == 'OswEndr20') { #AndelGrVar, andelTid
             #Mislykkede operasjoner
             RegData$OswEndr <- switch(as.character(ktr), 
                                       '1'= (RegData$OswTotPre - RegData$OswTot3mnd),
                                       '2'= (RegData$OswTotPre - RegData$OswTot12mnd))
             RegData <- RegData[which(RegData$OswEndr >= -100), ]
             RegData$Variabel[which(RegData$OswEndr >20)] <- 1
+            varTxt <- 'med >20 poeng forbedring'
             tittel <- paste0('Forbedring av Oswestry-skår > 20 poeng', ktrtxt)
       }
       
-      if (valgtVar == 'OswEndr30pst') { #AndelGrVar
+      if (valgtVar == 'OswEndr30pst') { #AndelGrVar, andelTid
             #Andel med klinisk signifikant forbedring i Oswestry-skår. 
             #Forbedring = nedgang
             RegData$OswPst <- switch(as.character(ktr),
                                      '1' = (RegData$OswTotPre - RegData$OswTot3mnd)/RegData$OswTotPre*100,
                                      '2' = (RegData$OswTotPre - RegData$OswTot12mnd)/RegData$OswTotPre*100)
             RegData <- RegData[which(RegData$OswPst>=-1000), ]
-            RegData$Variabel[which(RegData$OswPst >30)] <- 1
-            tittel <- paste0('Mer enn 30% forbedring av Oswestry-skår', ktrtxt)
+            RegData$Variabel[which(RegData$OswPst >=30)] <- 1
+            varTxt <- 'med >=30 % forbedring'
+            tittel <- paste0('Minst 30% forbedring av Oswestry-skår', ktrtxt)
       }
       if (valgtVar == 'Osw48') { #AndelGrVar
             #Andel med Oswestry-skår fortsatt over 48. 
