@@ -154,14 +154,15 @@ RyggVarTilrettelegg  <- function(RegData, valgtVar, grVar='', ktr=0, figurtype='
             tittel <- 'Pasienten har søkt/planlegger å søke erstatning'
       }
       if (valgtVar =='Fornoyd') { #AndelGrVar	#%in% c('Fornoyd3mnd','Fornoyd12mnd')) {
-            #3/12mndSkjema. Andel med Fornøyd/litt fornøyd (1,2)
+            #3/12mndSkjema. Andel med helt Fornøyd (1)
             #Kode 1:5,9: 'Fornøyd', 'Litt fornøyd', 'Verken eller', 'Litt misfornøyd', 'Misfornøyd', 'Ukjent')
             RegData$Fornoyd <- switch(as.character(ktr), 
-                                      '1'= RegData$FornoydBeh3mnd,
-                                      '2'= RegData$FornoydBeh12mnd)
+                                      '1'= RegData$Fornoyd3mnd,
+                                      '2'= RegData$Fornoyd12mnd)
             RegData <- RegData[which(RegData$Fornoyd %in% 1:5), ]
-            RegData$Variabel[which(RegData$Fornoyd %in% 1:2)] <- 1
-            tittel <- paste0('Fornøyde pasienter, 3 mnd.' ,ktrtxt)
+            RegData$Variabel[which(RegData$Fornoyd %in% 1:2)] <- 1 #
+            #RegData$Variabel[which(RegData$Fornoyd ==1)] <- 1 #%in% 1:2
+            tittel <- paste0('Helt fornøyde pasienter', ktrtxt)
       }
       #andel av degenerativ spondylolistese som er operert  med fusjonskirurgi (hovedinngr=5)
       if (valgtVar == 'degSponFusj') { #AndelGrVar
@@ -219,12 +220,14 @@ RyggVarTilrettelegg  <- function(RegData, valgtVar, grVar='', ktr=0, figurtype='
             #For opphold registrert som dagkirurgi uten at liggedogn er reg., settes liggedogn=0
             dagind <- which( (is.na(RegData$Liggedogn) | is.nan(RegData$Liggedogn))  & RegData$Dagkirurgi==1)
             RegData$Liggedogn[dagind]<-0
+            RegData <- RegData[which(RegData$Liggedogn>=0),]
             RegData$Variabel <- RegData$Liggedogn #gjsnGrVar
             gr <- c(0:7,100)	
             RegData$VariabelGr <- cut(RegData$Liggedogn, breaks=gr, include.lowest=TRUE, right=FALSE)
             grtxt <- c(0:6, '7+')
             xAkseTxt <- 'Antall liggedøgn' #(subtxt
             tittel <- 'liggetid' #gjsnGrVar
+            sortAvtagende <- 'F'
       }
 #      if (valgtVar == 'liggetid') { #Andeler #GjsnGrVar
 #            #Liggetid bare >0
@@ -239,6 +242,14 @@ RyggVarTilrettelegg  <- function(RegData, valgtVar, grVar='', ktr=0, figurtype='
 #            xAkseTxt <- 'Liggetid (døgn)'
 #      }
       
+      if (valgtVar=='OswEndr') {#gjsnGrVar
+            RegData$Variabel <- switch(as.character(ktr), 
+                                      '1'= (RegData$OswTotPre - RegData$OswTot3mnd),
+                                      '2'= (RegData$OswTotPre - RegData$OswTot12mnd))
+            RegData <- RegData[which(!is.na(RegData$Variabel)),]
+            tittel <- 'forbedring av Oswestry' #gjsnGrVar
+
+      }
       if (valgtVar == 'OswEndrLav') { #AndelGrVar
             #Mislykkede operasjoner
             RegData$OswEndr <- switch(as.character(ktr), 
@@ -267,7 +278,7 @@ RyggVarTilrettelegg  <- function(RegData, valgtVar, grVar='', ktr=0, figurtype='
                                      '2' = (RegData$OswTotPre - RegData$OswTot12mnd)/RegData$OswTotPre*100)
             RegData <- RegData[which(RegData$OswPst>=-1000), ]
             RegData$Variabel[which(RegData$OswPst >=30)] <- 1
-            varTxt <- 'med >=30 % forbedring'
+            varTxt <- 'med \u2265 30 % forbedring'
             tittel <- paste0('Minst 30% forbedring av Oswestry-skår', ktrtxt)
       }
       if (valgtVar == 'Osw48') { #AndelGrVar

@@ -61,17 +61,6 @@ antDes <- 1
 
 #Når bare skal sammenlikne med sykehusgruppe eller region, eller ikke sammenlikne, 
 #trengs ikke data for hele landet:
-reshID <- as.numeric(reshID)
-indEgen1 <- match(reshID, RegData$ReshId)
-if (enhetsUtvalg %in% c(2,3,4,6,7)) {	#Ta med 2,4 og 7? Oppr. 3 og 6
-		RegData <- switch(as.character(enhetsUtvalg),
-						'2' = RegData[which(RegData$ReshId == reshID),],	#kun egen enhet
-						'3' = RegData[which(RegData$Sykehustype == RegData$Sykehustype[indEgen1]),],	#sml. shgruppe
-						'4' = RegData[which(RegData$Sykehustype == RegData$Sykehustype[indEgen1]),],	#kun egen shgruppe
-						'6' = RegData[which(RegData$Region == as.character(RegData$Region[indEgen1])),],	#sml region
-						'7' = RegData[which(RegData$Region == as.character(RegData$Region[indEgen1])),])	#kun egen region
-	}
-
 
 	if (valgtVar == 'EQ5DPre') {KIekstrem <- c(0, 1.6)}
 	if (valgtVar == 'OswTotPre') {KIekstrem <- c(0, 100)}
@@ -87,8 +76,8 @@ IkkeTidsVar <- c('EQ5DEndrPre', 'OswEndrPre', 'SmBeinEndrPre', 'SmRyggEndrPre')
 
 if (valgtVar %in% c('EQ5DPre', 'OswTotPre', 'SmBePre', 'SmRyPre')) {
 	RegData$Variabel <- RegData[ ,valgtVar]
-	TittelVar <- paste(t1, ' før operasjonen', sep='')
-	ytxt1 <- paste('prescore av ', t1, sep='')
+	TittelVar <- paste0(t1, ' før operasjonen')
+	ytxt1 <- paste0('prescore av ', t1)
 	} 	
 
 	Xlab <- 'Operasjonsår'
@@ -167,8 +156,8 @@ if (valgtVar %in% c('EQ5DEndr', 'OswEndr', 'SmBeinEndr', 'SmRyggEndr',
 	if (ktr==2) {RegData$Variabel <- (RegData$Post12mnd - RegData$Pre)
 					ktrtxt <- '12 mnd etter'}
       
-	TittelVar <- paste('Forbedring av ', t1, ktrtxt, ' operasjon,', sep='')
-	ytxt1 <- paste('endring av ', t1 ,sep='')
+	TittelVar <- paste0('Forbedring av ', t1, ktrtxt, ' operasjon,')
+	ytxt1 <- paste0('endring av ', t1)
 	}
  if (valgtVar %in% c('OswEndrPre', 'SmBeinEndrPre', 'SmRyggEndrPre',
 						'OswEndr', 'SmBeinEndr', 'SmRyggEndr') ) {
@@ -179,59 +168,28 @@ if (valgtVar %in% c('EQ5DEndr', 'OswEndr', 'SmBeinEndr', 'SmRyggEndr',
 #Gjør utvalg
 RegData <- RegData[intersect(which(is.na(RegData$Variabel) == FALSE), 
 							 which(is.nan(RegData$Variabel) == FALSE)), ]
-RyggUtvalg <- RyggUtvalg(RegData=RegData, datoFra=datoFra, datoTil=datoTil, minald=minald, maxald=maxald, 
-		erMann=erMann, hovedkat=hovedkat, tidlOp=tidlOp)
+RyggUtvalg <- RyggUtvalgEnh(RegData=RegData, datoFra=datoFra, datoTil=datoTil, 
+                            minald=minald, maxald=maxald, erMann=erMann, aar=aar,
+                            hovedkat=hovedkat, opKat=opKat, tidlOp=tidlOp,enhetsUtvalg=enhetsUtvalg)
+
 RegData <- RyggUtvalg$RegData
 utvalgTxt <- RyggUtvalg$utvalgTxt
+smltxt <- RyggUtvalg$smltxt
+medSml <- RyggUtvalg$medSml 
+ind <- RyggUtvalg$ind
 
 #Tar ut de med manglende registrering
 	indMed <- intersect(which(RegData$Variabel != 'NA'), which(RegData$Variabel != c('NaN')))
 	if (dim(RegData)[1]>0) {RegData <- RegData[indMed, ]}
 
 
-SykehustypeTxt <- c('universitetssykehus', 'lokalsykehus', 'private sykehus')				
-indEgen1 <- match(reshID, RegData$ReshId)
-if (enhetsUtvalg %in% c(1,2,3,6)) {	#Involverer egen enhet
-		shtxt <- as.character(RegData$ShNavn[indEgen1]) } else {
-		shtxt <- switch(as.character(enhetsUtvalg), 	
-			'0' = 'Hele landet',
-			'4' = SykehustypeTxt[RegData$Sykehustype[indEgen1]],
-			'5' = SykehustypeTxt[RegData$Sykehustype[indEgen1]],
-			'7' = as.character(RegData$Region[indEgen1]),
-			'8' = as.character(RegData$Region[indEgen1]))
-			}
-			
-if (enhetsUtvalg %in% c(0,2,4,7)) {		#Ikke sammenlikning
-			medSml <- 0
-			indHoved <- 1:dim(RegData)	#Tidligere redusert datasettet for 2,4,7. (+ 3og6)
-			indRest <- NULL
-		} else {						#Skal gjøre sammenlikning
-			medSml <- 1
-			if (enhetsUtvalg %in% c(1,3,6)) {	#Involverer egen enhet
-				indHoved <-which(as.numeric(RegData$ReshId)==reshID) } else {
-				indHoved <- switch(as.character(enhetsUtvalg),
-						'5' = which(RegData$Sykehustype == RegData$Sykehustype[indEgen1]),	#shgr
-						'8' = which(RegData$Region == RegData$Region[indEgen1]))}	#region
-			smltxt <- switch(as.character(enhetsUtvalg),
-				'1' = 'landet forøvrig',
-				'3' = paste(SykehustypeTxt[RegData$Sykehustype[indEgen1]], ' forøvrig', sep=''),	#RegData inneh. kun egen shgruppe
-				'5' = 'alle andre typer sykehus',
-				'6' = paste(RegData$Region[indEgen1], ' forøvrig', sep=''),	#RegData inneh. kun egen region
-				'8' = 'andre regioner')
-			indRest <- switch(as.character(enhetsUtvalg),
-				'1' = which(as.numeric(RegData$ReshId) != reshID),
-				'3' = which(as.numeric(RegData$ReshId) != reshID),	#RegData inneh. kun egen shgruppe
-				'5' = which(RegData$Sykehustype != RegData$Sykehustype[indEgen1]),
-				'6' = which(as.numeric(RegData$ReshId)!=reshID),	#RegData inneh. kun egen region
-				'8' = which(RegData$Region != RegData$Region[indEgen1]))
-			}								
-			
+
 TittelUt <-  c(TittelVar, shtxt)	#c(TittelVar, hovedkattxt, paste(kjtxt, ', ', optxt, sep=''), shtxt)
 if (tittel==0) {Tittel<-''} else {Tittel <- TittelUt} 
 
 		
 
-if (length(indHoved)<5 | ((medSml == 1) & (length(indRest) < 5))) {
+if (length(ind$Hoved)<5 | ((medSml == 1) & (length(ind$Rest) < 5))) {
     #-----------Figur---------------------------------------
 figtype(outfile)
 	tekst <- 'Mindre enn 5 registreringer i egen eller sammenligningsgruppa'  
@@ -253,9 +211,9 @@ if (!(valgtVar %in% IkkeTidsVar)) { #Må ha gjort utvalg før angir hvilke år s
 
  
 #Resultat for hovedgruppe
-N <- tapply(RegData[indHoved ,'Variabel'], RegData[indHoved, 'Gr'], length)
+N <- tapply(RegData[ind$Hoved ,'Variabel'], RegData[ind$Hoved, 'Gr'], length)
 if (valgtMaal=='Med') {
-	MedIQR <- plot(RegData$Gr[indHoved],RegData$Variabel[indHoved],  notch=TRUE, plot=FALSE)
+	MedIQR <- plot(RegData$Gr[ind$Hoved],RegData$Variabel[ind$Hoved],  notch=TRUE, plot=FALSE)
 	Midt <- as.numeric(MedIQR$stats[3, ])	#as.numeric(MedIQR$stats[3, sortInd])
 	Konf <- MedIQR$conf
 	#Hvis vil bruke vanlige konf.int:
@@ -267,8 +225,8 @@ if (valgtMaal=='Med') {
 #and are said to be rather insensitive to the underlying distributions of the samples. The idea appears to be to give 
 #roughly a 95% confidence interval for the difference in two medians. 	
 } else {	#Gjennomsnitt blir standard.
-	Midt <- tapply(RegData[indHoved ,'Variabel'], RegData[indHoved, 'Gr'], mean)
-	SD <- tapply(RegData[indHoved ,'Variabel'], RegData[indHoved, 'Gr'], sd)
+	Midt <- tapply(RegData[ind$Hoved ,'Variabel'], RegData[ind$Hoved, 'Gr'], mean)
+	SD <- tapply(RegData[ind$Hoved ,'Variabel'], RegData[ind$Hoved, 'Gr'], sd)
 	Konf <- rbind(Midt - 2*SD/sqrt(N), Midt + 2*SD/sqrt(N))
 }
 	Konf <- replace(Konf, which(Konf < KIekstrem[1]), KIekstrem[1])
@@ -278,15 +236,15 @@ if (valgtMaal=='Med') {
 MidtRest <- NULL
 KonfRest <- NULL
 if (medSml ==  1) {
-NRest <- tapply(RegData[indRest ,'Variabel'], RegData[indRest, 'Gr'], length)
+NRest <- tapply(RegData[ind$Rest ,'Variabel'], RegData[ind$Rest, 'Gr'], length)
 	if (valgtMaal=='Med') {
-		MedIQRrest <- plot(RegData$Gr[indRest],RegData$Variabel[indRest],  notch=TRUE, plot=FALSE)
+		MedIQRrest <- plot(RegData$Gr[ind$Rest],RegData$Variabel[ind$Rest],  notch=TRUE, plot=FALSE)
 		MidtRest <- as.numeric(MedIQRrest$stats[3, ])
 		KonfRest <- MedIQRrest$conf
 	} else {
-	MidtRest <- tapply(RegData[indRest,'Variabel'], RegData[indRest, 'Gr'], mean)	#indRest
-	SDRest <- tapply(RegData[indRest,'Variabel'], RegData[indRest, 'Gr'], sd)
-	NRest <- tapply(RegData[indRest,'Variabel'], RegData[indRest, 'Gr'], length)
+	MidtRest <- tapply(RegData[ind$Rest,'Variabel'], RegData[ind$Rest, 'Gr'], mean)	#ind$Rest
+	SDRest <- tapply(RegData[ind$Rest,'Variabel'], RegData[ind$Rest, 'Gr'], sd)
+	NRest <- tapply(RegData[ind$Rest,'Variabel'], RegData[ind$Rest, 'Gr'], length)
 	KonfRest <- rbind(MidtRest - 2*SDRest/sqrt(NRest), MidtRest + 2*SDRest/sqrt(NRest))
 	}
 	KonfRest <- replace(KonfRest, which(KonfRest < KIekstrem[1]), KIekstrem[1])
@@ -325,7 +283,7 @@ if (medSml==1) {
 	polygon( c(AntGrVek, AntGrVek[AntGr:1]), c(KonfRest[1,], KonfRest[2,AntGr:1]), 
 			col=fargeRestRes, border=NA)
 	legend('top', bty='n', fill=fargeRestRes, border=fargeRestRes, cex=cexgr,
-		paste('95% konfidensintervall for ', smltxt, ', N=', sum(NRest, na.rm=T), sep=''))
+		paste0('95% konfidensintervall for ', smltxt, ', N=', sum(NRest, na.rm=T)))
 }
 h <- strheight(1, cex=cexgr)*0.7	#,  units='figure',
 b <- 1.1*strwidth(max(N, na.rm=T), cex=cexgr)/2	#length(AntGrVek)/30

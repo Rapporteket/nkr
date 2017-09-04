@@ -66,7 +66,7 @@ RyggFigAndelerGrVar <- function(RegData, valgtVar, datoFra='2007-01-01', datoTil
           RegData <- RyggPreprosess(RegData=RegData)
      }
       #------- Tilrettelegge variable
-            RyggVarSpes <- RyggVarTilrettelegg(RegData=RegData, valgtVar=valgtVar, ktr=ktr) #, figurtype = 'andelGrVar')
+            RyggVarSpes <- RyggVarTilrettelegg(RegData=RegData, valgtVar=valgtVar, ktr=ktr, figurtype = 'andelGrVar')
             RegData <- RyggVarSpes$RegData
             sortAvtagende <- RyggVarSpes$sortAvtagende
             varTxt <- RyggVarSpes$varTxt
@@ -97,29 +97,41 @@ RyggFigAndelerGrVar <- function(RegData, valgtVar, datoFra='2007-01-01', datoTil
      
      
      #Standardisere mht grupperingsvariabel. Først sykehus.
+#---------------Beregninger
+# Variabelen Variabel er definert som indikatorvariabel for den valgte variabelen. 
      
+     if(dim(RegData)[1] > 0) {
+	       RegData <- RegData[which(RegData[ ,grVar] != ''),] #Tar ut registreringer uten grupperingsnavn
+			RegData[ ,grVar] <- as.factor(RegData[ ,grVar])	
+			Ngr <- table(RegData[ ,grVar])
+	}	else {Ngr <- 0}
+  N <- dim(RegData)[1]
+    AntGr <- length(which(Ngr >= Ngrense))	#Alle som har gyldig resultat
+   AndelHele <- round(100*sum(RegData$Variabel)/N, 2)
+     AndelerGr <- round(100*tapply(RegData$Variabel, RegData[ ,grVar], sum, na.rm=T)/Ngr,2)
+	#AndelerGr <- as.vector(table(RegData[which(RegData$Variabel==1) , grVar])/Ngr*100)	
 
-     dummy0 <- -0.001
-     N <- dim(RegData)[1]
-     Nvar <- tapply(RegData$Variabel, RegData[ ,grVar], sum, na.rm=T)
-     if(N > 0) {Ngr <- table(RegData[ ,grVar])}	else {Ngr <- 0}
-     AntGr <- length(which(Ngr >= Ngrense))	#Alle som har gyldig resultat
-     AndelerGr <- round(100*Nvar/Ngr,2)
+if (sum(which(Ngr < Ngrense))>0) {indGrUt <- as.numeric(which(Ngr<Ngrense))} else {indGrUt <- 0}
+     AndelerGr[indGrUt] <- NA
+     Ngrtxt <- as.character(Ngr) #Ngrtxt <- paste0('N=', as.character(Ngr))	#
+     Ngrtxt[indGrUt] <- paste0('<', Ngrense)	
 
-     indGrUt <- as.numeric(which(Ngr < Ngrense))
-     if (length(indGrUt)==0) { indGrUt <- 0}
-     AndelerGr[indGrUt] <- dummy0
-     sortInd <- order(as.numeric(AndelerGr), decreasing=TRUE)
-     Ngrtxt <- paste0('N=', as.character(Ngr))	#
-     Ngrtxt[indGrUt] <- paste0('N<', Ngrense)	#paste(' (<', Ngrense,')',sep='')	#
+     sortInd <- order(as.numeric(AndelerGr), decreasing=sortAvtagende, na.last = FALSE) 
+	AndelerGrSort <- AndelerGr[sortInd]
+	#Ngr <- Ngr[sortInd]
+	GrNavnSort <- paste0(names(Ngr)[sortInd], ' (',Ngrtxt[sortInd], ')')
 
-     AndelerGrSort <- AndelerGr[sortInd]
-     AndelHele <- round(100*sum(RegData$Variabel)/N, 2)
-     #	GrNavnSort <- paste(names(Ngr)[sortInd], ', ',Ngrtxt[sortInd], sep='')
-     GrNavnSort <- names(Ngr)[sortInd]
+     andeltxtUsort <- paste0(sprintf('%.1f',AndelerGr), ' %') 	
+	andeltxtUsort[indGrUt] <- ''
+	andeltxt <- andeltxtUsort[sortInd]
+	#andeltxt <- paste0(sprintf('%.1f',AndelerGrSort), '%') 	#round(as.numeric(AndelerGrSort),1)
+     #if (length(indGrUt)>0) {andeltxt[(AntGr+1):(AntGr+length(indGrUt))] <- ''}
 
-     andeltxt <- paste0(sprintf('%.1f',AndelerGrSort), '%') 	#round(as.numeric(AndelerGrSort),1)
-     if (length(indGrUt)>0) {andeltxt[(AntGr+1):(AntGr+length(indGrUt))] <- ''}
+
+#N = list(Hoved=N, Rest=0)
+#Ngr = list(Hoved=Ngr, Rest=0)
+#AggVerdier = list(Hoved=AndelerGrSort, Rest=0)
+xAkseTxt <- "Andel opphold (%)"	
 
      if (tittel==0) {Tittel<-''} else {Tittel <- RyggVarSpes$tittel}
 
@@ -150,22 +162,26 @@ RyggFigAndelerGrVar <- function(RegData, valgtVar, datoFra='2007-01-01', datoTil
           #NB: strwidth oppfører seg ulikt avh. av device...
           par('fig'=c(vmarg, 1, 0, 1-0.02*(NutvTxt-1)))	#Har alltid datoutvalg med
 
-          xmax <- min(max(AndelerGrSort),100)*1.15
-          pos <- barplot(as.numeric(AndelerGrSort), horiz=T, border=NA, col=farger[3], #main=Tittel,
-                         xlim=c(0,xmax), ylim=c(0.05, 1.25)*length(Ngr), font.main=1, xlab='Andel (%)', las=1, cex.names=cexShNavn*0.9)
+          xmax <- min(max(AndelerGrSort, na.rm=T),100)*1.15
+          pos <- rev(barplot(rev(as.numeric(AndelerGrSort)), horiz=T, border=NA, col=farger[3], #main=Tittel,
+                        xlim=c(0,xmax), ylim=c(0.05, 1.25)*length(Ngr), font.main=1, xlab='Andel (%)', las=1, cex.names=cexShNavn*0.9))
           ybunn <- 0.1
-          ytopp <- pos[AntGr]+1	#-length(indGrUt)]
-          lines(x=rep(AndelHele, 2), y=c(ybunn, ytopp), col=farger[2], lwd=2)
+          ytopp <- rev(pos)[AntGr]+1	#-length(indGrUt)]
+          #Linje for hele landet/utvalget:
+	      lines(x=rep(AndelHele, 2), y=c(ybunn, ytopp), col=farger[2], lwd=2)
           legend('topright', xjust=1, cex=1, lwd=2, col=farger[2],
                  legend=paste0(hovedgrTxt, ' (', sprintf('%.1f',AndelHele), '%), ', 'N=', N),
                  bty='o', bg='white', box.col='white')
           mtext(at=pos+max(pos)*0.0045, GrNavnSort, side=2, las=1, cex=cexShNavn, adj=1, line=0.25)	#Legge på navn som eget steg
-          text(x=0.005*xmax, y=pos, Ngrtxt[sortInd], las=1, cex=cexShNavn, adj=0, col=farger[4], lwd=3)	#c(Nshtxt[sortInd],''),
-          title(Tittel, line=1, font.main=1, cex.main=1.3)
+          
+		  
+		  title(Tittel, line=1, font.main=1, cex.main=1.3)
 
           text(x=AndelerGrSort+xmax*0.01, y=pos+0.1, andeltxt,
                las=1, cex=0.9, adj=0, col=farger[1])	#Andeler, hvert sykehus
 
+		mtext(at=max(pos)+0.35*log(max(pos)), paste0('(N)' ), side=2, las=1, cex=1, adj=1, line=0.25)
+	         
           #Tekst som angir hvilket utvalg som er gjort
           mtext(utvalgTxt, side=3, las=1, cex=1, adj=0, col=farger[1], line=c(3+0.8*((NutvTxt-1):0)))
 
@@ -175,3 +191,4 @@ RyggFigAndelerGrVar <- function(RegData, valgtVar, datoFra='2007-01-01', datoTil
           #----------------------------------------------------------------------------------
      }
 }
+

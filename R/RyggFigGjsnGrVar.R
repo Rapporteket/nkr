@@ -33,12 +33,12 @@ if (hentData == 1) {
 }
 
 # Hvis RegData ikke har blitt preprosessert. (I samledokument gjøres dette i samledokumentet)
-if (preprosess){
+if (preprosess == 1){
        RegData <- RyggPreprosess(RegData=RegData) #, reshID=reshID)
      }
 
 #------- Tilrettelegge variable
-RyggVarSpes <- RyggVarTilrettelegg(RegData=RegData, valgtVar=valgtVar, figurtype = 'gjsnGrVar')
+RyggVarSpes <- RyggVarTilrettelegg(RegData=RegData, valgtVar=valgtVar, ktr=ktr, figurtype = 'gjsnGrVar')
 RegData <- RyggVarSpes$RegData
 
 #------- Gjøre utvalg
@@ -50,6 +50,8 @@ smltxt <- RyggUtvalg$smltxt
 medSml <- RyggUtvalg$medSml 
 utvalgTxt <- RyggUtvalg$utvalgTxt
 ind <- RyggUtvalg$ind
+hovedgrTxt <- RyggUtvalg$hovedgrTxt
+RegData <- RyggUtvalg$RegData
 
 #Ngrense <- 10		
 '%i%' <- intersect
@@ -259,7 +261,7 @@ if (dim(RegData)[1] < 10 )
       	             col=farger[1], cex=cexleg, seg.len=0.6, merge=TRUE, bty='n')
 	      } else {
 	            TXT <- c(paste0('totalt: ', sprintf('%.1f', AggTot), ', N=', N), 
-	                     paste0('95% konf.int., ', grTypeTxt, 'sykehus (', 
+	                     paste0('95% konf.int., ', hovedgrTxt,  ' (', #grTypeTxt, 'sykehus..
 	                            sprintf('%.1f', KIHele[1]), '-', sprintf('%.1f', KIHele[2]), ')'))
       	      legend(xmax/4, posOver+2*posDiff, TXT, fill=c(NA, farger[3]),  border=NA, lwd=2.5,  #inset=c(-0.1,0),
       	             col=c(farger[1], farger[3]), cex=cexleg, seg.len=0.6, merge=TRUE, bty='n')

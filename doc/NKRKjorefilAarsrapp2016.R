@@ -2,6 +2,7 @@
 #********************* Årsrapport, 2016****************************
 
 #------------------Resultatkapittel--------------------------------
+library(nkr)
 rm(list=ls())
 setwd('C:/ResultattjenesteGIT//nkr/aarsrapp')
 
@@ -25,6 +26,7 @@ tidlOp <- 99 #4 - Bare primæroperasjoner
 enhetsUtvalg <- 0 # 0-hele landet, 4–egen shusgruppe, 7–egen region
 grVar <- 'ShNavn'  #ShNavn, Fylke, BoHF, BoRHF
 ktr <- 2
+reshID <- 0
 #aar <- 0	#Kan velge flere
 #valgtVar <- 'KpInf3Mnd'   #BeinsmEndrLav', BeinsmLavPre, DegSponSSSten,OswEndr13, OswEndr20, OswEndr30pst, Osw48
 #Verre, KpInf3Mnd
