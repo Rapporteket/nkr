@@ -17,12 +17,6 @@
 \usepackage{rotating} %add rotating for plain tables
 \usepackage{pdflscape} %add rotating/landcape for pdf
 
-%add rotating for plain tables
-\usepackage{rotating}
-
-%add rotating/landcape for pdf
-\usepackage{pdflscape}
-
 %bytte font
 \renewcommand{\familydefault}{\sfdefault}
 
@@ -40,8 +34,8 @@ library(xtable)
 #options(encoding = "UTF-8")
 knitr::opts_chunk$set(warnings=FALSE,echo=FALSE)
 knitr::opts_knit$set(root.dir = './')
-knitr::opts_chunk$set(fig.path='./Figurer', fig.align='center', fig.show='hold', out.width='.8\\textwidth',
-	cache=FALSE)
+knitr::opts_chunk$set(fig.path='Figurer/', fig.align='center', fig.show='hold', out.width='.8\\textwidth', #'./Figurer'
+cache=FALSE)
 
 # supress the '+' continuation prompt
 options(continue=" ")
@@ -56,6 +50,7 @@ options(width=60)
 #RegData <- read.table('A:/Rygg/NKR2010-2016aarsrapp.csv', sep=';', header=T, encoding = 'UTF-8')
 #save(RegData, file='A:/Rygg/NKR2010-2016aarsrapp.Rdata')
 load('A:/Rygg/NKR2010-2016aarsrapp.Rdata')
+#RegData <- RegData[sample(dim(RegData)[1], 1000), ]
 setwd('C:/ResultattjenesteGIT//nkr/aarsrapp')
 library(nkr)
 
@@ -68,9 +63,8 @@ RegData$ODIpst <- with(RegData, (OswTotPre-OswTot12mnd)/OswTotPre*100)
 #Felles parametre:
 ktr <- 2
 ktrtxt <- '12 mnd.'
-s1 <- 0.8	#Skaleringsparameter for enkeltfigurer
-figKrymp1 <- 0.8
-s2 <- 0.5	#Skaleringsparameter for "dobbeltfigurer"
+s1 <- 0.7	#Skaleringsparameter for enkeltfigurer
+s2 <- 0.55	#Skaleringsparameter for "dobbeltfigurer"
 tittel <- 0
 ktr <- 2
 
@@ -110,9 +104,9 @@ datomax <- max(dato)
 #Spinal stenose:
 #attach(RegData)
 indSS <-with(RegData, which((RfSentr == 1 | RfLateral == 1)
-                  & is.na(RfSpondtypeIsmisk)
-                  & (OpDeUlamin==1 | OpLaminektomi==1 | OpDeFasett==1)
-                  & (HovedInngrep %in% c(2:5,7))))
+                            & is.na(RfSpondtypeIsmisk)
+                            & (OpDeUlamin==1 | OpLaminektomi==1 | OpDeFasett==1)
+                            & (HovedInngrep %in% c(2:5,7))))
 #Degenerativ spondylolistese:
 indDegenSpondy <- intersect(indSS, which(RegData$RfSpondtypeDegen==1))
 indDegenSpondyFusj <- intersect(indDegenSpondy, which(RegData$HovedInngrep==5))
@@ -130,8 +124,8 @@ rownames(tabAvdN)[dim(tabAvdN)[1] ]<- 'TOTALT, alle avdelinger:'
 colnames(tabAvdN)[dim(tabAvdN)[2] ]<- 'Alle år'
 
 xtable(tabAvdN5, digits=0, align=c('l', rep('r', 6)),
-	caption=paste0('Antall registreringer ved hver avdeling siste 5 år, samt totalt siden ', min(RegData$OpAar, na.rm=T),'.'), 
-	label = 'tab:AntReg')
+       caption=paste0('Antall registreringer ved hver avdeling siste 5 år, samt totalt siden ', min(RegData$OpAar, na.rm=T),'.'), 
+       label = 'tab:AntReg')
 
 tabKjPst <- sprintf('%.1f',table(RegData$Kjonn)/Ntot*100)
 
@@ -139,11 +133,11 @@ tabKjPst <- sprintf('%.1f',table(RegData$Kjonn)/Ntot*100)
 
 Tabell \ref{tab:AntReg} viser antall 
 registreringer gjort ved de respektive avdelinger hvert år. Vi ser at det er  
-\Sexpr{dim(tabAvdN)[1]-1} avdelinger som registrerer og at det i perioden 2010 til \Sexpr{rappAar} totalt er registrert \Sexpr{Ntot} 
+\Sexpr{dim(tabAvdN)[1]-1} avdelinger som registrerer og at det i perioden \Sexpr{min(RegData$OpAar)} til \Sexpr{rappAar} totalt er registrert \Sexpr{Ntot} 
 operasjoner. Av disse er \Sexpr{tabKjPst[1]}\% utført på menn og \Sexpr{tabKjPst[2]}\% på kvinner.
 Siste inngrep registrert i datauttrekket som ligger til grunn for denne rapporten, ble utført 
-\Sexpr{datomax}. 
-\par 
+\Sexpr{datomax}. I peroden 2007 til og med 2009 er det registrert 5832 operasjoner til NKR. 
+
 \clearpage
 
 
@@ -157,14 +151,14 @@ AlderAar <- tapply(RegData$Alder, RegData$OpAar, 'mean', na.rm=T)
 Andel70 <- sprintf('%.1f',sum(RegData1aar$Alder>=70, na.rm=T)/sum(RegData1aar$Alder > -1, na.rm=T)*100)
 #Alder70 <- tapply(RegData1aar$Alder>=70, RegData$OpAar, sum, na.rm=T)
 
-AlderFord <- RyggFigAndeler(RegData=RegData1aar, valgtVar='Alder', datoFra=datoFra, datoTil=datoTil, enhetsUtvalg=0, outfile='FigAlderFord.pdf', tittel=0)
+AlderFord <- RyggFigAndeler(RegData=RegData1aar, valgtVar='Alder', datoFra=datoFra, datoTil=datoTil, enhetsUtvalg=0, outfile='Figurer/FigAlderFord.pdf', tittel=0)
 
-	AlderTab <- rbind(paste0(round(AlderFord$Andeler[1,], 1), '%'), AlderFord$Antall[1,])
-	rownames(AlderTab) <- c('Andeler','Antall')
-	colnames(AlderTab) <- AlderFord$GruppeTekst
-	xtable(AlderTab, caption=AlderFord$Tittel[1], label="tab:Alder", digits=1)
+AlderTab <- rbind(paste0(round(AlderFord$Andeler[1,], 1), '%'), AlderFord$Antall[1,])
+rownames(AlderTab) <- c('Andeler','Antall')
+colnames(AlderTab) <- AlderFord$GruppeTekst
+xtable(AlderTab, caption='Aldersfordeling, 2016.', label="tab:Alder", digits=1)
 
-Alder70 <- RyggFigAndelTid(RegData=RegData, valgtVar='alder70', outfile='FigAlder70.pdf', tittel=0)
+Alder70 <- RyggFigAndelTid(RegData=RegData, valgtVar='alder70', outfile='Figurer/FigAlder70.pdf', tittel=0)
 
 @ 
 
@@ -176,8 +170,8 @@ all hovedsak håndterer denne pasientgruppen. I \Sexpr{rappAar} ble \Sexpr{Andel
 ryggoperasjonene meldt til NKR utført på personer over 70 år.
 
 \begin{figure}[ht]
-	\centering \includegraphics[width= \Sexpr{figKrymp1}\textwidth]{FigAlder70.pdf}
-	\caption{\label{fig:Alder70} Andel ryggoperasjoner utført på personer som er 70 år eller mer.}}
+\scalebox{\Sexpr{s1}}{\includegraphics{Figurer/FigAlder70.pdf}}
+\caption{\label{fig:Alder70} Andel ryggoperasjoner utført på personer som er 70 år eller mer.}}
 \end{figure}
 
 
@@ -185,7 +179,7 @@ ryggoperasjonene meldt til NKR utført på personer over 70 år.
 %Figur \ref{fig:Alder} viser aldersfordeling for alle pasienter i \Sexpr{rappAar}.
 
 %\begin{figure}[ht]
-%	\centering \includegraphics[width= \Sexpr{figKrymp1}\textwidth]{FigAlderFord.pdf}
+%	\centering \includegraphics[width= \Sexpr{s1}\textwidth]{FigAlderFord.pdf}
 %	\caption{\label{fig:Alder} \Sexpr{paste0(AlderFord$Tittel,', ',rappAar)}}
 %\end{figure}
 
@@ -193,7 +187,7 @@ ryggoperasjonene meldt til NKR utført på personer over 70 år.
 
 <<FigBMI, echo=FALSE>>=
 BMIFord <- RyggFigAndeler(RegData=RegData1aar, valgtVar='BMI', datoFra=datoFra, datoTil=datoTil, 
-			outfile='FigBMI.pdf', enhetsUtvalg = 0,  tittel=0)
+                          outfile='Figurer/FigBMI.pdf', enhetsUtvalg = 0,  tittel=0)
 FedmeAar <- table(RegData$BMI>30, RegData$OpAar)
 AndelFedmeAar <- FedmeAar['TRUE',]/table(RegData$OpAar)*100
 
@@ -205,8 +199,8 @@ til \Sexpr{sprintf('%.1f',AndelFedmeAar[as.character(rappAar)])} \%
 Figur \ref{fig:BMI} viser fordeling av BMI for alle pasienter i \Sexpr{rappAar}. 
 
 \begin{figure}[ht]
-	\centering \includegraphics[width= \Sexpr{figKrymp1}\textwidth]{FigBMI.pdf}
-	\caption{\label{fig:BMI} \Sexpr{BMIFord$Tittel}}
+\scalebox{\Sexpr{s1}}{\includegraphics{Figurer/FigBMI.pdf}}
+\caption{\label{fig:BMI} \Sexpr{BMIFord$Tittel}}
 \end{figure}
 
 
@@ -216,68 +210,78 @@ Figur \ref{fig:BMI} viser fordeling av BMI for alle pasienter i \Sexpr{rappAar}.
 \subsection{Morsmål / etnisitet og utdanning}
 
 <<TabMorsm, results='asis', echo=FALSE>>=
-	MorsmAnt <- table(RegData1aar$Morsmal, useNA='a')
-	AndelFremmedspraak <- sprintf('%.1f', sum(MorsmAnt[2:3], na.rm=T)/Ntot1aar*100)
-	Morsm <- cbind('Antall' = MorsmAnt,
-				'Andeler' = paste0(round(MorsmAnt/Ntot1aar*100, 1), '%'))
-	rownames(Morsm) <- c('Norsk', 'Samisk', 'Annet', 'Ikke svart')
-	xtable(Morsm, caption='Pasientenes morsmål', label="tab:Morsm", align=c('l','r','r'))
+MorsmAnt <- table(RegData1aar$Morsmal, useNA='a')
+AndelFremmedspraak <- sprintf('%.1f', sum(MorsmAnt[2:3], na.rm=T)/Ntot1aar*100)
+Morsm <- cbind('Antall' = MorsmAnt,
+               'Andeler' = paste0(round(MorsmAnt/Ntot1aar*100, 1), '%'))
+rownames(Morsm) <- c('Norsk', 'Samisk', 'Annet', 'Ikke svart')
+xtable(Morsm, caption='Pasientenes morsmål', label="tab:Morsm", align=c('l','r','r'))
 
-	dum <- RyggFigAndelerGrVar(RegData = RegData1aar, valgtVar='Morsmal', hovedkat = 1,outfile = 'FigMorsmal.pdf')
+dum <- RyggFigAndelerGrVar(RegData = RegData1aar, valgtVar='Morsmal', hovedkat = 1, outfile = 'Figurer/FigMorsmal.pdf')
 
 @ 
 
 Tabell \ref{tab:Morsm} viser fordeling av norske, samiske og andre fremmedsåpråklige pasienter.
 Andel fremmedspråklige pasienter (inkl. samisk) var \Sexpr{AndelFremmedspraak[1]}\% . 
 
-Andelen fremmedspråklige som opereres for prolaps har økt fra 5 til 7 \% i perioden.
+Andelen fremmedspråklige som opereres for prolaps har økt fra 5 \% til 7 \% i perioden.
 Beslutning om ryggkirurgi baserer seg på en felles forståelse mellom kirurg og
 pasient av hva helseproblemene består i og hva som kan oppnås med operasjon
 («shared desicion making»). I behandling av fremmedspråklige er kommunikasjon
 en utfordring. Av de som har norsk som morsmål var suksessraten 65 \% mot 56 \%
 for fremmedspråklige. Bedre kommunikasjon kan bidra å redusere disse
-forskjellene.
+forskjellene. Figur \ref{fig:Morsmal} viser andelen fremmedspråklige operert ved de ulike avdelingene i \Sexpr{rappAar}.
 
 \begin{figure}[ht]
-	\centering \includegraphics[width= \Sexpr{figKrymp1}\textwidth]{FigMorsmal.pdf}
-	\caption{\label{fig:Morsmal} Andel fremmedspråklige av alle prolapsopererte ved ulike sykehus i
+\scalebox{\Sexpr{s1}}{\includegraphics{Figurer/FigMorsmal.pdf}}
+\caption{\label{fig:Morsmal} Andel fremmedspråklige av alle prolapsopererte ved ulike sykehus i
 Norge.}
 \end{figure}
 
 
 <<FigUtd, echo=FALSE>>=
 Utdanning <- RyggFigAndeler(RegData=RegData1aar, valgtVar='Utd', datoFra=datoFra, datoTil=datoTil, 
-			outfile='FigUtd.pdf', tittel=0)
+                            outfile='Figurer/FigUtd.pdf', tittel=0)
 AndelHoyUtd <- sprintf('%.1f', rowSums(Utdanning$Andeler[ ,4:5]))
+
+HoyUtdAvd <- RyggFigAndelerGrVar(RegData=RegData1aar, valgtVar='Utd', Ngrense = 10,
+                                 outfile='Figurer/FigHoyUtdAvd.pdf', tittel=0)
+
+
 @
 
-Figur \ref{fig:Utd} viser nivå av utdanning 
-Opplysningene om utdanning er rapportert av pasientene selv.
+Figur \ref{fig:Utd} viser nivå av utdanning og vi ser at det er \Sexpr{AndelHoyUtd} som har høyere utdanning. Opplysningene om utdanning er rapportert av pasientene selv. 
+Lav utdanning er assosiert til dårligere operasjonsresultat. Figur \ref{fig:HoyUtdAvd} viser andel pasienter med høyskole eller universistetsutdanning ved hvert sykehus/avdeling.
 
 \begin{figure}[ht]
-	\centering \includegraphics[width= \Sexpr{figKrymp1}\textwidth]{FigUtd.pdf}
-	\caption{\label{fig:Utd} \Sexpr{Utdanning$Tittel}}
+\scalebox{\Sexpr{s1}}{\includegraphics{Figurer/FigUtd.pdf}}
+\caption{\label{fig:Utd} \Sexpr{Utdanning$Tittel}}
+\end{figure}
+
+\begin{figure}[ht]
+\scalebox{\Sexpr{s1}}{\includegraphics{Figurer/FigHoyUtdAvd.pdf}}
+\caption{\label{fig:HoyUtdAvd} Andel pasienter med høyere utdanning.}
 \end{figure}
 
 
-
+\clearpage
 
 \subsection{Arbeidsstatus}
 
 <<TabArbstat, results='asis', echo=FALSE>>=
-	indSyk <- which(RegData1aar$ArbstatusPre %in% 6:10)
-	GjsnSyk<- mean(RegData1aar$SykemeldVarighPre[indSyk], na.rm=T)
-	SdSyk<- sd(RegData1aar$SykemeldVarighPre[indSyk], na.rm=T)
-	MedSyk<- median(RegData1aar$SykemeldVarighPre[indSyk], na.rm=T)
+indSyk <- which(RegData1aar$ArbstatusPre %in% 6:10)
+GjsnSyk<- mean(RegData1aar$SykemeldVarighPre[indSyk], na.rm=T)
+SdSyk<- sd(RegData1aar$SykemeldVarighPre[indSyk], na.rm=T)
+MedSyk<- median(RegData1aar$SykemeldVarighPre[indSyk], na.rm=T)
 
-	NsvarArb <- sum(table(RegData1aar$ArbstatusPre))
-	ArbNum <- round(table(RegData1aar$ArbstatusPre)*100/sum(table(RegData1aar$ArbstatusPre)), 1)
-	Arb <- paste0(ArbNum, '%')
-	names(Arb) <- c('I arbeid', 'Hjemmeværende', 'Student/skoleelev', 'Pensjonist', 'Arbeidsledig', 
-		'Sykemeldt', 'Aktiv sykemeldt', 'Delvis Sykemeldt', 'Attføring/rehabiliteirng', 'Uføretrygdet')
-	xtable(cbind('Andeler'=Arb),  align=c('l','r'),
-	       caption='Arbeidsstatus, pasienter operert i 2016', 
-	       label="tab:Arb")
+NsvarArb <- sum(table(RegData1aar$ArbstatusPre))
+ArbNum <- round(table(RegData1aar$ArbstatusPre)*100/sum(table(RegData1aar$ArbstatusPre)), 1)
+Arb <- paste0(ArbNum, '%')
+names(Arb) <- c('I arbeid', 'Hjemmeværende', 'Student/skoleelev', 'Pensjonist', 'Arbeidsledig', 
+                'Sykemeldt', 'Aktiv sykemeldt', 'Delvis Sykemeldt', 'Attføring/rehabiliteirng', 'Uføretrygdet')
+xtable(cbind('Andeler'=Arb),  align=c('l','r'),
+       caption='Arbeidsstatus, pasienter operert i 2016', 
+       label="tab:Arb")
 @ 
 
 Tabell \ref{tab:Arb} viser fordeling av arbeidsstatus før operasjon for de \Sexpr{round(NsvarArb/Ntot1aar*100, 1)}\% 
@@ -289,29 +293,33 @@ Median varighet av sykemelding/attføring/rehabilitering  før operasjon var
 \Sexpr{MedSyk} uker.
 
 
-\clearpage
+%\clearpage
 
 
 \subsection{Uføretrygd og erstatning }
 
 Tabell \ref{tab:Ufor} viser pasientenes svar på spørsmålet: ``Har du søkt om uføretrygd?''.
 Pasienter som har en uavklart uføre eller erstatningssak vil sjeldnere komme tidlig tilbake i jobb etter operasjon.
-Figur \ref{fig:Ufor} utvikling over tid for andel som har søkt eller planlegger å søke uføretrygd.
+Andel som har søkt eller planlegger å søke uføretrygd ligger fortsatt stabilt like under 5 \% i 2016. 
+Figur \ref{fig:Ufor} viser andel ryggopererte ved hver avdeling som har søkt eller planlegger å søke uføretrygd.
 
 <<Ufor, results='asis', echo=FALSE>>=
 
-UforTid <- RyggFigAndelTid(RegData=RegData, valgtVar='UforetrygdPre', outfile='FigUfor.pdf', tittel=0)
-	
+UforTid <- RyggFigAndelTid(RegData=RegData, valgtVar='UforetrygdPre', outfile='Figurer/FigUfor.pdf', tittel=0)
+UforetrygdPre <- RyggFigAndelerGrVar(RegData=RegData, valgtVar='UforetrygdPre', datoFra='2016-01-01',
+                                     outfile='Figurer/FigUforAvd.pdf', tittel=0)
+
+
 Ufor <- paste0(round(table(RegData1aar$UforetrygdPre, useNA='a')*100/Ntot1aar, 1), '%')
 names(Ufor) <- c('Ja', 'Nei', 'Planlegger å søke', 'Er innvilget', 'Ikke besvart')	#, 'Tot. ant.')
 xtable(cbind('Andeler'=Ufor), caption='Spørsmål: Har du søkt om uføretrygd?', label="tab:Ufor", 
-align=c('l','r'), digits=1)
+       align=c('l','r'), digits=1)
 
 @ 
 
 \begin{figure}[ht]
-	\centering \includegraphics[width= \Sexpr{figKrymp1}\textwidth]{FigUfor.pdf}
-	\caption{\label{fig:Ufor} Pasienter som har søkt eller planlegger å søke uføretrygd} 
+\scalebox{\Sexpr{s1}}{\includegraphics{Figurer/FigUforAvd.pdf}}
+\caption{\label{fig:Ufor} Pasienter som har søkt eller planlegger å søke uføretrygd} 
 \end{figure}
 
 Tabell \ref{tab:Erst} viser pasientenes svar på spørsmålet: ``Har du søkt om erstatning?'' 
@@ -323,34 +331,36 @@ xtable(cbind('Andeler'=Erst), caption='Spørsmål: Har du søkt om erstatning fr
 		eventuelt yrkesskadeerstatning)?', label="tab:Erst", align=c('l','r'))
 @ 
 
+\clearpage
 
 \subsection{Tidligere ryggoperert}
 Informasjonen er hentet fra legeskjema.
 Figur \ref{fig:TidlOp} viser en prosentvis fordelig mellom primæroperasjon, det vil si første gangs 
 operasjon, og operasjoner hos pasienter som har vært operert tidligere.  
 Søylene representerer hvert år frem til i dag. Tallet på toppen av søylen viser antall operasjoner utført 
-det aktuelle året.
+det aktuelle året. Reoperasjon gir genereltl dårligere operasjonsresultat enn første gangs operasjon.
 
 <<FigTidlOp, echo=FALSE>>=
-AndelTidlOp <- RyggFigAndelStabelTid(RegData=RegData, outfile='TidlOp.pdf', valgtVar='TidlOp', 
+#1: Samme nivå, 2:Annet nivå, 3: Annet og sm. nivå, 4: Primæroperasjon
+#NB: I figuren er 4 kodet om til 0 !!!
+AndelTidlOp <- RyggFigAndelStabelTid(RegData=RegData, outfile='Figurer/TidlOp.pdf', valgtVar='TidlOp', 
                                      tittel=0)
 #	RyggFigAndelStabelTid(RegData=RegData, outfile=outfile, valgtVar=valgtVar, hovedkat=hovedkat, preprosess=1,
 #                   minald = minald, maxald = maxald,
 #                        erMann=erMann, ktr=ktr, tidlOp=tidlOp, enhetsUtvalg=enhetsUtvalg, tittel=1, reshID=reshID)#
 
-#	RyggFigAndelStabelTid(RegData=RegData, outfile='', valgtVar='TidlOp', tittel=0)
+#	RyggFigAndelStabelTid(RegData=RegData, outfile='Figurer/', valgtVar='TidlOp', tittel=0)
 TidlOpFordHoved <- rowSums(AndelTidlOp$AndelerHoved)
 TidlOpHoved <- round(TidlOpFordHoved[2:4]*100/sum(TidlOpFordHoved[2:4]), 1)
-TidlOpFordRest <- rowSums(AndelTidlOp$AndelerRest)
-TidlOpRL <- round(TidlOpFordRest[2:4]*100/sum(TidlOpFordRest[2:4]), 1)
 
+AndelReop2010 <- round(sum(AndelTidlOp$AndelerHoved[2:4,1])/sum(AndelTidlOp$AndelerHoved[,1])*100)
 AndelerSisteAar <- AndelTidlOp$AndelerHoved[,dim(AndelTidlOp$AndelerHoved)[2]]
 AndelerTidlOp <- sprintf('%.1f', AndelerSisteAar[2:4]/sum(AndelerSisteAar[2:4])*100)
-
+AndelReopSisteAar <- round(sum(AndelerSisteAar[2:4])/sum(AndelerSisteAar)*100)
 @
 
 \begin{figure}[ht]
-\centering \includegraphics[width= \Sexpr{figKrymp1}\textwidth]{TidlOp.pdf}
+\scalebox{\Sexpr{s1}}{\includegraphics{Figurer/TidlOp.pdf}}
 \caption{\label{fig:TidlOp} \Sexpr{AndelTidlOp$Tittel}}
 \end{figure}
 
@@ -359,7 +369,8 @@ AndelerTidlOp <- sprintf('%.1f', AndelerSisteAar[2:4]/sum(AndelerSisteAar[2:4])*
 Av de pasientene operert i 2016 som hadde vært operert tidligere, var \Sexpr{AndelerTidlOp[1]}\% 
 operert i samme nivå, \Sexpr{AndelerTidlOp[2]}\% 
 operert i annet nivå og \Sexpr{AndelerTidlOp[3]}\% 
-operert i både samme og annet nivå. 
+operert i både samme og annet nivå.
+Andelen reoperasjoner var \Sexpr{AndelReop2010} \% i 2010 og \Sexpr{AndelReopSisteAar} \% i 2016.
 
 
 
@@ -383,79 +394,76 @@ xtable(cbind('Andeler'=UtsRH), caption='Varighet av nåværende utstrålende sme
 
 
 dum <- RyggFigAndelerGrVar(valgtVar='SympVarighUtstr', RegData=RegData1aar, datoFra='2016-01-01', hovedkat=1,
-                           outfile='VarighUtstrAvdPro.pdf')
+                           outfile='Figurer/VarighUtstrAvdPro.pdf')
 dum <- RyggFigAndelerGrVar(valgtVar='SympVarighUtstr', RegData=RegData1aar, datoFra='2016-01-01', hovedkat=8,
-                           outfile='VarighUtstrAvdSS.pdf')
+                           outfile='Figurer/VarighUtstrAvdSS.pdf')
 dum <- RyggFigAndelTid(valgtVar='SympVarighUtstr', RegData=RegData, 
-                       hovedkat=1,outfile='VarighUtstrTidPro.pdf')
+                       hovedkat=1,outfile='Figurer/VarighUtstrTidPro.pdf')
 dum <- RyggFigAndelTid(valgtVar='SympVarighUtstr', RegData=RegData, 
-                       hovedkat=8,outfile='VarighUtstrTidSS.pdf')
+                       hovedkat=8,outfile='Figurer/VarighUtstrTidSS.pdf')
 
 
 dum <- RyggFigAndelerGrVar(valgtVar='SymptVarighRyggHof', RegData=RegData1aar, datoFra='2016-01-01', hovedkat=1,
-                           outfile='VarighRyggHofAvdPro.pdf')
+                           outfile='Figurer/VarighRyggHofAvdPro.pdf')
 dum <- RyggFigAndelerGrVar(valgtVar='SymptVarighRyggHof', RegData=RegData1aar, datoFra='2016-01-01', hovedkat=8,
-                           outfile='VarighRyggHofAvdSS.pdf')
+                           outfile='Figurer/VarighRyggHofAvdSS.pdf')
 
 @ 
-Spørsmålene er besvart av pasienten.
+I nasjonale retningslinjer (2007) er det anbefalt å operere pasienter for prolaps før
+beinsmertene har vart for lenge, helst innen ett år. Derfor bør
+pasientgruppen håndteres raskt og effektivt når beslutning om operasjon er tatt og
+ikke-kirurgisk behandling har vært forsøkt. Data fra NKR og nyere forskning viser at
+pasienter som opereres for prolaps og har hatt beinsmerter mer enn ett år har
+dårligere prognose. Andelen pasienter med beinsmerter mer enn ett år på
+operasjonstidspunkt var uendret fra 2010 til \Sexpr{rappAar} (47\%).
+Figur 7 viser at det er stor variasjon i varighet av beinsmerter hos pasienter som blir
+operert ved ulike sykehus. Det har sannsynligvis sammenheng med ventetid for
+utredning og operasjon og tilgjengelig operasjonskapasitet i forhold til etterspørsel.
+
 Tabellene \ref{tab:SmRH}  og \ref{tab:Utstr} viser fordeling av hvor lenge pasientene har hatt 
-hhv. smerter i rygg/hofte og utstrålende smerter. Figurene \ref{fig:VarighSmerteUtstrAvdPro} og \ref{fig:VarighSmerteUtstrAvdSS} viser hvor stor andel av henholdsvis prolaps- og spinal stenosepasienter som har hatt ustrålende smerter i mer enn ett år ved hvert sykehus. 
+hhv. smerter i rygg/hofte og utstrålende smerter. 
+Figurene \ref{fig:VarighSmerteUtstrAvdPro} og \ref{fig:VarighSmerteUtstrAvdSS} viser hvor stor andel av henholdsvis prolaps- og spinal stenosepasienter som har hatt ustrålende smerter i mer enn ett år ved hvert sykehus. 
+Figurene \ref{fig:VarighSmerteRyggAvdPro} og \ref{fig:VarighSmerteRyggAvdSS} viser hvor stor andel av henholdsvis prolaps- og spinal stenosepasienter som har hatt rygg-/hoftesmerter mer enn ett år ved hvert sykehus.
 
 \begin{figure}[h] 
-      \scalebox{\Sexpr{s1}}{\includegraphics{VarighUtstrAvdPro.pdf}}
-      \caption{Prolapspasienter som har utstrålende smerter i mer enn ett år før operasjonen.}
-      \label{fig:VarighSmerteUtstrAvdPro}
+\scalebox{\Sexpr{s1}}{\includegraphics{Figurer/VarighUtstrAvdPro.pdf}}
+\caption{Prolapspasienter som har utstrålende smerter i mer enn ett år før operasjonen.}
+\label{fig:VarighSmerteUtstrAvdPro}
 \end{figure}
 
 \begin{figure}[h] 
-      \scalebox{\Sexpr{s1}}{\includegraphics{VarighUtstrAvdSS.pdf}}
-      \caption{Spinal stenosepasienter som har utstrålende smerter i mer enn ett år før operasjonen.}
-      \label{fig:VarighSmerteUtstrAvdSS}
+\scalebox{\Sexpr{s1}}{\includegraphics{Figurer/VarighUtstrAvdSS.pdf}}
+\caption{Spinal stenosepasienter som har utstrålende smerter i mer enn ett år før operasjonen.}
+\label{fig:VarighSmerteUtstrAvdSS}
 \end{figure}
 
-Figur \ref{fig: 
-\begin{figure}[h] 
-      \scalebox{\Sexpr{s1}}{\includegraphics{VarighUtstrTidPro.pdf}}
-      \caption{Prolapspasienter som har utstrålende smerter i mer enn ett år før operasjonen, utvikling over tid.}
-      \label{fig:VarighSmerteUtstrAvdPro}
-\end{figure}
+Figur \ref{fig:VarighSmerteUtstrTid} viser utvikling over tid for andel pasienter med lang symptomvarighet. 
 
 \begin{figure}[h] 
-      \scalebox{\Sexpr{s1}}{\includegraphics{VarighUtstrTidSS.pdf}}
-      \caption{Spinal stenosepasienter som har utstrålende smerter i mer enn ett år før operasjonen, utvikling over tid.}
-      \label{fig:VarighSmerteUtstrAvdSS}
+\center{
+\scalebox{\Sexpr{s2}}{\includegraphics{Figurer/VarighUtstrTidPro.pdf}}
+\scalebox{\Sexpr{s2}}{\includegraphics{Figurer/VarighUtstrTidSS.pdf}}} 
+\caption{Prolaps- og Spinal stenosepasienter som har utstrålende smerter i mer enn ett år før operasjonen, utvikling over tid.}
+\label{fig:VarighSmerteUtstrTid}
 \end{figure}
 
-Figurene \ref{fig:VarighSmerteRyggAvdPro} og \ref{fig:VarighSmerteRyggAvdSS} viser henholdsvis prolaps- og spinal stenosepasienter som har hatt smerter i rygg-/hofte i mer enn ett år før operasjon.
 
 
 \begin{figure}[h] 
-\scalebox{\Sexpr{s1}}{\includegraphics{VarighRyggHofAvdPro.pdf}}
+\scalebox{\Sexpr{s1}}{\includegraphics{Figurer/VarighRyggHofAvdPro.pdf}}
 \caption{Prolapspasienter som har hatt smerter i rygg-/hofte
 i mer enn ett år før operasjonen.}
 \label{fig:VarighSmerteRyggAvdPro}
 \end{figure}
+
 \begin{figure}[h] 
-\scalebox{\Sexpr{s1}}{\includegraphics{VarighRyggHofAvdSS.pdf}}
+\scalebox{\Sexpr{s1}}{\includegraphics{Figurer/VarighRyggHofAvdSS.pdf}}
 \caption{Spinal stenosepasienter som har hatt smerter i rygg-/hofte
 i mer enn ett år før operasjonen.}
 \label{fig:VarighSmerteRyggAvdSS}
 \end{figure}
 
 
-\textbf{Effektiv håndtering (rett tid)}
-
-I nasjonale retningslinjer (2007) er det anbefalt å operere pasienter for prolaps før
-bensmertene har vart for lenge, helst innen ett år. Derfor bør
-pasientgruppen håndteres raskt og effektivt når beslutning om operasjon er tatt og
-ikke-kirurgisk behandling har vært forsøkt. Data fra NKR og nyere forskning viser at
-pasienter som opereres for prolaps og har hatt bensmerter mer enn ett år har
-dårligere prognose. Andelen pasienter med bensmerter mer enn ett år på
-operasjonstidspunkt var uendret fra 2010 til \Sexpr{rappAar} (47\%).
-Figur 7 viser at det er stor variasjon i varighet av bensmerter hos pasienter som blir
-operert ved ulike sykehus. Det har sannsynligvis sammenheng med ventetid for
-utredning og operasjon og tilgjengelig operasjonskapasitet i forhold til etterspørsel.
 
 
 \clearpage
@@ -494,7 +502,7 @@ var \Sexpr{round(sum(table(RegData1aar$ASA)[1:2])/Ntot1aar*100, 1)}\%. Pasienter
 <<TabRV, results='asis', echo=FALSE>>=
 RVvar <- c('RvCt', 'RvMr', 'RvRadigr', 'RvDiscogr', 'RvDpregblok', 'RvRtgLscol', 'RvFunksjo')
 RVant <- colSums(RegData1aar[, RVvar], na.rm=T)
-RVpst <- round(RVant*100/Ntot1aar, 1)
+RVpst <- round(RVant*100/Ntot1aar)
 
 RV <- cbind('Antall' = c(RVant, Ntot1aar),
             'Andeler' = c(paste0(RVpst, '%'),' ')
@@ -518,7 +526,7 @@ RFvar <- c("RfNormal", "RfSkive", "RfSentr", "RfLateral", "RfForamino", "RfDegen
            "RfSpondtypeIsmisk", "RfSpondtypeDegen", "RfDegskol", "RfSynovpre", "RfPseudom")
 
 RFant <- colSums(RegData1aar[, RFvar], na.rm=T)[-1]
-RFpst <- round(RFant*100/Ntot1aar, 1)
+RFpst <- round(RFant*100/Ntot1aar)
 RF <- cbind('Antall' = c(RFant, Ntot1aar),
             'Andeler' = c(paste0(RFpst, '%'),' '))
 
@@ -545,90 +553,110 @@ En pasient kan ha flere diagnoser/radiologiske funn.
 
 
 
-\clearpage
 
 \section{Virksomhetsdata}
 
 \subsection{Type operasjon}
 
-Tabell \ref{tab:AntHovedInngrep} viser fordeling av hovedinngrepstype, samt antall antall registrerte operasjoner for hver hovedinngrepstype
-
-<<AntHovedInngrepAvd,results='asis', echo=FALSE>>=	
+<<AntHovedInngrep,results='asis', echo=FALSE>>=	
 
 HovedInngrep <- RyggFigAndeler(RegData=RegData1aar, valgtVar='HovedInngrep', datoFra=datoFra, datoTil=datoTil, 
-                               enhetsUtvalg=enhetsUtvalg, outfile='HovedInngrep.pdf', tittel=0)
+                               enhetsUtvalg=enhetsUtvalg, outfile='Figurer/HovedInngrep.pdf', tittel=0)
+indSS1aar <- intersect(which(RegData$OpAar==rappAar), indSS)
+AndelSSrappaar <- round(100*length(indSS1aar)/dim(RegData1aar)[1])
+@
 
+De hyppigste tilstandene pasienter opereres for er prolapskirurgi (\Sexpr{round(HovedInngrep$Andeler[1,2])} \%) og spinal stenose (\Sexpr{AndelSSrappaar} \%). Tabell \ref{tab:AntHovedInngrep} viser fordeling av hovedinngrepstype, samt antall registrerte operasjoner for hver hovedinngrepstype.
+
+<<AntHovedInngrepTab,results='asis', echo=FALSE>>=	
 HovedInngrepTab <- cbind('Antall' = HovedInngrep$Antall[1,], 
-                         'Andeler' = paste0(round(as.numeric(HovedInngrep$Andeler[1,]),1),'%')
+                         'Andeler' = paste0(round(as.numeric(HovedInngrep$Andeler[1,])),'%')
 )
 rownames(HovedInngrepTab) <- HovedInngrep$GruppeTekst
 xtable(HovedInngrepTab, align=c('l','r','r'), caption=paste0('Fordeling av hovedinngrep, ', rappAar), label="tab:AntHovedInngrep", digits=1)
 
-indSS1aar <- intersect(which(RegData$OpAar==rappAar), indSS)
-AndelSSrappaar <- round(100*length(indSS1aar)/dim(RegData1aar)[1])
 
 @
 
 
-\begin{figure}[ht]
-\centering \includegraphics[width= \Sexpr{figKrymp1}\textwidth]{HovedInngrep.pdf}
-\caption{\label{fig:HovedInngrep} \Sexpr{HovedInngrep$Tittel}}
-\end{figure}
+%\begin{figure}[ht]
+%      \scalebox{\Sexpr{s1}}{\includegraphics{Figurer/HovedInngrep.pdf}}
+%      \caption{\label{fig:HovedInngrep} \Sexpr{HovedInngrep$Tittel}}
+%\end{figure}
 
 
 
-\textbf{Degen. spondylolistese operert med fusjonskirurgi}
+\subsubsection{Degen. spondylolistese operert med fusjonskirurgi}
 <<FigurdegSfusj, echo=FALSE>>=
-dum <- RyggFigAndelerGrVar(RegData = RegData, valgtVar = 'degSponFusj', outfile = 'FigdegSponFusj.pdf')
+dum <- RyggFigAndelerGrVar(RegData = RegData, valgtVar = 'degSponFusj', outfile = 'Figurer/FigdegSponFusj.pdf')
 @
 
-De hyppigste tilstandene pasienter opereres for er prolapskirurgi (\Sexpr{round(HovedInngrep$Andeler[1,2])} \%) og spinal stenose (\Sexpr{AndelSSrappaar} \%). En andel av de som har spinal stenose har også en forskyvning mellom ryggvirvlene (Degenerativ spondylolistese). I faglitteraturen er det sprikende anbefalinger for om denne undergruppen skal ha tilleggsbehandling med avstivningsoperasjon (fusjonskirurgi).
-Det er stor variasjon i bruk av denne fusjonskirurgi i Norge. Og det pågår flere forskningstudier for å kartlegge om denne tilleggsbehandlingen er nødvendig.  En andel av de som har spinal stenose har også en forskyvning mellom ryggvirvlene (Degenerativ spondylolistese). I faglitteraturen er det sprikende anbefalinger for om denne undergruppen skal ha tilleggsbehandling med avstivningsoperasjon (fusjonskirurgi).
-Det er stor variasjon i bruk av denne fusjonskirurgi i Norge. Og det pågår flere forskningstudier for å kartlegge om denne tilleggsbehandlingen er nødvendig. 
+En andel av de som har spinal stenose har også en forskyvning mellom ryggvirvlene (Degenerativ spondylolistese). I faglitteraturen er det sprikende anbefalinger for om denne undergruppen skal ha tilleggsbehandling med avstivningsoperasjon (fusjonskirurgi).
+Figur \ref{fig:degSponFusj} viser at det er stor variasjon i bruk av denne fusjonskirurgi i Norge. Det pågår flere forskningstudier for å kartlegge om denne tilleggsbehandlingen er nødvendig. 
 
 
 
 \begin{figure}[ht]
-\centering \includegraphics[width= \Sexpr{s1}\textwidth]{FigdegSponFusj.pdf}
-\caption{\label{fig:Dura} Degenerativ spondylolistese operert med fusjonskirurgi}
+\scalebox{\Sexpr{s1}}{\includegraphics{Figurer/FigdegSponFusj.pdf}}
+\caption{\label{fig:degSponFusj} Degenerativ spondylolistese operert med fusjonskirurgi}
 \end{figure}
 
 
+\clearpage
 
 \subsection{Liggetid}
 
 Informasjonen er hentet fra legeskjema.
 Figur \ref{fig:Liggedogn} viser liggedøgnsfordeling for alle pasienter operert i 2016. Figur \ref{fig:LiggedognTid} viser gjennomsnittlig antall liggedøgn per år.  
-
+Figur \ref{fig:LiggetidAvdPro} og \ref{fig:LiggetidAvdSS} viser at det er stor variasjon i antall liggedøgn mellom sykehus og avdelinger.
+Det har vært en klar reduksjon i  liggetid på sykehus  for både prolaps og spinal stenose opererte (ca 1 døgn). Dette henger sammen med økt bruk av mindre invassive operasjonsmetoder og dermed mer dagkirurgi. 
 
 <<FigLiggetid, echo=FALSE>>=	#fig=TRUE, 
 LiggetidFord <- RyggFigAndeler(RegData=RegData1aar, valgtVar='Liggedogn', datoFra=datoFra, datoTil=datoTil,
-                               enhetsUtvalg=enhetsUtvalg, outfile='FigLiggetidFord.pdf', tittel=0)
+                               enhetsUtvalg=enhetsUtvalg, outfile='Figurer/FigLiggetidFord.pdf', tittel=0)
 
-dum <- RyggFigGjsnBox(RegData=RegData,  reshID=0, outfile='LiggetidBoxPro.pdf', 
-                      valgtVar='Liggedogn', hovedkat = 1, tittel=0, valgtMaal='', enhetsUtvalg=0)
-dum <- RyggFigGjsnBox(RegData=RegData,  reshID=0, outfile='LiggetidBoxSS.pdf', 
-                      valgtVar='Liggedogn', hovedkat = 8, tittel=0, valgtMaal='', enhetsUtvalg=0)
+dum <- RyggFigGjsnBox(RegData=RegData,  reshID=0, outfile='Figurer/LiggetidBoxPro.pdf', 
+                      valgtVar='Liggedogn', hovedkat = 1, tittel=0)
+dum <- RyggFigGjsnBox(RegData=RegData,  reshID=0, outfile='Figurer/LiggetidBoxSS.pdf', 
+                      valgtVar='Liggedogn', hovedkat = 8, tittel=0)
+
+dum <- RyggFigGjsnGrVar(RegData=RegData1aar, outfile='Figurer/LiggetidAvdPro.pdf', #aar=2016
+                        valgtVar='Liggedogn', hovedkat = 1, valgtMaal = 'Gjsn', tittel=0)
+dum <- RyggFigGjsnGrVar(RegData=RegData1aar, outfile='Figurer/LiggetidAvdSS.pdf', #aar=2016,
+                        valgtVar='Liggedogn', hovedkat = 8, valgtMaal = 'Gjsn', tittel=0)
 @
 
+
+
 \begin{figure}[h] 
-\centering \includegraphics[width=\Sexpr{figKrymp1}\textwidth]{FigLiggetidFord.pdf}
+\scalebox{\Sexpr{s1}}{\includegraphics{Figurer/FigLiggetidFord.pdf}}
 \caption{\Sexpr{LiggetidFord$Tittel}}
 \label{fig:Liggedogn}
 \end{figure}
 
 \begin{figure}[h] 
 \centerline{
-\scalebox{\Sexpr{s2}}{\includegraphics{LiggetidBoxPro.pdf}}
-\scalebox{\Sexpr{s2}}{\includegraphics{LiggetidBoxSS.pdf}}
+\scalebox{\Sexpr{s2}}{\includegraphics{Figurer/LiggetidBoxPro.pdf}}
+\scalebox{\Sexpr{s2}}{\includegraphics{Figurer/LiggetidBoxSS.pdf}}
 }
-\caption{Gjennomsnittlig liggetid for hhv. prolaps og spinal stenose. Skal også ha to figurer for gjennomsnittlig Liggetid for hvert sykehus i 2016. (Denne figurtypen må lages først...)}
+\caption{Gjennomsnittlig liggetid for hhv. prolaps og spinal stenose. }
 \label{fig:LiggedognTid}
 \end{figure}
 
+\begin{figure}[h] 
+\scalebox{\Sexpr{s1}}{\includegraphics{Figurer/LiggetidAvdPro.pdf}}
+\caption{Gjennomsnittlig liggetid for prolaps ved ulike avdelinger. Noen sykehus har kun dagkirurgi og får derfor få observasjoner. } 
+\label{fig:LiggetidAvdPro}
+\end{figure}
+
+\begin{figure}[h] 
+\scalebox{\Sexpr{s1}}{\includegraphics{Figurer/LiggetidAvdSS.pdf}}
+\caption{Gjennomsnittlig liggetid for spinal stenose ved ulike avdelinger. Noen sykehus har kun dagkirurgi og får derfor få observasjoner. } 
+\label{fig:LiggetidAvdSS}
+\end{figure}
 
 <<Antibiotika, results='asis', echo=FALSE, eval=FALSE>>=
-Antibiotika <- RyggFigAndelerTid(RegData=RegData, outfile='Antibiotika.pdf', enhetsUtvalg=enhetsUtvalg,
+Antibiotika <- RyggFigAndelerTid(RegData=RegData, outfile='Figurer/Antibiotika.pdf', enhetsUtvalg=enhetsUtvalg,
                                  variabel='Antibiotika', tittel=0)	#AndelTidLinjer
 
 Antibiotika <- rbind('Andeler' = paste(round(Antibiotika$Andel[1,],1), '%',sep=''),
@@ -647,172 +675,22 @@ AndelAntiLand <- round(Antibiotika$Andeler[1,dim(Antibiotika$Andeler)[2]],1)
 
 \section{Resultatmål}
 All informasjon i dette kapitlet er hentet fra pasientskjema. Ingen av resultatmålene er justert
-for eventuelle ulikheter i pasientpopulasjonene.
+for eventuelle ulikheter i pasientpopulasjonene. Noen viktige forskjeller som kan forklare en del av forskjeller i resultat er vist i de forgående kapitlene.
 
 
 <<FigEffPre, echo=FALSE>>=	 #fig=TRUE, 
-dum <- RyggFigGjsnBox(RegData=RegData, outfile='OswEndrPro.pdf', 
+dum <- RyggFigGjsnBox(RegData=RegData, outfile='Figurer/OswEndrPro.pdf', 
                       aar=2010:2015, valgtVar='OswEndr', hovedkat=1, ktr=ktr, tittel=0)
-dum <- RyggFigGjsnBox(RegData=RegData, outfile='OswEndrSS.pdf', 
+dum <- RyggFigGjsnBox(RegData=RegData, outfile='Figurer/OswEndrSS.pdf', 
                       aar=2010:2015, valgtVar='OswEndr', hovedkat=8, ktr=ktr, tittel=0)
 
-#dum <- RyggFigGjsnBox(RegData=RegData, outfile='EQ5DEndrPre.pdf', 
+#dum <- RyggFigGjsnBox(RegData=RegData, outfile='Figurer/EQ5DEndrPre.pdf', 
 #	aar=aar, valgtVar='EQ5DEndrPre', hovedkat=hBovedkat, ktr=ktr, tittel=0)
 
 @
 
 
-
-
-\subsection{Oswestry Disability Index (ODI)}
-ODI er en score for fysisk funksjon og et sykdomsspesifikt livskvalitetsmål. Skalaen går fra 0
-til 100, hvor 0 angir ingen funksjonshemming og følgelig beste livskvalitet.
-Figur \ref{fig:OswEndr} viser gjennomsnittlig endring av ODI fra før operasjon til ett år etter.
-Merk at resultatene \textit{ikke} er justert for forskjeller i pasientpopulasjonene.
-\\
-
-<<FigEff2, echo=FALSE>>=	 #fig=TRUE, 
-dum <- RyggFigGjsnGrVar(RegData=RegData, outfile='OswEndrAvdPro.pdf', Ngrense = 10,
-                      aar=2014:2015, valgtVar='OswEndr', hovedkat=1, ktr=ktr, tittel=0)
-dum <- RyggFigGjsnGrVar(RegData=RegData, outfile='OswEndrAvdSS.pdf', Ngrense = 10,
-                      aar=2014:2015, valgtVar='OswEndr', hovedkat=8, ktr=ktr, tittel=0)
-
-
-dum <- RyggFigAndelTid(RegData=RegData, outfile='Osw20ProTid.pdf', 
-                      aar=2010:2015, valgtVar='OswEndr20', hovedkat=1, ktr=ktr, tittel=0)
-dum <- RyggFigAndelTid(RegData=RegData, outfile='Osw30SSTid.pdf', 
-                      aar=2010:2015, valgtVar='OswEndr30pst', hovedkat=8, ktr=ktr, tittel=0)
-
-dum <- RyggFigGjsnBox(RegData=RegData, outfile='OswEndrPro.pdf', 
-                      aar=2010:2015, valgtVar='OswEndr', hovedkat=1, ktr=ktr, tittel=0)
-
-dum <- RyggFigGjsnBox(RegData=RegData, outfile='OswEndrSS.pdf', 
-                      aar=2010:2015, valgtVar='OswEndr', hovedkat=8, ktr=ktr, tittel=0)
-
-@
-
-Figur \ref{fig:OswEndrAvdPro} og \ref{fig:OswEndrAvdSS} viser gjennomsnittlig endring 12 måneder etter for hver avdeling.''
-
-\begin{figure}[h] 
-      \centerline{\scalebox{\Sexpr{s1}}{\includegraphics{OswEndrAvdPro.pdf}}}
-      \caption{Gjennomsnittlig endring av ODI per avdeling for prolaps}}
-      \label{fig:OswEndrAvdPro}
-\end{figure}
-
-\begin{figure}[h] 
-      \centerline{\scalebox{\Sexpr{s1}}{\includegraphics{OswEndrAvdSS.pdf}}}
-      \caption{Agjennomsnittlig endring av ODI per avdeling for spinal stenose.}}
-      \label{fig:OswEndrAvdSS}
-\end{figure}
-
-
-
-\begin{figure}[h] 
-\centerline{
-\scalebox{\Sexpr{s2}}{\includegraphics{OswEndrPro.pdf}}
-\scalebox{\Sexpr{s2}}{\includegraphics{OswEndrSS.pdf}}
-}
-\caption{Gjennomsnittlig endring i Oswestry for hhv. prolaps og spinal stenose, ett år etter operasjon, utvikling over år.}}
-\label{fig:OswEndr}
-\end{figure}
-
-
-
-Figur \ref{fig:OswEndr20TidPro} og \ref{fig:OswEndr30TidSS} viser henholdsvis andel prolapspasienter og spinal stenosepasienter med klinisk signifikant forbedring av ODI 12 måneder etter operasjon. Klinisk signifikant forbedring er ei ODI-forbedring på 20 poeng hos prolapspasienter og 30 \% hos spinal stenosepasienter.
-
-
-
-\begin{figure}[h] 
-      \centerline{\scalebox{\Sexpr{s1}}{\includegraphics{Osw20ProTid.pdf}}}
-      \caption{Andel med klinisk signifikant endring i Oswestry (>20 poeng) for prolapspasienter, ett år etter operasjon.}}
-      \label{fig:OswEndr20ProTid}
-\end{figure}
-
-\begin{figure}[h] 
-      \centerline{\scalebox{\Sexpr{s1}}{\includegraphics{Osw30SS.pdf}}}
-      \caption{Andel med klinisk signifikant endring i Oswestry ($\geq$ 30 poeng) for spinal stenosepasienter, ett år etter operasjon.}}
-      \label{fig:OswEndr30TidSS}
-\end{figure}
-
-
-\clearpage
-
-
-\subsection{Opplevd nytte av operasjon}
-
-Figur \ref{fig:Nytte} viser hvor stor nytte pasientene opplever å ha hatt av behandlingen ett år etter operasjon fordelt på år. Det hvite merket på søylene angir andel pasienter som angir at de har blitt ''Frisk'' eller ''Mye bedre'' i landet for øvrig . Tallet øverst på søyla angir antall pasienter som har svart. 
-I figuren er det gjort følgende aggregering av svaralternativene i spørreskjemaet:
-\begin{itemize}
-\item ''Frisk mye/bedre'' omfatter ''helt bra'' og ''mye bedre'' 
-\item ''Omtrent uendret'' omfatter ''litt bedre'', ''ingen endring'' og ''litt verre'' 
-\item ''Klart verre'' omfatter ''mye verre'' og ''verre enn noen gang før''
-\end{itemize}
-
-<<FigNytte, echo=FALSE>>=
-NyttePro <- RyggFigAndelStabelTid(RegData=RegData, aar=2010:2015, outfile='FigNyttePro.pdf', valgtVar='Nytte', 
-                                  hovedkat=1, ktr=ktr, tittel=0)
-
-NytteSS <- RyggFigAndelStabelTid(RegData=RegData, aar=2010:2015, outfile='FigNytteSS.pdf', valgtVar='Nytte',
-                                 hovedkat=8, ktr=ktr, tittel=0)
-
-@
-
-\begin{figure}[h] 
-\begin{center}
-\scalebox{\Sexpr{s2}}{\includegraphics{FigNyttePro.pdf}}
-\scalebox{\Sexpr{s2}}{\includegraphics{FigNytteSS.pdf}}
-\end{center}
-\caption{Spørsmål stilt 12 måneder etter operasjon til henholdsvis prolaps- og spinal stenosepasienter$:$ Hvilken nytte mener du at du har hatt av operasjonen?}
-\label{fig:Nytte}
-\end{figure}
-
-
-
-
-\subsection{Pasienttilfredshet}
-
-Figur \ref{fig:Fornoyd} viser hvor fornøyde pasientene er \Sexpr{ktrtxt} 
-etter operasjon fordelt på operasjonsår. Tallet øverst på søyla angir antall pasienter som har svart. 
-
-
-<<FigFornoyd, echo=FALSE>>=
-FornoydPro <- RyggFigAndelStabelTid(RegData=RegData, outfile='FigFornoydPro.pdf', valgtVar='Fornoyd',
-                                    hovedkat=1, aar=2010:2015, ktr=ktr, tittel=0)
-FornoydSS <- RyggFigAndelStabelTid(RegData=RegData, outfile='FigFornoydSS.pdf', valgtVar='Fornoyd',
-                                   hovedkat=8, aar=2010:2015, ktr=ktr, tittel=0)
-
-dum <- RyggFigAndelerGrVar(RegData=RegData, valgtVar='Fornoyd', ktr=ktr, aar=2014:2015, Ngrense = 20, 
-                                    hovedkat=1,  opKat=1, tidlOp=4,  outfile='FigFornoydAvdPro.pdf')
-dum <- RyggFigAndelerGrVar(RegData=RegData, valgtVar='Fornoyd', ktr=ktr, aar=2014:2015, Ngrense = 20, 
-                                    hovedkat=8,  opKat=1, tidlOp=4,  outfile='FigFornoydAvdSS.pdf')
-
-
-@
-
-\begin{figure}[h] 
-\begin{center}
-\scalebox{\Sexpr{s2}}{\includegraphics{FigFornoydPro.pdf}}
-\scalebox{\Sexpr{s2}}{\includegraphics{FigFornoydSS.pdf}}
-\end{center}
-\caption{Spørsmål stilt 12 måneder etter operasjon: Hvor fornøyd er du med behandlinga du har fått på sykehuset? til henholdsvis prolaps- og spinal stenosepasienter}
-\label{fig:Fornoyd}
-\end{figure}
-
-\begin{figure}[h] 
-\centerline{\scalebox{\Sexpr{s1}}{\includegraphics{FigFornoydAvdPro.pdf}}}
-\caption{Prolapspasienter som er helt fornøyde med behandlinga de har fått på sykehuset}
-\label{fig:FornoydAvdPro}
-\end{figure}
-
-\begin{figure}[h] 
-\centerline{\scalebox{\Sexpr{s1}}{\includegraphics{FigFornoydAvdSS.pdf}}}
-\caption{Spinal stenosespasienter som er helt fornøyde med behandlinga de har fått på sykehuset}
-\label{fig:FornoydAvdSS}
-\end{figure}
-
-
-\subsection{ Resultater etter rygg og nakkekirurgi 2010 til \Sexpr{rappAar}}
-\textbf{Denne overskrifta virker litt malplassert. Og det gjør flere av de kommende overskrifter også. Det henger fortsatt igjen fra todelinga av resultatkapitlet at det er rotete. Håper det blir lettere å rydde nå når alt er oppdatert.}
+\subsection{ Resultater etter ryggkirurgi, 2010 til \Sexpr{rappAar}}
 
 <<Res, echo=FALSE>>=
 #ODI-for året før årsrapport
@@ -834,6 +712,8 @@ ODIpostFusj <- sprintf('%.1f', mean(RegData$OswTot12mnd[indFusjPP]))
 Hyppigst utførte inngrep er for prolaps, dernest for trang ryggkanal (spinal stenose),
 dernest mer omfattende avstivningskirurgi (fusjon) for mer komplekse og
 sammensatte tilstander. 
+ODI er en score for smerterelatert fysisk funksjon og et sykdomsspesifikt livskvalitetsmål. Skalaen går fra 0
+til 100, hvor 0 angir ingen funksjonshemming og følgelig beste livskvalitet.
 Gjennomsnittlig ODI score var \Sexpr{ODIprePro} før operasjon og \Sexpr{ODIpostPro} ett år etter
 operasjon for prolapspasienter operert i \Sexpr{rappAar-1}. Dette betyr at funksjonssvikten ble redusert fra alvorlig til minimal for gjennomsnittspasienten. \\
 
@@ -843,7 +723,7 @@ fortsatt moderat funksjonssvikt ett år etter kirurgi.
 De som ble operert med fusjon har
 omtrent samme forbedring (ODI redusert fra \Sexpr{ODIpreFusj} til \Sexpr{ODIpostFusj}). 
 Dette betyr at selv om
-pasientene kan forvente en betydelig bedring, vil mange fortsatt ha moderate restplager
+pasientene kan forvente en betydelig bedring, vil mange fortsatt ha en del restplager
 ett år etter kirurgi. Resultatene synes å være omtrent det samme fra år til år. NKR
 sammenstiller nå norske resultater med data fra tilsvarende registre i Sverige og
 Danmark. Foreløpige analyser tyder på at resultatene er de samme i
@@ -863,20 +743,134 @@ virksomheten, strengere indikasjonsstilling og bedret pasientsikkerhet.
 
 
 
+\subsection{Oswestry Disability Index (ODI)}
+
+%Figur \ref{fig:OswEndr} viser gjennomsnittlig endring av ODI fra før operasjon til ett år etter.
+Merk at resultatene \textit{ikke} er justert for forskjeller i pasientpopulasjonene. 
+
+
+<<FigEff2, echo=FALSE>>=	 #fig=TRUE, 
+dum <- RyggFigGjsnGrVar(RegData=RegData, outfile='Figurer/OswEndrAvdPro.pdf', Ngrense = 20, aar=2014:2015, 
+                        valgtVar='OswEndr', hovedkat=1, tidlOp=4, opKat=1, ktr=ktr, tittel=0)
+dum <- RyggFigGjsnGrVar(RegData=RegData, outfile='Figurer/OswEndrAvdSS.pdf', Ngrense = 20, aar=2014:2015, 
+                        valgtVar='OswEndr', hovedkat=8, tidlOp=4, ktr=ktr, tittel=0)
+
+
+dum <- RyggFigAndelTid(RegData=RegData, outfile='Figurer/Osw20TidPro.pdf', 
+                       aar=2010:2015, valgtVar='OswEndr20', hovedkat=1, ktr=ktr, tittel=0)
+dum <- RyggFigAndelTid(RegData=RegData, outfile='Figurer/Osw30TidSS.pdf', 
+                       aar=2010:2015, valgtVar='OswEndr30pst', hovedkat=8, ktr=ktr, tittel=0)
+
+dum <- RyggFigGjsnBox(RegData=RegData, outfile='Figurer/OswEndrTidPro.pdf', 
+                      aar=2010:2015, valgtVar='OswEndr', hovedkat=1, ktr=ktr, tittel=0)
+
+dum <- RyggFigGjsnBox(RegData=RegData, outfile='Figurer/OswEndrTidSS.pdf', 
+                      aar=2010:2015, valgtVar='OswEndr', hovedkat=8, ktr=ktr, tittel=0)
+
+@
+
+Figurene \ref{fig:OswEndrAvdPro} og \ref{fig:OswEndrAvdSS} viser gjennomsnittlig endring 12 måneder etter for hver avdeling for henholdsvis prolaps og spinal stenose pasienter. Forskjellene er små. Vi ser også at konfidensintervallene er relativt brede og overlappende.
+
+\begin{figure}[h] 
+\scalebox{\Sexpr{s1}}{\includegraphics{Figurer/OswEndrAvdPro.pdf}}
+\caption{Gjennomsnittlig endring av ODI per avdeling for prolaps}
+\label{fig:OswEndrAvdPro}
+\end{figure}
+
+\begin{figure}[h] 
+\scalebox{\Sexpr{s1}}{\includegraphics{Figurer/OswEndrAvdSS.pdf}}
+\caption{Gjennomsnittlig endring av ODI per avdeling for spinal stenose.}
+\label{fig:OswEndrAvdSS}
+\end{figure}
 
 
 
 
+Suksessrate, det vil si forbedring i Oswestry på mer enn 20 poeng, ligger stabilt rundt 60 \% for prolapspasienter, ett år etter operasjon. 
+For spinal stenosepasienter er "suksess" forbedring i Oswestry på mer enn 30 \% , ett år etter operasjon. Denne raten ligger også stabilt rundt 60\%.
 
 
+\clearpage
 
+
+\subsection{Opplevd nytte av operasjon}
+
+Figur \ref{fig:Nytte} viser hvor stor nytte pasientene opplever å ha hatt av behandlingen ett år etter operasjon fordelt på år. Tallet øverst på søyla angir antall pasienter som har svart. 
+I figuren er det gjort følgende aggregering av svaralternativene i spørreskjemaet:
+\begin{itemize}
+\item ''Frisk mye/bedre'' omfatter ''helt bra'' og ''mye bedre'' 
+\item ''Omtrent uendret'' omfatter ''litt bedre'', ''ingen endring'' og ''litt verre'' 
+\item ''Klart verre'' omfatter ''mye verre'' og ''verre enn noen gang før''
+\end{itemize}
+
+Vi ser at en mindre andel av spinal stenose pasienter opplever å ha hatt stor nytte av operasjonen sammenlignet 
+med prolapspasienter.
+
+<<FigNytte, echo=FALSE>>=
+NyttePro <- RyggFigAndelStabelTid(RegData=RegData, aar=2010:2015, outfile='Figurer/FigNyttePro.pdf', valgtVar='Nytte', 
+                                  hovedkat=1, ktr=ktr, tittel=0)
+
+NytteSS <- RyggFigAndelStabelTid(RegData=RegData, aar=2010:2015, outfile='Figurer/FigNytteSS.pdf', valgtVar='Nytte',
+                                 hovedkat=8, ktr=ktr, tittel=0)
+
+@
+
+\begin{figure}[h] 
+\begin{center}
+\scalebox{\Sexpr{s2}}{\includegraphics{Figurer/FigNyttePro.pdf}}
+\scalebox{\Sexpr{s2}}{\includegraphics{Figurer/FigNytteSS.pdf}}
+\end{center}
+\caption{Spørsmål stilt 12 måneder etter operasjon til henholdsvis prolaps- og spinal stenosepasienter$:$ Hvilken nytte mener du at du har hatt av operasjonen?}
+\label{fig:Nytte}
+\end{figure}
+
+\subsection{Pasienttilfredshet}
+
+Figur \ref{fig:Fornoyd} viser hvor fornøyde pasientene var med behandlinga de fikk på sykehuset \Sexpr{ktrtxt} 
+etter operasjon fordelt på operasjonsår. Tallet øverst på søyla angir antall pasienter som har svart. Vi ser at spinal stenose pasienter gjennomgående er litt mindre fornøyde enn prolapspasienter.
+
+
+<<FigFornoyd, echo=FALSE>>=
+FornoydPro <- RyggFigAndelStabelTid(RegData=RegData, outfile='Figurer/FigFornoydPro.pdf', valgtVar='Fornoyd',
+                                    hovedkat=1, aar=2010:2015, ktr=ktr, tittel=0)
+FornoydSS <- RyggFigAndelStabelTid(RegData=RegData, outfile='Figurer/FigFornoydSS.pdf', valgtVar='Fornoyd',
+                                   hovedkat=8, aar=2010:2015, ktr=ktr, tittel=0)
+
+dum <- RyggFigAndelerGrVar(RegData=RegData, valgtVar='Fornoyd', ktr=ktr, aar=2014:2015, Ngrense = 20, 
+                           hovedkat=1,  opKat=1, tidlOp=4,  outfile='Figurer/FigFornoydAvdPro.pdf')
+dum <- RyggFigAndelerGrVar(RegData=RegData, valgtVar='Fornoyd', ktr=ktr, aar=2014:2015, Ngrense = 20, 
+                           hovedkat=8,  opKat=1, tidlOp=4,  outfile='Figurer/FigFornoydAvdSS.pdf')
+
+
+@
+
+\begin{figure}[h] 
+\begin{center}
+\scalebox{\Sexpr{s2}}{\includegraphics{Figurer/FigFornoydPro.pdf}}
+\scalebox{\Sexpr{s2}}{\includegraphics{Figurer/FigFornoydSS.pdf}}
+\end{center}
+\caption{Spørsmål stilt 12 måneder etter operasjon: Hvor fornøyd er du med behandlinga du har fått på sykehuset? til henholdsvis prolaps- og spinal stenosepasienter}
+\label{fig:Fornoyd}
+\end{figure}
+
+\begin{figure}[h] 
+\scalebox{\Sexpr{s1}}{\includegraphics{Figurer/FigFornoydAvdPro.pdf}}
+\caption{Prolapspasienter operert i 2014 og 2015, som ett år etter er helt fornøyde med behandlinga de har fått på sykehuset}
+\label{fig:FornoydAvdPro}
+\end{figure}
+
+\begin{figure}[h] 
+\scalebox{\Sexpr{s1}}{\includegraphics{Figurer/FigFornoydAvdSS.pdf}}
+\caption{Spinal stenosespasienter som er helt fornøyde med behandlinga de har fått på sykehuset}
+\label{fig:FornoydAvdSS}
+\end{figure}
 
 
 \subsection{Prolapskirurgi (alle kategorier)}
 
 <<Figurer1Pro, echo=FALSE>>=
 dum <- RyggFigGjsnBox(RegData=RegData, valgtVar='Liggedogn', datoFra=datoFra, datoTil=datoTil, 
-                      hovedkat = 1, outfile='LiggetidProlaps.pdf', tittel=0) #
+                      hovedkat = 1, outfile='Figurer/LiggetidProlaps.pdf', tittel=0) #
 LiggetidPro <- tapply(RegDataPro$Liggedogn[indPro], RegDataPro$OpAar[indPro], mean, na.rm=T)
 NedgLiggetidPro <- sprintf('%.1f', abs(LiggetidPro[as.character(rappAar)]-LiggetidPro['2010']))
 
@@ -885,17 +879,10 @@ NedgLiggetidPro <- sprintf('%.1f', abs(LiggetidPro[as.character(rappAar)]-Ligget
 
 Gjennomsnittlig liggetid på sykehus i forbindelse med prolapsoperasjon har gått ned med \Sexpr{NedgLiggetidPro} døgn fra 2010 til \Sexpr{rappAar}.
 
-%\begin{figure}[ht]
-%	\centering \includegraphics[width= \Sexpr{figKrymp1}\textwidth]{LiggetidProlaps.pdf}
-%	\caption{\label{fig:LiggetidPro} Gjennomsnittlig liggetid per år for pasienter operert for prolaps.}}
-%\end{figure}
-
-
-\textbf{Alt videre skal splittes på prolapskirurgi og ss}
 
 <<Div, echo=FALSE>>=
 MikroAarPro <- prop.table(table(RegDataPro$OpMikro, RegDataPro$OpAar),2)*100
-BruktMikroAarPro <- sprintf('%.1f', MikroAarPro['1',])
+BruktMikroAarPro <- sprintf('%.0f', MikroAarPro['1',])
 
 AndelTidlOp3Pro <- round(table(RegDataPro$TidlOprAntall>2,RegDataPro$OpAar)['TRUE',]/table(RegDataPro$OpAar)*100,1)
 
@@ -903,11 +890,10 @@ SaarInfPro <- prop.table(table(RegDataPro$KpInf3Mnd, RegDataPro$OpAar),2)*100
 
 AntibiotikaPro <- prop.table(table(RegDataPro$Antibiotika, RegDataPro$OpAar),2)*100
 
-FornoydPro <- sprintf('%.1f',prop.table(table(RegDataPro12mnd$Fornoyd12mnd, RegDataPro12mnd$OpAar),2)*100)
-
+FornoydPro <- sprintf('%.0f',prop.table(table(RegDataPro12mnd$Fornoyd12mnd, RegDataPro12mnd$OpAar),2)[1,]*100)
 
 MikroAarSS <- prop.table(table(RegDataSS$OpMikro, RegDataSS$OpAar),2)*100
-BruktMikroAarSS <- sprintf('%.1f', MikroAarSS['1',])
+BruktMikroAarSS <- sprintf('%.0f', MikroAarSS['1',])
 
 AndelTidlOp3SS <- round(table(RegDataSS$TidlOprAntall>2,RegDataSS$OpAar)['TRUE',]/table(RegDataSS$OpAar)*100,1)
 
@@ -915,7 +901,7 @@ SaarInfSS <- prop.table(table(RegDataSS$KpInf3Mnd, RegDataSS$OpAar),2)*100
 
 #AntibiotikaSS <- prop.table(table(RegDataSS$Antibiotika, RegDataSS$OpAar),2)*100
 
-FornoydSS <- sprintf('%.1f',prop.table(table(RegDataSS$Fornoyd12mnd, RegDataSS$OpAar),2)*100)
+FornoydSS <- sprintf('%.0f',prop.table(table(RegDataSS$Fornoyd12mnd, RegDataSS$OpAar),2)[1,]*100)
 
 @
 
@@ -924,12 +910,18 @@ lupebriller), som har åpenbare fordeler, har økt fra \Sexpr{BruktMikroAarPro[1
 \Sexpr{BruktMikroAarPro[length(BruktMikroAarPro)]} \% i \Sexpr{rappAar} for prolapsoperasjoner. For spinal stenose er endringa fra \Sexpr{BruktMikroAarSS[1]} \% i 2010 til 
 \Sexpr{BruktMikroAarSS[length(BruktMikroAarSS)]} \% i \Sexpr{rappAar}.
 
-NKR har tidligere vist at multiple reoperasjoner har en minimal og potensielt skadelig
-effekt. Andelen som har vært operert mer enn 2 ganger tidligere varierer mellom \Sexpr{min(AndelTidlOp3Pro)} 
-og \Sexpr{max(AndelTidlOp3Pro)} for prolapspasienter og mellom \Sexpr{min(AndelTidlOp3SS)} 
-og \Sexpr{max(AndelTidlOp3SS)} i perioden 2010-\Sexpr{rappAar}. 
 
-Andelen prolapspasienter som ett år etter behandlinga er fornøyde med behandlingen de fikk på sykehuset (PREM) ligger mellom \Sexpr{min(FornoydPro)}\% og \Sexpr{max(FornoydPro)}\% for pasienter operert i perioden 2010-\Sexpr{rappAar}. Tilsvarende er andel fornøyde spinal stenosepasienter mellom \Sexpr{min(FornoydSS)}\% og \Sexpr{max(FornoydSS)}\%
+
+
+
+NKR har tidligere vist at multiple reoperasjoner har minimal effekt. Andelen som har vært operert mer enn 2 ganger tidligere ligger mellom \Sexpr{min(AndelTidlOp3Pro)} \%
+og \Sexpr{max(AndelTidlOp3Pro)} \% for prolapspasienter og mellom \Sexpr{min(AndelTidlOp3SS)} \%
+og \Sexpr{max(AndelTidlOp3SS)} \% for spinal stenosepasienter i perioden 2010-\Sexpr{rappAar}. 
+
+Andelen prolapspasienter som ett år etter behandlinga er fornøyde med behandlingen de fikk på sykehuset (PREM) ligger mellom \Sexpr{min(FornoydPro)} \% og \Sexpr{max(FornoydPro)} \% for pasienter operert i perioden 2010-\Sexpr{rappAar-1}. 
+Tilsvarende ligger andel fornøyde spinal stenosepasienter mellom \Sexpr{min(FornoydSS)} \% og \Sexpr{max(FornoydSS)} \%
+
+\clearpage
 
 \subsection{Kvalitetsindikatorer}
 
@@ -939,32 +931,33 @@ Kvalitetsindikatorene er  utviklet gjennom forskning (valideringsstudier)  i reg
 
 <<KvalBakgr, echo=FALSE>>=
 #OpKat: 'Elektiv', 'Akutt', '1/2-Akutt',
-indPro1aar <- which(RegData1aar$HovedInngrep == 1)
-ODIProOpKat <- round(prop.table(table(RegData1aar$ODIendr[indPro1aar]>20, RegData1aar$OpKat[indPro1aar]),2)*100,1)
-ODIProTidlOp <- round(prop.table(table(RegData1aar$ODIendr[indPro1aar]>20, RegData1aar$TidlOpr[indPro1aar]==4),2)*100,1)
-ODIProTidlOpAnt3 <- round(prop.table(table(RegData1aar$ODIendr[indPro1aar]>20, RegData1aar$TidlOprAntall[indPro1aar]>2),2)*100,1)
+#indPro1aar <- which(RegData1aar$HovedInngrep == 1)
+ODIProOpKat <- round(prop.table(table(RegDataPro$ODIendr>20, RegDataPro$OpKat),2)*100,1)
+ODIProTidlOp <- round(prop.table(table(RegDataPro$ODIendr>20, RegDataPro$TidlOpr==4),2)*100,1)
+ODIProTidlOpAnt3 <- round(prop.table(table(RegDataPro$ODIendr>20, RegDataPro$TidlOprAntall>2),2)*100,1)
 
-indSS1aar <- intersect(indSS, which(RegData$OpAar==rappAar))
-AndelOhjSS <- round(prop.table(table(RegData$OpKat[indSS1aar]))*100,1)
-ODISSTidlOpAnt3 <- round(prop.table(table((RegData$ODIpst)[indSS1aar]>=30, 
-                                          RegData$TidlOprAntall[indSS1aar]>2),2)*100,1)
+#indSS1aar <- intersect(indSS, which(RegData$OpAar==rappAar))
+AndelOhjSS <- round(prop.table(table(RegData$OpKat[indSS]))*100,1)
+ODISSTidlOpAnt3 <- round(prop.table(table((RegData$ODIpst)[indSS]>=30, 
+                                          RegData$TidlOprAntall[indSS]>2),2)*100,1)
 
 opKat <- 1  #Bare elektive pasienter
 tidlOp <- 4 #Bare primæroperasjoner
 
 
-RyggFigAndelTid(RegData=RegData, hovedkat = 1, valgtVar = 'tidlOp3', outfile = '')
-TidlOp3 <- RyggFigAndelTid(RegData=RegData, hovedkat = 1, valgtVar = 'tidlOp3', outfile = 'FigTidlOpAnt3.pdf')
+TidlOp3 <- RyggFigAndelTid(RegData=RegData, hovedkat = 1, valgtVar = 'tidlOp3', outfile = 'Figurer/FigTidlOpAnt3.pdf')
+
+#dum <- RyggFigAndelerGrVar(RegData = RegData, hovedkat = 1, valgtVar = 'tidlOp3', Ngrense=20, outfile='Figurer/')
 
 @
 
-Resultatene nedenfor gjelder  \textit{planlagt, første gangs prolapsoperasjon} i \Sexpr{rappAar}. 
+Resultatene nedenfor gjelder  \textit{planlagt, første gangs prolapsoperasjon}. 
 Kun avdelinger med mer enn 10 evt. 20 (avhenger av type resultat) registrerte operasjoner i er med i
 analysen. Grunnen til at gjentatt kirurgi (reoperasjon) og øyeblikkelig hjelp (ø-hjelp)
 er filtrert bort er at dette er ulikt fordelt mellom sykehusene.
 
 
-Hos prolapspasienter operert som ø-hjelp er andelen med betydelig forbedring (suksessrate).  \Sexpr{ODIProOpKat['TRUE','2']} \%, mot \Sexpr{ODIProOpKat['TRUE','1']} \% av de som blir operert planlagt (elektivt). Betydelig forbedring er definert som mer enn 20 poengs forbedring av ODI.
+Følgende gjelder hele tidsperioden: Hos prolapspasienter operert som ø-hjelp er andelen med betydelig forbedring (suksessrate)  \Sexpr{ODIProOpKat['TRUE','2']} \%, mot \Sexpr{ODIProOpKat['TRUE','1']} \% av de som blir operert planlagt (elektivt). Betydelig forbedring er definert som mer enn 20 poengs forbedring av ODI.
 Hos prolapspasienter som ikke har vært operert i ryggen tidligere er suksessraten \Sexpr{ODIProTidlOp['TRUE','TRUE']} \% mot \Sexpr{ODIProTidlOp['TRUE','FALSE']} \%
 hos de som har vært operert før. 
 Langt færre pasienter i spinal stenosegruppen opereres som øyeblikkelig hjelp; \Sexpr{AndelOhjSS[2]} \%
@@ -976,52 +969,51 @@ Sykehus som får henvist få pasienter som ø-hjelp og
 mange til reoperasjon vil dermed få dårligere resultater.
 
 
-\begin{figure}[ht]
-\centering \includegraphics[width= \Sexpr{figKrymp1}\textwidth]{FigTidlOpAnt3.pdf}
-\caption{\label{fig:TidlOpAnt3} Andel prolapspasienter med mer enn 3 eller flere tidligere operasjoner}
-\end{figure}
-
-\textbf{Skal alt dette ramses opp for spinal stenose også? Da er det bedre å ikke filtrere på prolaps slik at argumentasjonen gjelder alle ryggoperasjoner.}
-
 
 \subsubsection{God indikasjonsstilling (rett pasient)}
 
 <<KvalIndBein, echo=FALSE>>=
+dum <- RyggFigGjsnBox(RegData=RegData1aar, valgtVar<-'SmBeinEndrPre', ktr=ktr, outfile='Figurer/FigBeinsmEndrPre.pdf')
+
 BeinsmLavPre <- RyggFigAndelerGrVar(RegData=RegData, valgtVar='BeinsmLavPre', aar=2015:2016, Ngrense = 20, 
-                                    hovedkat=1,  opKat=1, tidlOp=4,  outfile='FigBeinsmLavPre.pdf')
+                                    hovedkat=1,  opKat=1, tidlOp=4,  outfile='Figurer/FigBeinsmLavPre.pdf')
 @
 
 Pasienter som har mye plager, vil kunne forvente størst nytte av ryggoperasjon,
 mens de som har lite plager vil ha mindre potensial for forbedring og større risiko
 for forverring. Gevinst av kirurgi henger derfor sammen med hvor streng
-indikasjonsstillingen («inngangsbilletten» til kirurgi) har vært. Figur 8 \textbf{Denne tok vi vel bort} viser denne
-sammenhengen tydelig. Verdt å merke seg er at hvis pasienten har lite smerter før
+indikasjonsstillingen («inngangsbilletten» til kirurgi) har vært. Figur \ref{fig:BeinsmEndrPre} viser denne
+sammenhengen tydelig. Det er verdt å merke seg er at hvis pasienten har lite smerter før
 operasjon (bensmerter under 3 på den horisontale smerteskalaen), er det stor
 sjanse for at pasienten faktisk blir verre (mindre enn 0 på den vertikale skalaen) etter
-operasjon. Figur 9 viser at det er stor variasjon i hvor stor grad sykehusene opererer
-pasienter med prolaps og lite bensmerter. Pasienter med lammelse (parese) er tatt
+operasjon. \\
+Figur \ref{fig:BeinsmLavPre} viser at det er stor variasjon i hvor stor grad sykehusene opererer
+pasienter med prolaps og lite beinsmerter. Pasienter med lammelse (parese) er tatt
 ut av analysen, da de ofte må opereres uansett grad av smerte.
 
-\textit{Rakk ikke å ta inn igjen figurene}
+
 
 \begin{figure}[ht]
-\centering \includegraphics[width= \Sexpr{figKrymp1}\textwidth]{FigBeinsmLavPre.pdf}
-\caption{\label{fig:BeinsmLavPre}  Andel pasienter med lite bensmerter (<3) operert for prolaps.}
-\end{figure}
-%($\leq$ 2) 
-
-\textbf{Her skulle vi vel fjerne noe?:}
-Figur 3.11: Sammenheng mellom intensitet av bensmerte før operasjon og
+\scalebox{\Sexpr{s1}}{\includegraphics{Figurer/FigBeinsmEndrPre.pdf}}
+\caption{\label{fig:BeinsmEndrPre}  Sammenheng mellom intensitet av bensmerte før operasjon og
 forbedring etter operasjon. Skala for bensmerter går fra 0 til 10, hvor 0 betegner
 ingen og 10 verst tenkelige smerte før operasjon (horisontal akse). Negativ endring
 av bensmerten (vertikal akse) tilsvarer forverring, 0 betyr uendret smerte etter
-operasjon.
+operasjon.}
+\end{figure}
+
+\begin{figure}[ht]
+\scalebox{\Sexpr{s1}}{\includegraphics{Figurer/FigBeinsmLavPre.pdf}}
+\caption{\label{fig:BeinsmLavPre}  Andel pasienter med lite beinsmerter ($\leq 2$) operert for prolaps.}
+\end{figure}
+
 
 
 
 
 
 \subsubsection{Resultatindikatorer (behandlings-effektivitet)}
+
 Viktige tiltak for å bedre behandlingseffektivitet vil være å øke andelen som får en
 betydelig forbedring (suksessraten), redusere andelen som ikke har nytte av
 behandlingen, blir verre eller får komplikasjoner. Nedenfor vises noen indikatorer
@@ -1034,112 +1026,242 @@ kirurgi.
 
 <<KvalInd1aar, echo=FALSE>>=
 Osw48 <- RyggFigAndelerGrVar(RegData=RegData, aar=2014:2015, valgtVar='Osw48',ktr=2, Ngrense = 20,
-                             hovedkat = 1, opKat=1, tidlOp=4, outfile='FigOsw48.pdf', tittel=0)
+                             hovedkat = 1, opKat=1, tidlOp=4, outfile='Figurer/FigOsw48.pdf', tittel=0)
 
 OswEndrLav <- RyggFigAndelerGrVar(RegData=RegData, aar=2014:2015, valgtVar='OswEndrLav', ktr=2,Ngrense = 20,
-                                  hovedkat = 1, opKat=1, tidlOp=4, outfile='FigOswEndrLav.pdf', tittel=0)
+                                  hovedkat = 1, opKat=1, tidlOp=4, outfile='Figurer/FigOswEndrLav.pdf', tittel=0)
+Osw22Pro <- RyggFigAndelerGrVar(RegData=RegData, aar=2014:2015, valgtVar='Osw22',ktr=2, Ngrense = 20,
+                                hovedkat = 1, opKat=1, tidlOp=4, outfile='Figurer/FigOsw22Pro.pdf', tittel=0)
+Osw22SS <- RyggFigAndelerGrVar(RegData=RegData, aar=2014:2015, valgtVar='Osw22',ktr=2, Ngrense = 20,
+                               hovedkat = 8, opKat=1, tidlOp=4, outfile='Figurer/FigOsw22SS.pdf', tittel=0)
 
 OswEndr20 <- RyggFigAndelerGrVar(RegData=RegData, aar=2014:2015, valgtVar='OswEndr20',  ktr=2,Ngrense = 20,
-                                 hovedkat = 1, opKat=1, tidlOp=4, outfile='FigOswEndr20.pdf', tittel=0)
+                                 hovedkat = 1, opKat=1, tidlOp=4, outfile='Figurer/FigOswEndr20.pdf', tittel=0)
 
 OswEndr30pstSS <- RyggFigAndelerGrVar(RegData=RegData, aar=2014:2015, valgtVar='OswEndr30pst', ktr=2, Ngrense = 20,
-                                      hovedkat = 8, tidlOp=4, outfile='FigOswEndr30pstSS.pdf', tittel=0)
+                                      hovedkat = 8, tidlOp=4, outfile='Figurer/FigOswEndr30pstSS.pdf', tittel=0)
 @
 
-\subsubsubsection{Uønsket resultat II}
 
-Pasienter som 1 år etter prolapskirurgi har en ODI skår over 48 har fortsatt alvorlig
-smerterelatert funksjonshemming i dagliglivet. Flesteparten av disse pasientene vil
-oppfatte sin livssituasjon som klart verre enn før operasjonen.
+
+\subsubsection{Uønsket resultat}
+
+Pasienter som 1 år etter prolapskirurgi har en ODIskår over 48 har fortsatt alvorlig
+smerterelatert funksjonshemming i dagliglivet. Figur \ref{fig:Osw48} viser andelen som har ODIskår over 48 etter prolapsoperasjon. Flesteparten av disse pasientene vil
+oppfatte sin livssituasjon som klart verre enn før operasjonen. 
+
 \begin{figure}[ht]
-\centering \includegraphics[width= \Sexpr{figKrymp1}\textwidth]{FigOsw48.pdf}
+\scalebox{\Sexpr{s1}}{\includegraphics{Figurer/FigOsw48.pdf}}
 \caption{\label{fig:Osw48}  Andel pasienter med alvorlig smerterelatert funksjonssvikt 1 år etter
+prolapskirurgi. Pasienter operert i 2014 og 2015.}
+\end{figure}
+
+
+
+Pasienter med forbedring av ODI skår mindre enn 13 vil som hovedregel ikke
+oppfatte sin situasjon som vesentlig forbedret etter kirurgi. Resultatet blir dermed å
+betrakte som utilfredsstillende. Figur \ref{fig:OswEndrLav} viser andelen med lav forbedring av ODIskår ved hver avdeling.
+
+\begin{figure}[ht]
+\scalebox{\Sexpr{s1}}{\includegraphics{Figurer/FigOswEndrLav.pdf}}
+\caption{\label{fig:OswEndrLav}   Andel pasienter som ikke oppnår et tilfredsstillende resultat, ODI
+forbedring under 13 poeng, etter prolapskirurgi. Pasienter operert i 2014 og 2015.}
+\end{figure}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+\subsubsection{Ønsket resultat («suksess»)}
+ODI skår  under 22 poeng oppleves av de fleste pasientene som et helt akseptabelt fysisk funksjonsnivå 12 mnd etter ryggopersjon. Figurene \ref{fig:Osw22Pro} og \ref{fig:Osw22SS} angir hvor stor andel av henholdsvis prolaps og spinal stenose opererete som oppnår dette.
+
+\begin{figure}[ht]
+\scalebox{\Sexpr{s1}}{\includegraphics{Figurer/FigOsw22Pro.pdf}}
+\caption{\label{fig:Osw22Pro}   Andel pasienter med ODI under 22 ett år
+etter prolapsoperasjon. Pasienter operert i 2014 og 2015.}
+\end{figure}
+
+\begin{figure}[ht]
+\scalebox{\Sexpr{s1}}{\includegraphics{Figurer/FigOsw22SS.pdf}}
+\caption{\label{fig:Osw22SS}   Andel pasienter med ODI under 22 ett år
+etter spinal stenose operasjon. Pasienter operert i 2014 og 2015.}
+\end{figure}
+
+
+
+Figur \ref{fig:OswEndr20} viser andel pasienter med betydelig forbedring av selvrapportert
+smerterelatert funksjon i dagliglivet («suksess», ODI forbedring over 20 poeng) 1 år
+etter prolapsoperasjon.
+
+\begin{figure}[ht]
+\scalebox{\Sexpr{s1}}{\includegraphics{Figurer/FigOswEndr20.pdf}}
+\caption{\label{fig:OswEndr20}   Andel pasienter med betydelig forbedring av selvrapportert
+smerterelatert funksjon i dagliglivet («suksess», ODI forbedring over 20 poeng) 1 år
+etter prolapsoperasjon. Pasienter operert i 2014 og 2015.}
+\end{figure}
+
+
+
+Nyere forskning knyttet til NKR viser at pasienter operert for spinal stenose bør ha minst 30 \% forbedring av ODI for å oppleve et meget godt operasjonsresultat. Figur \ref{fig:OswEndr30pstSS} viser andelen med minst 30 \% forbedring av ODI ved hver avdeling.
+
+\begin{figure}[ht]
+\scalebox{\Sexpr{s1}}{\includegraphics{Figurer/FigOswEndr30pstSS.pdf}}
+\caption{\label{fig:OswEndr30pstSS} Andel spinal stenose pasienter med betydelig forbedring av selvrapportert
+smerterelatert funksjon i dagliglivet («suksess», ODI forbedring over 30 \% poeng) 1 år
+etter prolapsoperasjon. Pasienter operert i 2014 og 2015.}
+\end{figure}
+
+
+
+
+
+
+
+
+
+
+
+
+
+\subsubsection{Komplikasjoner (sikkerhet)}
+
+\textbf{I. Sårinfeksjon.}
+<<FigurInf, echo=FALSE>>=
+KpInf3MndPro <- RyggFigAndelerGrVar(RegData=RegData, valgtVar='KpInf3Mnd', aar=2015:2016, Ngrense = 20,
+                                    hovedkat = 1, outfile='Figurer/FigKpInf3MndPro.pdf', tittel=0)
+KpInf3MndSS <- RyggFigAndelerGrVar(RegData=RegData, valgtVar='KpInf3Mnd', aar=2015:2016, Ngrense = 20,
+                                   hovedkat = 8, outfile='Figurer/FigKpInf3MndSS.pdf', tittel=0)
+
+KpInf3MndTidPro <- RyggFigAndelTid(RegData=RegData,  valgtVar='KpInf3Mnd', 
+                                   hovedkat = 1, outfile='Figurer/FigKpInf3MndTidPro.pdf', tittel=0)
+KpInf3MndTidPro <- RyggFigAndelTid(RegData=RegData,  valgtVar='KpInf3Mnd', 
+                                   hovedkat = 8, outfile='Figurer/FigKpInf3MndTidSS.pdf', tittel=0)
+@
+For alle typer prolapsoperasjoner har
+andel sårinfeksjoner (pasientrapportert) har blitt noe redusert fram til 2010, mens bruk av  forbyggende antibiotikabehandling har økte sterkt og i dag får nesten alle forebyggende antibiotikabehandling ved kirurgi. Siden 2010 har andelen sårinfeksjoner ligget stabilt rundt 2 \% for prolapsopererte og rundt 3 \% for spinal stenose opererte.
+
+
+%\begin{figure}[ht]
+%      \centering \scalebox{\Sexpr{s2}}{\includegraphics{Figurer/FigKpInf3MndTidPro.pdf}}
+%      \centering \scalebox{\Sexpr{s2}}{\includegraphics{Figurer/FigKpInf3MndTidSS.pdf}}
+%      \caption{\label{fig:KpInfTid} Andel pasienter som rapporterer om sårinfeksjon 3 måneder etter
+%hhv. prolapskirurgi og spinal stenose, utvikling over tid.}
+%\end{figure}
+
+Årsakene til sårinfeksjon er komplekse. I \Sexpr{rappAar} fikk 98-100 \% av pasienter som
+opereres for prolaps, forebyggende antibiotikabehandling under operasjon. NKR
+viste for mange år siden at dette har god forbyggende effekt. Figurene \ref{fig:KpInfAvdPro} og \ref{fig:KpInfAvdSS} viser andel pasienter som får sårinfeksjon ved hver avdeling.
+
+\begin{figure}[ht]
+\scalebox{\Sexpr{s1}}{\includegraphics{Figurer/FigKpInf3MndPro.pdf}}
+\caption{\label{fig:KpInfAvdPro} Andel pasienter som rapporterer om sårinfeksjon 3 måneder etter
 prolapskirurgi.}
 \end{figure}
 
-\clearpage
-
-\subsubsubsection{Uønsket resultat III}
-Pasienter med forbedring av ODI skår mindre enn 13 vil som hovedregel ikke
-oppfatte sin situasjon som vesentlig forbedret etter kirurgi. Resultatet blir dermed å
-betrakte som utilfredsstillende. 
-
 \begin{figure}[ht]
-\centering \includegraphics[width= \Sexpr{figKrymp1}\textwidth]{FigOswEndrLav.pdf}
-\caption{\label{fig:OswEndrLav}   Andel pasienter som ikke oppnår et tilfredsstillende resultat, ODI
-forbedring under 13 poeng, etter prolapskirurgi.}
+\scalebox{\Sexpr{s1}}{\includegraphics{Figurer/FigKpInf3MndSS.pdf}}
+\caption{\label{fig:KpInfAvdSS} Andel pasienter som rapporterer om sårinfeksjon 3 måneder etter
+spinal stenose.}
 \end{figure}
 
-
-\subsubsubsection{Ønsket resultat («suksess»)}
-
-Figur 3.16: Andel pasienter med betydelig forbedring av selvrapportert
-smerterelatert funksjon i dagliglivet («suksess», ODI forbedring over 20 poeng) 1 år
-etter prolapsoperasjon.
-\begin{figure}[ht]
-\centering \includegraphics[width= \Sexpr{figKrymp1}\textwidth]{FigOswEndr20.pdf}
-\caption{\label{fig:OswEndr20}   Andel pasienter med betydelig forbedring av selvrapportert
-smerterelatert funksjon i dagliglivet («suksess», ODI forbedring over 20 poeng) 1 år
-etter prolapsoperasjon.}
-\end{figure}
-
-\subsubsection{Spinal stenose, ODI forbedring minst 30 \%}
-
-Nyere forskning knyttet til NKR viser at pasienter operert for spinal stenose bør ha minst 30 \% forbedring av ODI for å oppleve et meget godt operasjonsresultat.
-
-\begin{figure}[ht]
-\centering \includegraphics[width= \Sexpr{figKrymp1}\textwidth]{FigOswEndr30pstSS.pdf}
-\caption{\label{fig:OswEndr30pstSS} Andel spinal stenose pasienter med betydelig forbedring av selvrapportert
-smerterelatert funksjon i dagliglivet («suksess», ODI forbedring over 30 \% poeng) 1 år
-etter prolapsoperasjon.}
-\end{figure}
+%\clearpage
 
 
-\subsubsubsection{Komplikasjoner (sikkerhet)}
-<<FigurInf, echo=FALSE>>=
-KpInf3MndPro <- RyggFigAndelerGrVar(RegData=RegData, valgtVar='KpInf3Mnd', aar=2015:2016, Ngrense = 20,
-                                    hovedkat = 1, outfile='FigKpInf3MndPro.pdf', tittel=0)
-KpInf3MndSS <- RyggFigAndelerGrVar(RegData=RegData, valgtVar='KpInf3Mnd', aar=2015:2016, Ngrense = 20,
-                                   hovedkat = 8, outfile='FigKpInf3MndSS.pdf', tittel=0)
-
+<<FigurDura, echo=FALSE>>=
 DuraPro <- RyggFigAndelerGrVar(RegData=RegData1aar, valgtVar='PeropKompDura', aar=2015:2016, Ngrense = 20,
-                               opKat = 1, tidlOp = 4, hovedkat = 1, outfile='FigDuraPro.pdf', tittel=0)
+                               opKat = 1, tidlOp = 4, hovedkat = 1, outfile='Figurer/FigDuraPro.pdf', tittel=0)
 DuraSS <- RyggFigAndelerGrVar(RegData=RegData1aar, valgtVar='PeropKompDura', aar=2015:2016, Ngrense = 20,
-                              opKat = 1, tidlOp = 4, hovedkat = 8, outfile='FigDuraSS.pdf', tittel=0)
+                              opKat = 1, tidlOp = 4, hovedkat = 8, outfile='Figurer/FigDuraSS.pdf', tittel=0)
 @
-
-\textbf{I. Sårinfeksjon.}
-For alle typer prolapsoperasjoner har
-andel sårinfeksjoner (pasientrapportert) har blitt noe redusert med mens
-bruk av forbyggende antibiotikabehandling har økt med 15 \%. 
-
-Årsakene til sårinfeksjon er komplekse. I \Sexpr{rappAar} fikk 98-100 \% av pasienter som
-opereres for prolaps forebyggende antibiotikabehandling under operasjon. NKR
-viste for mange år siden at dette har god forbyggende effekt.
-
-\begin{figure}[ht]
-\centering \includegraphics[width= \Sexpr{s2}\textwidth]{FigKpInf3MndPro.pdf}
-\centering \includegraphics[width= \Sexpr{s2}\textwidth]{FigKpInf3MndSS.pdf}
-\caption{\label{fig:KpInf} Andel pasienter som rapporterer om sårinfeksjon 3 måneder etter
-hhv. prolapskirurgi og spinal stenose.}
-\end{figure}
-
-
-\subsubsubsection{Durarift (rift på ryggmargshinnen)}
-
-Dette er oftest en ufarlig komplikasjon, men kan medføre væskelekkasje og
+Durarift er oftest en ufarlig komplikasjon, men kan medføre væskelekkasje og
 ubehag for pasienten, lengre liggetid og i noen tilfeller behov for reoperasjon.
-Unntaksvis kan også konsekvensen være nerveskade og alvorlig infeksjon.
+Unntaksvis kan også konsekvensen være nerveskade og alvorlig infeksjon. Figur \ref{fig:Dura} viser andelen som får durarift for prolaps og spinal stenose pasienter.
+
 \begin{figure}[ht]
-\centering \includegraphics[width= \Sexpr{s2}\textwidth]{FigDuraPro.pdf}
-\centering \includegraphics[width= \Sexpr{s2}\textwidth]{FigDuraSS.pdf}
+\centering \includegraphics[width= \Sexpr{s2}\textwidth]{Figurer/FigDuraPro.pdf}
+\centering \includegraphics[width= \Sexpr{s2}\textwidth]{Figurer/FigDuraSS.pdf}
 \caption{\label{fig:Dura} Andel pasienter som får durarift etter kirurgi for hhv. prolaps og spinal stenose, begge elektiv primæroperasjon.}
 \end{figure}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 \clearpage
 
 \section{Resultater degenerativ nakke}
+
+I Norge drives nakkekirurgi kun ved nevrokirurgiske avdelinger knyttet til de fem
+universitetssykehusene i Oslo, Bergen, Trondheim, Stavanger og Tromsø, samt ved
+hovedsakelig ett privat sykehus (Oslofjordklinikken).
+Da der ikke finnes etablerte kvalitetsindikatorer for nakkekirurgi vil dette bli en
+viktig oppgave for NKR. Da en ny validering av datakvaliteten ikke er fullført grunnet
+uventede databaseproblemer, vises kun et generelt mål på pasient rapporterte
+tilfredshet (PREM) i årets rapport. I neste årsrapport vil NKR presentere sykehusvise
+kvalitetsdata splittet på diagnose, behandling.
+Pasienttilfredshet (PREM)
+
+
+<<NAKKE, echo=FALSE, eval=FALSE>>=
+rm(list=ls())
+library(Nakke)
+load('A:/Nakke/NakkeAarsrapp2016.Rdata') #RegData
+setwd('C:/ResultattjenesteGIT//nkr/aarsrapp')
+
+# Preprosessere data:  
+RegData <- NakkePreprosess(RegData=RegData)  
+#Kjønnsvariabel:ErMann - vil senere benytte denne
+RegData$ErMann <- RegData$Kjonn
+RegData$ErMann[which(RegData$Kjonn == 2)] <- 0
+#Riktig datoformat og hoveddato
+RegData$InnDato <- as.POSIXlt(RegData$OprDato, format="%Y-%m-%d")
+RegData$Aar <- 1900 + strptime(RegData$InnDato, format="%Y")$year
+#Variabel som identifiserer avdelingas resh
+names(RegData)[which(names(RegData) == 'AvdRESH')] <- 'ReshId'
+class(RegData$ReshId) <- 'numeric'
+
+
+
+
+#Andel70aar <- FigAndelerGrVar(RegData = 
+FigAndelerGrVar(RegData=RegData, datoFra=datoFra, valgtVar=valgtVar,
+                datoTil=datoTil, reshID=reshID, enhetsUtvalg=0, outfile=outfile)
+@
 Figurer:
 \begin{itemize}
 \item Andel over 70 år per sykehus
@@ -1151,22 +1273,7 @@ Figurer:
 \item Splitte på fremre og bakre tilgang
 \end{itemize}
 
-I Norge drives nakkekirurgi kun ved nevrokirurgiske avdelinger knyttet til de fem
-universitetssykehusene i Oslo, Bergen, Trondheim, Stavanger og Tromsø, samt ved
-hovedsakelig ett privat sykehus (Oslofjordklinikken).
-Da der ikke finnes etablerte kvalitetsindikatorer for nakkekirurgi vil dette bli en
-viktig oppgave for NKR. Da en ny validering av datakvaliteten ikke er fullført grunnet
-uventede databaseproblemer, vises kun et generelt mål på pasient rapporterte
-tilfredshet (PREM) i årets rapport. I neste årsrapport vil NKR presentere sykehusvise
-kvalitetsdata splittet på diagnose, behandling.
-Pasienttilfredshet (PREM)
-Her har pasienten svart på hvor fornøyd de var med behandlingen de fikk på
-sykehuset. Dette er et lite spesifikt effektmål som gir uttrykk for totalopplevelsen,
-det vil si mange aspekter knyttet til både informasjon, utredning, opphold,
-behandling og oppfølging.
 
-Figur 3.20: Andelen nakkeopererte som fornøyde med behandlingen ved Norske
-sykehus 12 måneder etter nakkekirurgi.
 
 Pasienter som opereres i nakken for degenerative tilstander har armsmerte med
 eller uten funksjonssvikt (radikulopati), varierende grad av nakkesmerter og noen
@@ -1175,39 +1282,9 @@ opereres på grunn av ryggmargspåvirkning påregne bedring i samme grad som de
 som behandles for armsmerte. Figur 3.21 viser at også andelen som opereres for
 myelopati varierer mellom sykehusene.
 
-Figur 3.21: Andel pasienter som opereres for ryggmargspåvirkning (myelopati) ved
-norske sykehus.
 
 
 \section{Oppsummering av de viktigste resultatene}
-
-\begin{itemize}
-\item Dekningsgraden er fortsatt under 80 \%, men økende.
-\item Innen offentlig helsetjeneste synes kvalitetssikring av egen virksomhet å
-være høyt prioritert på Sørvest-landet og i Sør-Trøndelag, men ikke i Helse
-Sørøst og Møre & Romsdal HF.
-\item Ryggopererte opplever generelt en sterk, klinisk relevant og statistisk
-signifikant forbedring av funksjon i dagliglivets aktiviteter, livskvalitet og
-arbeidsuførhet. Resultatene er stabile over tid.
-\item Liggetiden er fortsatt redusert i \Sexpr{rappAar}. Dette kan knyttes til økt bruk av
-mindre omfattende kirurgi.
-\item Bruke av synsfremmende midler under operasjon øker
-\item Andelen pasienter som er fornøyde med behandlingen de fikk på sykehuset
-12 mnd. etter operasjon øker blant prolapsopererte, og andel multiple
-reoperasjoner og andel sårinfeksjoner går ned. Andel som har søkt
-uføretrygd før operasjon er redusert. Andelen pasienter med lang
-symptomvarighet før operasjon er ikke redusert.
-\item Det er stor variasjon i resultat mellom sykehus
-\item Strengere indikasjonsstilling vil kunne bedre operasjonsresultatene
-\item Pasienttilfredsheten blant nakkeopererte varierer mellom 80-90 \% ut fra
-hvor pasientene er operert og type diagnose.
-\end{itemize}
-
-
-
-
-
-
 
 
 

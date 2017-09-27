@@ -93,7 +93,8 @@ Argumentet \emph{valgtVar} har følgende valgmuligheter:
     \item Saardren: Sårdren    
     \item SmStiPre: Bruker smertestillende før operasjonen    
     \item SymptVarighRyggHof: Varighet av rygg-/hoftesmerter > 1år    
-    \item SympVarighUtstr: Varighet av utstrålende smerter > 1 år  
+    \item SympVarighUtstr: Varighet av utstrålende smerter > 1 år 
+    \item tidlOp3: Mer enn to tidligere operasjoner 
     \item UforetrygdPre: Søkt eller planlegger å søke uføretrygd før operasjon?    
     \item Utd: Andel høyskole-/universitetsutdannede    
     \item Verre Mye verre/verre enn noen gang, 3 mnd. [ENDRET fra Verre3mnd, Verre12mnd]

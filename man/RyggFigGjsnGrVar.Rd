@@ -4,58 +4,69 @@
 \alias{RyggFigGjsnGrVar}
 \title{Søylediagram med gjennomsnitt/median for hver grupperingsenhet (sykehus, RHF, ...)}
 \usage{
-RyggFigGjsnGrVar(RegData, valgtVar, preprosess = 1, hentData = 0,
-  valgtMaal = "Gjsn", Ngrense = 10, minald = 0, maxald = 130,
-  datoFra = "2011-01-01", datoTil = "3000-01-01", aar = 0, grType = 99,
-  InnMaate = 99, dodInt = "", erMann = "", grVar = "ShNavn",
-  medKI = 1, lagFig = 1, outfile)
+RyggFigGjsnGrVar(RegData, valgtVar, valgtMaal = "Gjsn",
+  datoFra = "2007-01-01", datoTil = "3000-12-31", aar = 0, minald = 0,
+  maxald = 130, erMann = "", hovedkat = 99, tidlOp = "", hentData = 0,
+  preprosess = 1, opKat = 99, enhetsUtvalg = 0, grVar = "ShNavn",
+  tittel = 1, ktr = 0, Ngrense = 10, medKI = 1, reshID = 0,
+  outfile = "")
 }
 \arguments{
 \item{RegData}{En dataramme med alle nødvendige variabler fra registeret}
 
 \item{valgtVar}{Hvilken variabel som skal visualiseres. Se \strong{Details} for oversikt.}
 
-\item{preprosess}{Preprosesser data
-0: Nei
-1: Ja (Standard)}
-
-\item{hentData}{Gjør spørring mot database
-0: Nei, RegData gis som input til funksjonen (Standard)
-1: Ja}
-
 \item{valgtMaal}{'Med' = median. Alt annet gir gjennomsnitt 
 
 Argumentet \emph{valgtVar} har følgende valgmuligheter:
    \itemize{
-    \item alder: Pasientens alders 
-    \item SMR: Standardisert mortalitetsratio (Gir annen figurtype)
-    \item liggetid: Liggetid 
-    \item Nas: Skår for sykepleieraktiviteter. (Nursing Activities Score). Per døgn.
-    \item NEMS: Skår for ressursbruk per opphold. (Nine Equivalents of Nursing Manpower Use Score)
-    \item NEMS24: NEMS-skår per døgn. 
-    \item respiratortid: Tid tilbrakt i respirator
-    \item SAPSII: Skår for alvorlighetsgrad av sykdom.  (Simplified Acute Physiology Score II)
+    \item Liggedogn: Liggetid 
    }
 
 Detajer: Her bør man liste opp hvilke variable funksjonen benytter.}
-
-\item{minald}{Alder, fra og med (Standardverdi: 0)}
-
-\item{maxald}{Alder, til og med (Standardverdi: 130)}
 
 \item{datoFra}{Tidligste operasjonsdato i utvalget (vises alltid i figuren).}
 
 \item{datoTil}{Seneste operasjonsdato i utvalget (vises alltid i figuren).}
 
+\item{minald}{Alder, fra og med (Standardverdi: 0)}
+
+\item{maxald}{Alder, til og med (Standardverdi: 130)}
+
 \item{erMann}{Kjønn, standard: alt annet enn 0/1 gir begge kjønn
 0: Kvinner
 1: Menn}
+
+\item{hovedkat}{Hvilken type hovedinngrep, numerisk 0-7, standard: 99, dvs. alle}
+
+\item{tidlOp}{Tidligere operert, numerisk 1-4. Alt annet gir alle data uten utvalg.
+       1: Tidl. operert samme nivå, 
+       2: Tidl. operert annet nivå, 
+3: Tidl. operert annet og sm. nivå,
+4: Primæroperasjon}
+
+\item{hentData}{Gjør spørring mot database
+0: Nei, RegData gis som input til funksjonen (Standard)
+1: Ja}
+
+\item{preprosess}{Preprosesser data
+0: Nei
+1: Ja (Standard)}
+
+\item{opKat}{Hastegrad av operasjon 1: Elektivt, 2: Akutt, 3: Halvøyeblikkelig}
+
+\item{enhetsUtvalg}{Gjør gruppeutvalg med eller uten sammenlikning. Se \strong{Details} for oversikt.}
 
 \item{grVar}{Tekstvariabel som angir hva skal resultatene grupperes på. 
 ShNavn-sykehus/avdeling
 Fylke- Pasienten bor i det akutelle fylket
 BoHF - Pasienten bor i boområdene til det angitte HF.
 BoRHF - Pasienten bor i boområdene til det angitte RHF.}
+
+\item{tittel}{Vise tittel i figuren eller ikke (0/1). standard:1}
+
+\item{reshID}{Parameter følger fra innlogging helseregister.no og angir
+hvilken enhet i spesialisthelsetjenesten brukeren tilhører}
 
 \item{outfile}{Navn på fil figuren skrives til. Standard: '' (Figur skrives
 til systemets standard utdataenhet (som regel skjerm))}

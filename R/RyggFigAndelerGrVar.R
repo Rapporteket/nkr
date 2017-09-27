@@ -27,7 +27,8 @@
 #'     \item Saardren: Sårdren    
 #'     \item SmStiPre: Bruker smertestillende før operasjonen    
 #'     \item SymptVarighRyggHof: Varighet av rygg-/hoftesmerter > 1år    
-#'     \item SympVarighUtstr: Varighet av utstrålende smerter > 1 år  
+#'     \item SympVarighUtstr: Varighet av utstrålende smerter > 1 år 
+#'     \item tidlOp3: Mer enn to tidligere operasjoner 
 #'     \item UforetrygdPre: Søkt eller planlegger å søke uføretrygd før operasjon?    
 #'     \item Utd: Andel høyskole-/universitetsutdannede    
 #'     \item Verre Mye verre/verre enn noen gang, 3 mnd. [ENDRET fra Verre3mnd, Verre12mnd]
@@ -163,7 +164,7 @@ xAkseTxt <- "Andel opphold (%)"
           par('fig'=c(vmarg, 1, 0, 1-0.02*(NutvTxt-1)))	#Har alltid datoutvalg med
 
           xmax <- min(max(AndelerGrSort, na.rm=T),100)*1.15
-          pos <- rev(barplot(rev(as.numeric(AndelerGrSort)), horiz=T, border=NA, col=farger[3], #main=Tittel,
+          pos <- rev(barplot(rev(as.numeric(AndelerGrSort)), horiz=T, border=NA, col=farger[4], #main=Tittel,
                         xlim=c(0,xmax), ylim=c(0.05, 1.25)*length(Ngr), font.main=1, xlab='Andel (%)', las=1, cex.names=cexShNavn*0.9))
           ybunn <- 0.1
           ytopp <- rev(pos)[AntGr]+1	#-length(indGrUt)]

@@ -67,12 +67,6 @@
 \usepackage{rotating} %add rotating for plain tables
 \usepackage{pdflscape} %add rotating/landcape for pdf
 
-%add rotating for plain tables
-\usepackage{rotating}
-
-%add rotating/landcape for pdf
-\usepackage{pdflscape}
-
 %bytte font
 \renewcommand{\familydefault}{\sfdefault}
 
@@ -92,7 +86,7 @@
 \section{Oppsummeringstall for NKR}
 
 % latex table generated in R 3.4.1 by xtable 1.8-2 package
-% Mon Sep 04 22:15:33 2017
+% Wed Sep 27 11:15:26 2017
 \begin{table}[ht]
 \centering
 \begin{tabular}{lrrrrrr}
@@ -159,8 +153,8 @@ registreringer gjort ved de respektive avdelinger hvert år. Vi ser at det er
 47 avdelinger som registrerer og at det i perioden 2010 til 2016 totalt er registrert 27415 
 operasjoner. Av disse er 53.1\% utført på menn og 46.9\% på kvinner.
 Siste inngrep registrert i datauttrekket som ligger til grunn for denne rapporten, ble utført 
-2016-12-30. 
-\par 
+2016-12-30. I peroden 2007 til og med 2009 er det registrert 5832 operasjoner til NKR. 
+
 \clearpage
 
 
@@ -170,7 +164,7 @@ Siste inngrep registrert i datauttrekket som ligger til grunn for denne rapporte
 
 
 % latex table generated in R 3.4.1 by xtable 1.8-2 package
-% Mon Sep 04 22:15:35 2017
+% Wed Sep 27 11:15:26 2017
 \begin{table}[ht]
 \centering
 \begin{tabular}{rlllllllll}
@@ -181,7 +175,7 @@ Andeler & 0.4\% & 4.5\% & 11.8\% & 18.7\% & 20.3\% & 21\% & 18.9\% & 4.3\% & 0.1
   Antall & 21 & 216 & 569 & 898 & 976 & 1013 & 909 & 207 & 4 \\ 
    \hline
 \end{tabular}
-\caption{Aldersfordeling.} 
+\caption{Aldersfordeling, 2016.} 
 \label{tab:Alder}
 \end{table}
 
@@ -194,8 +188,8 @@ all hovedsak håndterer denne pasientgruppen. I 2016 ble 23.3 \% (1120 operasjon
 ryggoperasjonene meldt til NKR utført på personer over 70 år.
 
 \begin{figure}[ht]
-	\centering \includegraphics[width= 0.8\textwidth]{FigAlder70.pdf}
-	\caption{\label{fig:Alder70} Andel ryggoperasjoner utført på personer som er 70 år eller mer.}}
+\scalebox{0.7}{\includegraphics{Figurer/FigAlder70.pdf}}
+\caption{\label{fig:Alder70} Andel ryggoperasjoner utført på personer som er 70 år eller mer.}}
 \end{figure}
 
 
@@ -203,7 +197,7 @@ ryggoperasjonene meldt til NKR utført på personer over 70 år.
 %Figur \ref{fig:Alder} viser aldersfordeling for alle pasienter i rappAar.
 
 %\begin{figure}[ht]
-%	\centering \includegraphics[width= figKrymp1\textwidth]{FigAlderFord.pdf}
+%	\centering \includegraphics[width= s1\textwidth]{FigAlderFord.pdf}
 %	\caption{\label{fig:Alder} paste0(AlderFord$Tittel,', ',rappAar)}
 %\end{figure}
 
@@ -217,8 +211,8 @@ til 24.5 \%
 Figur \ref{fig:BMI} viser fordeling av BMI for alle pasienter i 2016. 
 
 \begin{figure}[ht]
-	\centering \includegraphics[width= 0.8\textwidth]{FigBMI.pdf}
-	\caption{\label{fig:BMI} Pasientenes BMI (Body Mass Index).}
+\scalebox{0.7}{\includegraphics{Figurer/FigBMI.pdf}}
+\caption{\label{fig:BMI} Pasientenes BMI (Body Mass Index).}
 \end{figure}
 
 
@@ -228,7 +222,7 @@ Figur \ref{fig:BMI} viser fordeling av BMI for alle pasienter i 2016.
 \subsection{Morsmål / etnisitet og utdanning}
 
 % latex table generated in R 3.4.1 by xtable 1.8-2 package
-% Mon Sep 04 22:15:37 2017
+% Wed Sep 27 11:15:28 2017
 \begin{table}[ht]
 \centering
 \begin{tabular}{lrr}
@@ -249,38 +243,43 @@ Norsk & 4509 & 93.7\% \\
 Tabell \ref{tab:Morsm} viser fordeling av norske, samiske og andre fremmedsåpråklige pasienter.
 Andel fremmedspråklige pasienter (inkl. samisk) var 5.9\% . 
 
-Andelen fremmedspråklige som opereres for prolaps har økt fra 5 til 7 \% i perioden.
+Andelen fremmedspråklige som opereres for prolaps har økt fra 5 \% til 7 \% i perioden.
 Beslutning om ryggkirurgi baserer seg på en felles forståelse mellom kirurg og
 pasient av hva helseproblemene består i og hva som kan oppnås med operasjon
 («shared desicion making»). I behandling av fremmedspråklige er kommunikasjon
 en utfordring. Av de som har norsk som morsmål var suksessraten 65 \% mot 56 \%
 for fremmedspråklige. Bedre kommunikasjon kan bidra å redusere disse
-forskjellene.
+forskjellene. Figur \ref{fig:Morsmal} viser andelen fremmedspråklige operert ved de ulike avdelingene i 2016.
 
 \begin{figure}[ht]
-	\centering \includegraphics[width= 0.8\textwidth]{FigMorsmal.pdf}
-	\caption{\label{fig:Morsmal} Andel fremmedspråklige av alle prolapsopererte ved ulike sykehus i
+\scalebox{0.7}{\includegraphics{Figurer/FigMorsmal.pdf}}
+\caption{\label{fig:Morsmal} Andel fremmedspråklige av alle prolapsopererte ved ulike sykehus i
 Norge.}
 \end{figure}
 
 
 
 
-Figur \ref{fig:Utd} viser nivå av utdanning 
-Opplysningene om utdanning er rapportert av pasientene selv.
+Figur \ref{fig:Utd} viser nivå av utdanning og vi ser at det er 36.2, 0.0 som har høyere utdanning. Opplysningene om utdanning er rapportert av pasientene selv. 
+Lav utdanning er assosiert til dårligere operasjonsresultat. Figur \ref{fig:HoyUtdAvd} viser andel pasienter med høyskole eller universistetsutdanning ved hvert sykehus/avdeling.
 
 \begin{figure}[ht]
-	\centering \includegraphics[width= 0.8\textwidth]{FigUtd.pdf}
-	\caption{\label{fig:Utd} Høyeste fullførte utdanning.}
+\scalebox{0.7}{\includegraphics{Figurer/FigUtd.pdf}}
+\caption{\label{fig:Utd} Høyeste fullførte utdanning.}
+\end{figure}
+
+\begin{figure}[ht]
+\scalebox{0.7}{\includegraphics{Figurer/FigHoyUtdAvd.pdf}}
+\caption{\label{fig:HoyUtdAvd} Andel pasienter med høyere utdanning.}
 \end{figure}
 
 
-
+\clearpage
 
 \subsection{Arbeidsstatus}
 
 % latex table generated in R 3.4.1 by xtable 1.8-2 package
-% Mon Sep 04 22:15:38 2017
+% Wed Sep 27 11:15:29 2017
 \begin{table}[ht]
 \centering
 \begin{tabular}{lr}
@@ -313,17 +312,18 @@ Median varighet av sykemelding/attføring/rehabilitering  før operasjon var
 15 uker.
 
 
-\clearpage
+%\clearpage
 
 
 \subsection{Uføretrygd og erstatning }
 
 Tabell \ref{tab:Ufor} viser pasientenes svar på spørsmålet: ``Har du søkt om uføretrygd?''.
 Pasienter som har en uavklart uføre eller erstatningssak vil sjeldnere komme tidlig tilbake i jobb etter operasjon.
-Figur \ref{fig:Ufor} utvikling over tid for andel som har søkt eller planlegger å søke uføretrygd.
+Andel som har søkt eller planlegger å søke uføretrygd ligger fortsatt stabilt like under 5 \% i 2016. 
+Figur \ref{fig:Ufor} viser andel ryggopererte ved hver avdeling som har søkt eller planlegger å søke uføretrygd.
 
 % latex table generated in R 3.4.1 by xtable 1.8-2 package
-% Mon Sep 04 22:15:39 2017
+% Wed Sep 27 11:15:31 2017
 \begin{table}[ht]
 \centering
 \begin{tabular}{lr}
@@ -343,14 +343,14 @@ Ja & 2\% \\
 
 
 \begin{figure}[ht]
-	\centering \includegraphics[width= 0.8\textwidth]{FigUfor.pdf}
-	\caption{\label{fig:Ufor} Pasienter som har søkt eller planlegger å søke uføretrygd} 
+\scalebox{0.7}{\includegraphics{Figurer/FigUforAvd.pdf}}
+\caption{\label{fig:Ufor} Pasienter som har søkt eller planlegger å søke uføretrygd} 
 \end{figure}
 
 Tabell \ref{tab:Erst} viser pasientenes svar på spørsmålet: ``Har du søkt om erstatning?'' 
 
 % latex table generated in R 3.4.1 by xtable 1.8-2 package
-% Mon Sep 04 22:15:39 2017
+% Wed Sep 27 11:15:31 2017
 \begin{table}[ht]
 \centering
 \begin{tabular}{lr}
@@ -370,18 +370,19 @@ Ja & 2.6\% \\
 \end{table}
 
 
+\clearpage
 
 \subsection{Tidligere ryggoperert}
 Informasjonen er hentet fra legeskjema.
 Figur \ref{fig:TidlOp} viser en prosentvis fordelig mellom primæroperasjon, det vil si første gangs 
 operasjon, og operasjoner hos pasienter som har vært operert tidligere.  
 Søylene representerer hvert år frem til i dag. Tallet på toppen av søylen viser antall operasjoner utført 
-det aktuelle året.
+det aktuelle året. Reoperasjon gir genereltl dårligere operasjonsresultat enn første gangs operasjon.
 
 
 
 \begin{figure}[ht]
-\centering \includegraphics[width= 0.8\textwidth]{TidlOp.pdf}
+\scalebox{0.7}{\includegraphics{Figurer/TidlOp.pdf}}
 \caption{\label{fig:TidlOp} Tidligere operert? }
 \end{figure}
 
@@ -390,14 +391,15 @@ det aktuelle året.
 Av de pasientene operert i 2016 som hadde vært operert tidligere, var 61.1\% 
 operert i samme nivå, 33.5\% 
 operert i annet nivå og 5.4\% 
-operert i både samme og annet nivå. 
+operert i både samme og annet nivå.
+Andelen reoperasjoner var 25 \% i 2010 og 27 \% i 2016.
 
 
 
 \subsection{Varighet av smerter i rygg-/hofte og av utstrålende smerter på operasjonstidspunktet}
 
 % latex table generated in R 3.4.1 by xtable 1.8-2 package
-% Mon Sep 04 22:15:41 2017
+% Wed Sep 27 11:15:33 2017
 \begin{table}[ht]
 \centering
 \begin{tabular}{lr}
@@ -416,7 +418,7 @@ Ingen rygg-/hoftesmerter & 1.7\% \\
 \label{tab:SmRH}
 \end{table}
 % latex table generated in R 3.4.1 by xtable 1.8-2 package
-% Mon Sep 04 22:15:41 2017
+% Wed Sep 27 11:15:33 2017
 \begin{table}[ht]
 \centering
 \begin{tabular}{lr}
@@ -435,64 +437,61 @@ Ingen utstrålende smerter & 2.7\% \\
 \label{tab:Utstr}
 \end{table}
 
-Spørsmålene er besvart av pasienten.
+I nasjonale retningslinjer (2007) er det anbefalt å operere pasienter for prolaps før
+beinsmertene har vart for lenge, helst innen ett år. Derfor bør
+pasientgruppen håndteres raskt og effektivt når beslutning om operasjon er tatt og
+ikke-kirurgisk behandling har vært forsøkt. Data fra NKR og nyere forskning viser at
+pasienter som opereres for prolaps og har hatt beinsmerter mer enn ett år har
+dårligere prognose. Andelen pasienter med beinsmerter mer enn ett år på
+operasjonstidspunkt var uendret fra 2010 til 2016 (47\%).
+Figur 7 viser at det er stor variasjon i varighet av beinsmerter hos pasienter som blir
+operert ved ulike sykehus. Det har sannsynligvis sammenheng med ventetid for
+utredning og operasjon og tilgjengelig operasjonskapasitet i forhold til etterspørsel.
+
 Tabellene \ref{tab:SmRH}  og \ref{tab:Utstr} viser fordeling av hvor lenge pasientene har hatt 
-hhv. smerter i rygg/hofte og utstrålende smerter. Figurene \ref{fig:VarighSmerteUtstrAvdPro} og \ref{fig:VarighSmerteUtstrAvdSS} viser hvor stor andel av henholdsvis prolaps- og spinal stenosepasienter som har hatt ustrålende smerter i mer enn ett år ved hvert sykehus. 
+hhv. smerter i rygg/hofte og utstrålende smerter. 
+Figurene \ref{fig:VarighSmerteUtstrAvdPro} og \ref{fig:VarighSmerteUtstrAvdSS} viser hvor stor andel av henholdsvis prolaps- og spinal stenosepasienter som har hatt ustrålende smerter i mer enn ett år ved hvert sykehus. 
+Figurene \ref{fig:VarighSmerteRyggAvdPro} og \ref{fig:VarighSmerteRyggAvdSS} viser hvor stor andel av henholdsvis prolaps- og spinal stenosepasienter som har hatt rygg-/hoftesmerter mer enn ett år ved hvert sykehus.
 
 \begin{figure}[h] 
-      \scalebox{0.8}{\includegraphics{VarighUtstrAvdPro.pdf}}
-      \caption{Prolapspasienter som har utstrålende smerter i mer enn ett år før operasjonen.}
-      \label{fig:VarighSmerteUtstrAvdPro}
+\scalebox{0.7}{\includegraphics{Figurer/VarighUtstrAvdPro.pdf}}
+\caption{Prolapspasienter som har utstrålende smerter i mer enn ett år før operasjonen.}
+\label{fig:VarighSmerteUtstrAvdPro}
 \end{figure}
 
 \begin{figure}[h] 
-      \scalebox{0.8}{\includegraphics{VarighUtstrAvdSS.pdf}}
-      \caption{Spinal stenosepasienter som har utstrålende smerter i mer enn ett år før operasjonen.}
-      \label{fig:VarighSmerteUtstrAvdSS}
+\scalebox{0.7}{\includegraphics{Figurer/VarighUtstrAvdSS.pdf}}
+\caption{Spinal stenosepasienter som har utstrålende smerter i mer enn ett år før operasjonen.}
+\label{fig:VarighSmerteUtstrAvdSS}
 \end{figure}
 
-Figur \ref{fig: 
-\begin{figure}[h] 
-      \scalebox{0.8}{\includegraphics{VarighUtstrTidPro.pdf}}
-      \caption{Prolapspasienter som har utstrålende smerter i mer enn ett år før operasjonen, utvikling over tid.}
-      \label{fig:VarighSmerteUtstrAvdPro}
-\end{figure}
+Figur \ref{fig:VarighSmerteUtstrTid} viser utvikling over tid for andel pasienter med lang symptomvarighet. 
 
 \begin{figure}[h] 
-      \scalebox{0.8}{\includegraphics{VarighUtstrTidSS.pdf}}
-      \caption{Spinal stenosepasienter som har utstrålende smerter i mer enn ett år før operasjonen, utvikling over tid.}
-      \label{fig:VarighSmerteUtstrAvdSS}
+\center{
+\scalebox{0.55}{\includegraphics{Figurer/VarighUtstrTidPro.pdf}}
+\scalebox{0.55}{\includegraphics{Figurer/VarighUtstrTidSS.pdf}}} 
+\caption{Prolaps- og Spinal stenosepasienter som har utstrålende smerter i mer enn ett år før operasjonen, utvikling over tid.}
+\label{fig:VarighSmerteUtstrTid}
 \end{figure}
 
-Figurene \ref{fig:VarighSmerteRyggAvdPro} og \ref{fig:VarighSmerteRyggAvdSS} viser henholdsvis prolaps- og spinal stenosepasienter som har hatt smerter i rygg-/hofte i mer enn ett år før operasjon.
 
 
 \begin{figure}[h] 
-\scalebox{0.8}{\includegraphics{VarighRyggHofAvdPro.pdf}}
+\scalebox{0.7}{\includegraphics{Figurer/VarighRyggHofAvdPro.pdf}}
 \caption{Prolapspasienter som har hatt smerter i rygg-/hofte
 i mer enn ett år før operasjonen.}
 \label{fig:VarighSmerteRyggAvdPro}
 \end{figure}
+
 \begin{figure}[h] 
-\scalebox{0.8}{\includegraphics{VarighRyggHofAvdSS.pdf}}
+\scalebox{0.7}{\includegraphics{Figurer/VarighRyggHofAvdSS.pdf}}
 \caption{Spinal stenosepasienter som har hatt smerter i rygg-/hofte
 i mer enn ett år før operasjonen.}
 \label{fig:VarighSmerteRyggAvdSS}
 \end{figure}
 
 
-\textbf{Effektiv håndtering (rett tid)}
-
-I nasjonale retningslinjer (2007) er det anbefalt å operere pasienter for prolaps før
-bensmertene har vart for lenge, helst innen ett år. Derfor bør
-pasientgruppen håndteres raskt og effektivt når beslutning om operasjon er tatt og
-ikke-kirurgisk behandling har vært forsøkt. Data fra NKR og nyere forskning viser at
-pasienter som opereres for prolaps og har hatt bensmerter mer enn ett år har
-dårligere prognose. Andelen pasienter med bensmerter mer enn ett år på
-operasjonstidspunkt var uendret fra 2010 til 2016 (47\%).
-Figur 7 viser at det er stor variasjon i varighet av bensmerter hos pasienter som blir
-operert ved ulike sykehus. Det har sannsynligvis sammenheng med ventetid for
-utredning og operasjon og tilgjengelig operasjonskapasitet i forhold til etterspørsel.
 
 
 \clearpage
@@ -503,7 +502,7 @@ utredning og operasjon og tilgjengelig operasjonskapasitet i forhold til ettersp
 ASA angir pasientens ”sårbarhet” i forhold til å få anestesi og operasjon på en skala fra 1 til 5. 
 Opplysningene skal hentes fra anestesiskjema som fylles ut av anestesilege/sykepleier før operasjon.
 % latex table generated in R 3.4.1 by xtable 1.8-2 package
-% Mon Sep 04 22:15:44 2017
+% Wed Sep 27 11:15:36 2017
 \begin{table}[ht]
 \centering
 \begin{tabular}{crr}
@@ -532,7 +531,7 @@ Det er 21\% av mennene og 22\% av kvinnene som røyker.
 \subsection{Radiologisk utredning}
 
 % latex table generated in R 3.4.1 by xtable 1.8-2 package
-% Mon Sep 04 22:15:44 2017
+% Wed Sep 27 11:15:36 2017
 \begin{table}[ht]
 \centering
 \begin{tabular}{lrr}
@@ -540,11 +539,11 @@ Det er 21\% av mennene og 22\% av kvinnene som røyker.
  & Antall & Andeler \\ 
   \hline
 CT & 339 & 7\% \\ 
-  MR & 4712 & 97.9\% \\ 
-  Radikulografi & 33 & 0.7\% \\ 
+  MR & 4712 & 98\% \\ 
+  Radikulografi & 33 & 1\% \\ 
   Diskografi & 2 & 0\% \\ 
-  Diagnostisk blokade & 12 & 0.2\% \\ 
-  Røntgen LS-columna & 1043 & 21.7\% \\ 
+  Diagnostisk blokade & 12 & 0\% \\ 
+  Røntgen LS-columna & 1043 & 22\% \\ 
   Med fleksjon/ekstensjon & 335 & 7\% \\ 
   Tot. ant. & 4813 &   \\ 
    \hline
@@ -562,22 +561,22 @@ Spørsmålene er besvart av leger. En pasient kan ha vært til flere undersøkel
 
 
 % latex table generated in R 3.4.1 by xtable 1.8-2 package
-% Mon Sep 04 22:15:44 2017
+% Wed Sep 27 11:15:36 2017
 \begin{table}[ht]
 \centering
 \begin{tabular}{lrr}
   \hline
  & Antall & Andeler \\ 
   \hline
-Skiveprolaps & 2206 & 45.8\% \\ 
-  Sentral spinalstenose & 1498 & 31.1\% \\ 
-  Lateral spinalstenose & 1578 & 32.8\% \\ 
-  Foraminal stenose & 590 & 12.3\% \\ 
-  Degenerativ rygg/skivedegenerasjon & 767 & 15.9\% \\ 
+Skiveprolaps & 2206 & 46\% \\ 
+  Sentral spinalstenose & 1498 & 31\% \\ 
+  Lateral spinalstenose & 1578 & 33\% \\ 
+  Foraminal stenose & 590 & 12\% \\ 
+  Degenerativ rygg/skivedegenerasjon & 767 & 16\% \\ 
   Istmisk spondylolistese & 146 & 3\% \\ 
-  Degenerativ spondylolistese & 414 & 8.6\% \\ 
-  Degenerativ skoliose & 125 & 2.6\% \\ 
-  Synovial syste & 92 & 1.9\% \\ 
+  Degenerativ spondylolistese & 414 & 9\% \\ 
+  Degenerativ skoliose & 125 & 3\% \\ 
+  Synovial syste & 92 & 2\% \\ 
   Pseudomeningocele & 1 & 0\% \\ 
   Tot.ant. & 4813 &   \\ 
    \hline
@@ -597,30 +596,31 @@ En pasient kan ha flere diagnoser/radiologiske funn.
 
 
 
-\clearpage
 
 \section{Virksomhetsdata}
 
 \subsection{Type operasjon}
 
-Tabell \ref{tab:AntHovedInngrep} viser fordeling av hovedinngrepstype, samt antall antall registrerte operasjoner for hver hovedinngrepstype
+
+
+De hyppigste tilstandene pasienter opereres for er prolapskirurgi (43 \%) og spinal stenose (40 \%). Tabell \ref{tab:AntHovedInngrep} viser fordeling av hovedinngrepstype, samt antall registrerte operasjoner for hver hovedinngrepstype.
 
 % latex table generated in R 3.4.1 by xtable 1.8-2 package
-% Mon Sep 04 22:15:44 2017
+% Wed Sep 27 11:15:36 2017
 \begin{table}[ht]
 \centering
 \begin{tabular}{lrr}
   \hline
  & Antall & Andeler \\ 
   \hline
-Udefinerbart & 127 & 2.6\% \\ 
-  Prolapskirurgi & 2065 & 42.9\% \\ 
-  Foramenotomi & 1816 & 37.7\% \\ 
-  Laminektomi & 196 & 4.1\% \\ 
+Udefinerbart & 127 & 3\% \\ 
+  Prolapskirurgi & 2065 & 43\% \\ 
+  Foramenotomi & 1816 & 38\% \\ 
+  Laminektomi & 196 & 4\% \\ 
   Interspin. implantat & 0 & 0\% \\ 
-  Fusjonskirurgi & 545 & 11.3\% \\ 
-  Skiveprotese & 32 & 0.7\% \\ 
-  Rev. av implantat & 32 & 0.7\% \\ 
+  Fusjonskirurgi & 545 & 11\% \\ 
+  Skiveprotese & 32 & 1\% \\ 
+  Rev. av implantat & 32 & 1\% \\ 
    \hline
 \end{tabular}
 \caption{Fordeling av hovedinngrep, 2016} 
@@ -629,61 +629,66 @@ Udefinerbart & 127 & 2.6\% \\
 
 
 
-\begin{figure}[ht]
-\centering \includegraphics[width= 0.8\textwidth]{HovedInngrep.pdf}
-\caption{\label{fig:HovedInngrep} Hovedinngrep.}
-\end{figure}
+%\begin{figure}[ht]
+%      \scalebox{s1}{\includegraphics{Figurer/HovedInngrep.pdf}}
+%      \caption{\label{fig:HovedInngrep} HovedInngrep$Tittel}
+%\end{figure}
 
 
 
-\textbf{Degen. spondylolistese operert med fusjonskirurgi}
-\begin{knitrout}
-\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}
-
-{\centering \includegraphics[width=.8\textwidth]{./FigurerFigurdegSfusj-1} 
-
-}
+\subsubsection{Degen. spondylolistese operert med fusjonskirurgi}
 
 
-
-\end{knitrout}
-
-De hyppigste tilstandene pasienter opereres for er prolapskirurgi (42.9% \%) og spinal stenose (40.5 \%). En andel av de som har spinal stenose har også en forskyvning mellom ryggvirvlene (Degenerativ spondylolistese). I faglitteraturen er det sprikende anbefalinger for om denne undergruppen skal ha tilleggsbehandling med avstivningsoperasjon (fusjonskirurgi).
-Det er stor variasjon i bruk av denne fusjonskirurgi i Norge. Og det pågår flere forskningstudier for å kartlegge om denne tilleggsbehandlingen er nødvendig.  En andel av de som har spinal stenose har også en forskyvning mellom ryggvirvlene (Degenerativ spondylolistese). I faglitteraturen er det sprikende anbefalinger for om denne undergruppen skal ha tilleggsbehandling med avstivningsoperasjon (fusjonskirurgi).
-Det er stor variasjon i bruk av denne fusjonskirurgi i Norge. Og det pågår flere forskningstudier for å kartlegge om denne tilleggsbehandlingen er nødvendig. 
+En andel av de som har spinal stenose har også en forskyvning mellom ryggvirvlene (Degenerativ spondylolistese). I faglitteraturen er det sprikende anbefalinger for om denne undergruppen skal ha tilleggsbehandling med avstivningsoperasjon (fusjonskirurgi).
+Figur \ref{fig:degSponFusj} viser at det er stor variasjon i bruk av denne fusjonskirurgi i Norge. Det pågår flere forskningstudier for å kartlegge om denne tilleggsbehandlingen er nødvendig. 
 
 
 
 \begin{figure}[ht]
-\centering \includegraphics[width= 0.8\textwidth]{FigdegSponFusj.pdf}
-\caption{\label{fig:Dura} Degenerativ spondylolistese operert med fusjonskirurgi}
+\scalebox{0.7}{\includegraphics{Figurer/FigdegSponFusj.pdf}}
+\caption{\label{fig:degSponFusj} Degenerativ spondylolistese operert med fusjonskirurgi}
 \end{figure}
 
 
+\clearpage
 
 \subsection{Liggetid}
 
 Informasjonen er hentet fra legeskjema.
 Figur \ref{fig:Liggedogn} viser liggedøgnsfordeling for alle pasienter operert i 2016. Figur \ref{fig:LiggedognTid} viser gjennomsnittlig antall liggedøgn per år.  
+Figur \ref{fig:LiggetidAvdPro} og \ref{fig:LiggetidAvdSS} viser at det er stor variasjon i antall liggedøgn mellom sykehus og avdelinger.
+Det har vært en klar reduksjon i  liggetid på sykehus  for både prolaps og spinal stenose opererte (ca 1 døgn). Dette henger sammen med økt bruk av mindre invassive operasjonsmetoder og dermed mer dagkirurgi. 
+
 
 
 
 
 \begin{figure}[h] 
-\centering \includegraphics[width=0.8\textwidth]{FigLiggetidFord.pdf}
+\scalebox{0.7}{\includegraphics{Figurer/FigLiggetidFord.pdf}}
 \caption{Liggetid ved operasjon.}
 \label{fig:Liggedogn}
 \end{figure}
 
 \begin{figure}[h] 
 \centerline{
-\scalebox{0.5}{\includegraphics{LiggetidBoxPro.pdf}}
-\scalebox{0.5}{\includegraphics{LiggetidBoxSS.pdf}}
+\scalebox{0.55}{\includegraphics{Figurer/LiggetidBoxPro.pdf}}
+\scalebox{0.55}{\includegraphics{Figurer/LiggetidBoxSS.pdf}}
 }
-\caption{Gjennomsnittlig liggetid for hhv. prolaps og spinal stenose. Skal også ha to figurer for gjennomsnittlig Liggetid for hvert sykehus i 2016. (Denne figurtypen må lages først...)}
+\caption{Gjennomsnittlig liggetid for hhv. prolaps og spinal stenose. }
 \label{fig:LiggedognTid}
 \end{figure}
 
+\begin{figure}[h] 
+\scalebox{0.7}{\includegraphics{Figurer/LiggetidAvdPro.pdf}}
+\caption{Gjennomsnittlig liggetid for prolaps ved ulike avdelinger. Noen sykehus har kun dagkirurgi og får derfor få observasjoner. } 
+\label{fig:LiggetidAvdPro}
+\end{figure}
+
+\begin{figure}[h] 
+\scalebox{0.7}{\includegraphics{Figurer/LiggetidAvdSS.pdf}}
+\caption{Gjennomsnittlig liggetid for spinal stenose ved ulike avdelinger. Noen sykehus har kun dagkirurgi og får derfor få observasjoner. } 
+\label{fig:LiggetidAvdSS}
+\end{figure}
 
 
 
@@ -694,132 +699,21 @@ Figur \ref{fig:Liggedogn} viser liggedøgnsfordeling for alle pasienter operert 
 
 \section{Resultatmål}
 All informasjon i dette kapitlet er hentet fra pasientskjema. Ingen av resultatmålene er justert
-for eventuelle ulikheter i pasientpopulasjonene.
+for eventuelle ulikheter i pasientpopulasjonene. Noen viktige forskjeller som kan forklare en del av forskjeller i resultat er vist i de forgående kapitlene.
 
 
 
 
 
-
-
-\subsection{Oswestry Disability Index (ODI)}
-ODI er en score for fysisk funksjon og et sykdomsspesifikt livskvalitetsmål. Skalaen går fra 0
-til 100, hvor 0 angir ingen funksjonshemming og følgelig beste livskvalitet.
-Figur \ref{fig:OswEndr} viser gjennomsnittlig endring av ODI fra før operasjon til ett år etter.
-Merk at resultatene \textit{ikke} er justert for forskjeller i pasientpopulasjonene.
-\\
-
-
-
-Figur \ref{fig:OswEndrAvdPro} og \ref{fig:OswEndrAvdSS} viser gjennomsnittlig endring 12 måneder etter for hver avdeling.''
-
-\begin{figure}[h] 
-      \centerline{\scalebox{0.8}{\includegraphics{OswEndrAvdPro.pdf}}}
-      \caption{Gjennomsnittlig endring av ODI per avdeling for prolaps}}
-      \label{fig:OswEndrAvdPro}
-\end{figure}
-
-\begin{figure}[h] 
-      \centerline{\scalebox{0.8}{\includegraphics{OswEndrAvdSS.pdf}}}
-      \caption{Agjennomsnittlig endring av ODI per avdeling for spinal stenose.}}
-      \label{fig:OswEndrAvdSS}
-\end{figure}
-
-
-
-\begin{figure}[h] 
-\centerline{
-\scalebox{0.5}{\includegraphics{OswEndrPro.pdf}}
-\scalebox{0.5}{\includegraphics{OswEndrSS.pdf}}
-}
-\caption{Gjennomsnittlig endring i Oswestry for hhv. prolaps og spinal stenose, ett år etter operasjon, utvikling over år.}}
-\label{fig:OswEndr}
-\end{figure}
-
-
-
-Figur \ref{fig:OswEndr20TidPro} og \ref{fig:OswEndr30TidSS} viser henholdsvis andel prolapspasienter og spinal stenosepasienter med klinisk signifikant forbedring av ODI 12 måneder etter operasjon. Klinisk signifikant forbedring er ei ODI-forbedring på 20 poeng hos prolapspasienter og 30 \% hos spinal stenosepasienter.
-
-
-
-\begin{figure}[h] 
-      \centerline{\scalebox{0.8}{\includegraphics{Osw20ProTid.pdf}}}
-      \caption{Andel med klinisk signifikant endring i Oswestry (>20 poeng) for prolapspasienter, ett år etter operasjon.}}
-      \label{fig:OswEndr20ProTid}
-\end{figure}
-
-\begin{figure}[h] 
-      \centerline{\scalebox{0.8}{\includegraphics{Osw30SS.pdf}}}
-      \caption{Andel med klinisk signifikant endring i Oswestry ($\geq$ 30 poeng) for spinal stenosepasienter, ett år etter operasjon.}}
-      \label{fig:OswEndr30TidSS}
-\end{figure}
-
-
-\clearpage
-
-
-\subsection{Opplevd nytte av operasjon}
-
-Figur \ref{fig:Nytte} viser hvor stor nytte pasientene opplever å ha hatt av behandlingen ett år etter operasjon fordelt på år. Det hvite merket på søylene angir andel pasienter som angir at de har blitt ''Frisk'' eller ''Mye bedre'' i landet for øvrig . Tallet øverst på søyla angir antall pasienter som har svart. 
-I figuren er det gjort følgende aggregering av svaralternativene i spørreskjemaet:
-\begin{itemize}
-\item ''Frisk mye/bedre'' omfatter ''helt bra'' og ''mye bedre'' 
-\item ''Omtrent uendret'' omfatter ''litt bedre'', ''ingen endring'' og ''litt verre'' 
-\item ''Klart verre'' omfatter ''mye verre'' og ''verre enn noen gang før''
-\end{itemize}
-
-
-
-\begin{figure}[h] 
-\begin{center}
-\scalebox{0.5}{\includegraphics{FigNyttePro.pdf}}
-\scalebox{0.5}{\includegraphics{FigNytteSS.pdf}}
-\end{center}
-\caption{Spørsmål stilt 12 måneder etter operasjon til henholdsvis prolaps- og spinal stenosepasienter$:$ Hvilken nytte mener du at du har hatt av operasjonen?}
-\label{fig:Nytte}
-\end{figure}
-
-
-
-
-\subsection{Pasienttilfredshet}
-
-Figur \ref{fig:Fornoyd} viser hvor fornøyde pasientene er 12 mnd. 
-etter operasjon fordelt på operasjonsår. Tallet øverst på søyla angir antall pasienter som har svart. 
-
-
-
-
-\begin{figure}[h] 
-\begin{center}
-\scalebox{0.5}{\includegraphics{FigFornoydPro.pdf}}
-\scalebox{0.5}{\includegraphics{FigFornoydSS.pdf}}
-\end{center}
-\caption{Spørsmål stilt 12 måneder etter operasjon: Hvor fornøyd er du med behandlinga du har fått på sykehuset? til henholdsvis prolaps- og spinal stenosepasienter}
-\label{fig:Fornoyd}
-\end{figure}
-
-\begin{figure}[h] 
-\centerline{\scalebox{0.8}{\includegraphics{FigFornoydAvdPro.pdf}}}
-\caption{Prolapspasienter som er helt fornøyde med behandlinga de har fått på sykehuset}
-\label{fig:FornoydAvdPro}
-\end{figure}
-
-\begin{figure}[h] 
-\centerline{\scalebox{0.8}{\includegraphics{FigFornoydAvdSS.pdf}}}
-\caption{Spinal stenosespasienter som er helt fornøyde med behandlinga de har fått på sykehuset}
-\label{fig:FornoydAvdSS}
-\end{figure}
-
-
-\subsection{ Resultater etter rygg og nakkekirurgi 2010 til 2016}
-\textbf{Denne overskrifta virker litt malplassert. Og det gjør flere av de kommende overskrifter også. Det henger fortsatt igjen fra todelinga av resultatkapitlet at det er rotete. Håper det blir lettere å rydde nå når alt er oppdatert.}
+\subsection{ Resultater etter ryggkirurgi, 2010 til 2016}
 
 
 
 Hyppigst utførte inngrep er for prolaps, dernest for trang ryggkanal (spinal stenose),
 dernest mer omfattende avstivningskirurgi (fusjon) for mer komplekse og
 sammensatte tilstander. 
+ODI er en score for smerterelatert fysisk funksjon og et sykdomsspesifikt livskvalitetsmål. Skalaen går fra 0
+til 100, hvor 0 angir ingen funksjonshemming og følgelig beste livskvalitet.
 Gjennomsnittlig ODI score var 46.7 før operasjon og 17.5 ett år etter
 operasjon for prolapspasienter operert i 2015. Dette betyr at funksjonssvikten ble redusert fra alvorlig til minimal for gjennomsnittspasienten. \\
 
@@ -829,7 +723,7 @@ fortsatt moderat funksjonssvikt ett år etter kirurgi.
 De som ble operert med fusjon har
 omtrent samme forbedring (ODI redusert fra 41.9 til 25.7). 
 Dette betyr at selv om
-pasientene kan forvente en betydelig bedring, vil mange fortsatt ha moderate restplager
+pasientene kan forvente en betydelig bedring, vil mange fortsatt ha en del restplager
 ett år etter kirurgi. Resultatene synes å være omtrent det samme fra år til år. NKR
 sammenstiller nå norske resultater med data fra tilsvarende registre i Sverige og
 Danmark. Foreløpige analyser tyder på at resultatene er de samme i
@@ -849,13 +743,90 @@ virksomheten, strengere indikasjonsstilling og bedret pasientsikkerhet.
 
 
 
+\subsection{Oswestry Disability Index (ODI)}
+
+%Figur \ref{fig:OswEndr} viser gjennomsnittlig endring av ODI fra før operasjon til ett år etter.
+Merk at resultatene \textit{ikke} er justert for forskjeller i pasientpopulasjonene. 
 
 
 
 
+Figurene \ref{fig:OswEndrAvdPro} og \ref{fig:OswEndrAvdSS} viser gjennomsnittlig endring 12 måneder etter for hver avdeling for henholdsvis prolaps og spinal stenose pasienter. Forskjellene er små. Vi ser også at konfidensintervallene er relativt brede og overlappende.
+
+\begin{figure}[h] 
+\scalebox{0.7}{\includegraphics{Figurer/OswEndrAvdPro.pdf}}
+\caption{Gjennomsnittlig endring av ODI per avdeling for prolaps}
+\label{fig:OswEndrAvdPro}
+\end{figure}
+
+\begin{figure}[h] 
+\scalebox{0.7}{\includegraphics{Figurer/OswEndrAvdSS.pdf}}
+\caption{Gjennomsnittlig endring av ODI per avdeling for spinal stenose.}
+\label{fig:OswEndrAvdSS}
+\end{figure}
 
 
 
+
+Suksessrate, det vil si forbedring i Oswestry på mer enn 20 poeng, ligger stabilt rundt 60 \% for prolapspasienter, ett år etter operasjon. 
+For spinal stenosepasienter er "suksess" forbedring i Oswestry på mer enn 30 \% , ett år etter operasjon. Denne raten ligger også stabilt rundt 60\%.
+
+
+\clearpage
+
+
+\subsection{Opplevd nytte av operasjon}
+
+Figur \ref{fig:Nytte} viser hvor stor nytte pasientene opplever å ha hatt av behandlingen ett år etter operasjon fordelt på år. Tallet øverst på søyla angir antall pasienter som har svart. 
+I figuren er det gjort følgende aggregering av svaralternativene i spørreskjemaet:
+\begin{itemize}
+\item ''Frisk mye/bedre'' omfatter ''helt bra'' og ''mye bedre'' 
+\item ''Omtrent uendret'' omfatter ''litt bedre'', ''ingen endring'' og ''litt verre'' 
+\item ''Klart verre'' omfatter ''mye verre'' og ''verre enn noen gang før''
+\end{itemize}
+
+Vi ser at en mindre andel av spinal stenose pasienter opplever å ha hatt stor nytte av operasjonen sammenlignet 
+med prolapspasienter.
+
+
+
+\begin{figure}[h] 
+\begin{center}
+\scalebox{0.55}{\includegraphics{Figurer/FigNyttePro.pdf}}
+\scalebox{0.55}{\includegraphics{Figurer/FigNytteSS.pdf}}
+\end{center}
+\caption{Spørsmål stilt 12 måneder etter operasjon til henholdsvis prolaps- og spinal stenosepasienter$:$ Hvilken nytte mener du at du har hatt av operasjonen?}
+\label{fig:Nytte}
+\end{figure}
+
+\subsection{Pasienttilfredshet}
+
+Figur \ref{fig:Fornoyd} viser hvor fornøyde pasientene var med behandlinga de fikk på sykehuset 12 mnd. 
+etter operasjon fordelt på operasjonsår. Tallet øverst på søyla angir antall pasienter som har svart. Vi ser at spinal stenose pasienter gjennomgående er litt mindre fornøyde enn prolapspasienter.
+
+
+
+
+\begin{figure}[h] 
+\begin{center}
+\scalebox{0.55}{\includegraphics{Figurer/FigFornoydPro.pdf}}
+\scalebox{0.55}{\includegraphics{Figurer/FigFornoydSS.pdf}}
+\end{center}
+\caption{Spørsmål stilt 12 måneder etter operasjon: Hvor fornøyd er du med behandlinga du har fått på sykehuset? til henholdsvis prolaps- og spinal stenosepasienter}
+\label{fig:Fornoyd}
+\end{figure}
+
+\begin{figure}[h] 
+\scalebox{0.7}{\includegraphics{Figurer/FigFornoydAvdPro.pdf}}
+\caption{Prolapspasienter operert i 2014 og 2015, som ett år etter er helt fornøyde med behandlinga de har fått på sykehuset}
+\label{fig:FornoydAvdPro}
+\end{figure}
+
+\begin{figure}[h] 
+\scalebox{0.7}{\includegraphics{Figurer/FigFornoydAvdSS.pdf}}
+\caption{Spinal stenosespasienter som er helt fornøyde med behandlinga de har fått på sykehuset}
+\label{fig:FornoydAvdSS}
+\end{figure}
 
 
 \subsection{Prolapskirurgi (alle kategorier)}
@@ -864,27 +835,26 @@ virksomheten, strengere indikasjonsstilling og bedret pasientsikkerhet.
 
 Gjennomsnittlig liggetid på sykehus i forbindelse med prolapsoperasjon har gått ned med 0.5 døgn fra 2010 til 2016.
 
-%\begin{figure}[ht]
-%	\centering \includegraphics[width= figKrymp1\textwidth]{LiggetidProlaps.pdf}
-%	\caption{\label{fig:LiggetidPro} Gjennomsnittlig liggetid per år for pasienter operert for prolaps.}}
-%\end{figure}
-
-
-\textbf{Alt videre skal splittes på prolapskirurgi og ss}
 
 
 
 Andelen som er operert ved hjelp av synsfremmende midler (mikroskop eller
-lupebriller), som har åpenbare fordeler, har økt fra 80.8 \% i 2010 til 
-98.8 \% i 2016 for prolapsoperasjoner. For spinal stenose er endringa fra 64.8 \% i 2010 til 
-94.8 \% i 2016.
+lupebriller), som har åpenbare fordeler, har økt fra 81 \% i 2010 til 
+99 \% i 2016 for prolapsoperasjoner. For spinal stenose er endringa fra 65 \% i 2010 til 
+95 \% i 2016.
 
-NKR har tidligere vist at multiple reoperasjoner har en minimal og potensielt skadelig
-effekt. Andelen som har vært operert mer enn 2 ganger tidligere varierer mellom 0.9 
-og 1.5 for prolapspasienter og mellom 1.7 
-og 3.1 i perioden 2010-2016. 
 
-Andelen prolapspasienter som ett år etter behandlinga er fornøyde med behandlingen de fikk på sykehuset (PREM) ligger mellom 1.7\% og 9.9\% for pasienter operert i perioden 2010-2016. Tilsvarende er andel fornøyde spinal stenosepasienter mellom 10.5\% og 9.8\%
+
+
+
+NKR har tidligere vist at multiple reoperasjoner har minimal effekt. Andelen som har vært operert mer enn 2 ganger tidligere ligger mellom 0.9 \%
+og 1.5 \% for prolapspasienter og mellom 1.7 \%
+og 3.1 \% for spinal stenosepasienter i perioden 2010-2016. 
+
+Andelen prolapspasienter som ett år etter behandlinga er fornøyde med behandlingen de fikk på sykehuset (PREM) ligger mellom 79 \% og 81 \% for pasienter operert i perioden 2010-2015. 
+Tilsvarende ligger andel fornøyde spinal stenosepasienter mellom 73 \% og 77 \%
+
+\clearpage
 
 \subsection{Kvalitetsindikatorer}
 
@@ -892,41 +862,25 @@ Kvalitetsindikatorene er  utviklet gjennom forskning (valideringsstudier)  i reg
 
 %\subsubsection{Sykehusvise resultater}
 
-\begin{knitrout}
-\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}
-
-{\centering \includegraphics[width=.8\textwidth]{./FigurerKvalBakgr-1} 
-
-}
 
 
-
-\end{knitrout}
-
-Resultatene nedenfor gjelder  \textit{planlagt, første gangs prolapsoperasjon} i 2016. 
+Resultatene nedenfor gjelder  \textit{planlagt, første gangs prolapsoperasjon}. 
 Kun avdelinger med mer enn 10 evt. 20 (avhenger av type resultat) registrerte operasjoner i er med i
 analysen. Grunnen til at gjentatt kirurgi (reoperasjon) og øyeblikkelig hjelp (ø-hjelp)
 er filtrert bort er at dette er ulikt fordelt mellom sykehusene.
 
 
-Hos prolapspasienter operert som ø-hjelp er andelen med betydelig forbedring (suksessrate).  82 \%, mot 60.2 \% av de som blir operert planlagt (elektivt). Betydelig forbedring er definert som mer enn 20 poengs forbedring av ODI.
-Hos prolapspasienter som ikke har vært operert i ryggen tidligere er suksessraten 68.6 \% mot 50 \%
+Følgende gjelder hele tidsperioden: Hos prolapspasienter operert som ø-hjelp er andelen med betydelig forbedring (suksessrate)  79.6 \%, mot 57.1 \% av de som blir operert planlagt (elektivt). Betydelig forbedring er definert som mer enn 20 poengs forbedring av ODI.
+Hos prolapspasienter som ikke har vært operert i ryggen tidligere er suksessraten 63.4 \% mot 56.1 \%
 hos de som har vært operert før. 
-Langt færre pasienter i spinal stenosegruppen opereres som øyeblikkelig hjelp; 0.5 \%
+Langt færre pasienter i spinal stenosegruppen opereres som øyeblikkelig hjelp; 0.6 \%
 
 Dersom man har vært operert mer enn 2 ganger tidligere i
-ryggen, faller suksessraten for prolapsoperasjoner til 0 \%. 
-For spinal stenose opererte faller suksessraten fra 50.9 \% til 17.6 \%. 
+ryggen, faller suksessraten for prolapsoperasjoner til 39.4 \%. 
+For spinal stenose opererte faller suksessraten fra 48.3 \% til 40 \%. 
 Sykehus som får henvist få pasienter som ø-hjelp og
 mange til reoperasjon vil dermed få dårligere resultater.
 
-
-\begin{figure}[ht]
-\centering \includegraphics[width= 0.8\textwidth]{FigTidlOpAnt3.pdf}
-\caption{\label{fig:TidlOpAnt3} Andel prolapspasienter med mer enn 3 eller flere tidligere operasjoner}
-\end{figure}
-
-\textbf{Skal alt dette ramses opp for spinal stenose også? Da er det bedre å ikke filtrere på prolaps slik at argumentasjonen gjelder alle ryggoperasjoner.}
 
 
 \subsubsection{God indikasjonsstilling (rett pasient)}
@@ -936,34 +890,38 @@ mange til reoperasjon vil dermed få dårligere resultater.
 Pasienter som har mye plager, vil kunne forvente størst nytte av ryggoperasjon,
 mens de som har lite plager vil ha mindre potensial for forbedring og større risiko
 for forverring. Gevinst av kirurgi henger derfor sammen med hvor streng
-indikasjonsstillingen («inngangsbilletten» til kirurgi) har vært. Figur 8 \textbf{Denne tok vi vel bort} viser denne
-sammenhengen tydelig. Verdt å merke seg er at hvis pasienten har lite smerter før
+indikasjonsstillingen («inngangsbilletten» til kirurgi) har vært. Figur \ref{fig:BeinsmEndrPre} viser denne
+sammenhengen tydelig. Det er verdt å merke seg er at hvis pasienten har lite smerter før
 operasjon (bensmerter under 3 på den horisontale smerteskalaen), er det stor
 sjanse for at pasienten faktisk blir verre (mindre enn 0 på den vertikale skalaen) etter
-operasjon. Figur 9 viser at det er stor variasjon i hvor stor grad sykehusene opererer
-pasienter med prolaps og lite bensmerter. Pasienter med lammelse (parese) er tatt
+operasjon. \\
+Figur \ref{fig:BeinsmLavPre} viser at det er stor variasjon i hvor stor grad sykehusene opererer
+pasienter med prolaps og lite beinsmerter. Pasienter med lammelse (parese) er tatt
 ut av analysen, da de ofte må opereres uansett grad av smerte.
 
-\textit{Rakk ikke å ta inn igjen figurene}
+
 
 \begin{figure}[ht]
-\centering \includegraphics[width= 0.8\textwidth]{FigBeinsmLavPre.pdf}
-\caption{\label{fig:BeinsmLavPre}  Andel pasienter med lite bensmerter (<3) operert for prolaps.}
-\end{figure}
-%($\leq$ 2) 
-
-\textbf{Her skulle vi vel fjerne noe?:}
-Figur 3.11: Sammenheng mellom intensitet av bensmerte før operasjon og
+\scalebox{0.7}{\includegraphics{Figurer/FigBeinsmEndrPre.pdf}}
+\caption{\label{fig:BeinsmEndrPre}  Sammenheng mellom intensitet av bensmerte før operasjon og
 forbedring etter operasjon. Skala for bensmerter går fra 0 til 10, hvor 0 betegner
 ingen og 10 verst tenkelige smerte før operasjon (horisontal akse). Negativ endring
 av bensmerten (vertikal akse) tilsvarer forverring, 0 betyr uendret smerte etter
-operasjon.
+operasjon.}
+\end{figure}
+
+\begin{figure}[ht]
+\scalebox{0.7}{\includegraphics{Figurer/FigBeinsmLavPre.pdf}}
+\caption{\label{fig:BeinsmLavPre}  Andel pasienter med lite beinsmerter ($\leq 2$) operert for prolaps.}
+\end{figure}
+
 
 
 
 
 
 \subsubsection{Resultatindikatorer (behandlings-effektivitet)}
+
 Viktige tiltak for å bedre behandlingseffektivitet vil være å øke andelen som får en
 betydelig forbedring (suksessraten), redusere andelen som ikke har nytte av
 behandlingen, blir verre eller får komplikasjoner. Nedenfor vises noen indikatorer
@@ -976,90 +934,187 @@ kirurgi.
 
 
 
-\subsubsubsection{Uønsket resultat II}
 
-Pasienter som 1 år etter prolapskirurgi har en ODI skår over 48 har fortsatt alvorlig
-smerterelatert funksjonshemming i dagliglivet. Flesteparten av disse pasientene vil
-oppfatte sin livssituasjon som klart verre enn før operasjonen.
+
+\subsubsection{Uønsket resultat}
+
+Pasienter som 1 år etter prolapskirurgi har en ODIskår over 48 har fortsatt alvorlig
+smerterelatert funksjonshemming i dagliglivet. Figur \ref{fig:Osw48} viser andelen som har ODIskår over 48 etter prolapsoperasjon. Flesteparten av disse pasientene vil
+oppfatte sin livssituasjon som klart verre enn før operasjonen. 
+
 \begin{figure}[ht]
-\centering \includegraphics[width= 0.8\textwidth]{FigOsw48.pdf}
+\scalebox{0.7}{\includegraphics{Figurer/FigOsw48.pdf}}
 \caption{\label{fig:Osw48}  Andel pasienter med alvorlig smerterelatert funksjonssvikt 1 år etter
+prolapskirurgi. Pasienter operert i 2014 og 2015.}
+\end{figure}
+
+
+
+Pasienter med forbedring av ODI skår mindre enn 13 vil som hovedregel ikke
+oppfatte sin situasjon som vesentlig forbedret etter kirurgi. Resultatet blir dermed å
+betrakte som utilfredsstillende. Figur \ref{fig:OswEndrLav} viser andelen med lav forbedring av ODIskår ved hver avdeling.
+
+\begin{figure}[ht]
+\scalebox{0.7}{\includegraphics{Figurer/FigOswEndrLav.pdf}}
+\caption{\label{fig:OswEndrLav}   Andel pasienter som ikke oppnår et tilfredsstillende resultat, ODI
+forbedring under 13 poeng, etter prolapskirurgi. Pasienter operert i 2014 og 2015.}
+\end{figure}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+\subsubsection{Ønsket resultat («suksess»)}
+ODI skår  under 22 poeng oppleves av de fleste pasientene som et helt akseptabelt fysisk funksjonsnivå 12 mnd etter ryggopersjon. Figurene \ref{fig:Osw22Pro} og \ref{fig:Osw22SS} angir hvor stor andel av henholdsvis prolaps og spinal stenose opererete som oppnår dette.
+
+\begin{figure}[ht]
+\scalebox{0.7}{\includegraphics{Figurer/FigOsw22Pro.pdf}}
+\caption{\label{fig:Osw22Pro}   Andel pasienter med ODI under 22 ett år
+etter prolapsoperasjon. Pasienter operert i 2014 og 2015.}
+\end{figure}
+
+\begin{figure}[ht]
+\scalebox{0.7}{\includegraphics{Figurer/FigOsw22SS.pdf}}
+\caption{\label{fig:Osw22SS}   Andel pasienter med ODI under 22 ett år
+etter spinal stenose operasjon. Pasienter operert i 2014 og 2015.}
+\end{figure}
+
+
+
+Figur \ref{fig:OswEndr20} viser andel pasienter med betydelig forbedring av selvrapportert
+smerterelatert funksjon i dagliglivet («suksess», ODI forbedring over 20 poeng) 1 år
+etter prolapsoperasjon.
+
+\begin{figure}[ht]
+\scalebox{0.7}{\includegraphics{Figurer/FigOswEndr20.pdf}}
+\caption{\label{fig:OswEndr20}   Andel pasienter med betydelig forbedring av selvrapportert
+smerterelatert funksjon i dagliglivet («suksess», ODI forbedring over 20 poeng) 1 år
+etter prolapsoperasjon. Pasienter operert i 2014 og 2015.}
+\end{figure}
+
+
+
+Nyere forskning knyttet til NKR viser at pasienter operert for spinal stenose bør ha minst 30 \% forbedring av ODI for å oppleve et meget godt operasjonsresultat. Figur \ref{fig:OswEndr30pstSS} viser andelen med minst 30 \% forbedring av ODI ved hver avdeling.
+
+\begin{figure}[ht]
+\scalebox{0.7}{\includegraphics{Figurer/FigOswEndr30pstSS.pdf}}
+\caption{\label{fig:OswEndr30pstSS} Andel spinal stenose pasienter med betydelig forbedring av selvrapportert
+smerterelatert funksjon i dagliglivet («suksess», ODI forbedring over 30 \% poeng) 1 år
+etter prolapsoperasjon. Pasienter operert i 2014 og 2015.}
+\end{figure}
+
+
+
+
+
+
+
+
+
+
+
+
+
+\subsubsection{Komplikasjoner (sikkerhet)}
+
+\textbf{I. Sårinfeksjon.}
+
+For alle typer prolapsoperasjoner har
+andel sårinfeksjoner (pasientrapportert) har blitt noe redusert fram til 2010, mens bruk av  forbyggende antibiotikabehandling har økte sterkt og i dag får nesten alle forebyggende antibiotikabehandling ved kirurgi. Siden 2010 har andelen sårinfeksjoner ligget stabilt rundt 2 \% for prolapsopererte og rundt 3 \% for spinal stenose opererte.
+
+
+%\begin{figure}[ht]
+%      \centering \scalebox{s2}{\includegraphics{Figurer/FigKpInf3MndTidPro.pdf}}
+%      \centering \scalebox{s2}{\includegraphics{Figurer/FigKpInf3MndTidSS.pdf}}
+%      \caption{\label{fig:KpInfTid} Andel pasienter som rapporterer om sårinfeksjon 3 måneder etter
+%hhv. prolapskirurgi og spinal stenose, utvikling over tid.}
+%\end{figure}
+
+Årsakene til sårinfeksjon er komplekse. I 2016 fikk 98-100 \% av pasienter som
+opereres for prolaps, forebyggende antibiotikabehandling under operasjon. NKR
+viste for mange år siden at dette har god forbyggende effekt. Figurene \ref{fig:KpInfAvdPro} og \ref{fig:KpInfAvdSS} viser andel pasienter som får sårinfeksjon ved hver avdeling.
+
+\begin{figure}[ht]
+\scalebox{0.7}{\includegraphics{Figurer/FigKpInf3MndPro.pdf}}
+\caption{\label{fig:KpInfAvdPro} Andel pasienter som rapporterer om sårinfeksjon 3 måneder etter
 prolapskirurgi.}
 \end{figure}
 
-\clearpage
-
-\subsubsubsection{Uønsket resultat III}
-Pasienter med forbedring av ODI skår mindre enn 13 vil som hovedregel ikke
-oppfatte sin situasjon som vesentlig forbedret etter kirurgi. Resultatet blir dermed å
-betrakte som utilfredsstillende. 
-
 \begin{figure}[ht]
-\centering \includegraphics[width= 0.8\textwidth]{FigOswEndrLav.pdf}
-\caption{\label{fig:OswEndrLav}   Andel pasienter som ikke oppnår et tilfredsstillende resultat, ODI
-forbedring under 13 poeng, etter prolapskirurgi.}
+\scalebox{0.7}{\includegraphics{Figurer/FigKpInf3MndSS.pdf}}
+\caption{\label{fig:KpInfAvdSS} Andel pasienter som rapporterer om sårinfeksjon 3 måneder etter
+spinal stenose.}
 \end{figure}
 
-
-\subsubsubsection{Ønsket resultat («suksess»)}
-
-Figur 3.16: Andel pasienter med betydelig forbedring av selvrapportert
-smerterelatert funksjon i dagliglivet («suksess», ODI forbedring over 20 poeng) 1 år
-etter prolapsoperasjon.
-\begin{figure}[ht]
-\centering \includegraphics[width= 0.8\textwidth]{FigOswEndr20.pdf}
-\caption{\label{fig:OswEndr20}   Andel pasienter med betydelig forbedring av selvrapportert
-smerterelatert funksjon i dagliglivet («suksess», ODI forbedring over 20 poeng) 1 år
-etter prolapsoperasjon.}
-\end{figure}
-
-\subsubsection{Spinal stenose, ODI forbedring minst 30 \%}
-
-Nyere forskning knyttet til NKR viser at pasienter operert for spinal stenose bør ha minst 30 \% forbedring av ODI for å oppleve et meget godt operasjonsresultat.
-
-\begin{figure}[ht]
-\centering \includegraphics[width= 0.8\textwidth]{FigOswEndr30pstSS.pdf}
-\caption{\label{fig:OswEndr30pstSS} Andel spinal stenose pasienter med betydelig forbedring av selvrapportert
-smerterelatert funksjon i dagliglivet («suksess», ODI forbedring over 30 \% poeng) 1 år
-etter prolapsoperasjon.}
-\end{figure}
+%\clearpage
 
 
-\subsubsubsection{Komplikasjoner (sikkerhet)}
 
-
-\textbf{I. Sårinfeksjon.}
-For alle typer prolapsoperasjoner har
-andel sårinfeksjoner (pasientrapportert) har blitt noe redusert med mens
-bruk av forbyggende antibiotikabehandling har økt med 15 \%. 
-
-Årsakene til sårinfeksjon er komplekse. I 2016 fikk 98-100 \% av pasienter som
-opereres for prolaps forebyggende antibiotikabehandling under operasjon. NKR
-viste for mange år siden at dette har god forbyggende effekt.
-
-\begin{figure}[ht]
-\centering \includegraphics[width= 0.5\textwidth]{FigKpInf3MndPro.pdf}
-\centering \includegraphics[width= 0.5\textwidth]{FigKpInf3MndSS.pdf}
-\caption{\label{fig:KpInf} Andel pasienter som rapporterer om sårinfeksjon 3 måneder etter
-hhv. prolapskirurgi og spinal stenose.}
-\end{figure}
-
-
-\subsubsubsection{Durarift (rift på ryggmargshinnen)}
-
-Dette er oftest en ufarlig komplikasjon, men kan medføre væskelekkasje og
+Durarift er oftest en ufarlig komplikasjon, men kan medføre væskelekkasje og
 ubehag for pasienten, lengre liggetid og i noen tilfeller behov for reoperasjon.
-Unntaksvis kan også konsekvensen være nerveskade og alvorlig infeksjon.
+Unntaksvis kan også konsekvensen være nerveskade og alvorlig infeksjon. Figur \ref{fig:Dura} viser andelen som får durarift for prolaps og spinal stenose pasienter.
+
 \begin{figure}[ht]
-\centering \includegraphics[width= 0.5\textwidth]{FigDuraPro.pdf}
-\centering \includegraphics[width= 0.5\textwidth]{FigDuraSS.pdf}
+\centering \includegraphics[width= 0.55\textwidth]{Figurer/FigDuraPro.pdf}
+\centering \includegraphics[width= 0.55\textwidth]{Figurer/FigDuraSS.pdf}
 \caption{\label{fig:Dura} Andel pasienter som får durarift etter kirurgi for hhv. prolaps og spinal stenose, begge elektiv primæroperasjon.}
 \end{figure}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 \clearpage
 
 \section{Resultater degenerativ nakke}
+
+I Norge drives nakkekirurgi kun ved nevrokirurgiske avdelinger knyttet til de fem
+universitetssykehusene i Oslo, Bergen, Trondheim, Stavanger og Tromsø, samt ved
+hovedsakelig ett privat sykehus (Oslofjordklinikken).
+Da der ikke finnes etablerte kvalitetsindikatorer for nakkekirurgi vil dette bli en
+viktig oppgave for NKR. Da en ny validering av datakvaliteten ikke er fullført grunnet
+uventede databaseproblemer, vises kun et generelt mål på pasient rapporterte
+tilfredshet (PREM) i årets rapport. I neste årsrapport vil NKR presentere sykehusvise
+kvalitetsdata splittet på diagnose, behandling.
+Pasienttilfredshet (PREM)
+
+
+
 Figurer:
 \begin{itemize}
 \item Andel over 70 år per sykehus
@@ -1071,22 +1126,7 @@ Figurer:
 \item Splitte på fremre og bakre tilgang
 \end{itemize}
 
-I Norge drives nakkekirurgi kun ved nevrokirurgiske avdelinger knyttet til de fem
-universitetssykehusene i Oslo, Bergen, Trondheim, Stavanger og Tromsø, samt ved
-hovedsakelig ett privat sykehus (Oslofjordklinikken).
-Da der ikke finnes etablerte kvalitetsindikatorer for nakkekirurgi vil dette bli en
-viktig oppgave for NKR. Da en ny validering av datakvaliteten ikke er fullført grunnet
-uventede databaseproblemer, vises kun et generelt mål på pasient rapporterte
-tilfredshet (PREM) i årets rapport. I neste årsrapport vil NKR presentere sykehusvise
-kvalitetsdata splittet på diagnose, behandling.
-Pasienttilfredshet (PREM)
-Her har pasienten svart på hvor fornøyd de var med behandlingen de fikk på
-sykehuset. Dette er et lite spesifikt effektmål som gir uttrykk for totalopplevelsen,
-det vil si mange aspekter knyttet til både informasjon, utredning, opphold,
-behandling og oppfølging.
 
-Figur 3.20: Andelen nakkeopererte som fornøyde med behandlingen ved Norske
-sykehus 12 måneder etter nakkekirurgi.
 
 Pasienter som opereres i nakken for degenerative tilstander har armsmerte med
 eller uten funksjonssvikt (radikulopati), varierende grad av nakkesmerter og noen
@@ -1095,39 +1135,9 @@ opereres på grunn av ryggmargspåvirkning påregne bedring i samme grad som de
 som behandles for armsmerte. Figur 3.21 viser at også andelen som opereres for
 myelopati varierer mellom sykehusene.
 
-Figur 3.21: Andel pasienter som opereres for ryggmargspåvirkning (myelopati) ved
-norske sykehus.
 
 
 \section{Oppsummering av de viktigste resultatene}
-
-\begin{itemize}
-\item Dekningsgraden er fortsatt under 80 \%, men økende.
-\item Innen offentlig helsetjeneste synes kvalitetssikring av egen virksomhet å
-være høyt prioritert på Sørvest-landet og i Sør-Trøndelag, men ikke i Helse
-Sørøst og Møre & Romsdal HF.
-\item Ryggopererte opplever generelt en sterk, klinisk relevant og statistisk
-signifikant forbedring av funksjon i dagliglivets aktiviteter, livskvalitet og
-arbeidsuførhet. Resultatene er stabile over tid.
-\item Liggetiden er fortsatt redusert i 2016. Dette kan knyttes til økt bruk av
-mindre omfattende kirurgi.
-\item Bruke av synsfremmende midler under operasjon øker
-\item Andelen pasienter som er fornøyde med behandlingen de fikk på sykehuset
-12 mnd. etter operasjon øker blant prolapsopererte, og andel multiple
-reoperasjoner og andel sårinfeksjoner går ned. Andel som har søkt
-uføretrygd før operasjon er redusert. Andelen pasienter med lang
-symptomvarighet før operasjon er ikke redusert.
-\item Det er stor variasjon i resultat mellom sykehus
-\item Strengere indikasjonsstilling vil kunne bedre operasjonsresultatene
-\item Pasienttilfredsheten blant nakkeopererte varierer mellom 80-90 \% ut fra
-hvor pasientene er operert og type diagnose.
-\end{itemize}
-
-
-
-
-
-
 
 
 

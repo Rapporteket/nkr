@@ -124,6 +124,9 @@ RyggVarTilrettelegg  <- function(RegData, valgtVar, grVar='', ktr=0, figurtype='
             #Lav beinsmerte og ingen parese. (Først og fremst prolaps)
             RegData$Variabel[which(is.na(RegData$OpIndParese) & (RegData$SmBePre < 2.5))] <- 1
             tittel <- 'Beinsmerte <= 2 og ingen parese'
+            sortAvtagende <- F
+            #tittel <- 'Beinsmerte \u2264 og ingen parese'
+            #intToUtf8(2264)
       }
       if (valgtVar == 'BeinsmEndrLav') { #AndelGrVar
             #Mislykkede operasjoner
@@ -145,6 +148,7 @@ RyggVarTilrettelegg  <- function(RegData, valgtVar, grVar='', ktr=0, figurtype='
             #(Først og fremst fusjonskirurgi)
             RegData$Variabel[which((RegData$RfSentr==1) & (RegData$RfSpondtypeDegen == 1))] <- 1
             tittel <- 'Degenerativ spondylolistese og sentral spinal stenose'
+            sortAvtagende <- FALSE
       }
       if (valgtVar == 'ErstatningPre') { #AndelGrVar
             #Pasientskjema. Andel med ErstatningPre 1 el 3
@@ -171,6 +175,7 @@ RyggVarTilrettelegg  <- function(RegData, valgtVar, grVar='', ktr=0, figurtype='
             RegData$Variabel[which(RegData$HovedInngrep ==5)] <- 1
             varTxt <- 'tilfeller'
             tittel <- 'Degen. spondylolistese operert med fusjonskirurgi'
+            sortAvtagende <- F
       }
       
       
@@ -187,6 +192,7 @@ RyggVarTilrettelegg  <- function(RegData, valgtVar, grVar='', ktr=0, figurtype='
             RegData$Variabel <- RegData[ ,valgtVar]
             varTxt <- 'tilfeller'
             tittel <- 'Sårinfeksjon, pasientrapportert'
+            sortAvtagende <- FALSE
       }
       if (valgtVar == 'Misfornoyd') { #AndelGrVar	#%in% c('Misfor3mnd','Misfor12mnd')) { #AndelGrVar
             #3/12mndSkjema. Andel med Misfornøyd/litt misfornøyd (1,2)
@@ -203,6 +209,7 @@ RyggVarTilrettelegg  <- function(RegData, valgtVar, grVar='', ktr=0, figurtype='
             RegData <- RegData[which(RegData$Morsmal %in% 1:3), ]
             RegData$Variabel[which(RegData$Morsmal %in% 2:3)] <- 1 
             tittel <- 'Fremmedspråklige (ikke norsk som morsmål)'
+            sortAvtagende <- F
       }
       
       if (valgtVar == 'Nytte') { #AndelGrVar
@@ -258,6 +265,7 @@ RyggVarTilrettelegg  <- function(RegData, valgtVar, grVar='', ktr=0, figurtype='
             RegData <- RegData[which(RegData$OswEndr >= -100), ]
             RegData$Variabel[which(RegData$OswEndr <13)] <- 1
             tittel <- paste0('Forbedring av Oswestry-skår < 13 poeng', ktrtxt)
+            sortAvtagende <- F
       }
       if (valgtVar == 'OswEndr20') { #AndelGrVar, andelTid
             #Mislykkede operasjoner
@@ -281,6 +289,15 @@ RyggVarTilrettelegg  <- function(RegData, valgtVar, grVar='', ktr=0, figurtype='
             varTxt <- 'med \u2265 30 % forbedring'
             tittel <- paste0('Minst 30% forbedring av Oswestry-skår', ktrtxt)
       }
+      if (valgtVar == 'Osw22') { #AndelGrVar
+            #Andel med Oswestry-skår fortsatt over 48. 
+            RegData$OswPost <- switch(as.character(ktr),
+                                      '1' = RegData$OswTot3mnd,
+                                      '2' = RegData$OswTot12mnd)
+            RegData <- RegData[which(RegData$OswPost>=0), ]
+            RegData$Variabel[which(RegData$OswPost <22)] <- 1
+            tittel <- paste0('Oswestry-skår < 22 poeng', ktrtxt)
+      }
       if (valgtVar == 'Osw48') { #AndelGrVar
             #Andel med Oswestry-skår fortsatt over 48. 
             RegData$OswPost <- switch(as.character(ktr),
@@ -289,6 +306,7 @@ RyggVarTilrettelegg  <- function(RegData, valgtVar, grVar='', ktr=0, figurtype='
             RegData <- RegData[which(RegData$OswPost>=0), ]
             RegData$Variabel[which(RegData$OswPost >48)] <- 1
             tittel <- paste0('Oswestry-skår > 48 poeng', ktrtxt)
+            sortAvtagende <- F
       }
       
       if (valgtVar=='PeropKomp') { #AndelGrVar
@@ -302,6 +320,7 @@ RyggVarTilrettelegg  <- function(RegData, valgtVar, grVar='', ktr=0, figurtype='
             #Kode 1:Ja,  tomme:Nei 
             RegData$Variabel[which(RegData$PeropKompDura == 1)] <- 1
             tittel <- 'Komplikasjon ved operasjon: Durarift'
+            sortAvtagende <- FALSE
       }
       if (valgtVar=='Roker') { #AndelGrVar
             #PasientSkjema. Andel med Roker=1
@@ -325,6 +344,7 @@ RyggVarTilrettelegg  <- function(RegData, valgtVar, grVar='', ktr=0, figurtype='
             RegData <- RegData[which(RegData$SmStiPre %in% 0:1), ]
             RegData$Variabel <- RegData$SmStiPre
             tittel <- 'Bruker smertestillende, før operasjon'
+            sortAvtagende <- F
       }
       
       if (valgtVar == 'SymptVarighRyggHof') { #AndelGrVar
@@ -334,6 +354,7 @@ RyggVarTilrettelegg  <- function(RegData, valgtVar, grVar='', ktr=0, figurtype='
             RegData$Variabel[which(RegData[ ,valgtVar] %in% 4:5)] <- 1
             varTxt <- 'med varighet minst 1 år'
             tittel <- 'Varighet av rygg-/hoftesmerter minst ett år'
+            sortAvtagende <- F
       }
       
       if (valgtVar == 'SympVarighUtstr') { #AndelGrVar
@@ -343,11 +364,13 @@ RyggVarTilrettelegg  <- function(RegData, valgtVar, grVar='', ktr=0, figurtype='
             RegData$Variabel[which(RegData[ ,valgtVar] %in% 4:5)] <- 1
             varTxt <- 'med varighet minst 1år'
             tittel <- 'Varighet av utstrålende smerter minst ett år'
+            sortAvtagende <- F
       }
-      if (valgtVar == 'tidlOp3'){
+      if (valgtVar == 'tidlOp3'){ #AndelTid, AndelGrVar
             RegData$Variabel[RegData$TidlOprAntall>2] <- 1
             varTxt <- 'med >2 tidl. operasjoner'
             tittel <- 'Flere enn to tidligere operasjoner'
+            sortAvtagende <- F
             }
       if (valgtVar == 'UforetrygdPre') { #AndelGrVar, AndelTid
             #PasientSkjema. Andel med UforetrygdPre 1 og 3
@@ -356,6 +379,7 @@ RyggVarTilrettelegg  <- function(RegData, valgtVar, grVar='', ktr=0, figurtype='
             RegData$Variabel[which(RegData[ ,valgtVar] %in% c(1,3))] <- 1
             varTxt <- 'søkt/planlagt å søke'
             tittel <- 'Har søkt eller planlegger å søke uføretrygd'
+            sortAvtagende <- F
       }
       if (valgtVar == 'Utd') { #AndelGrVar
             #PasientSkjema. Andel med Utdanning 4 el 5

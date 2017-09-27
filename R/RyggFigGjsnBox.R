@@ -184,7 +184,7 @@ ind <- RyggUtvalg$ind
 
 
 
-TittelUt <-  c(TittelVar, shtxt)	#c(TittelVar, hovedkattxt, paste(kjtxt, ', ', optxt, sep=''), shtxt)
+TittelUt <-  TittelVar #c(TittelVar, shtxt)	#c(TittelVar, hovedkattxt, paste(kjtxt, ', ', optxt, sep=''), shtxt)
 if (tittel==0) {Tittel<-''} else {Tittel <- TittelUt} 
 
 		
@@ -254,7 +254,7 @@ NRest <- tapply(RegData[ind$Rest ,'Variabel'], RegData[ind$Rest, 'Gr'], length)
 #xmin <- 0.5
 #xmax <- AntGr+0.5
 cexgr <- 0.9	#Kan endres for enkeltvariable
-ymin <- min(KonfRest, Konf, na.rm=TRUE)	#ymin1 - 2*h
+ymin <- 0.9*min(KonfRest, Konf, na.rm=TRUE)	#ymin1 - 2*h
 ymax <- 1.1*max(KonfRest, Konf, na.rm=TRUE)	#ymax1 + 2*h
 if (valgtMaal=='Med') {maaltxt <- 'Median ' } else {maaltxt <- 'Gjennomsnittlig '}
 ytxt <- paste(maaltxt, ytxt1, sep='')
