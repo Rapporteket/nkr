@@ -7,7 +7,7 @@
 #' @return RegData data frame
 #' @export
 #'
-RyggRegDataSQL <- function() {
+RyggRegDataSQLFull <- function() {
       
 #RyggRegDataSQL <- function(datoFra = '2007-01-01', datoTil = '2099-01-01') 
 #Dette blir feil siden Rygg i staging har datoformat dd.mm.yyyy
