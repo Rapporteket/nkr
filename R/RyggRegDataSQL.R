@@ -2,7 +2,6 @@
 #'
 #' Henter data for Degenerativ Rygg fra "staging" (?)
 #'
-#' @inheritParams RyggFigAndeler
 #'
 #' @return RegData data frame
 #' @export
@@ -15,8 +14,6 @@ RyggRegDataSQL <- function() {
   registryName <- "nkr"
   dbType <- "mssql"
 
-  
-#  query = 'select * from Uttrekk_Rapport'
   
   query <- paste0('SELECT
 	Alder,
@@ -161,9 +158,6 @@ RyggRegDataSQL <- function() {
 	Utfylt3Mnd,
 	Vekt
 FROM Uttrekk_Rapport ')
-#FROM Uttrekk_RapportRapportekproblem
-#  WHERE (OpAar==2012) ') #
-#                  WHERE OpDato >= \'', datoFra, '\' AND OpDato <= \'', datoTil, '\'')
 
 RegData <- rapbase::LoadRegData(registryName, query, dbType)
 
