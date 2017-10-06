@@ -104,8 +104,8 @@
 #' @export
 #'
 RyggFigAndeler  <- function(RegData, valgtVar, datoFra='2007-01-01', datoTil='2999-12-31', aar=0, 
-                            hentData=0, preprosess=1,minald=0, maxald=130, erMann='', hovedkat=99, 
-                            tidlOp='', tittel=1, outfile='', reshID=0, enhetsUtvalg=0)
+                            hentData=0, preprosess=1,minald=0, maxald=130, erMann='', hovedkat=99,
+                            opKat=99, tidlOp='', tittel=1, outfile='', reshID=0, enhetsUtvalg=0)
 {
 
 

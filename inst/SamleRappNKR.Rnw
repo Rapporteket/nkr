@@ -70,7 +70,8 @@
 \setcounter{secnumdepth}{-1} 
 
 
-\begin{document}{~}
+\begin{document}
+%{~}
 
 % LOGO, Include a department/university logo - this will require the graphicx package
  \includegraphics[height=2cm]{\Sexpr{system.file(file='NKRlogo.jpg', package='nkr')}}
@@ -117,7 +118,7 @@ if (!exists('RegData')){
 <<'FellesParamPreProsess', echo=FALSE, eval=T>>=
 # Preprosessere data:  
 RegData <- RyggPreprosess(RegData=RegData)  #, reshID=reshID)
-
+RegData$ShNavn <-  iconv(RegData$ShNavn, from = '', to = 'UTF-8')
 	#Formatering 
 	#Velger å ha denne her og ikke i preprosesser siden kan ha andre nivå (levels) i andre sammenhenger
 	RegData$Morsmal <- factor(RegData$Morsmal, levels=1:3)
@@ -141,7 +142,7 @@ enhetsUtvalg <- 0
 erMann <- 99
 aar <- 0	#Kan velge flere
 datoFra <- '2010-01-01'
-datoTil <- '2015-12-31'
+datoTil <- '2050-12-31'
 minald <- 0
 maxald <- 130
 hovedkat <- 99
