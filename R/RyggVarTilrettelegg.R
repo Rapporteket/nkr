@@ -132,6 +132,7 @@ RyggVarTilrettelegg  <- function(RegData, valgtVar, ktr=0, figurtype='andeler'){
             #          RegData$Variabel[which(RegData$BeinsmEndr <1.5)] <- 1
             RegData$Variabel[which(is.na(RegData$OpIndParese) & (RegData$BeinsmEndr < 1.5))] <- 1
             tittel <- paste0('Forbedring av beinsmerte-skår \u2264 1 poeng', ktrtxt)
+            sortAvtagende <- FALSE
       }
       if (valgtVar == 'BMI') { #AndelGrVar
             #BMI > 30
