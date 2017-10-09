@@ -84,14 +84,7 @@ RyggVarTilrettelegg  <- function(RegData, valgtVar, grVar='', ktr=0, figurtype='
             tittel <- 'Pasienter over 70 år'
       }
 
-      if (valgtVar == 'Alder') { #AndelGrVar
-            #Andel over 75 år
-            RegData$Variabel[which(RegData[ ,valgtVar] >= 75)] <- 1
-            tittel <- 'Pasienter over 75 år'
-      }
-      
       if (valgtVar == 'Antibiotika') { #AndelGrVar
-            #Komorbiditet
             RegData <- RegData[which(RegData[,valgtVar] %in% 0:1), ]
             RegData$Variabel <- RegData[ ,valgtVar]
             tittel <- 'Fått antibiotika'
@@ -144,7 +137,15 @@ RyggVarTilrettelegg  <- function(RegData, valgtVar, grVar='', ktr=0, figurtype='
             RegData$Variabel[which(RegData[ ,valgtVar] > 30)] <- 1
             tittel <- 'Pasienter med fedme (BMI>30)'
       }
-      if (valgtVar == 'DegSponSSSten') { #AndelGrVar
+      if (valgtVar == 'degSponFusj') { #AndelGrVar
+            #hovedkat=9 #Degen. spondylolistese
+            RegData <- RyggUtvalgEnh(RegData, hovedkat=9)$RegData
+            RegData$Variabel[which(RegData$HovedInngrep ==5)] <- 1
+            varTxt <- 'tilfeller'
+            tittel <- 'Degen. spondylolistese operert med fusjonskirurgi'
+            sortAvtagende <- F
+      }
+      if (valgtVar == 'degSponSSSten') { #AndelGrVar
             #(Først og fremst fusjonskirurgi)
             RegData$Variabel[which((RegData$RfSentr==1) & (RegData$RfSpondtypeDegen == 1))] <- 1
             tittel <- 'Degenerativ spondylolistese og sentral spinal stenose'
@@ -157,6 +158,15 @@ RyggVarTilrettelegg  <- function(RegData, valgtVar, grVar='', ktr=0, figurtype='
             RegData$Variabel[which(RegData[ ,valgtVar] %in% c(1,3))] <- 1
             tittel <- 'Pasienten har søkt/planlegger å søke erstatning'
       }
+      if (valgtVar=='EQ5DEndr') {#gjsnGrVar
+            RegData$Variabel <- switch(as.character(ktr), 
+                                       '1'= (RegData$EQ5D3mnd - RegData$EQ5DPre),
+                                       '2'= (RegData$EQ5D12mnd - RegData$EQ5DPre))
+            RegData <- RegData[which(!is.na(RegData$Variabel)),]
+            tittel <- paste0('forbedring av EQ5D', ktrtxt)#gjsnGrVar
+            
+      }
+      
       if (valgtVar =='Fornoyd') { #AndelGrVar	#%in% c('Fornoyd3mnd','Fornoyd12mnd')) {
             #3/12mndSkjema. Andel med helt Fornøyd (1)
             #Kode 1:5,9: 'Fornøyd', 'Litt fornøyd', 'Verken eller', 'Litt misfornøyd', 'Misfornøyd', 'Ukjent')
@@ -168,18 +178,6 @@ RyggVarTilrettelegg  <- function(RegData, valgtVar, grVar='', ktr=0, figurtype='
             #RegData$Variabel[which(RegData$Fornoyd ==1)] <- 1 #%in% 1:2
             tittel <- paste0('Helt fornøyde pasienter', ktrtxt)
       }
-      #andel av degenerativ spondylolistese som er operert  med fusjonskirurgi (hovedinngr=5)
-      if (valgtVar == 'degSponFusj') { #AndelGrVar
-            #hovedkat=9 #Degen. spondylolistese
-            RegData <- RyggUtvalgEnh(RegData, hovedkat=9)$RegData
-            RegData$Variabel[which(RegData$HovedInngrep ==5)] <- 1
-            varTxt <- 'tilfeller'
-            tittel <- 'Degen. spondylolistese operert med fusjonskirurgi'
-            sortAvtagende <- F
-      }
-      
-      
-      
       if (valgtVar == 'Kp3Mnd') { #AndelGrVar
             #Komplikasjoner 0:nei, 1:ja
             RegData <- RegData[which(RegData[,valgtVar] %in% 0:1), ]
@@ -254,9 +252,10 @@ RyggVarTilrettelegg  <- function(RegData, valgtVar, grVar='', ktr=0, figurtype='
                                       '1'= (RegData$OswTotPre - RegData$OswTot3mnd),
                                       '2'= (RegData$OswTotPre - RegData$OswTot12mnd))
             RegData <- RegData[which(!is.na(RegData$Variabel)),]
-            tittel <- 'forbedring av Oswestry' #gjsnGrVar
+            tittel <- paste0('forbedring av Oswestry', ktrtxt)#gjsnGrVar
 
       }
+      
       if (valgtVar == 'OswEndrLav') { #AndelGrVar
             #Mislykkede operasjoner
             RegData$OswEndr <- switch(as.character(ktr), 
@@ -290,7 +289,7 @@ RyggVarTilrettelegg  <- function(RegData, valgtVar, grVar='', ktr=0, figurtype='
             tittel <- paste0('Minst 30% forbedring av Oswestry-skår', ktrtxt)
       }
       if (valgtVar == 'Osw22') { #AndelGrVar
-            #Andel med Oswestry-skår fortsatt over 48. 
+            #Andel med Oswestry-skår under 22 etter op. 
             RegData$OswPost <- switch(as.character(ktr),
                                       '1' = RegData$OswTot3mnd,
                                       '2' = RegData$OswTot12mnd)
@@ -337,8 +336,23 @@ RyggVarTilrettelegg  <- function(RegData, valgtVar, grVar='', ktr=0, figurtype='
             RegData$Variabel <- RegData$Saardren
             tittel <- 'Andel som får sårdren'
       }
-      
-      if (valgtVar == 'SmStiPre') { #AndelGrVar
+      if (valgtVar=='SmBeinEndr') {#gjsnGrVar
+            RegData$Variabel <- switch(as.character(ktr), 
+                                       '1'= (RegData$SmBePre - RegData$SmBe3mnd),
+                                       '2'= (RegData$SmBePre - RegData$SmBe12mnd))
+            RegData <- RegData[which(!is.na(RegData$Variabel)),]
+            tittel <- paste0('forbedring av beinsmerter', ktrtxt)#gjsnGrVar
+            
+      }
+      if (valgtVar=='SmRyggEndr') {#gjsnGrVar
+            RegData$Variabel <- switch(as.character(ktr), 
+                                       '1'= (RegData$SmRyPre - RegData$SmRy3mnd),
+                                       '2'= (RegData$SmRyPre - RegData$SmRy12mnd))
+            RegData <- RegData[which(!is.na(RegData$Variabel)),]
+            tittel <- paste0('forbedring av ryggsmerter', ktrtxt)#gjsnGrVar
+            
+      }
+            if (valgtVar == 'SmStiPre') { #AndelGrVar
             #PasientSkjema. Andel med SmStiPre=1
             #Kode 0,1,tom: Nei, Ja Ukjent
             RegData <- RegData[which(RegData$SmStiPre %in% 0:1), ]
@@ -432,14 +446,6 @@ RyggVarTilrettelegg  <- function(RegData, valgtVar, grVar='', ktr=0, figurtype='
             retn <- 'H'
             tittel <- 'Trakeostomi utført'
             RegData$Variabel[which(RegData$Trakeostomi %in% 2:3)] <- 1
-            cexgr <- 0.9
-      } 
-      if (valgtVar == 'trakAapen') { #andelGrVar 
-            RegData <- RegData[which((RegData$Trakeostomi %in% 2:3) 
-                                     & (RegData$InnDato >= as.POSIXlt('2016-01-01'))), ] #Innført ila 2015
-            retn <- 'H'
-            tittel <- 'Andel opphold med trakeostomi lagt under oppholdet'
-            RegData$Variabel[which(RegData$Trakeostomi == 3)] <- 1
             cexgr <- 0.9
       } 
       

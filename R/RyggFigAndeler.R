@@ -125,6 +125,7 @@ grtxt2 <- NULL	#Spesifiseres evt. for hver enkelt variabel
 subtxt <- ''	#Benevning
 flerevar <- 0
 antDes <- 1
+cexgr <- 1	#Kan endres for enkeltvariable
 
 #Noen variable settes som "Variabel" for å standardisere beregninga ytterligere:
 if (valgtVar %in% c('Alder', 'BMI', 'HovedInngrep', 'Liggedogn', 'Utd', 
@@ -309,7 +310,7 @@ if (valgtVar == 'Nytte3mnd') {
 	}
 if (valgtVar == 'Nytte12mnd') {
 	datoTil <- min(datoTil, as.character(Sys.Date()-365))
-	RegData <- RegData[which(RegData$Utfylt12Mnd==1), ]
+	#RegData <- RegData[which(RegData$Utfylt12Mnd==1), ]
 	retn <- 'H'
 	grtxt <- c('Helt bra', 'Mye bedre', 'Litt bedre', 'Uendret', 'Litt verre', 'Mye verre', 
 					'Verre enn noen gang', 'Ukjent')
@@ -442,7 +443,8 @@ if (valgtVar=='Komorbiditet') {
 			'Muskel-/skjelettsm.', 'Osteoporose', 'Diabetes Mell.', 
 			'Reumatoid artritt', 'Vask. Claudicatio', 'Tot. Komorb.')
 			
-		}
+	cexgr <- 0.9	#Kan endres for enkeltvariable
+}
 if (valgtVar=='KomplPer') {
 	retn <- 'H'
 	flerevar <- 1
@@ -566,7 +568,6 @@ farger <- FigTypUt$farger
 
 #-----------Figur---------------------------------------
 #Innparametre: subtxt, grtxt, grtxt2, tittel, Andeler, utvalgTxt, retn, cexgr
-cexgr <- 1	#Kan endres for enkeltvariable
 
 
 #Plottspesifikke parametre:

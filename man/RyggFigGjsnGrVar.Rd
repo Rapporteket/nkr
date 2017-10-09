@@ -20,7 +20,11 @@ RyggFigGjsnGrVar(RegData, valgtVar, valgtMaal = "Gjsn",
 
 Argumentet \emph{valgtVar} har følgende valgmuligheter:
    \itemize{
+    \item alder:  
     \item Liggedogn: Liggetid 
+    \item OswEndr: Endring i Oswestry fra før til etter
+    \item SmBeinEndr: Forbedring av beinsmerter fra før til etter
+    \item SmRyEndr: Forbedring av ryggsmerter fra før til etter
    }
 
 Detajer: Her bør man liste opp hvilke variable funksjonen benytter.}

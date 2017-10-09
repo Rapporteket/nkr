@@ -8,19 +8,27 @@
 #'        'Aktiv sykemeldt', 'Delvis sykemeldt', 'Attføring/rehab.', 'Uføretrygdet' 
 #' Argumentet \emph{valgtVar} har følgende valgmuligheter:
 #'    \itemize{
-#'     \item Alder: Pasienter over 75år    
+#'     \item alder70: Pasienter over 75år    
 #'     \item Antibiotika: Er det gitt antibiotikaprofylakse?    
 #'     \item ArbstatusPre: Mottar sykepenger, før operasjon?    
-#'     \item Arbstatus: Mottar sykepenger, 3 mnd etter operasjon?    [ENDRET fra Arbstatus3mnd, Arbstatus12mnd]
+#'     \item Arbstatus: Mottar sykepenger, etter operasjon?   
 #'     \item ASA: ASA-grad > II    
+#'	 \item BeinsmLavPre: Pasienter med preop. beinsmerte < 2.5 og ikke parese.
+#'	 \item BeinsmEndrLav: Forbedring av beinsmerter under 1.5 poeng
 #'     \item BMI: Pasienter med fedme (BMI>30)    
-#'     \item degSponFusj: Degenerativ spondylolistese operert  med fusjonskirurgi 
+#'     \item degSponFusj: Degenerativ spondylolistese operert  med fusjonskirurgi
+#'     \item degSponSSSten: Degenerativ spondylolistese og sentral spinal stenose
 #'     \item ErstatningPre: Søkt/planlegger å søke erstatning?    
-#'     \item Fornoyd: Fornøyde pasienter [ENDRET fra Fornoyd3mnd, Fornoyd12mnd  ]
+#'     \item Fornoyd: Fornøyde pasienter 
+#'     \item KpInf3Mnd: Sårinfeksjon, pasientrapportert    
 #'     \item Kp3Mnd: Pasientrapporterte komplikasjoner    
-#'     \item Misfornoyd:  Andel med Misfornøyd/litt misfornøyd [ENDRET fra Misfor3mnd, Misfor12mnd]
-#'     \item Nytte: Klart bedre    [ENDRET fra Nytte3mnd, Nytte12mnd]
-#'	 \item OswEndr30pst: Mer enn 30% forbedring i Oswestry-skår, 3 mnd. [ENDRET fra Osw30_3mnd, Osw30_12mnd]
+#'     \item Misfornoyd:  Andel med Misfornøyd/litt misfornøyd
+#'     \item Nytte: Klart bedre   
+#'	 \item OswEndrLav: Forbedring av Oswestry-skår < 13 poeng
+#'	 \item OswEndr20: Forbedring av Oswestry-skår > 20 poeng
+#'	 \item OswEndr30pst: Mer enn 30% forbedring i Oswestry-skår
+#'	 \item Osw22: Oswestry-skår < 22 poeng
+#'	 \item Osw48: Oswestry-skår > 48 poeng
 #'     \item PeropKomp: Komplikasjon ved operasjon
 #'     \item PeropKompDura: Komplikasjon ved operasjon: Durarift
 #'     \item Roker: Røyker du?    
@@ -31,15 +39,7 @@
 #'     \item tidlOp3: Mer enn to tidligere operasjoner 
 #'     \item UforetrygdPre: Søkt eller planlegger å søke uføretrygd før operasjon?    
 #'     \item Utd: Andel høyskole-/universitetsutdannede    
-#'     \item Verre Mye verre/verre enn noen gang, 3 mnd. [ENDRET fra Verre3mnd, Verre12mnd]
-#'		\item ..
-#'	 	\item BeinsmLavPre: Pasienter med preop. beinsmerte < 2.5 og ikke parese.
-#'		\item BeinsmEndrLav: Forbedring av beinsmerter under 1.5 poeng
-#'     \item DegSponSSSten: Pasienter med Degenerativ spondylolistese og sentral spinal stenose 
-#'	 \item OswEndrLav: Mer enn 20 poeng forbedring i Oswestry-skår, 3 mnd/12mnd.
-#' \item OswEndr20: 
-#' \item Osw48: 
-#' \item KpInf3Mnd: Sårinfeksjon
+#'     \item Verre Mye verre/verre enn noen gang, 3 mnd. 
 #'		}
 #'
 #' @inheritParams RyggFigAndeler
