@@ -30,11 +30,12 @@
 		<defaultValueExpression><![CDATA[new String("nkr")]]></defaultValueExpression>
 	</parameter>
 	<parameter name="rFunctionCallString" class="java.lang.String" isForPrompting="false">
-		<defaultValueExpression><![CDATA[new String("RyggFigAndelerGrVar(RegData=0, valgtVar=valgtVar, datoFra=datoFra, datoTil=datoTil,  minald=minald, maxald=maxald, erMann=erMann, hovedkat=hovedkat, tidlOp='',  tittel=1, grVar='ShNavn', outfile=outfile, reshID=reshID, hentData=1, preprosess=1)")]]></defaultValueExpression>
+		<defaultValueExpression><![CDATA[new String("RyggFigAndelerGrVar(RegData=0, valgtVar=valgtVar, ktr=ktr, datoFra=datoFra, datoTil=datoTil,  minald=minald, maxald=maxald, erMann=erMann, hovedkat=hovedkat, tidlOp='',  tittel=1, grVar='ShNavn', outfile=outfile, reshID=reshID, hentData=1, preprosess=1)")]]></defaultValueExpression>
 	</parameter>
 	<parameter name="valgtVar" class="java.lang.String">
 		<defaultValueExpression><![CDATA[new String("Alder")]]></defaultValueExpression>
 	</parameter>
+	<parameter name="postControl" class="java.lang.Integer"/>
 	<parameter name="beginDate" class="java.util.Date">
 		<defaultValueExpression><![CDATA[new SimpleDateFormat("yyyy-MM-dd").parse("2016-01-01")]]></defaultValueExpression>
 	</parameter>

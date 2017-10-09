@@ -118,9 +118,9 @@ RyggVarTilrettelegg  <- function(RegData, valgtVar, ktr=0, figurtype='andeler'){
       if (valgtVar == 'BeinsmLavPre') { #AndelGrVar
             #Lav beinsmerte og ingen parese. (Først og fremst prolaps)
             RegData$Variabel[which(is.na(RegData$OpIndParese) & (RegData$SmBePre < 2.5))] <- 1
-            tittel <- 'Beinsmerte <= 2 og ingen parese'
+            #tittel <- paste0('Beinsmerte ',expression(""<=2),' og ingen parese')
             sortAvtagende <- F
-            #tittel <- 'Beinsmerte \u2264 og ingen parese'
+            tittel <- 'Beinsmerte \u2264 2 og ingen parese'
             #intToUtf8(2264)
       }
       if (valgtVar == 'BeinsmEndrLav') { #AndelGrVar
@@ -131,7 +131,7 @@ RyggVarTilrettelegg  <- function(RegData, valgtVar, ktr=0, figurtype='andeler'){
             RegData <- RegData[which(RegData$BeinsmEndr >= -10), ]	#Fjerne tomme og ugyldige
             #          RegData$Variabel[which(RegData$BeinsmEndr <1.5)] <- 1
             RegData$Variabel[which(is.na(RegData$OpIndParese) & (RegData$BeinsmEndr < 1.5))] <- 1
-            tittel <- paste0('Forbedring av beinsmerte-skår < 1.5 poeng', ktrtxt)
+            tittel <- paste0('Forbedring av beinsmerte-skår \u2264 1 poeng', ktrtxt)
       }
       if (valgtVar == 'BMI') { #AndelGrVar
             #BMI > 30

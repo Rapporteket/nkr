@@ -68,6 +68,8 @@ RyggRegDataSQL <- function() {
 	Nytte3mnd,
 	OpAar,
 	OpDato,
+      OpDeUlamin,
+      OpDeFasett,
 	OpIndCauda,
 	OpIndParese,
 	OpIndPareseGrad,
