@@ -16,7 +16,7 @@
 #' @export
 #'
 
-RyggVarTilrettelegg  <- function(RegData, valgtVar, grVar='', ktr=0, figurtype='andeler'){
+RyggVarTilrettelegg  <- function(RegData, valgtVar, ktr=0, figurtype='andeler'){ #grVar='', 
 
       
       "%i%" <- intersect
@@ -69,7 +69,7 @@ RyggVarTilrettelegg  <- function(RegData, valgtVar, grVar='', ktr=0, figurtype='
             tittel <- 'Alder ved innleggelse'
             if (figurtype %in% c('gjsnGrVar', 'gjsnTid')) {
                   tittel <- 'alder ved innleggelse'}
-            if (grVar == '') {	#Fordelingsfigur
+            if (figurtype == 'andeler') {	#Fordelingsfigur
                   gr <- c(seq(0, 100, 10),150)		
                   RegData$VariabelGr <- cut(RegData$Alder, breaks=gr, include.lowest=TRUE, right=FALSE)	
                   grtxt <- c('0-9','10-19','20-29','30-39','40-49','50-59','60-69','70-79','80-89','90-99','100+')
@@ -99,6 +99,7 @@ RyggVarTilrettelegg  <- function(RegData, valgtVar, grVar='', ktr=0, figurtype='
             RegData <- RegData[which(RegData$Arbstatus %in% 1:10), ]
             RegData$Variabel[which(RegData[ ,valgtVar] %in% 6:10)] <- 1
             tittel <- paste0('Mottar sykepenger' ,ktrtxt)
+            sortAvtagende <- FALSE
       }
       if (valgtVar == 'ArbstatusPre') { #AndelGrVar
             # Andel i kategori 6 tom 9, mottar sykepenger Av 1-9, (ikke bare de som sykemeldt fra før)
@@ -107,6 +108,7 @@ RyggVarTilrettelegg  <- function(RegData, valgtVar, grVar='', ktr=0, figurtype='
             RegData <- RegData[which(RegData[ ,valgtVar] %in% 1:10), ]
             tittel <- 'Mottar sykepenger, preoperativt?'
             RegData$Variabel[which(RegData[ ,valgtVar] %in% 6:10)] <- 1
+            sortAvtagende <- FALSE
       }
       if (valgtVar == 'ASA') { #AndelGrVar
             RegData <- RegData[which(RegData[,valgtVar] %in% 1:5), ]
@@ -136,6 +138,7 @@ RyggVarTilrettelegg  <- function(RegData, valgtVar, grVar='', ktr=0, figurtype='
             RegData <- RegData[which(RegData[,valgtVar] >10), ]
             RegData$Variabel[which(RegData[ ,valgtVar] > 30)] <- 1
             tittel <- 'Pasienter med fedme (BMI>30)'
+            sortAvtagende <- FALSE
       }
       if (valgtVar == 'degSponFusj') { #AndelGrVar
             #hovedkat=9 #Degen. spondylolistese
@@ -157,6 +160,7 @@ RyggVarTilrettelegg  <- function(RegData, valgtVar, grVar='', ktr=0, figurtype='
             RegData <- RegData[which(RegData$ErstatningPre %in% 1:4), ]
             RegData$Variabel[which(RegData[ ,valgtVar] %in% c(1,3))] <- 1
             tittel <- 'Pasienten har søkt/planlegger å søke erstatning'
+            sortAvtagende <- FALSE
       }
       if (valgtVar=='EQ5DEndr') {#gjsnGrVar
             RegData$Variabel <- switch(as.character(ktr), 
@@ -183,6 +187,7 @@ RyggVarTilrettelegg  <- function(RegData, valgtVar, grVar='', ktr=0, figurtype='
             RegData <- RegData[which(RegData[,valgtVar] %in% 0:1), ]
             RegData$Variabel <- RegData[ ,valgtVar]
             tittel <- 'Pasientrapporterte komplikasjoner'
+            sortAvtagende <- FALSE
       }
       if (valgtVar == 'KpInf3Mnd') { #AndelGrVar
             #Komplikasjoner 0:nei, 1:ja
@@ -196,11 +201,12 @@ RyggVarTilrettelegg  <- function(RegData, valgtVar, grVar='', ktr=0, figurtype='
             #3/12mndSkjema. Andel med Misfornøyd/litt misfornøyd (1,2)
             #Kode 1:5,9: 'Fornøyd', 'Litt fornøyd', 'Verken eller', 'Litt misfornøyd', 'Misfornøyd', 'Ukjent')
             RegData$Misfornoyd <- switch(as.character(ktr), 
-                                         '1'= RegData$FornoydBeh3mnd,
-                                         '2'= RegData$FornoydBeh12mnd)
+                                         '1'= RegData$Fornoyd3mnd,
+                                         '2'= RegData$Fornoyd12mnd)
             RegData <- RegData[which(RegData$Misfornoyd %in% 1:5), ]
             RegData$Variabel[which(RegData$Misfornoyd %in% 4:5)] <- 1
-            tittel <- paste0('Misfornøyde pasienter, 3 mnd.' ,ktrtxt)
+            tittel <- paste0('Misfornøyde pasienter' ,ktrtxt)
+            sortAvtagende <- FALSE
       }
       if (valgtVar == 'Morsmal') { #AndelGrVar
             #           Kode 1:3:'Norsk', 'Samisk', 'Annet'
@@ -327,6 +333,7 @@ RyggVarTilrettelegg  <- function(RegData, valgtVar, grVar='', ktr=0, figurtype='
             RegData <- RegData[which(RegData$Roker %in% 0:1), ]
             RegData$Variabel <- RegData$Roker
             tittel <- 'Røykere'
+            sortAvtagende <- FALSE
       }
       
       if (valgtVar == 'Saardren') { #AndelGrVar
@@ -414,6 +421,7 @@ RyggVarTilrettelegg  <- function(RegData, valgtVar, grVar='', ktr=0, figurtype='
             RegData <- RegData[which(RegData$Nytte %in% 1:7), ]
             RegData$Variabel[RegData$Nytte %in% 6:7] <- 1
             tittel <- paste0('Mye verre/verre enn noen gang' , ktrtxt)
+            sortAvtagende <- F
       }
       
       

@@ -32,7 +32,7 @@
 	<parameter name="rFunctionCallString" class="java.lang.String" isForPrompting="false">
 		<defaultValueExpression><![CDATA[new String("RyggFigGjsnGrVar(RegData=0, valgtVar=valgtVar, valgtMaal=valgtMaal, datoFra=datoFra, datoTil=datoTil,  minald=minald, maxald=maxald, erMann=erMann, hovedkat=hovedkat, tidlOp='',  outfile=outfile, hentData=1, preprosess=1)")]]></defaultValueExpression>
 	</parameter>
-	<parameter name="valgtVar" class="java.lang.String">
+	<parameter name="varName" class="java.lang.String">
 		<defaultValueExpression><![CDATA[new String("Liggedogn")]]></defaultValueExpression>
 	</parameter>
 	<parameter name="statMeasureMethod" class="java.lang.String"/>
