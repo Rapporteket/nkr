@@ -6,8 +6,9 @@
 #' Argumentet \emph{valgtVar} har følgende valgmuligheter:
 #'    \itemize{
 #'     \item alder70: Alder over 70år, 
-#'     \item saarinf: Pasientrapportert sårinfeksjon, alle typer 
 #'     \item degSponFusj: Andel av degenerativ spondylolistese er operert  med fusjonskirurgi (hovedinngr=5)
+#'     \item KpInf3Mnd: Sårinfeksjon, pasientrapportert
+#'     \item OswEndr20: Forbedring av Oswestry-skår > 20 poeng
 #'    }
 #'
 #' @inheritParams RyggFigAndeler 
@@ -18,11 +19,11 @@
 #' @export
 RyggFigAndelTid <- function(RegData, valgtVar, datoFra='2011-01-01', datoTil='3000-12-31', aar=0,
                             tidsenhet='Aar', hovedkat = 99, ktr = 2, tidlOp = 99, tittel = 1,
-                        minald=0, maxald=130, erMann='', reshID=0, outfile='', opKat=99, 
+                        minald=0, maxald=130, erMann=99, reshID=0, outfile='', opKat=99, 
                         enhetsUtvalg=1, preprosess=1, hentData=0, lagFig=1, offData=0) {
       
       if (hentData == 1) {		
-            RegData <- RyggRegDataSQL(datoFra, datoTil)
+            RegData <- RyggRegDataSQL()
       }
       if (offData == 1) {
             utvalgsInfo <- RegData$utvalgsInfo

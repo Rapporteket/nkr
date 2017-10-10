@@ -190,7 +190,7 @@ RyggVarTilrettelegg  <- function(RegData, valgtVar, ktr=0, figurtype='andeler'){
             tittel <- 'Pasientrapporterte komplikasjoner'
             sortAvtagende <- FALSE
       }
-      if (valgtVar == 'KpInf3Mnd') { #AndelGrVar
+      if (valgtVar == 'KpInf3Mnd') { #AndelGrVar, AndelTid
             #Komplikasjoner 0:nei, 1:ja
             RegData <- RegData[which(RegData[,valgtVar] %in% 0:1), ]
             RegData$Variabel <- RegData[ ,valgtVar]
@@ -320,6 +320,7 @@ RyggVarTilrettelegg  <- function(RegData, valgtVar, ktr=0, figurtype='andeler'){
             #Kode 1:Ja,  tomme:Nei 
             RegData$Variabel[which(RegData$PeropKomp == 1)] <- 1
             tittel <- 'Komplikasjoner ved operasjon'
+            sortAvtagende <- FALSE
       }
       if (valgtVar=='PeropKompDura') { #AndelGrVar
             #Durarift ved operasjon
