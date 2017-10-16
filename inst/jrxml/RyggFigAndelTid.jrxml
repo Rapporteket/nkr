@@ -26,7 +26,7 @@
 		<defaultValueExpression><![CDATA[new String("nkr")]]></defaultValueExpression>
 	</parameter>
 	<parameter name="rFunctionCallString" class="java.lang.String" isForPrompting="false">
-		<defaultValueExpression><![CDATA[new String("RyggFigAndelTid(RegData=0, valgtVar=valgtVar, datoFra=datoFra, datoTil=datoTil, hovedkat=hovedkat, ktr=ktr, tidlOp = tidlOp, minald=minald, maxald=maxald, erMann=erMann, reshID=reshID, outfile=outfile, enhetsUtvalg=enhetsUtvalg, hentData=0)")]]></defaultValueExpression>
+		<defaultValueExpression><![CDATA[new String("RyggFigAndelTid(RegData=0, valgtVar=valgtVar, datoFra=datoFra, datoTil=datoTil, hovedkat=hovedkat, ktr=ktr, tidlOp = tidlOp, minald=minald, maxald=maxald, erMann=erMann, reshID=reshID, outfile=outfile, enhetsUtvalg=enhetsUtvalg, hentData=1)")]]></defaultValueExpression>
 	</parameter>
 	<parameter name="varName" class="java.lang.String">
 		<defaultValueExpression><![CDATA[new String("KpInf3Mnd")]]></defaultValueExpression>
