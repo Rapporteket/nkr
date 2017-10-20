@@ -301,8 +301,8 @@ RyggVarTilrettelegg  <- function(RegData, valgtVar, ktr=0, figurtype='andeler'){
                                       '1' = RegData$OswTot3mnd,
                                       '2' = RegData$OswTot12mnd)
             RegData <- RegData[which(RegData$OswPost>=0), ]
-            RegData$Variabel[which(RegData$OswPost <22)] <- 1
-            tittel <- paste0('Oswestry-skår < 22 poeng', ktrtxt)
+            RegData$Variabel[which(RegData$OswPost <= 22)] <- 1
+            tittel <- paste0('Oswestry-skår <= 22 poeng', ktrtxt)
       }
       if (valgtVar == 'Osw48') { #AndelGrVar
             #Andel med Oswestry-skår fortsatt over 48. 
