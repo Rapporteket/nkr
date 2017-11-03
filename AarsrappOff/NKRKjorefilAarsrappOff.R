@@ -16,50 +16,84 @@ load('A:/Rygg/NKR2010-2016aarsrapp.Rdata')
 #__Inndata til funksjon:
 datoFra <- '2010-01-01'
 datoTil <- '2016-12-31'
-aar <- 2010:2016
 minald <- 0
 maxald <- 130
 erMann <- 99
-hovedkat <- 99 		#Hovedinngrep, 0-7, Standard: 99, dvs alle operasjoner
+aar <- 2010:2016
+hovedkat <- 99 		#Hovedinngrep, 0-9, Standard: 99, dvs alle operasjoner
 opKat <- 99  #Bare elektive pasienter
 tidlOp <- 99 #4 - Bare primæroperasjoner
 enhetsUtvalg <- 0 # 0-hele landet, 4–egen shusgruppe, 7–egen region
 grVar <- 'ShNavn'  #ShNavn, Fylke, BoHF, BoRHF
 ktr <- 2
+AKjust <- 0
 reshID <- 0
-#aar <- 0	#Kan velge flere
-#valgtVar <- 'KpInf3Mnd'   #BeinsmEndrLav', BeinsmLavPre, DegSponSSSten,OswEndr13, OswEndr20, OswEndr30pst, Osw48
-#Verre, KpInf3Mnd
-#outfile <- paste0(valgtVar, '_', grVar,'.png')
+outfile <- ''
+
+
+#----------------------------Til offentliggjøring for 2016-tall:
+#---NAKKE----------
+#Stemmevansker, 3 mnd etter (ikke-myelopati, fremre tilgang) – lav
+#Svelgvansker, 3 mnd (ikke-myelopati, fremre tilgang) – lav
+#Infeksjon, pasientrapp., 3 mnd etter (bakre tilgang) – lav
+# 
+#----- RYGG ---------------------
+#Sårinfeksjon, pasientrapportert (prolaps) – lav
+#15 mot 16
+valgtVar='KpInf3Mnd'
+hovedkat=1
+grVar='ShNavn'
+tidlAar=2015
+aar=2016
+Ngrense <- 20
+
+RyggFigAndelerGrVarAar(RegData=RegData, valgtVar='KpInf3Mnd', hovedkat=1, grVar='ShNavn', #tittel=1, ktr=0, 
+                                   Ngrense=20, aar=2016, tidlAar=2015, outfile='EksempelShusAar.png') 
+      
+tapply(RegData$Variabel, RegData[ ,c('OpAar', 'ShNavn')], sum, na.rm=T)
+
+#Sårinfeksjon, pasientrapportert (spinal stenose) – lav
+#15 mot 16
+
+#Komplikasjon durarift ved operasjon (prolaps, elektiv, primærop.) - lav
+#15 mot 16
+
+#Komplikasjon durarift ved operasjon (spinal stenose, elektiv, primærop.) – lav
+#15 mot 16
+
+#Degen. spondylolistese operert med fusjonskirurgi
+#15 mot 16
+
+#Gjennomsnittlig liggetid (spinal stenose)
+#15 mot 16
+
+#Beinsmerte <=2 og ingen parese (prolaps, elektiv, primærop.) – lav 
+#15 mot 16
+
+#Oswestry >48p 12 mnd. etter operasjon (prolaps, elektiv, primærop.) – lav
+# 12 og 13 mot 14 og 15
+
+#Forbedring av Oswestry-skår <13p, 12mnd etter. (prolaps, elektiv, primærop.) – lav
+# 12 og 13 mot 14 og 15
+
+#Oswestry-skår =<22p, 12 mnd. etter (prolaps, elektiv, primærop.) – høy
+# 12 og 13 mot 14 og 15
+
+#Oswestry-skår =<22p, 12 mnd. etter (spinal stenose, elektiv, primærop.) – høy
+# 12 og 13 mot 14 og 15
+
+#Helt fornøyde pasienter 12 mnd. etter (spinal stenose, elektiv, primær) også
+# 12 og 13 mot 14 og 15
 
 
 
-#Definifjon av spinal stenose:
-#      COMPUTE filter_$=((RfSentr = 1 or RfLateral = 1) 
-#                        & (RfSpondtypeIsmisk = 0)  
-#                        & (OpDeUlamin=1 or OpLaminektomi=1 or OpDeFasett=1) 
-#                        & (HovedInngrep=2 or HovedInngrep=3 or HovedInngrep=4  or HovedInngrep=5 or HovedInngrep=7) )
 
-#Spinal stenose:
-attach(RegData)
-indSS <-which((RfSentr == 1 | RfLateral == 1)
-                  & is.na(RfSpondtypeIsmisk)
-                  & (OpDeUlamin==1 | OpLaminektomi==1 | OpDeFasett==1)
-                  & (HovedInngrep %in% c(2:5,7)))
-#Degenerativ spondylolistese:
-indDegenSpondy <- intersect(indSS, which(RfSpondtypeDegen==1))
-indDegenSpondyFusj <- intersect(indDegenSpondy, which(HovedInngrep==5))
 
-detach(RegData)
-#Ut av de som er definert ovenfor (som har spinal stenose) er det i tillegg ønskelig å se 
-#spesielt på subgruppen som har degenerativ spondylolistese (RfSpondtypeDegen= 1) og 
-#andelen av dem som er operert med fusjonskirurgi (HovedInngrep = 5), 
-#per år og 
-#per sykehus for 2016.
+
+
 
 
 #--------------------------------------N>30: ---------------------------
-
 #Andel fusjonskirurgi over 75 år. Andel foramenotomi over 75 år
 valgtVar <- 'Alder'
 ktr <- 1

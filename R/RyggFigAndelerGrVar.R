@@ -56,8 +56,9 @@
 #' @export
 
 RyggFigAndelerGrVar <- function(RegData, valgtVar, datoFra='2007-01-01', datoTil='3000-12-31', aar=0,
-                            minald=0, maxald=130, erMann='', hovedkat=99, tidlOp='', hentData=0, preprosess=1,
-                            opKat=99, enhetsUtvalg=0, grVar='ShNavn', tittel=1, ktr=0, Ngrense=10, reshID=0, outfile='') {
+                            minald=0, maxald=130, erMann='', hovedkat=99, tidlOp='', hentData=0, 
+							preprosess=1, opKat=99, enhetsUtvalg=0, grVar='ShNavn', tittel=1, ktr=0, 
+							Ngrense=10, reshID=0, outfile='') {
 
 	if (hentData == 1) {		
 	  RegData <- RyggRegDataSQL()
@@ -73,12 +74,8 @@ RyggFigAndelerGrVar <- function(RegData, valgtVar, datoFra='2007-01-01', datoTil
             sortAvtagende <- RyggVarSpes$sortAvtagende
             varTxt <- RyggVarSpes$varTxt
             KImaal <- RyggVarSpes$KImaal
-            tittel <- RyggVarSpes$tittel
-      
-
-     #----------- Figurparametre ------------------------------
-     cexShNavn <- 1 #0.85
-
+            
+     
      RegData[ ,grVar] <- factor(RegData[ ,grVar])
      #Ngrense <- 10		#Minste antall registreringer for at ei gruppe skal bli vist
 
@@ -114,7 +111,7 @@ RyggFigAndelerGrVar <- function(RegData, valgtVar, datoFra='2007-01-01', datoTil
 
      Ngrtxt <- as.character(Ngr) 
      indGrUt <- 0
-     GrNavn <-names(Ngr)
+     GrNavn <- names(Ngr)
      if (sum(which(Ngr < Ngrense))>0) {
            indGrUt <- as.numeric(which(Ngr<Ngrense)) #} else {indGrUt <- 0}
            AndelGrUt <- sum(AndelerGr[indGrUt]*Ngr[indGrUt], na.rm = T)/sum(Ngr[indGrUt])
@@ -155,6 +152,8 @@ RyggFigAndelerGrVar <- function(RegData, valgtVar, datoFra='2007-01-01', datoTil
            
            #--------------------------FIGUR---------------------------------------------------
            #Innparametre: ...
+           #----------- Figurparametre ------------------------------
+           cexShNavn <- 1 #0.85
            
            
            FigTypUt <- figtype(outfile, height=3*800, fargepalett=RyggUtvalg$fargepalett)

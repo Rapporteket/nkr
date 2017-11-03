@@ -196,7 +196,7 @@ RyggVarTilrettelegg  <- function(RegData, valgtVar, ktr=0, figurtype='andeler'){
             RegData$Variabel <- RegData[ ,valgtVar]
             varTxt <- 'tilfeller'
             tittel <- 'Sårinfeksjon, pasientrapportert'
-            sortAvtagende <- FALSE
+            sortAvtagende <- TRUE #FALSE
       }
       if (valgtVar == 'Misfornoyd') { #AndelGrVar	#%in% c('Misfor3mnd','Misfor12mnd')) { #AndelGrVar
             #3/12mndSkjema. Andel med Misfornøyd/litt misfornøyd (1,2)

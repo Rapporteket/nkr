@@ -6,7 +6,7 @@
 \usage{
 RyggFigGjsnGrVar(RegData, valgtVar, valgtMaal = "Gjsn",
   datoFra = "2007-01-01", datoTil = "3000-12-31", aar = 0, minald = 0,
-  maxald = 130, erMann = "", hovedkat = 99, tidlOp = "", hentData = 0,
+  maxald = 130, erMann = 99, hovedkat = 99, tidlOp = "", hentData = 0,
   preprosess = 1, opKat = 99, enhetsUtvalg = 0, grVar = "ShNavn",
   tittel = 1, ktr = 0, Ngrense = 10, medKI = 1, reshID = 0,
   outfile = "")
@@ -68,6 +68,8 @@ BoHF - Pasienten bor i boområdene til det angitte HF.
 BoRHF - Pasienten bor i boområdene til det angitte RHF.}
 
 \item{tittel}{Vise tittel i figuren eller ikke (0/1). standard:1}
+
+\item{Ngrense}{Minste antall registreringer for at ei gruppe skal bli vist}
 
 \item{reshID}{Parameter følger fra innlogging helseregister.no og angir
 hvilken enhet i spesialisthelsetjenesten brukeren tilhører}

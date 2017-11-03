@@ -70,6 +70,11 @@ indOpKat <- if (opKat %in% 1:3) {which(RegData$OpKat == opKat)} else {1:Ninn}
 indMed <- indAld %i% indDato %i% indAar %i% indKj %i% indHovedInngr %i% indTidlOp %i% indOpKat
 RegData <- RegData[indMed,]
 
+#Definifjon av spinal stenose:
+#      COMPUTE filter_$=((RfSentr = 1 or RfLateral = 1) 
+#                        & (RfSpondtypeIsmisk = 0)  
+#                        & (OpDeUlamin=1 or OpLaminektomi=1 or OpDeFasett=1) 
+#                        & (HovedInngrep=2 or HovedInngrep=3 or HovedInngrep=4  or HovedInngrep=5 or HovedInngrep=7) )
 
 hkatnavn <- c( #0:9
 	'Operasjonskategori: "ukjent"',	#hkat=0
