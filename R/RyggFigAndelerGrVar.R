@@ -116,7 +116,7 @@ RyggFigAndelerGrVar <- function(RegData, valgtVar, datoFra='2007-01-01', datoTil
            indGrUt <- as.numeric(which(Ngr<Ngrense)) #} else {indGrUt <- 0}
            AndelGrUt <- sum(AndelerGr[indGrUt]*Ngr[indGrUt], na.rm = T)/sum(Ngr[indGrUt])
            AndelerGr <- c(AndelGrUt, AndelerGr[-indGrUt]) #AndelerGr[indGrUt] <- NA
-           GrNavn <- c(paste0(length(indGrUt), ' avd. med N<',Ngrense, '*'), names(Ngr)[-indGrUt])
+           GrNavn <- c(paste0(length(indGrUt), ' avd. med N<',Ngrense), names(Ngr)[-indGrUt])
            Ngrtxt <- c(Ngrtxt[-indGrUt],sum(Ngr[indGrUt]))  #Ngrtxt[indGrUt] <- paste0('<', Ngrense)
      }
      sortInd <- order(as.numeric(AndelerGr), decreasing=sortAvtagende, na.last = FALSE) 
@@ -189,9 +189,9 @@ RyggFigAndelerGrVar <- function(RegData, valgtVar, datoFra='2007-01-01', datoTil
            #Tekst som angir hvilket utvalg som er gjort
            mtext(utvalgTxt, side=3, las=1, cex=1, adj=0, col=farger[1], line=c(3+0.8*((NutvTxt-1):0)))
            
-           if (indGrUt[1]>0){
-           mtext(paste0('* ',length(indGrUt),  ' avdelinger har mindre enn ', Ngrense,' registreringer og er fjernet fra figuren'), 
-                        side=1, at=-0.2*xmax, las=1, cex=0.8, adj=0, col=farger[1], line=3)}
+           # if (indGrUt[1]>0){
+           # mtext(paste0('* ',length(indGrUt),  ' avdelinger har mindre enn ', Ngrense,' registreringer og er fjernet fra figuren'), 
+           #              side=1, at=-0.2*xmax, las=1, cex=0.8, adj=0, col=farger[1], line=3)}
            
            par('fig'=c(0, 1, 0, 1))
            if ( outfile != '') {dev.off()}

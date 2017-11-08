@@ -47,34 +47,38 @@ tidlAar=2015
 aar=2016
 Ngrense <- 20
 
+
+
+
 RyggFigAndelerGrVarAar(RegData=RegData, valgtVar='KpInf3Mnd', hovedkat=1, grVar='ShNavn', #tittel=1, ktr=0, 
-                                   Ngrense=20, aar=2016, tidlAar=2015, outfile='EksempelShusAar.png') 
+                                   Ngrense=20, aar=2016, tidlAar=2015, outfile='') #EksempelShusAar.png') 
       
-tapply(RegData$Variabel, RegData[ ,c('OpAar', 'ShNavn')], sum, na.rm=T)
-
+#tapply(RegData$Variabel, RegData[ ,c('OpAar', 'ShNavn')], sum, na.rm=T)
+setwd('C:/ResultattjenesteGIT/nkr/AarsrappOff/2016')
+#KpInf3Mnd, #15 mot 16
+#Sårinfeksjon, pasientrapportert (prolaps) – lav
+RyggFigAndelerGrVarAar(RegData=RegData, valgtVar='KpInf3Mnd', hovedkat=1,  
+                       Ngrense=20, aar=2016, tidlAar=2015, outfile='KpInf3MndPro.pdf') 
 #Sårinfeksjon, pasientrapportert (spinal stenose) – lav
-#15 mot 16
+RyggFigAndelerGrVarAar(RegData=RegData, valgtVar='KpInf3Mnd', hovedkat=8,  
+                       Ngrense=20, aar=2016, tidlAar=2015, outfile='KpInf3MndSS.pdf') 
 
-#Komplikasjon durarift ved operasjon (prolaps, elektiv, primærop.) - lav
-#15 mot 16
 
+#Komplikasjon durarift ved operasjon (prolaps, elektiv, primærop.), 15 mot 16 - lav
+RyggFigAndelerGrVarAar(RegData=RegData, valgtVar='PeropKompDura', hovedkat=1, tidlOp=4, opKat=1, 
+                       Ngrense=20, aar=2016, tidlAar=2015, outfile='PeropKompDuraPro.pdf') 
 #Komplikasjon durarift ved operasjon (spinal stenose, elektiv, primærop.) – lav
-#15 mot 16
+RyggFigAndelerGrVarAar(RegData=RegData, valgtVar='PeropKompDura', hovedkat=8, tidlOp=4, opKat=1, 
+                       Ngrense=20, aar=2016, tidlAar=2015, outfile='') #PeropKompDuraSS.pdf') 
 
-#Degen. spondylolistese operert med fusjonskirurgi
-#15 mot 16
-
-#Gjennomsnittlig liggetid (spinal stenose)
-#15 mot 16
-
-#Beinsmerte <=2 og ingen parese (prolaps, elektiv, primærop.) – lav 
-#15 mot 16
-
-#Oswestry >48p 12 mnd. etter operasjon (prolaps, elektiv, primærop.) – lav
-# 12 og 13 mot 14 og 15
+#Degen. spondylolistese operert med fusjonskirurgi, 15 mot 16
+RyggFigAndelerGrVar(RegData=RegData, valgtVar='degSponFusj', 
+                       Ngrense=20, outfile='DegSponFusj.pdf') #aar=2016, 
 
 #Forbedring av Oswestry-skår <13p, 12mnd etter. (prolaps, elektiv, primærop.) – lav
 # 12 og 13 mot 14 og 15
+RyggFigAndelerGrVarAar(RegData=RegData, valgtVar='OswEndrLav', hovedkat=1, tidlOp=4, opKat=1, 
+                       Ngrense=20, aar=2014:2015, tidlAar=2012:2013, outfile='') #PeropKompDuraPro.pdf') 
 
 #Oswestry-skår =<22p, 12 mnd. etter (prolaps, elektiv, primærop.) – høy
 # 12 og 13 mot 14 og 15
@@ -82,8 +86,12 @@ tapply(RegData$Variabel, RegData[ ,c('OpAar', 'ShNavn')], sum, na.rm=T)
 #Oswestry-skår =<22p, 12 mnd. etter (spinal stenose, elektiv, primærop.) – høy
 # 12 og 13 mot 14 og 15
 
-#Helt fornøyde pasienter 12 mnd. etter (spinal stenose, elektiv, primær) også
+#Helt fornøyde pasienter 12 mnd. etter (spinal stenose, elektiv, primær) - høy
 # 12 og 13 mot 14 og 15
+
+#Gjennomsnittlig liggetid (spinal stenose)
+#15 mot 16
+
 
 
 

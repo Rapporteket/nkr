@@ -58,8 +58,8 @@
 
 RyggFigAndelerGrVarAar <- function(RegData, valgtVar, datoFra='2007-01-01', datoTil='3000-12-31', 
                                    minald=0, maxald=130, erMann='', hovedkat=99, tidlOp='', opKat=99, 
-								   hentData=0, preprosess=1,enhetsUtvalg=0, grVar='ShNavn', tittel=1, 
-								   ktr=0, reshID=0, aar=0, Ngrense=10, tidlAar=0, AKjust=0, outfile='') {
+                                   hentData=0, preprosess=1,enhetsUtvalg=0, grVar='ShNavn', tittel=1, 
+                                   ktr=0, reshID=0, aar=0,tidlAar=0,  Ngrense=10, AKjust=0, outfile='') {
       
       if (hentData == 1) {		
             RegData <- RyggRegDataSQL()
@@ -72,7 +72,7 @@ RyggFigAndelerGrVarAar <- function(RegData, valgtVar, datoFra='2007-01-01', dato
       #------- Tilrettelegge variable
       RyggVarSpes <- RyggVarTilrettelegg(RegData=RegData, valgtVar=valgtVar, ktr=ktr, figurtype = 'andelGrVar')
       RegData <- RyggVarSpes$RegData
-      sortAvtagende <- RyggVarSpes$sortAvtagende
+      sortAvtagende <- !RyggVarSpes$sortAvtagende
       varTxt <- RyggVarSpes$varTxt
       KImaal <- RyggVarSpes$KImaal
       
@@ -81,28 +81,25 @@ RyggFigAndelerGrVarAar <- function(RegData, valgtVar, datoFra='2007-01-01', dato
       if ((AKjust==1) & !(grVar %in% c('BoHF', 'BoRHF'))) { AKjust=0}
       
       
-     #Gjør utvalg
+      #Gjør utvalg
       if (tidlAar != 0 ) { #tidlAar - år det skal sammenliknes med
-            #AarMax <- max(RegData$OpAar)	#Siste år
-            AarTxt <- as.character(aar)
-            #RegData <- RegData[which(RegData$OpAar %in% c((AarMax-2):AarMax)), ]
+            AarTxt <- ifelse(length(aar)>1, paste0(min(aar),'-', max(aar)), as.character(aar))
             RegData[,grVar] <- as.character(RegData[,grVar])
             RegData[,grVar] <- factor(RegData[,grVar])
-		#aar <- as.numeric(c(tidlAar, aar))
       }
       
-     if (reshID==0) {enhetsUtvalg <- 0}
-     RyggUtvalg <- RyggUtvalgEnh(RegData=RegData, reshID=reshID, datoFra=datoFra, datoTil=datoTil, 
-                                 minald=minald, maxald=maxald, erMann=erMann, aar=as.numeric(c(tidlAar, aar)),
-                                 hovedkat=hovedkat, opKat=opKat, tidlOp=tidlOp,enhetsUtvalg=enhetsUtvalg)
-     smltxt <- RyggUtvalg$smltxt
-     medSml <- RyggUtvalg$medSml 
-     hovedgrTxt <- RyggUtvalg$hovedgrTxt
-     utvalgTxt <- RyggUtvalg$utvalgTxt
-     ind <- RyggUtvalg$ind
-     RegData <- RyggUtvalg$RegData
-     
-     
+      if (reshID==0) {enhetsUtvalg <- 0}
+      RyggUtvalg <- RyggUtvalgEnh(RegData=RegData, reshID=reshID, datoFra=datoFra, datoTil=datoTil, 
+                                  minald=minald, maxald=maxald, erMann=erMann, aar=as.numeric(c(tidlAar, aar)),
+                                  hovedkat=hovedkat, opKat=opKat, tidlOp=tidlOp,enhetsUtvalg=enhetsUtvalg)
+      smltxt <- RyggUtvalg$smltxt
+      medSml <- RyggUtvalg$medSml 
+      hovedgrTxt <- RyggUtvalg$hovedgrTxt
+      utvalgTxt <- RyggUtvalg$utvalgTxt
+      ind <- RyggUtvalg$ind
+      RegData <- RyggUtvalg$RegData
+      
+      
       #SJEKK:
       RegData <- RegData[which(!is.na(RegData[ ,grVar])), ]
       names(RegData)[which(names(RegData) == grVar)] <- 'grVar'
@@ -112,8 +109,10 @@ RyggFigAndelerGrVarAar <- function(RegData, valgtVar, datoFra='2007-01-01', dato
       
       #----------------------------------------------------------------------------------------------
       #KODEN MÅ KOMPRIMERES!!!!!!!!!:
-      if (tidlAar != 0) { #Resultater for hvert av de siste 3 år.
-            katVariable <- c('OpAar', 'grVar')
+      if (tidlAar != 0) { #Sammenligne med resultater for tidligere år.
+            RegData$grNaa <- 0 #Har fjernet år som ikke skal være med
+            RegData$grNaa[which(RegData$OpAar %in% aar)] <- 1
+            katVariable <- c('grNaa', 'grVar')
             Nvar <- tapply(RegData$Variabel, RegData[ ,katVariable], sum, na.rm=T) #Variabel er en 0/1-variabel.
             if(N > 0) {Ngr <- table(RegData[ ,katVariable])}	else {Ngr <- 0}
             
@@ -130,24 +129,24 @@ RyggFigAndelerGrVarAar <- function(RegData, valgtVar, datoFra='2007-01-01', dato
             }  else {	
                   AndelerGr <- round(100*Nvar/Ngr,2)
             }
-		indGrUt <- 0
-		GrNavn <- names(Ngr[AarTxt, ])
+            indGrUt <- 0
+            GrNavn <- names(Ngr[AarTxt, ])
             Ngrtxt <- Ngr[AarTxt, ]	#paste0('N=', as.character(Ngr[AarTxt, ]))
             #Ikke sjekket at tidl. år <Ngrense tas ut.
-      if (sum(which(Ngr[AarTxt, ] < Ngrense))>0) {
-            #Må ta bort punkt/søyler for de som har for få registreringer for det aktuelle året.
-           indGrUt <- which(Ngr < Ngrense) #, arr.ind = TRUE ) #Alle som har for få. Indeks er kolonnevis
-           indGrUt2 <- which(Ngr[2,] < Ngrense)#as.numeric() #"Hoved"år
-           indGrUt1 <- as.numeric(which(Ngr[1,] < Ngrense)) #Første år union(indGrUt1, indGrUt2)
-           #NB: ?Heller ta ut Alle med hovedår<Ngrense + sml.år med <Ngrense?
-           AndelGrUt <- c(sum(AndelerGr[1,indGrUt1]*Ngr[1,indGrUt1], na.rm = T)/sum(Ngr[1,indGrUt1]),
-                        sum(AndelerGr[2,indGrUt2]*Ngr[2,indGrUt2], na.rm = T)/sum(Ngr[2,indGrUt2]))
-           
-           AndelerGr <- cbind(AndelGrUt, AndelerGr[,-indGrUt2]) 
-           GrNavn <- c(paste0(length(indGrUt2), ' avd. med N<',Ngrense, '*'), GrNavn[-indGrUt2])
-           Ngrtxt <- c(sum(Ngr[2,indGrUt2]), Ngrtxt[-indGrUt2])  
-     }
-           #AndelerGr[indGrUt] <- NA	#dummy0	#Alle andeler med for lav N
+            if (sum(which(Ngr[AarTxt, ] < Ngrense))>0) {
+                  #Må ta bort punkt/søyler for de som har for få registreringer for det aktuelle året.
+                  indGrUt <- which(Ngr < Ngrense) #, arr.ind = TRUE ) #Alle som har for få. Indeks er kolonnevis
+                  indGrUt2 <- which(Ngr[2,] < Ngrense)#as.numeric() #"Hoved"år
+                  indGrUt1 <- as.numeric(which(Ngr[1,] < Ngrense)) #Første år union(indGrUt1, indGrUt2)
+                  #NB: ?Heller ta ut Alle med hovedår<Ngrense + sml.år med <Ngrense?
+                  AndelGrUt <- c(sum(AndelerGr[1,indGrUt1]*Ngr[1,indGrUt1], na.rm = T)/sum(Ngr[1,indGrUt1]),
+                                 sum(AndelerGr[2,indGrUt2]*Ngr[2,indGrUt2], na.rm = T)/sum(Ngr[2,indGrUt2]))
+                  
+                  AndelerGr <- cbind(AndelGrUt, AndelerGr[,-indGrUt2]) 
+                  GrNavn <- c(paste0(length(indGrUt2), ' avd. med N<',Ngrense), GrNavn[-indGrUt2])
+                  Ngrtxt <- c(sum(Ngr[2,indGrUt2]), Ngrtxt[-indGrUt2])  
+            }
+            #AndelerGr[indGrUt] <- NA	#dummy0	#Alle andeler med for lav N
             sortInd <- order(as.numeric(AndelerGr[AarTxt,]), decreasing=sortAvtagende)
             AndelerSisteSort <- AndelerGr[AarTxt,sortInd] #Unødvendig?
             
@@ -158,6 +157,11 @@ RyggFigAndelerGrVarAar <- function(RegData, valgtVar, datoFra='2007-01-01', dato
             #GrNavnSort <- paste0(colnames(AndelerGrSort),' (',Ngrtxt[sortInd], ')')  #paste0(names(Ngr)[sortInd], ', ',Ngrtxt[sortInd])
             andeltxt <- paste0(sprintf('%.1f',AndelerGrSort[AarTxt,]), '%') 	
             #if (length(indGrUt)>0) {andeltxt[(AntGrNgr+1):(length(GrNavnSort))] <- '' } #paste0('N<', Ngrense, ' siste år')} #''
+            
+            pVerdier <- PverdiAndelsDiff(n=t(Nvar), N=t(Ngr), justMetode='fdr')
+            signDiffInd <- which(pVerdier[-indGrUt2][sortInd] < 0.05)
+            GrNavnSort[signDiffInd] <- paste0(GrNavnSort[signDiffInd], '*')
+            signTxt <- ifelse(length(signDiffInd)==0, 'Ingen av avdelingene har signifikant endring', '')
             #--------------------------------------------------------------
       } else {	#Hvis vi skal ha resultater for perioden totalt
             
@@ -223,14 +227,14 @@ RyggFigAndelerGrVarAar <- function(RegData, valgtVar, datoFra='2007-01-01', dato
             
             xmax <- min(max(AndelerGrSort, na.rm = T),100)*1.15
             xaksetxt <- ifelse(AKjust==1, 'Andel (%), justert for alder og kjønn', 'Andel operasjoner (%)')
-		
-		maalGrenser <- c(2,4,xmax)
-		pos <- barplot(as.numeric(AndelerSisteSort), horiz=T, border=NA, col=soyleFarger, #add=TRUE , #plot=T,
+            
+            maalGrenser <- c(2,4,xmax)
+            pos <- barplot(as.numeric(AndelerSisteSort), horiz=T, border=NA, col=soyleFarger, #add=TRUE , #plot=T,
                            xlim=c(0,xmax), ylim=c(0.05, 1.32)*length(GrNavnSort), font.main=1, #xlab=xaksetxt, 
-		               las=1, cex.names=cexShNavn*0.9)
-		rect(xleft=c(0, maalGrenser[1:2]), ybottom=0, xright=maalGrenser, ytop=max(pos)+0.4, #pos[AntGrNgr+1], 
-		     col = fargerMaalNiva, border = NA) #add = TRUE,
-		
+                           las=1, cex.names=cexShNavn*0.9)
+            #Legge på målnivå
+            #rect(xleft=c(0, maalGrenser[1:2]), ybottom=0, xright=maalGrenser, ytop=max(pos)+0.4, #pos[AntGrNgr+1], 
+             #    col = fargerMaalNiva, border = NA) #add = TRUE,
             ybunn <- 0.1
             ytopp <- max(pos)+ 0.4 #pos[2]-pos[1] #pos[AntGrNgr]+ 0.4	#
             if (tidlAar != 0) {
@@ -243,19 +247,20 @@ RyggFigAndelerGrVarAar <- function(RegData, valgtVar, datoFra='2007-01-01', dato
                           xlim=c(0,xmax), ylim=c(0.05, 1.27)*length(GrNavnSort), font.main=1, #xlab=xaksetxt, 
                           las=1, cex.names=cexShNavn*0.9)
                   #points(y=pos[indMed], x=AndelerGrSort[Aar1txt, indMed], cex=1.7, pch='|')    #col=farger[2],
-                  points(y=pos+0.1, x=AndelerGrSort[AartxtTidl, ], cex=1, pch='|', col=prikkFarge) #y=pos[indMed]+0.1, x=AndelerGrSort[AartxtTidl, indMed]
+                  points(y=pos+0.1, x=AndelerGrSort[AartxtTidl, ], cex=1, pch=16, col=prikkFarge) #pch='|', y=pos[indMed]+0.1, x=AndelerGrSort[AartxtTidl, indMed]
                   legend('top', inset=c(0.1,0), xjust=1, cex=0.85, bty='o', bg='white', box.col='white',
-                         lwd=c(NA,NA,2), pch=c(124,15,NA), pt.cex=c(1, 1.9, 1), 
-						 col=c(prikkFarge,soyleFarger,farger[1]),
+                         lwd=c(NA,NA,2), pch=c(16,15,NA), pt.cex=c(1, 1.9, 1),  #pch=c(124,15,NA)
+                         col=c(prikkFarge,soyleFarger,farger[1]),
                          legend=c(#paste0(Aar1txt, ' (', sprintf('%.1f', ResAar[1]), '%, ', 'N=', Naar[1],')'),
-                                  paste0(AartxtTidl, ' (', sprintf('%.1f', ResAar[1]), '%, ', 'N=', Naar[1],')'),
-                                  paste0(aar, ' (', sprintf('%.1f', ResAar[2]), '%, ', 'N=', Naar[2],')'),
-                                  paste0('Hele landet, ',AarTxt)) 
+                               paste0(AartxtTidl, ' (', sprintf('%.1f', ResAar[1]), '%, ', 'N=', Naar[1],')'),
+                               paste0(aar, ' (', sprintf('%.1f', ResAar[2]), '%, ', 'N=', Naar[2],')'),
+                               paste0('Hele landet, ',AarTxt)) 
                   )
-                  #mtext(line=3, at=0.5, 'Måloppnåelse: ', side=1, las=1, cex=0.8, adj=1) # 
-                  legend(x=0, y=-3.5, pch=c(NA,15,15,15), col=c(NA, fargerMaalNiva), ncol=4, xpd=TRUE, border=NA,
-                         box.col='white',cex=0.8, pt.cex=1.5, 
-                         legend=c('Måloppnåelse:', 'Meget god', 'God', 'Mindre god')) #paste(c('Meget god', 'God', 'Mindre god'), 'måloppnåelse')
+                  # legend(x=0, y=-3.5, pch=c(NA,15,15,15), col=c(NA, fargerMaalNiva), ncol=4, xpd=TRUE, border=NA,
+                  #        box.col='white',cex=0.8, pt.cex=1.5, 
+                  #        legend=c('Måloppnåelse:', 'Meget god', 'God', 'Mindre god')) #paste(c('Meget god', 'God', 'Mindre god'), 'måloppnåelse')
+                  signTxt
+                  mtext(signTxt, side=1, las=1, cex=cexShNavn, adj=0, line=3, col='grey')
                   mtext(xaksetxt, side=1, las=1, cex=cexShNavn, adj=0.5, line=2)
                   overPos <- max(pos)+0.4*log(max(pos))
                   mtext(at=overPos, paste0('(N, ', aar, ')'), side=2, las=1, cex=cexShNavn, adj=1, line=0.25)	
