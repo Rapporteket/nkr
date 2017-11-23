@@ -4,7 +4,7 @@
 #------------------Resultatkapittel--------------------------------
 library(nkr)
 rm(list=ls())
-setwd('C:/ResultattjenesteGIT//nkr/aarsrapp')
+setwd('C:/ResultattjenesteGIT/nkr/AarsrappOff/')
 
 library(knitr)
 library(tools)
@@ -33,67 +33,108 @@ outfile <- ''
 
 #----------------------------Til offentliggjøring for 2016-tall:
 #---NAKKE----------
+library(Nakke)
+load('A:/Nakke/NakkeAarsrapp2016.Rdata')
+library(nkr)
+
+
+valgtVar <- 'KomplStemme3mnd'
+datoFra='2012-01-01'
+datoTil='3000-12-31'
+enhetsUtvalg=0
+minald=0
+maxald=130
+erMann=''
+myelopati=99
+fremBak=0
+Ngrense=10
+grVar='ShNavn'
+ktr=0
+aar=2015:2016
+tidlAar=2013:2014
+hentData=0
+outfile=''
+
+library(Nakke)
 #Stemmevansker, 3 mnd etter (ikke-myelopati, fremre tilgang) – lav
+FigAndelerGrVarAar(RegData=RegData, valgtVar='KomplStemme3mnd',
+                   myelopati=0, fremBak=1, Ngrense=20,
+                   ktr=0,aar=2015:2016,tidlAar=2013:2014, outfile='')
+
 #Svelgvansker, 3 mnd (ikke-myelopati, fremre tilgang) – lav
+FigAndelerGrVarAar(RegData=RegData, valgtVar='KomplSvelging3mnd',
+                   myelopati=0, fremBak=1, Ngrense=20,
+                   ktr=0,aar=2015:2016,tidlAar=2013:2014, outfile='')
+
 #Infeksjon, pasientrapp., 3 mnd etter (bakre tilgang) – lav
+FigAndelerGrVarAar(RegData=RegData, valgtVar='Komplinfek',
+                   fremBak=2, Ngrense=20,
+                   ktr=0,aar=2015:2016,tidlAar=2013:2014, outfile='')
+
 # 
 #----- RYGG ---------------------
 #Sårinfeksjon, pasientrapportert (prolaps) – lav
 #15 mot 16
-valgtVar='KpInf3Mnd'
+valgtVar='Fornoyd'
 hovedkat=1
 grVar='ShNavn'
 tidlAar=2015
 aar=2016
 Ngrense <- 20
 
+#Testing:
+RyggFigAndelerGrVarAar(RegData=RegData, valgtVar='Fornoyd', ktr = 2, hovedkat=8, tidlOp=4, opKat=1, 
+                       Ngrense=30, aar=2014:2015, tidlAar=2012:2013, outfile='') #EksempelShusAar.png') 
 
-
-
-RyggFigAndelerGrVarAar(RegData=RegData, valgtVar='KpInf3Mnd', hovedkat=1, grVar='ShNavn', #tittel=1, ktr=0, 
-                                   Ngrense=20, aar=2016, tidlAar=2015, outfile='') #EksempelShusAar.png') 
       
 #tapply(RegData$Variabel, RegData[ ,c('OpAar', 'ShNavn')], sum, na.rm=T)
 setwd('C:/ResultattjenesteGIT/nkr/AarsrappOff/2016')
 #KpInf3Mnd, #15 mot 16
 #Sårinfeksjon, pasientrapportert (prolaps) – lav
 RyggFigAndelerGrVarAar(RegData=RegData, valgtVar='KpInf3Mnd', hovedkat=1,  
-                       Ngrense=20, aar=2016, tidlAar=2015, outfile='KpInf3MndPro.pdf') 
+                       Ngrense=30, aar=2015:2016, tidlAar=2012:2014, outfile='KpInf3MndPro.png') 
 #Sårinfeksjon, pasientrapportert (spinal stenose) – lav
 RyggFigAndelerGrVarAar(RegData=RegData, valgtVar='KpInf3Mnd', hovedkat=8,  
-                       Ngrense=20, aar=2016, tidlAar=2015, outfile='KpInf3MndSS.pdf') 
+                       Ngrense=30, aar=2015:2016, tidlAar=2013:2014, outfile='KpInf3MndSS.png') 
 
 
 #Komplikasjon durarift ved operasjon (prolaps, elektiv, primærop.), 15 mot 16 - lav
 RyggFigAndelerGrVarAar(RegData=RegData, valgtVar='PeropKompDura', hovedkat=1, tidlOp=4, opKat=1, 
-                       Ngrense=20, aar=2016, tidlAar=2015, outfile='PeropKompDuraPro.pdf') 
+                       Ngrense=30, aar=2015:2016, tidlAar=2013:2014, outfile='PeropKompDuraPro.png') 
 #Komplikasjon durarift ved operasjon (spinal stenose, elektiv, primærop.) – lav
 RyggFigAndelerGrVarAar(RegData=RegData, valgtVar='PeropKompDura', hovedkat=8, tidlOp=4, opKat=1, 
-                       Ngrense=20, aar=2016, tidlAar=2015, outfile='') #PeropKompDuraSS.pdf') 
+                       Ngrense=30, aar=2015:2016, tidlAar=2013:2014, outfile='PeropKompDuraSS.png') 
 
-#Degen. spondylolistese operert med fusjonskirurgi, 15 mot 16
+#Degen. spondylolistese operert med fusjonskirurgi, hele tidsperioden
 RyggFigAndelerGrVar(RegData=RegData, valgtVar='degSponFusj', 
-                       Ngrense=20, outfile='DegSponFusj.pdf') #aar=2016, 
+                       Ngrense=30, outfile='DegSponFusj.png') #aar=2016, 
 
 #Forbedring av Oswestry-skår <13p, 12mnd etter. (prolaps, elektiv, primærop.) – lav
 # 12 og 13 mot 14 og 15
-RyggFigAndelerGrVarAar(RegData=RegData, valgtVar='OswEndrLav', hovedkat=1, tidlOp=4, opKat=1, 
-                       Ngrense=20, aar=2014:2015, tidlAar=2012:2013, outfile='') #PeropKompDuraPro.pdf') 
+RyggFigAndelerGrVarAar(RegData=RegData, valgtVar='OswEndrLav', ktr = 2, hovedkat=1, tidlOp=4, opKat=1, 
+                       Ngrense=30, aar=2014:2015, tidlAar=2012:2013, outfile='OswEndrLav.png') 
 
 #Oswestry-skår =<22p, 12 mnd. etter (prolaps, elektiv, primærop.) – høy
 # 12 og 13 mot 14 og 15
+RyggFigAndelerGrVarAar(RegData=RegData, valgtVar='Osw22', ktr = 2, hovedkat=1, tidlOp=4, opKat=1, 
+                       Ngrense=30, aar=2014:2015, tidlAar=2012:2013, outfile='Osw22Pro.png') 
+#Oswestry-skår =<22p, 12 mnd. etter (spinal stenose, elektiv, primærop.), 12 og 13 mot 14 og 15 – høy
+RyggFigAndelerGrVarAar(RegData=RegData, valgtVar='Osw22', ktr = 2, hovedkat=8, tidlOp=4, opKat=1, 
+                       Ngrense=30, aar=2014:2015, tidlAar=2012:2013, outfile='Osw22SS.png') 
 
-#Oswestry-skår =<22p, 12 mnd. etter (spinal stenose, elektiv, primærop.) – høy
-# 12 og 13 mot 14 og 15
 
 #Helt fornøyde pasienter 12 mnd. etter (spinal stenose, elektiv, primær) - høy
 # 12 og 13 mot 14 og 15
+RyggFigAndelerGrVarAar(RegData=RegData, valgtVar='Fornoyd', ktr = 2, hovedkat=8, tidlOp=4, opKat=1, 
+                       Ngrense=30, aar=2014:2015, tidlAar=2012:2013, outfile='Fornoyd.png') 
+
+
 
 #Gjennomsnittlig liggetid (spinal stenose)
 #15 mot 16
+RyggFigGjsnBox(valgtVar='Liggedogn', RegData=RegData, datoFra='2010-01-01', hovedkat=8, outfile='LiggedognTidSS.png')
 
-
-
+RyggFigGjsnGrVar(valgtVar='Liggedogn', Ngrense=20, valgtMaal = 'Gjsn', RegData=RegData, datoFra='2016-01-01', hovedkat=8, outfile='') #LiggedognSh.png')
 
 
 

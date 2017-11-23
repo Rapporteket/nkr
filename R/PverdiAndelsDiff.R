@@ -20,6 +20,8 @@ PverdiAndelsDiff <- function(n, N, konfnivaa=0.95, justMetode='fdr')
       #smokers  <- c( 83, 90, 129, 70 )
       #patients <- c( 86, 93, 136, 82 )
       #prop.test(smokers, patients)
+      #n <- t(Nvar[ ,-indGrUt2]) 
+      #N <- t(Ngr[ ,-indGrUt2])
       options(warn=-1)
       pVerdi <- NA
       for (k in 1:dim(N)[1]){
@@ -32,7 +34,9 @@ PverdiAndelsDiff <- function(n, N, konfnivaa=0.95, justMetode='fdr')
       pVerdierJust <- p.adjust(p=pVerdi, method = justMetode) #
       #p.adjust.methods
       # c("holm", "hochberg", "hommel", "bonferroni", "BH", "BY",  "fdr", "none")
-      
+     
+      #a <- prop.test(c(34,84), c(50,93))      #c(32,15),c(597,559))
+      #p.adjust(p=c(0.04, a$p.value, 0.2), method = 'fdr') 
 # 
 # #Binomial test med N-tilnærming
 # p <- (n[1] * n[1]/N[1] + n[2] * n[2]/N[2])/ (n[1] + n[2]) # np>5 and n(1−p)>5, for p1 og p2

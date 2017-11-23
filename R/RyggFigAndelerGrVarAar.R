@@ -82,7 +82,7 @@ RyggFigAndelerGrVarAar <- function(RegData, valgtVar, datoFra='2007-01-01', dato
       
       
       #Gjør utvalg
-      if (tidlAar != 0 ) { #tidlAar - år det skal sammenliknes med
+      if (tidlAar[1] != 0 ) { #tidlAar - år det skal sammenliknes med
             AarTxt <- ifelse(length(aar)>1, paste0(min(aar),'-', max(aar)), as.character(aar))
             RegData[,grVar] <- as.character(RegData[,grVar])
             RegData[,grVar] <- factor(RegData[,grVar])
@@ -92,6 +92,7 @@ RyggFigAndelerGrVarAar <- function(RegData, valgtVar, datoFra='2007-01-01', dato
       RyggUtvalg <- RyggUtvalgEnh(RegData=RegData, reshID=reshID, datoFra=datoFra, datoTil=datoTil, 
                                   minald=minald, maxald=maxald, erMann=erMann, aar=as.numeric(c(tidlAar, aar)),
                                   hovedkat=hovedkat, opKat=opKat, tidlOp=tidlOp,enhetsUtvalg=enhetsUtvalg)
+      
       smltxt <- RyggUtvalg$smltxt
       medSml <- RyggUtvalg$medSml 
       hovedgrTxt <- RyggUtvalg$hovedgrTxt
@@ -109,7 +110,7 @@ RyggFigAndelerGrVarAar <- function(RegData, valgtVar, datoFra='2007-01-01', dato
       
       #----------------------------------------------------------------------------------------------
       #KODEN MÅ KOMPRIMERES!!!!!!!!!:
-      if (tidlAar != 0) { #Sammenligne med resultater for tidligere år.
+      if (tidlAar[1] != 0) { #Sammenligne med resultater for tidligere år.
             RegData$grNaa <- 0 #Har fjernet år som ikke skal være med
             RegData$grNaa[which(RegData$OpAar %in% aar)] <- 1
             katVariable <- c('grNaa', 'grVar')
@@ -130,38 +131,37 @@ RyggFigAndelerGrVarAar <- function(RegData, valgtVar, datoFra='2007-01-01', dato
                   AndelerGr <- round(100*Nvar/Ngr,2)
             }
             indGrUt <- 0
-            GrNavn <- names(Ngr[AarTxt, ])
-            Ngrtxt <- Ngr[AarTxt, ]	#paste0('N=', as.character(Ngr[AarTxt, ]))
-            #Ikke sjekket at tidl. år <Ngrense tas ut.
-            if (sum(which(Ngr[AarTxt, ] < Ngrense))>0) {
+            GrNavn <- names(Ngr['1', ]) #names(Ngr[AarTxt, ])
+            #Ngrtxt <- paste0('(',Ngr['1', ],')') #Ngr['1', ]	#Ikke sjekket at tidl. år <Ngrense tas ut.
+            if (sum(which(Ngr['1', ] < Ngrense))>0) {
                   #Må ta bort punkt/søyler for de som har for få registreringer for det aktuelle året.
-                  indGrUt <- which(Ngr < Ngrense) #, arr.ind = TRUE ) #Alle som har for få. Indeks er kolonnevis
                   indGrUt2 <- which(Ngr[2,] < Ngrense)#as.numeric() #"Hoved"år
-                  indGrUt1 <- as.numeric(which(Ngr[1,] < Ngrense)) #Første år union(indGrUt1, indGrUt2)
-                  #NB: ?Heller ta ut Alle med hovedår<Ngrense + sml.år med <Ngrense?
-                  AndelGrUt <- c(sum(AndelerGr[1,indGrUt1]*Ngr[1,indGrUt1], na.rm = T)/sum(Ngr[1,indGrUt1]),
-                                 sum(AndelerGr[2,indGrUt2]*Ngr[2,indGrUt2], na.rm = T)/sum(Ngr[2,indGrUt2]))
+                  #indGrUt1 <- as.numeric(which(Ngr[1,] < Ngrense)) #Første år union(indGrUt1, indGrUt2)
                   
-                  AndelerGr <- cbind(AndelGrUt, AndelerGr[,-indGrUt2]) 
+                  pVerdier <- PverdiAndelsDiff(n=t(Nvar[ ,-indGrUt2]), 
+                                               N=t(Ngr[ ,-indGrUt2]), justMetode='fdr')
+                  signDiffInd <- which(pVerdier < 0.05)
+                  Ngrtxt <- paste0(' (',Ngr['1', -indGrUt2],')') #Ngr['1', ]	#Ikke sjekket at tidl. år <Ngrense tas ut.
+                  Ngrtxt[signDiffInd] <- paste0(Ngrtxt[signDiffInd],'*')
+                  #GrNavnSort[signDiffInd] <- paste0(GrNavnSort[signDiffInd], '*')
+                  signTxt <- ifelse(length(signDiffInd)==0, 'Ingen av avdelingene har signifikant endring', 
+                                    '* markerer at endringa er signifikant')
+                  
                   GrNavn <- c(paste0(length(indGrUt2), ' avd. med N<',Ngrense), GrNavn[-indGrUt2])
-                  Ngrtxt <- c(sum(Ngr[2,indGrUt2]), Ngrtxt[-indGrUt2])  
+                  Ngrtxt <- c(paste0(' (',sum(Ngr[2,indGrUt2]),')'), Ngrtxt)  
+                  indGrUt <- indGrUt2
+                  
+                  AndelGrUt <- rowSums(Nvar[ ,indGrUt2], na.rm = T)/rowSums(Ngr[ ,indGrUt2])*100
+                  AndelerGr <- cbind(AndelGrUt, AndelerGr[,-indGrUt2]) 
+                  
+                  sortInd <- order(as.numeric(AndelerGr['1',]), decreasing=sortAvtagende)
+                  AndelerSisteSort <- AndelerGr['1',sortInd] #Unødvendig?
+                  indGrUt1sort <- as.numeric(which(c(Ngrense, Ngr[1,-indGrUt2])[sortInd] < Ngrense)) #Legger til dummy for gruppa <Ngrense
             }
-            #AndelerGr[indGrUt] <- NA	#dummy0	#Alle andeler med for lav N
-            sortInd <- order(as.numeric(AndelerGr[AarTxt,]), decreasing=sortAvtagende)
-            AndelerSisteSort <- AndelerGr[AarTxt,sortInd] #Unødvendig?
-            
-            #AntGrNgr <- length(which(Ngr[AarTxt, ] >= Ngrense))	#"Gyldige" grupper
-            #Ngrtxt[which(Ngr[AarTxt, ] < Ngrense)] <- paste0('<', Ngrense) #paste0('N<', Ngrense)	
             AndelerGrSort <- AndelerGr[ ,sortInd]
-            GrNavnSort <- paste0(GrNavn[sortInd],' (',Ngrtxt[sortInd], ')')  #paste0(names(Ngr)[sortInd], ', ',Ngrtxt[sortInd])
-            #GrNavnSort <- paste0(colnames(AndelerGrSort),' (',Ngrtxt[sortInd], ')')  #paste0(names(Ngr)[sortInd], ', ',Ngrtxt[sortInd])
-            andeltxt <- paste0(sprintf('%.1f',AndelerGrSort[AarTxt,]), '%') 	
-            #if (length(indGrUt)>0) {andeltxt[(AntGrNgr+1):(length(GrNavnSort))] <- '' } #paste0('N<', Ngrense, ' siste år')} #''
+            GrNavnSort <- paste0(GrNavn[sortInd], Ngrtxt[sortInd])  #paste0(names(Ngr)[sortInd], ', ',Ngrtxt[sortInd])
+            andeltxt <- paste0(sprintf('%.1f',AndelerGrSort['1',]), '%') 	
             
-            pVerdier <- PverdiAndelsDiff(n=t(Nvar), N=t(Ngr), justMetode='fdr')
-            signDiffInd <- which(pVerdier[-indGrUt2][sortInd] < 0.05)
-            GrNavnSort[signDiffInd] <- paste0(GrNavnSort[signDiffInd], '*')
-            signTxt <- ifelse(length(signDiffInd)==0, 'Ingen av avdelingene har signifikant endring', '')
             #--------------------------------------------------------------
       } else {	#Hvis vi skal ha resultater for perioden totalt
             
@@ -216,54 +216,52 @@ RyggFigAndelerGrVarAar <- function(RegData, valgtVar, datoFra='2007-01-01', dato
             prikkFarge <- farger[3]
             #Hvis Norge egen søyle: soyleFarger[which(names(AndelerSisteSort)=='Norge')] <- farger[4]
             fargerMaalNiva <- c('#ddffcc', '#ffffcc', '#fff0e6') #Grønn, gul, rød
-            #gronn <- '#CCFF99'
-            #gul <- '#FFFF99'
-            #rod <- '#ffb3b3'
             #Tilpasse marger for å kunne skrive utvalgsteksten
             NutvTxt <- length(utvalgTxt)
             vmarg <- max(0, strwidth(GrNavnSort, units='figure', cex=cexShNavn)*0.85)
             #NB: strwidth oppfører seg ulikt avh. av device...
-            par('fig'=c(vmarg, ifelse(tidlAar==1,1,1), 0, 1-0.02*(NutvTxt-1)))	#Har alltid datoutvalg med
+            par('fig'=c(vmarg, ifelse(tidlAar[1]!=0,1,1), 0, 1-0.02*(NutvTxt-1)))	#Har alltid datoutvalg med
             
             xmax <- min(max(AndelerGrSort, na.rm = T),100)*1.15
-            xaksetxt <- ifelse(AKjust==1, 'Andel (%), justert for alder og kjønn', 'Andel operasjoner (%)')
+            xAkseTxt <- ifelse (AKjust==1, paste0(RyggVarSpes$xAkseTxt, ', justert for alder og kjønn'), 
+                                RyggVarSpes$xAkseTxt)
             
             maalGrenser <- c(2,4,xmax)
             pos <- barplot(as.numeric(AndelerSisteSort), horiz=T, border=NA, col=soyleFarger, #add=TRUE , #plot=T,
-                           xlim=c(0,xmax), ylim=c(0.05, 1.32)*length(GrNavnSort), font.main=1, #xlab=xaksetxt, 
+                           xlim=c(0,xmax), ylim=c(0.05, 1.32)*length(GrNavnSort), font.main=1, #xlab=xAkseTxt, 
                            las=1, cex.names=cexShNavn*0.9)
             #Legge på målnivå
             #rect(xleft=c(0, maalGrenser[1:2]), ybottom=0, xright=maalGrenser, ytop=max(pos)+0.4, #pos[AntGrNgr+1], 
-             #    col = fargerMaalNiva, border = NA) #add = TRUE,
+            #    col = fargerMaalNiva, border = NA) #add = TRUE,
             ybunn <- 0.1
             ytopp <- max(pos)+ 0.4 #pos[2]-pos[1] #pos[AntGrNgr]+ 0.4	#
             if (tidlAar != 0) {
                   #indMed <- 1:AntGrNgr
-                  AartxtTidl <- as.character(tidlAar)
+                  AartxtTidl <- ifelse(length(tidlAar)>1, paste0(min(tidlAar),'-', max(tidlAar)), as.character(tidlAar))
                   Naar <- rowSums(Ngr, na.rm=T)
                   ResAar <- 100*rowSums(Nvar, na.rm=T)/Naar
                   lines(x=rep(ResAar[2], 2), y=c(ybunn, ytopp), col=farger[1], lwd=2)
                   barplot(as.numeric(AndelerSisteSort), horiz=T, border=NA, col=soyleFarger, add=T, #plot=T,
-                          xlim=c(0,xmax), ylim=c(0.05, 1.27)*length(GrNavnSort), font.main=1, #xlab=xaksetxt, 
+                          xlim=c(0,xmax), ylim=c(0.05, 1.27)*length(GrNavnSort), font.main=1, #xlab=xAkseTxt, 
                           las=1, cex.names=cexShNavn*0.9)
                   #points(y=pos[indMed], x=AndelerGrSort[Aar1txt, indMed], cex=1.7, pch='|')    #col=farger[2],
-                  points(y=pos+0.1, x=AndelerGrSort[AartxtTidl, ], cex=1, pch=16, col=prikkFarge) #pch='|', y=pos[indMed]+0.1, x=AndelerGrSort[AartxtTidl, indMed]
+                  points(y=pos[-indGrUt1sort]+0.1, x=AndelerGrSort['0', -indGrUt1sort], cex=1, pch=16, col=prikkFarge) #pch='|', y=pos[indMed]+0.1, x=AndelerGrSort[AartxtTidl, indMed]
                   legend('top', inset=c(0.1,0), xjust=1, cex=0.85, bty='o', bg='white', box.col='white',
                          lwd=c(NA,NA,2), pch=c(16,15,NA), pt.cex=c(1, 1.9, 1),  #pch=c(124,15,NA)
                          col=c(prikkFarge,soyleFarger,farger[1]),
                          legend=c(#paste0(Aar1txt, ' (', sprintf('%.1f', ResAar[1]), '%, ', 'N=', Naar[1],')'),
                                paste0(AartxtTidl, ' (', sprintf('%.1f', ResAar[1]), '%, ', 'N=', Naar[1],')'),
-                               paste0(aar, ' (', sprintf('%.1f', ResAar[2]), '%, ', 'N=', Naar[2],')'),
+                               paste0(AarTxt, ' (', sprintf('%.1f', ResAar[2]), '%, ', 'N=', Naar[2],')'),
                                paste0('Hele landet, ',AarTxt)) 
                   )
                   # legend(x=0, y=-3.5, pch=c(NA,15,15,15), col=c(NA, fargerMaalNiva), ncol=4, xpd=TRUE, border=NA,
                   #        box.col='white',cex=0.8, pt.cex=1.5, 
                   #        legend=c('Måloppnåelse:', 'Meget god', 'God', 'Mindre god')) #paste(c('Meget god', 'God', 'Mindre god'), 'måloppnåelse')
-                  signTxt
-                  mtext(signTxt, side=1, las=1, cex=cexShNavn, adj=0, line=3, col='grey')
-                  mtext(xaksetxt, side=1, las=1, cex=cexShNavn, adj=0.5, line=2)
+                  
+                  mtext(signTxt, side=1, las=1, cex=cexShNavn, adj=0, line=3, col='#FF7260')
+                  mtext(xAkseTxt, side=1, las=1, cex=cexShNavn, adj=0.5, line=2)
                   overPos <- max(pos)+0.4*log(max(pos))
-                  mtext(at=overPos, paste0('(N, ', aar, ')'), side=2, las=1, cex=cexShNavn, adj=1, line=0.25)	
+                  mtext(at=overPos, paste0('(N, ', AarTxt, ')'), side=2, las=1, cex=cexShNavn, adj=1, line=0.25)	
             } else {
                   legend('topright', xjust=1, cex=1, lwd=2, col=farger[2],
                          legend=paste0(smltxt, ' (', sprintf('%.1f',AndelHele), '%), ', 'N=', N),

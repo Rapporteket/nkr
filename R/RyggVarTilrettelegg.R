@@ -30,6 +30,7 @@ RyggVarTilrettelegg  <- function(RegData, valgtVar, ktr=0, figurtype='andeler'){
       grNavn <- ''
       varTxt <- ''
       xAkseTxt <- ''	#Benevning
+      if (figurtype == 'andelGrVar') {xAkseTxt <- 'Andel operasjoner (%)'}
       yAkseTxt <- ''
       pktTxt <- '' #(evt. søyletekst)
       txtEtiketter  <- ''	#legend
@@ -148,6 +149,7 @@ RyggVarTilrettelegg  <- function(RegData, valgtVar, ktr=0, figurtype='andeler'){
             varTxt <- 'tilfeller'
             tittel <- 'Degen. spondylolistese operert med fusjonskirurgi'
             sortAvtagende <- F
+            xAkseTxt <- 'Andel med fusjonskirurgi (%)'
       }
       if (valgtVar == 'degSponSSSten') { #AndelGrVar
             #(Først og fremst fusjonskirurgi)
@@ -185,18 +187,21 @@ RyggVarTilrettelegg  <- function(RegData, valgtVar, ktr=0, figurtype='andeler'){
       }
       if (valgtVar == 'Kp3Mnd') { #AndelGrVar
             #Komplikasjoner 0:nei, 1:ja
+            RegData <- RegData[which(RegData$Utfylt3Mnd ==1), ]
             RegData <- RegData[which(RegData[,valgtVar] %in% 0:1), ]
             RegData$Variabel <- RegData[ ,valgtVar]
-            tittel <- 'Pasientrapporterte komplikasjoner'
+            tittel <- 'Pasientrapporterte komplikasjoner (%)'
             sortAvtagende <- FALSE
       }
       if (valgtVar == 'KpInf3Mnd') { #AndelGrVar, AndelTid
             #Komplikasjoner 0:nei, 1:ja
+            RegData <- RegData[which(RegData$Utfylt3Mnd ==1), ]
             RegData <- RegData[which(RegData[,valgtVar] %in% 0:1), ]
             RegData$Variabel <- RegData[ ,valgtVar]
             varTxt <- 'tilfeller'
             tittel <- 'Sårinfeksjon, pasientrapportert'
-            sortAvtagende <- TRUE #FALSE
+            sortAvtagende <- FALSE
+            xAkseTxt <- 'Andel sårinfeksjoner (%)'
       }
       if (valgtVar == 'Misfornoyd') { #AndelGrVar	#%in% c('Misfor3mnd','Misfor12mnd')) { #AndelGrVar
             #3/12mndSkjema. Andel med Misfornøyd/litt misfornøyd (1,2)
@@ -328,6 +333,7 @@ RyggVarTilrettelegg  <- function(RegData, valgtVar, ktr=0, figurtype='andeler'){
             RegData$Variabel[which(RegData$PeropKompDura == 1)] <- 1
             tittel <- 'Komplikasjon ved operasjon: Durarift'
             sortAvtagende <- FALSE
+            xAkseTxt <- 'Andel durarift (%)'
       }
       if (valgtVar=='Roker') { #AndelGrVar
             #PasientSkjema. Andel med Roker=1
@@ -343,7 +349,7 @@ RyggVarTilrettelegg  <- function(RegData, valgtVar, ktr=0, figurtype='andeler'){
             #Kode 0,1,tom: Nei, Ja Ukjent
             RegData <- RegData[which(RegData$Saardren %in% 0:1), ]
             RegData$Variabel <- RegData$Saardren
-            tittel <- 'Andel som får sårdren'
+            tittel <- 'Andel som får sårdren (%)'
       }
       if (valgtVar=='SmBeinEndr') {#gjsnGrVar
             RegData$Variabel <- switch(as.character(ktr), 

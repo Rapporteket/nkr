@@ -42,9 +42,10 @@ if (preprosess == 1){
      }
 
 #------- Tilrettelegge variable
-RyggVarSpes <- RyggVarTilrettelegg(RegData=RegData, valgtVar=valgtVar, ktr=ktr, figurtype = 'gjsnGrVar')
-RegData <- RyggVarSpes$RegData
-
+	RyggVarSpes <- RyggVarTilrettelegg(RegData=RegData, valgtVar=valgtVar, ktr=ktr, figurtype = 'gjsnGrVar')
+	RegData <- RyggVarSpes$RegData
+    sortAvtagende <- RyggVarSpes$sortAvtagende
+    
 #------- Gjøre utvalg
 RyggUtvalg <- RyggUtvalgEnh(RegData=RegData, reshID=reshID, datoFra=datoFra, datoTil=datoTil, 
                             minald=minald, maxald=maxald, erMann=erMann, aar=aar, 
@@ -57,48 +58,83 @@ ind <- RyggUtvalg$ind
 hovedgrTxt <- RyggUtvalg$hovedgrTxt
 RegData <- RyggUtvalg$RegData
 
-#Ngrense <- 10		
 '%i%' <- intersect
 
-RegData[ ,grVar] <- as.factor(RegData[ ,grVar])
+
+#---------------Beregninger
+#RegData[ ,grVar] <- as.factor(RegData[ ,grVar])
 #Grupper som ikke har registreringer vil nå ikke komme med i oversikta. Gjøres dette tidligere, vil alle
 #grupper komme med uansett om de ikke har registreringer.
-
-if(dim(RegData)[1]>0) {Ngr <- table(RegData[ ,grVar])}	else {Ngr <- 0}
-
 
 t1 <- switch(valgtMaal,
 			Med = 'Median ',
 			Gjsn = 'Gjennomsnittlig ')
 
-
 #tittel <- paste0(t1, valgtVar, ', ', RyggUtvalg$grTypeTxt, 'sykehus')
 tittel <- paste0(t1, RyggVarSpes$tittel) 
 			
-Ngrtxt <- paste0(' (', as.character(Ngr),')') 
-indGrUt <- which(Ngr < Ngrense)
-if (length(indGrUt)==0) { indGrUt <- 0}
-Ngrtxt[indGrUt] <- paste0(' (<', Ngrense,')')	
+RegData$grVar <- RegData[,grVar]
 N <- dim(RegData)[1]
+Ngr <- table(RegData$grVar)
+
+indGrUt <- which(Ngr < Ngrense) #Grupper som har for få observasjoner
+ShUt <- names(Ngr[indGrUt])
+
+antGrUt <- length(indGrUt)
+antGr <- length(Ngr)-antGrUt
+if (antGrUt==0) { indGrUt <- length(Ngr)+1}
+indUt <- which(RegData$grVar %in% ShUt)
+indMed <- which(RegData$grVar %in% names(Ngr[-indGrUt]))
+Nut <- ifelse(antGrUt==0, NULL, length(indUt))
+antGrUt <- ifelse(Nut==0, NULL, length(indGrUt))
+Ngr <- Ngr[-indGrUt]
+GrNavn <- names(Ngr)
+
+#indGrMed <- which(Ngr >= Ngrense)
+#antGr <- length(indGrMed)	#Alle som har gyldig resultat
 
 KIHele <- c(0,0)    
 KIned <- c(0,0)
 KIhele <- c(0,0)
-		
+MidtUt <- NULL
 
-dummy0 <- NA #-0.0001
+#dummy0 <- -1 #NA 
 #Kommer ut ferdig sortert!
+
 if (valgtMaal=='Med') {
-	MedIQR <- plot(RegData[ ,grVar], RegData$Variabel, notch=TRUE, plot=FALSE)
-	MedIQR$stats[ ,indGrUt] <- dummy0
-	MedIQR$conf[ ,indGrUt] <- dummy0
-	sortInd <- order( MedIQR$stats[3,], decreasing=RyggVarSpes$sortAvtagende, na.last = FALSE) 
-	Midt <- as.numeric(MedIQR$stats[3, sortInd])
-	KIned <- MedIQR$conf[1, sortInd]
-	KIopp <- MedIQR$conf[2, sortInd]
-	MedIQRHele <-  boxplot.stats(RegData$Variabel, do.conf = TRUE)
-	MidtHele <- as.numeric(MedIQRHele$stats[3])	#median(RegData$Variabel)
-	KIHele <- MedIQRHele$conf
+      #For routine use, I recommend the groupwiseMedian function in the rcompanion package, 
+      #with either the BCa or the percentile method. 
+      #The BCa (bias corrected, accelerated) is often cited as the best for theoretical reasons.  
+      #The percentile method is also cited as typically good.  
+      #If you get the “extreme order statistics used as endpoints” warning message, use a different test.  
+      #For small data sets, the interval from BCa may be wider than for some other methods.
+      #Stats <- groupwiseMedian(data = RegData[indMed,], var='Variabel', group='grVar' , percentile=TRUE, R=4999) #bca=TRUE
+      #Bootstrap krever relativt mange trekkinger (5000+) og tar lang tid. 
+      #Det ser ut til at N-tilnærminga er ok også for små N.
+      Median <- tapply(RegData$Variabel[indMed], RegData[indMed ,grVar], median, na.rm=T)
+      #N-tilnærming:
+      KIgr <- matrix(0,antGr, 2)
+      for (k in 1:antGr) {
+            obsNed <- ceiling(as.numeric(Ngr[k])/2 - 1.96*sqrt(as.numeric(Ngr[k])/4))
+            obsOpp <- ceiling(as.numeric(Ngr[k])/2 + 1.96*sqrt(as.numeric(Ngr[k])/4))
+            KIgr[k,] <- sort(RegData$Variabel[which(RegData$grVar == names(Ngr[k]))])[c(obsNed,obsOpp)]
+      }
+      
+    #cbind(Stats, KIgr)
+    
+      sortInd <- order(c(Median, MedianUt), decreasing=RyggVarSpes$sortAvtagende, na.last = FALSE) 
+      
+      MedianUt <- median(RegData$Variabel[indUt])	
+      KIUt <- sort(RegData$Variabel[indUt])[ceiling(Nut/2 +c(-1,1)*1.96*sqrt(Nut/4))]
+      
+      MedianHele <- median(RegData$Variabel)	
+      KIHele <- sort(RegData$Variabel)[ceiling(N/2 +c(-1,1)*1.96*sqrt(N/4))]
+
+      Midt <- c(Median, MedianUt)[sortInd] #as.numeric(Gjsn[sortInd])
+      KIned <- c(KIgr[,1], KIUt[1])[sortInd]
+      KIopp <- c(KIgr[,2], KIUt[2])[sortInd]
+      
+ 
 	#Hvis vil bruke vanlige konf.int:
 	#j <- ceiling(N/2 - 1.96*sqrt(N/4))
 	#k <- ceiling(N/2 + 1.96*sqrt(N/4))
@@ -110,32 +146,32 @@ if (valgtMaal=='Med') {
 	} 
 	
 if (valgtMaal=='Gjsn') {	#Gjennomsnitt er standard, men må velges.
-      Gjsn <- tapply(RegData$Variabel, RegData[ ,grVar], mean, na.rm=T)
-	SE <- tapply(RegData$Variabel, RegData[ ,grVar], sd, na.rm=T)/sqrt(Ngr)
+      Gjsn <- tapply(RegData$Variabel[indMed], RegData[indMed, grVar], mean, na.rm=T)
+	SE <- tapply(RegData$Variabel[indMed], RegData[indMed, grVar], sd, na.rm=T)/sqrt(Ngr[Ngr >= Ngrense])
+	
+	MidtUt <- mean(RegData$Variabel[indUt])	#mean(RegData$Variabel)
+	KIUt <- MidtHele + sd(RegData$Variabel[indUt])/sqrt(N[indUt])*c(-2,2)
+	
+	sortInd <- order(c(Gjsn, MidtUt), decreasing=RyggVarSpes$sortAvtagende, na.last = FALSE) 
+	
 	MidtHele <- mean(RegData$Variabel)	#mean(RegData$Variabel)
 	KIHele <- MidtHele + sd(RegData$Variabel)/sqrt(N)*c(-2,2)
-	Gjsn[indGrUt] <- dummy0
-	SE[indGrUt] <- 0
-	sortInd <- order(Gjsn, decreasing=RyggVarSpes$sortAvtagende, na.last = FALSE) 
-	Midt <- Gjsn[sortInd] #as.numeric(Gjsn[sortInd])
-	KIned <- Gjsn[sortInd] - 2*SE[sortInd]
-	KIopp <- Gjsn[sortInd] + 2*SE[sortInd]
+	
+	Midt <- c(Gjsn, MidtUt)[sortInd] #as.numeric(Gjsn[sortInd])
+	KIned <- c(Gjsn[sortInd] - 2*SE[sortInd], KIUt[1])[sortInd]
+	KIopp <- c(Gjsn[sortInd] + 2*SE[sortInd], KIUt[2])[sortInd]
 	}
 
 
-#if (sum(which(Ngr < Ngrense))>0) {indGrUt <- as.numeric(which(Ngr<Ngrense))} else {indGrUt <- 0}
-#AndelerGr[indGrUt] <- -0.0001
-
-GrNavnSort <- paste0(names(Ngr)[sortInd], Ngrtxt[sortInd])
-soyletxt <- sprintf(paste0('%.1f'), Midt) 
-#soyletxt <- c(sprintf(paste0('%.', AntDes,'f'), Midt[1:AntGr]), rep('',length(Ngr)-AntGr))
-indUT <- which(is.na(Midt))  #Rydd slik at bare benytter indGrUt
-soyletxt[indUT] <- ''
-KIned[indUT] <- NA
-KIopp[indUT] <- NA
+navnNut <- ifelse(Nut<Ngrense, NULL,'')
+Ngr <- c(as.character(Ngr), Nut) #Ngr[sortInd]
+Ngrtxt <- paste0(' (', Ngr[sortInd],')' ) #[-indGrUt] 
+GrNavnSort <- paste0(c(GrNavn, paste0(antGrUt, ' avdelinger med N<', Ngrense))[sortInd], Ngrtxt[sortInd])
+soyletxt <- sprintf('%.1f', Midt) 
+antGr <- length(GrNavnSort)
 
 AggVerdier <- list(Hoved=Midt, Rest=0, KIned=KIned, KIopp=KIopp, KIHele=KIHele)
-Ngr <- list(Hoved=Ngr[sortInd], Rest=0)
+
 
 
 #Se RyggFigSoyler for forklaring av innhold i lista GjsnGrVarData
@@ -201,7 +237,6 @@ if (dim(RegData)[1] < 10 )
 	fargeHoved <- ifelse(grVar %in% c('ShNavn'), farger[4], farger[1])
 	fargeRest <- farger[3]
 	graa <- c('#4D4D4D','#737373','#A6A6A6','#DADADA')  #Mørk til lys          																# Fire graatoner
-	antGr <- length(GrNavnSort)
 	lwdRest <- 3	#tykkelse på linja som repr. landet
 	cexleg <- 0.9	#Størrelse på legendtekst
 	

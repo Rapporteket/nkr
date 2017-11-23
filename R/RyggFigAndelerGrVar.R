@@ -77,9 +77,8 @@ RyggFigAndelerGrVar <- function(RegData, valgtVar, datoFra='2007-01-01', datoTil
             
      
      RegData[ ,grVar] <- factor(RegData[ ,grVar])
-     #Ngrense <- 10		#Minste antall registreringer for at ei gruppe skal bli vist
-
-     #------- Gjøre utvalg
+     
+	#------- Gjøre utvalg
      smltxt <- ''
      medSml <- 0
      
@@ -95,7 +94,6 @@ RyggFigAndelerGrVar <- function(RegData, valgtVar, datoFra='2007-01-01', datoTil
      RegData <- RyggUtvalg$RegData
      
      
-     #Standardisere mht grupperingsvariabel. Først sykehus.
 #---------------Beregninger
 # Variabelen Variabel er definert som indikatorvariabel for den valgte variabelen. 
      
