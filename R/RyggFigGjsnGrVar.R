@@ -62,7 +62,7 @@ RegData <- RyggUtvalg$RegData
 
 
 #---------------Beregninger
-#RegData[ ,grVar] <- as.factor(RegData[ ,grVar])
+RegData[ ,grVar] <- as.character(RegData[ ,grVar])
 #Grupper som ikke har registreringer vil nå ikke komme med i oversikta. Gjøres dette tidligere, vil alle
 #grupper komme med uansett om de ikke har registreringer.
 
@@ -84,7 +84,7 @@ antGrUt <- length(indGrUt)
 antGr <- length(Ngr)-antGrUt
 if (antGrUt==0) { indGrUt <- length(Ngr)+1}
 indUt <- which(RegData$grVar %in% ShUt)
-indMed <- which(RegData$grVar %in% names(Ngr[-indGrUt]))
+indMed <- which(!(RegData$grVar %in% ShUt))
 Nut <- ifelse(antGrUt==0, NULL, length(indUt))
 antGrUt <- ifelse(Nut==0, NULL, length(indGrUt))
 Ngr <- Ngr[-indGrUt]
@@ -102,6 +102,7 @@ MidtUt <- NULL
 #Kommer ut ferdig sortert!
 
 if (valgtMaal=='Med') {
+      medKI <- 0 #!!!!!!!!MÅ SJEKKE NÆRMERE AT KONFIDENSINTERVALLER FOR MEDIAN BLIR RIKTIGE!!
       #For routine use, I recommend the groupwiseMedian function in the rcompanion package, 
       #with either the BCa or the percentile method. 
       #The BCa (bias corrected, accelerated) is often cited as the best for theoretical reasons.  
@@ -112,6 +113,7 @@ if (valgtMaal=='Med') {
       #Bootstrap krever relativt mange trekkinger (5000+) og tar lang tid. 
       #Det ser ut til at N-tilnærminga er ok også for små N.
       Median <- tapply(RegData$Variabel[indMed], RegData[indMed ,grVar], median, na.rm=T)
+      length(tapply(RegData$Variabel[indMed], RegData[indMed ,grVar], median, na.rm=T))
       #N-tilnærming:
       KIgr <- matrix(0,antGr, 2)
       for (k in 1:antGr) {
@@ -120,14 +122,12 @@ if (valgtMaal=='Med') {
             KIgr[k,] <- sort(RegData$Variabel[which(RegData$grVar == names(Ngr[k]))])[c(obsNed,obsOpp)]
       }
       
-    #cbind(Stats, KIgr)
+      MedianUt <- median(RegData$Variabel[indUt])	
+      KIUt <- sort(RegData$Variabel[indUt])[ceiling(Nut/2 +c(-1,1)*1.96*sqrt(Nut/4))]
     
       sortInd <- order(c(Median, MedianUt), decreasing=RyggVarSpes$sortAvtagende, na.last = FALSE) 
       
-      MedianUt <- median(RegData$Variabel[indUt])	
-      KIUt <- sort(RegData$Variabel[indUt])[ceiling(Nut/2 +c(-1,1)*1.96*sqrt(Nut/4))]
-      
-      MedianHele <- median(RegData$Variabel)	
+      MidtHele <- median(RegData$Variabel)	
       KIHele <- sort(RegData$Variabel)[ceiling(N/2 +c(-1,1)*1.96*sqrt(N/4))]
 
       Midt <- c(Median, MedianUt)[sortInd] #as.numeric(Gjsn[sortInd])
@@ -150,7 +150,7 @@ if (valgtMaal=='Gjsn') {	#Gjennomsnitt er standard, men må velges.
 	SE <- tapply(RegData$Variabel[indMed], RegData[indMed, grVar], sd, na.rm=T)/sqrt(Ngr[Ngr >= Ngrense])
 	
 	MidtUt <- mean(RegData$Variabel[indUt])	#mean(RegData$Variabel)
-	KIUt <- MidtHele + sd(RegData$Variabel[indUt])/sqrt(N[indUt])*c(-2,2)
+	KIUt <- MidtUt + sd(RegData$Variabel[indUt])/sqrt(Nut)*c(-2,2)
 	
 	sortInd <- order(c(Gjsn, MidtUt), decreasing=RyggVarSpes$sortAvtagende, na.last = FALSE) 
 	
@@ -158,10 +158,9 @@ if (valgtMaal=='Gjsn') {	#Gjennomsnitt er standard, men må velges.
 	KIHele <- MidtHele + sd(RegData$Variabel)/sqrt(N)*c(-2,2)
 	
 	Midt <- c(Gjsn, MidtUt)[sortInd] #as.numeric(Gjsn[sortInd])
-	KIned <- c(Gjsn[sortInd] - 2*SE[sortInd], KIUt[1])[sortInd]
-	KIopp <- c(Gjsn[sortInd] + 2*SE[sortInd], KIUt[2])[sortInd]
+	KIned <- c(Gjsn - 2*SE, KIUt[1])[sortInd]
+	KIopp <- c(Gjsn + 2*SE, KIUt[2])[sortInd]
 	}
-
 
 navnNut <- ifelse(Nut<Ngrense, NULL,'')
 Ngr <- c(as.character(Ngr), Nut) #Ngr[sortInd]
@@ -267,7 +266,7 @@ if (dim(RegData)[1] < 10 )
 	                c(minpos, maxpos, maxpos, minpos))
 	  }
 
-	if (grVar %in% c('ShNavn')) {	#Må si noe om den "gamle figurtypen"
+	if (grVar %in% c('ShNavn')) {	
 	      #GrNavnSort <- rev(GrNavnSort)
 	      grTypeTxt <- smltxt
 	      mtext(at=posOver, paste0('(N)' ), side=2, las=1, cex=cexgr, adj=1, line=0.25)
