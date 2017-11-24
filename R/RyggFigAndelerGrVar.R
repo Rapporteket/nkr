@@ -106,29 +106,27 @@ RyggFigAndelerGrVar <- function(RegData, valgtVar, datoFra='2007-01-01', datoTil
      AntGr <- length(which(Ngr >= Ngrense))	#Alle som har gyldig resultat
      AndelHele <- round(100*sum(RegData$Variabel)/N, 2)
      AndelerGr <- round(100*tapply(RegData$Variabel, RegData[ ,grVar], sum, na.rm=T)/Ngr,2)
-
      Ngrtxt <- as.character(Ngr) 
-     indGrUt <- 0
      GrNavn <- names(Ngr)
-     if (sum(which(Ngr < Ngrense))>0) {
-           indGrUt <- as.numeric(which(Ngr<Ngrense)) #} else {indGrUt <- 0}
+      
+     indGrUt <- which(Ngr < Ngrense)
+     if (sum(indGrUt)>0) {
            AndelGrUt <- sum(AndelerGr[indGrUt]*Ngr[indGrUt], na.rm = T)/sum(Ngr[indGrUt])
-           AndelerGr <- c(AndelGrUt, AndelerGr[-indGrUt]) #AndelerGr[indGrUt] <- NA
-           GrNavn <- c(paste0(length(indGrUt), ' avd. med N<',Ngrense), names(Ngr)[-indGrUt])
+           AndelerGr <- c(AndelerGr[-indGrUt],AndelGrUt) #AndelerGr[indGrUt] <- NA
+           #GrNavn <- c(names(Ngr)[-indGrUt], paste0(length(indGrUt), ' avd. med N<',Ngrense), )
+           GrUtNavn <- paste0(length(indGrUt), ' avd. med N<',Ngrense)
            Ngrtxt <- c(Ngrtxt[-indGrUt],sum(Ngr[indGrUt]))  #Ngrtxt[indGrUt] <- paste0('<', Ngrense)
+           GrNavn <- paste0(c(GrNavn[-indGrUt], GrUtNavn),' (',Ngrtxt , ')')
+           
      }
      sortInd <- order(as.numeric(AndelerGr), decreasing=sortAvtagende, na.last = FALSE) 
      AndelerGrSort <- AndelerGr[sortInd]
-     GrNavnSort <- paste0(GrNavn[sortInd], ' (',Ngrtxt[sortInd], ')')
+     GrNavnSort <- GrNavn[sortInd]
      
      andeltxtUsort <- paste0(sprintf('%.1f',AndelerGr), ' %') 	
-     #andeltxtUsort[indGrUt] <- ''
      andeltxt <- andeltxtUsort[sortInd]
 
      
-     #N = list(Hoved=N, Rest=0)
-     #Ngr = list(Hoved=Ngr, Rest=0)
-     #AggVerdier = list(Hoved=AndelerGrSort, Rest=0)
      xAkseTxt <- "Andel opphold (%)"	
      
      if (tittel==0) {Tittel<-''} else {Tittel <- RyggVarSpes$tittel}

@@ -51,7 +51,7 @@ options(width=60)
 #save(RegData, file='A:/Rygg/NKR2010-2016aarsrapp.Rdata')
 load('A:/Rygg/NKR2010-2016aarsrapp.Rdata')
 #RegData <- RegData[sample(dim(RegData)[1], 1000), ]
-setwd('C:/ResultattjenesteGIT//nkr/aarsrapp')
+setwd('C:/ResultattjenesteGIT//nkr/AarsrappOff/')
 library(nkr)
 
 # Preprosessere data:  
@@ -1143,14 +1143,14 @@ etter prolapsoperasjon. Pasienter operert i 2014 og 2015.}
 \textbf{I. Sårinfeksjon.}
 <<FigurInf, echo=FALSE>>=
 KpInf3MndPro <- RyggFigAndelerGrVar(RegData=RegData, valgtVar='KpInf3Mnd', aar=2015:2016, Ngrense = 20,
-                                    hovedkat = 1, outfile='Figurer/FigKpInf3MndPro.pdf', tittel=0)
+                                    hovedkat = 1, outfile='FigKpInf3MndPro.pdf', tittel=1)
 KpInf3MndSS <- RyggFigAndelerGrVar(RegData=RegData, valgtVar='KpInf3Mnd', aar=2015:2016, Ngrense = 20,
-                                   hovedkat = 8, outfile='Figurer/FigKpInf3MndSS.pdf', tittel=0)
+                                   hovedkat = 8, outfile='FigKpInf3MndSS.pdf', tittel=0) #Figurer/
 
 KpInf3MndTidPro <- RyggFigAndelTid(RegData=RegData,  valgtVar='KpInf3Mnd', 
-                                   hovedkat = 1, outfile='Figurer/FigKpInf3MndTidPro.pdf', tittel=0)
+                                   hovedkat = 1, outfile='FigKpInf3MndTidPro.pdf', tittel=0) #Figurer/
 KpInf3MndTidPro <- RyggFigAndelTid(RegData=RegData,  valgtVar='KpInf3Mnd', 
-                                   hovedkat = 8, outfile='Figurer/FigKpInf3MndTidSS.pdf', tittel=0)
+                                   hovedkat = 8, outfile='FigKpInf3MndTidSS.pdf', tittel=0) #Figurer/
 @
 For alle typer prolapsoperasjoner har
 andel sårinfeksjoner (pasientrapportert) har blitt noe redusert fram til 2010, mens bruk av  forbyggende antibiotikabehandling har økte sterkt og i dag får nesten alle forebyggende antibiotikabehandling ved kirurgi. Siden 2010 har andelen sårinfeksjoner ligget stabilt rundt 2 \% for prolapsopererte og rundt 3 \% for spinal stenose opererte.
