@@ -5,8 +5,8 @@
 \title{Utvikling over tid eller som funksjon av variabelen for gjennomsnitt/median av valgt variabel}
 \usage{
 RyggFigGjsnBox(RegData, outfile, valgtVar, tidlOp = "", erMann = "",
-  hovedkat = 99, aar = 0, minald = 0, maxald = 130, ktr = 0,
-  tittel = 1, datoFra = "2007-01-01", datoTil = "3000-01-01",
+  hovedkat = 99, aar = 0, opKat = 99, minald = 0, maxald = 130,
+  ktr = 0, tittel = 1, datoFra = "2007-01-01", datoTil = "3000-01-01",
   valgtMaal = "", enhetsUtvalg = 0, hentData = 0, preprosess = 1,
   reshID = 0)
 }
@@ -29,6 +29,8 @@ til systemets standard utdataenhet (som regel skjerm))}
 1: Menn}
 
 \item{hovedkat}{Hvilken type hovedinngrep, numerisk 0-7, standard: 99, dvs. alle}
+
+\item{opKat}{Hastegrad av operasjon 1: Elektivt, 2: Akutt, 3: Halvøyeblikkelig}
 
 \item{minald}{Alder, fra og med (Standardverdi: 0)}
 
@@ -80,7 +82,7 @@ Argumentet \emph{valgtVar} har følgende valgmuligheter:
 	\item EQ5DPre: EQ5D før operasjon
          \item EQ5DEndrPre: EQ5D, endring vs. prescore
     	\item Liggedogn: Liggetid på sykehuset
-    	\item OswEndrPre: Endring i Oswestry-skår fra før til etter operasjon
+    	\item OswEndr: Endring i Oswestry-skår fra før til etter operasjon
          \item OswEndrPre: Oswestry (ODI-Oswestry Disability Index.) Endring vs. prescore.
     	\item OswTotPre: Oswestry-skår før operasjon
     	\item SmBeinEndr: Endring i beinsmerter fra før til etter operasjon
@@ -89,6 +91,6 @@ Argumentet \emph{valgtVar} har følgende valgmuligheter:
     	\item SmRyggEndr: Endring av ryggsmerter fra før til etter operasjon
          \item SmRyggEndrPre: Smerter i ryggen. Endring vs. prescore 
     	\item SmRyPre: Ryggsmerter før operasjon
-     \item TidOpReg Ønsker å se på tid fra operasjon til registrering
+     \item TidOpReg MANGLER UTFYLT-variabel. (Ønsker å se på tid fra operasjon til registrering - )
    }
 }

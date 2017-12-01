@@ -17,7 +17,7 @@
 #'		\item EQ5DPre: EQ5D før operasjon
 #'          \item EQ5DEndrPre: EQ5D, endring vs. prescore
 #'     	\item Liggedogn: Liggetid på sykehuset
-#'     	\item OswEndrPre: Endring i Oswestry-skår fra før til etter operasjon
+#'     	\item OswEndr: Endring i Oswestry-skår fra før til etter operasjon
 #'          \item OswEndrPre: Oswestry (ODI-Oswestry Disability Index.) Endring vs. prescore.
 #'     	\item OswTotPre: Oswestry-skår før operasjon
 #'     	\item SmBeinEndr: Endring i beinsmerter fra før til etter operasjon
@@ -26,7 +26,7 @@
 #'     	\item SmRyggEndr: Endring av ryggsmerter fra før til etter operasjon
 #'          \item SmRyggEndrPre: Smerter i ryggen. Endring vs. prescore 
 #'     	\item SmRyPre: Ryggsmerter før operasjon
-#'      \item TidOpReg Ønsker å se på tid fra operasjon til registrering
+#'      \item TidOpReg MANGLER UTFYLT-variabel. (Ønsker å se på tid fra operasjon til registrering - )
 #'    }
 #' @inheritParams RyggFigAndeler 
 #' @param valgtMaal
@@ -39,9 +39,8 @@
 #' @export
 RyggFigGjsnBox <- function(RegData, outfile, valgtVar, tidlOp='', erMann='', hovedkat=99, aar=0, opKat=99,
                     minald=0, maxald=130, ktr=0, tittel=1, datoFra='2007-01-01', datoTil='3000-01-01', 
-                    valgtMaal='',enhetsUtvalg=0, hentData=0, preprosess=1, reshID=0){
-      
-  
+                    valgtMaal='Gjsn',enhetsUtvalg=0, hentData=0, preprosess=1, reshID=0){
+
       if (hentData == 1) {		
             RegData <- RyggRegDataSQL()   #(datoFra, datoTil)
       }
@@ -168,7 +167,7 @@ if (valgtVar %in% c('EQ5DEndr', 'OswEndr', 'SmBeinEndr', 'SmRyggEndr',
 #Gjør utvalg
 RegData <- RegData[intersect(which(is.na(RegData$Variabel) == FALSE), 
 							 which(is.nan(RegData$Variabel) == FALSE)), ]
-RyggUtvalg <- RyggUtvalgEnh(RegData=RegData, datoFra=datoFra, datoTil=datoTil, 
+RyggUtvalg <- RyggUtvalgEnh(RegData=RegData, datoFra=datoFra, datoTil=datoTil, reshID=reshID,
                             minald=minald, maxald=maxald, erMann=erMann, aar=aar,
                             hovedkat=hovedkat, opKat=opKat, tidlOp=tidlOp,enhetsUtvalg=enhetsUtvalg)
 
@@ -184,7 +183,7 @@ ind <- RyggUtvalg$ind
 
 
 
-TittelUt <-  TittelVar #c(TittelVar, shtxt)	#c(TittelVar, hovedkattxt, paste(kjtxt, ', ', optxt, sep=''), shtxt)
+TittelUt <-  c(TittelVar, RyggUtvalg$hovedgrTxt)	#c(TittelVar, hovedkattxt, paste(kjtxt, ', ', optxt, sep=''), shtxt)
 if (tittel==0) {Tittel<-''} else {Tittel <- TittelUt} 
 
 		

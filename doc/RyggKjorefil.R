@@ -64,14 +64,14 @@ maxald <- 130	#alder, til og med
 erMann <- 99			#kjønn, 1-menn, 0-kvinner, standard: '' (alt annet enn 0 og 1), dvs. begge
 hovedkat <- 1 		#HovedInngrep, 0-7, Standard: 99, dvs alle op
 opKat <- 1 #Hastegrad, 1-3
-enhetsUtvalg <- 0 #	0-hele landet, 1-egen enhet mot resten av landet, 2-egen enhet
+enhetsUtvalg <- 1 #	0-hele landet, 1-egen enhet mot resten av landet, 2-egen enhet
 #					3–egen enhet mot egen shusgruppe, 4–egen shusgruppe, 5–egen shusgruppe mot resten
 #					6–egen enhet mot egen region, 7–egen region, 8–egen region mot resten
 ktr <- 2			#1. el 2. kontroll. '3mnd' - 3mnd kontroll, '12mnd' - 12 mnd kontroll
 tittel <- 1
 tidlOp <- 4			#Tidl.operert: 1-sm, 2-annet, 3, sm+annet, 4-primær, Standard: 0, dvs. alle operasjoner
 grVar <- 'ShNavn'  #ShNavn, Fylke, BoHF, BoRHF
-valgtMaal <- 'Med'
+valgtMaal <- 'Gjsn'
 aar <- 2010:2016	#Standard: 0, dvs. alle år
 tidsenhet <- 'Aar' #Oppløsning på tidsaksen: 'Aar' (standard), 'Halvaar', 'Kvartal','Mnd'
 offData <- 0
@@ -141,7 +141,12 @@ outfile <- ''#paste0(valgtVar,enhetsUtvalg, '.png')	#paste0(valgtVar,enhetsUtval
 
 utdata <- RyggFigGjsnBox(RegData=RegData, outfile=outfile, valgtVar=valgtVar, tidlOp=tidlOp, erMann=erMann, 
 		hovedkat=hovedkat, minald=minald, maxald=maxald, ktr=ktr, tittel=tittel, valgtMaal=valgtMaal, 
-		datoFra=datoFra, datoTil=datoTil, aar=aar, enhetsUtvalg=enhetsUtvalg, reshID=reshID)
+		datoFra=datoFra, datoTil=datoTil, enhetsUtvalg=1, reshID=reshID) #aar=aar, 
+#RyggFigGjsnBox
+#RegData=0, outfile=outfile, valgtVar=valgtVar,valgtMaal=valgtMaal, enhetsUtvalg=enhetsUtvalg, 
+#datoFra=datoFra, datoTil=datoTil, hovedkat=hovedkat, tidlOp=tidlOp,  ktr=ktr, erMann=erMann, 
+#minald=minald, maxald=maxald, hentData=1, preprosess=1, reshID=reshID
+
 
 variable <- c('EQ5DPre', 'OswTotPre', 'SmBePre', 'SmRyPre', 
               'EQ5DEndr', 'Liggedogn', 'OswEndr', 'SmRyggEndr', 'SmBeinEndr', 

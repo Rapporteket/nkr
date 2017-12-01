@@ -42,7 +42,7 @@
 #'
 #' @export
 #'
-RyggFigEndrPre <- function(RegData, valgtVar, datoFra='2007-01-01', datoTil='2999-12-31', hentData=0, preprosess=1,
+RyggFigEndrPreUT <- function(RegData, valgtVar, datoFra='2007-01-01', datoTil='2999-12-31', hentData=0, preprosess=1,
                      minald=0, maxald=130, erMann='', hovedkat=99, tidlOp='', tittel=1, outfile='', reshID, enhetsUtvalg=1)
       #aar, ktr=1, )
 {
