@@ -5,7 +5,8 @@
 \title{Funksjon som gjør utvalg i datagrunnlaget til registreringene for Nakke}
 \usage{
 RyggUtvalg(RegData, datoFra, datoTil, minald = 0, maxald = 130,
-  erMann = "", hovedkat = 99, tidlOp = "", fargepalett = "BlaaOff")
+  erMann = "", hovedkat = 99, aar = 0, opKat = 99, tidlOp = "",
+  fargepalett = "BlaaOff")
 }
 \arguments{
 \item{RegData}{En dataramme med alle nødvendige variabler fra registeret}
@@ -24,6 +25,8 @@ RyggUtvalg(RegData, datoFra, datoTil, minald = 0, maxald = 130,
 
 \item{hovedkat}{Hvilken type hovedinngrep, numerisk 0-7, standard: 99, dvs. alle}
 
+\item{opKat}{Hastegrad av operasjon 1: Elektivt, 2: Akutt, 3: Halvøyeblikkelig}
+
 \item{tidlOp}{Tidligere operert, numerisk 1-4. Alt annet gir alle data uten utvalg.
        1: Tidl. operert samme nivå, 
        2: Tidl. operert annet nivå, 
@@ -35,4 +38,3 @@ RyggUtvalg(RegData, datoFra, datoTil, minald = 0, maxald = 130,
 \description{
 Funksjon som gjør utvalg av dataene, returnerer det reduserte datasettet og utvalgsteksten.
 }
-

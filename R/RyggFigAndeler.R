@@ -83,6 +83,7 @@
 #'                2: Tidl. operert annet nivå, 
 #'			3: Tidl. operert annet og sm. nivå,
 #'			4: Primæroperasjon
+#' @param opKat Hastegrad av operasjon 1: Elektivt, 2: Akutt, 3: Halvøyeblikkelig
 #' @param hovedkat Hvilken type hovedinngrep, numerisk 0-7, standard: 99, dvs. alle
 
 #' @param outfile Navn på fil figuren skrives til. Standard: '' (Figur skrives
@@ -102,8 +103,9 @@
 #'
 #' @export
 #'
-RyggFigAndeler  <- function(RegData, valgtVar, datoFra='2007-01-01', datoTil='2999-12-31', hentData=0, preprosess=1,
-		minald=0, maxald=130, erMann='', hovedkat=99, tidlOp='', tittel=1, outfile='', reshID, enhetsUtvalg=1)
+RyggFigAndeler  <- function(RegData, valgtVar, datoFra='2007-01-01', datoTil='2999-12-31', aar=0, 
+                            hentData=0, preprosess=1,minald=0, maxald=130, erMann='', hovedkat=99,
+                            opKat=99, tidlOp='', tittel=1, outfile='', reshID=0, enhetsUtvalg=0)
 {
 
 
@@ -119,23 +121,11 @@ if (preprosess == 1){
 #------------Parameterdefinisjon -------------------------
 retn <- 'V'		#Vertikal som standard. 'H' angis evt. for enkeltvariable
 grtxt <- ''		#Spesifiseres for hver enkelt variabel
-grtxt2 <- ''	#Spesifiseres evt. for hver enkelt variabel
+grtxt2 <- NULL	#Spesifiseres evt. for hver enkelt variabel
 subtxt <- ''	#Benevning
 flerevar <- 0
 antDes <- 1
-
-#Når bare skal sammenlikne med sykehusgruppe eller region, eller ikke sammenlikne, 
-#trengs ikke data for hele landet:
-reshID <- as.numeric(reshID)
-indEgen1 <- match(reshID, RegData$ReshId)
-if (enhetsUtvalg %in% c(2,3,4,6,7)) {	#Ta med 2,4 og 7? Oppr. 3 og 6
-		RegData <- switch(as.character(enhetsUtvalg),
-						'2' = RegData[which(RegData$ReshId == reshID),],	#kun egen enhet
-						'3' = RegData[which(RegData$Sykehustype == RegData$Sykehustype[indEgen1]),],	#sml. shgruppe
-						'4' = RegData[which(RegData$Sykehustype == RegData$Sykehustype[indEgen1]),],	#kun egen shgruppe
-						'6' = RegData[which(RegData$Region == as.character(RegData$Region[indEgen1])),],	#sml region
-						'7' = RegData[which(RegData$Region == as.character(RegData$Region[indEgen1])),])	#kun egen region
-	}
+cexgr <- 1	#Kan endres for enkeltvariable
 
 #Noen variable settes som "Variabel" for å standardisere beregninga ytterligere:
 if (valgtVar %in% c('Alder', 'BMI', 'HovedInngrep', 'Liggedogn', 'Utd', 
@@ -165,7 +155,7 @@ if (valgtVar=='Utd') {
 	}
 
 if (valgtVar=='HovedInngrep'){
-	grtxt <- c('Annet', 'Prolapskirurgi', 'Foramenotomi', 'Laminektomi',
+	grtxt <- c('Udefinerbart', 'Prolapskirurgi', 'Foramenotomi', 'Laminektomi',
 	'Interspin. implantat', 'Fusjonskirurgi', 'Skiveprotese', 'Rev. av implantat')
 	RegData$VariabelGr <- factor(RegData$HovedInngrep, levels = 0:7) 
 	retn <- 'H'
@@ -191,8 +181,6 @@ if (valgtVar=='Underkat'){
 	
 if (valgtVar=='Alder') {
 	gr <- c(0,seq(20,90,10),150)
-	#AndelSh <- table(cut(RegData$Alder[ind_sh], gr, right=F))/NSh*100
-	#AndelLand <- table(cut(RegData$Alder[ind_resten], gr, right=F))/NLand*100
 	RegData$VariabelGr <- cut(RegData$Variabel, breaks=gr, include.lowest=TRUE, right=FALSE)
 	grtxt <- c('0-19', '20-29', '30-39', '40-49', '50-59', '60-69', '70-79', '80-89', '90+')	#c(levels(RegData$VariabelGr)[-length(gr)], '90+')	#c(names(AndelLand)[-length(gr)], '90+')
 	subtxt <- 'Aldersgruppe'
@@ -322,7 +310,7 @@ if (valgtVar == 'Nytte3mnd') {
 	}
 if (valgtVar == 'Nytte12mnd') {
 	datoTil <- min(datoTil, as.character(Sys.Date()-365))
-	RegData <- RegData[which(RegData$Utfylt12Mnd==1), ]
+	#RegData <- RegData[which(RegData$Utfylt12Mnd==1), ]
 	retn <- 'H'
 	grtxt <- c('Helt bra', 'Mye bedre', 'Litt bedre', 'Uendret', 'Litt verre', 'Mye verre', 
 					'Verre enn noen gang', 'Ukjent')
@@ -455,7 +443,8 @@ if (valgtVar=='Komorbiditet') {
 			'Muskel-/skjelettsm.', 'Osteoporose', 'Diabetes Mell.', 
 			'Reumatoid artritt', 'Vask. Claudicatio', 'Tot. Komorb.')
 			
-		}
+	cexgr <- 0.9	#Kan endres for enkeltvariable
+}
 if (valgtVar=='KomplPer') {
 	retn <- 'H'
 	flerevar <- 1
@@ -522,48 +511,18 @@ TittelUt <- switch(valgtVar,
 				Underkat = 'Fordeling av inngrepstyper',
 				Utd = 'Høyeste fullførte utdanning')
 
-#Tar ut de med manglende registrering av valgt variabel og gjør utvalg
-RyggUtvalg <- RyggUtvalg(RegData=RegData, datoFra=datoFra, datoTil=datoTil, minald=minald, maxald=maxald, 
-		erMann=erMann, hovedkat=hovedkat, tidlOp=tidlOp)
+#Gjør utvalg
+RyggUtvalg <- RyggUtvalgEnh(RegData=RegData, reshID=reshID, datoFra=datoFra, datoTil=datoTil, 
+                            minald=minald, maxald=maxald, erMann=erMann, aar=aar,
+                            hovedkat=hovedkat, opKat=opKat, tidlOp=tidlOp,enhetsUtvalg=enhetsUtvalg)
 RegData <- RyggUtvalg$RegData
 utvalgTxt <- RyggUtvalg$utvalgTxt
+ind <- RyggUtvalg$ind
+medSml <- RyggUtvalg$medSml
+hovedgrTxt <- RyggUtvalg$hovedgrTxt
+smltxt <- RyggUtvalg$smltxt
+#Skal endres til ind$Hoved og ind$Rest
 
-SykehustypeTxt <- c('univ. sykehus', 'lokalsykehus', 'priv. sykehus')				
-indEgen1 <- match(reshID, RegData$ReshId)
-if (enhetsUtvalg %in% c(1,2,3,6)) {	#Involverer egen enhet
-		shtxt <- as.character(RegData$ShNavn[indEgen1]) } else {
-		shtxt <- switch(as.character(enhetsUtvalg), 	
-			'0' = 'Hele landet',
-			'4' = SykehustypeTxt[RegData$Sykehustype[indEgen1]],
-			'5' = SykehustypeTxt[RegData$Sykehustype[indEgen1]],
-			'7' = as.character(RegData$Region[indEgen1]),
-			'8' = as.character(RegData$Region[indEgen1]))
-			}
-			
-if (enhetsUtvalg %in% c(0,2,4,7)) {		#Ikke sammenlikning
-			medSml <- 0
-			indHoved <- 1:dim(RegData)[1]	#Tidligere redusert datasettet for 2,4,7. (+ 3og6)
-			indRest <- NULL
-		} else {						#Skal gjøre sammenlikning
-			medSml <- 1
-			if (enhetsUtvalg %in% c(1,3,6)) {	#Involverer egen enhet
-				indHoved <-which(as.numeric(RegData$ReshId)==reshID) } else {
-				indHoved <- switch(as.character(enhetsUtvalg),
-						'5' = which(RegData$Sykehustype == RegData$Sykehustype[indEgen1]),	#shgr
-						'8' = which(RegData$Region == RegData$Region[indEgen1]))}	#region
-			smltxt <- switch(as.character(enhetsUtvalg),
-				'1' = 'landet forøvrig',
-				'3' = paste('andre ', SykehustypeTxt[RegData$Sykehustype[indEgen1]], sep=''),	#RegData inneh. kun egen shgruppe
-				'5' = 'andre typer sykehus',
-				'6' = paste(RegData$Region[indEgen1], ' forøvrig', sep=''),	#RegData inneh. kun egen region
-				'8' = 'andre regioner')
-			indRest <- switch(as.character(enhetsUtvalg),
-				'1' = which(as.numeric(RegData$ReshId) != reshID),
-				'3' = which(as.numeric(RegData$ReshId) != reshID),	#RegData inneh. kun egen shgruppe
-				'5' = which(RegData$Sykehustype != RegData$Sykehustype[indEgen1]),
-				'6' = which(as.numeric(RegData$ReshId)!=reshID),	#RegData inneh. kun egen region
-				'8' = which(RegData$Region != RegData$Region[indEgen1]))
-			}								
 if (tittel==0) {Tittel<-''} else {Tittel <- TittelUt} 
 			
 #--------------- Gjøre beregninger ------------------------------
@@ -572,20 +531,20 @@ Andeler <- list(Hoved = 0, Rest =0)
 NRest <- 0
 AntRest <- 0
 AntHoved <- switch(as.character(flerevar), 
-				'0' = table(RegData$VariabelGr[indHoved]),
-				'1' = colSums(sapply(RegData[indHoved ,variable], as.numeric), na.rm=T))
+				'0' = table(RegData$VariabelGr[ind$Hoved]),
+				'1' = colSums(sapply(RegData[ind$Hoved ,variable], as.numeric), na.rm=T))
 NHoved <- switch(as.character(flerevar), 
-				'0' = sum(AntHoved),	#length(indHoved)- Kan inneholde NA
-				'1' = length(indHoved))
+				'0' = sum(AntHoved),	#length(ind$Hoved)- Kan inneholde NA
+				'1' = length(ind$Hoved))
 Andeler$Hoved <- 100*AntHoved/NHoved
 
 if (medSml==1) {
 	AntRest <- switch(as.character(flerevar), 
-					'0' = table(RegData$VariabelGr[indRest]),
-					'1' = colSums(sapply(RegData[indRest ,variable], as.numeric), na.rm=T))
+					'0' = table(RegData$VariabelGr[ind$Rest]),
+					'1' = colSums(sapply(RegData[ind$Rest ,variable], as.numeric), na.rm=T))
 	NRest <- switch(as.character(flerevar), 
-					'0' = sum(AntRest),	#length(indRest)- Kan inneholde NA
-					'1' = length(indRest))
+					'0' = sum(AntRest),	#length(ind$Rest)- Kan inneholde NA
+					'1' = length(ind$Rest))
 	Andeler$Rest <- 100*AntRest/NRest
 }
 #-----------Figur---------------------------------------
@@ -593,7 +552,7 @@ if (medSml==1) {
 #if (dim(RegData)[1] < 10 | (length(which(RegData$ReshId == reshID))<5 & egenavd==1)) {
 if ((valgtVar=='Underkat' & all(hovedkat != c(1,2,5,7))) | NHoved < 10 | 
 		(medSml ==1 & NRest<10)) {
-FigTypUt <- figtype(outfile)
+FigTypUt <- rapbase::figtype(outfile, fargepalett=RyggUtvalg$fargepalett)
 farger <- FigTypUt$farger
 	plot.new()
 	title(Tittel)	#, line=-6)
@@ -609,15 +568,14 @@ farger <- FigTypUt$farger
 
 #-----------Figur---------------------------------------
 #Innparametre: subtxt, grtxt, grtxt2, tittel, Andeler, utvalgTxt, retn, cexgr
-cexgr <- 1	#Kan endres for enkeltvariable
 
 
 #Plottspesifikke parametre:
 FigTypUt <- rapbase::figtype(outfile, fargepalett=RyggUtvalg$fargepalett)
 #Tilpasse marger for å kunne skrive utvalgsteksten
 NutvTxt <- length(utvalgTxt)
-antDesTxt <- paste('%.', antDes, 'f', sep='')
-grtxtpst <- paste(rev(grtxt), ' (', rev(sprintf(antDesTxt, Andeler$Hoved)), '%)', sep='')
+antDesTxt <- paste0('%.', antDes, 'f')
+grtxtpst <- paste0(rev(grtxt), ' \n(', rev(sprintf(antDesTxt, Andeler$Hoved)), '%)')
 vmarg <- switch(retn, V=0, H=max(0, strwidth(grtxtpst, units='figure', cex=cexgr)*0.7))
 #vmarg <- max(0, strwidth(grtxtpst, units='figure', cex=cexgr)*0.7)
 par('fig'=c(vmarg, 1, 0, 1-0.02*(NutvTxt-1)))	#Har alltid datoutvalg med
@@ -638,19 +596,19 @@ if (retn == 'H') {
 
 	if (medSml == 1) {
 		points(as.numeric(rev(Andeler$Rest)), pos, col=fargeRest,  cex=2, pch=18) #c("p","b","o"), 
-		legend('top', c(paste(shtxt, ' (N=', NHoved,')', sep=''), 
-						paste(smltxt, ' (N=', NRest,')', sep='')), 
+		legend('top', c(paste0(hovedgrTxt, ' (N=', NHoved,')'), 
+						paste0(smltxt, ' (N=', NRest,')')), 
 			border=c(fargeHoved,NA), col=c(fargeHoved,fargeRest), bty='n', pch=c(15,18), pt.cex=2, 
 			lwd=lwdRest,	lty=NA, ncol=1, cex=cexleg)
 		} else {	
-		legend('top', paste(shtxt, ' (N=', NHoved,')', sep=''), 
+		legend('top', paste0(hovedgrTxt, ' (N=', NHoved,')'), 
 			border=NA, fill=fargeHoved, bty='n', ncol=1, cex=cexleg)
 		}
 }
 
 if (retn == 'V' ) {
 #Vertikale søyler eller linje
-	if (grtxt2 == '') {grtxt2 <- paste('(', sprintf(antDesTxt, Andeler$Hoved), '%)', sep='')}
+	if (length(grtxt2) == 0) {grtxt2 <- paste0('(', sprintf(antDesTxt, Andeler$Hoved), '%)')}
 	ymax <- max(c(Andeler$Hoved, Andeler$Rest),na.rm=T)*1.15
 	pos <- barplot(as.numeric(Andeler$Hoved), beside=TRUE, las=1, ylab="Andel pasienter (%)",	
 		xlab=subtxt, col=fargeHoved, border='white', ylim=c(0, ymax))	#sub=subtxt,	
@@ -658,11 +616,11 @@ if (retn == 'V' ) {
 	mtext(at=pos, grtxt2, side=1, las=1, cex=cexgr, adj=0.5, line=1.5)
 if (medSml == 1) {
 	points(pos, as.numeric(Andeler$Rest), col=fargeRest,  cex=2, pch=18) #c("p","b","o"), 
-	legend('top', c(paste(shtxt, ' (N=', NHoved,')', sep=''), paste(smltxt, ' (N=', NRest,')', sep='')), 
+	legend('top', c(paste0(hovedgrTxt, ' (N=', NHoved,')'), paste0(smltxt, ' (N=', NRest,')')), 
 		border=c(fargeHoved,NA), col=c(fargeHoved,fargeRest), bty='n', pch=c(15,18), pt.cex=2, lty=c(NA,NA), 
 		lwd=lwdRest, ncol=2, cex=cexleg)
 	} else {	
-	legend('top', paste(shtxt, ' (N=', NHoved,')', sep=''), 
+	legend('top', paste0(hovedgrTxt, ' (N=', NHoved,')'), 
 		border=NA, fill=fargeHoved, bty='n', ncol=1, cex=cexleg)
 	}
 } 
@@ -678,11 +636,11 @@ if ( outfile != '') {dev.off()}
 
 
 AndelerUt <- rbind(Andeler$Hoved, Andeler$Rest)
-rownames(AndelerUt) <- c('Hoved', 'Rest')
+rownames(AndelerUt) <- c(hovedgrTxt, smltxt)
 AntallUt <- rbind(AntHoved, AntRest)
-rownames(AntallUt) <- c('Hoved', 'Rest')
+rownames(AntallUt) <- c(hovedgrTxt, smltxt)
 
-UtData <- list(paste(toString(Tittel),'.', sep=''), AndelerUt, AntallUt, grtxt )
+UtData <- list(paste(toString(TittelUt),'.', sep=''), AndelerUt, AntallUt, grtxt )
 names(UtData) <- c('Tittel', 'Andeler', 'Antall', 'GruppeTekst')
 return(invisible(UtData))
 

@@ -5,9 +5,10 @@
 \title{Søylediagram med andeler for hver grupperingsenhet (sykehus, RHF, ...)}
 \usage{
 RyggFigAndelerGrVar(RegData, valgtVar, datoFra = "2007-01-01",
-  datoTil = "3000-12-31", minald = 0, maxald = 130, erMann = "",
-  hovedkat = 99, tidlOp = "", hentData = 0, preprosess = 1,
-  enhetsUtvalg = 0, grVar = "ShNavn", tittel = 1, reshID, outfile = "")
+  datoTil = "3000-12-31", aar = 0, minald = 0, maxald = 130,
+  erMann = "", hovedkat = 99, tidlOp = "", hentData = 0,
+  preprosess = 1, opKat = 99, enhetsUtvalg = 0, grVar = "ShNavn",
+  tittel = 1, ktr = 0, Ngrense = 10, reshID = 0, outfile = "")
 }
 \arguments{
 \item{RegData}{En dataramme med alle nødvendige variabler fra registeret}
@@ -42,6 +43,8 @@ RyggFigAndelerGrVar(RegData, valgtVar, datoFra = "2007-01-01",
 0: Nei
 1: Ja (Standard)}
 
+\item{opKat}{Hastegrad av operasjon 1: Elektivt, 2: Akutt, 3: Halvøyeblikkelig}
+
 \item{enhetsUtvalg}{Gjør gruppeutvalg med eller uten sammenlikning. Se \strong{Details} for oversikt.}
 
 \item{grVar}{Tekstvariabel som angir hva skal resultatene grupperes på. 
@@ -51,6 +54,8 @@ BoHF - Pasienten bor i boområdene til det angitte HF.
 BoRHF - Pasienten bor i boområdene til det angitte RHF.}
 
 \item{tittel}{Vise tittel i figuren eller ikke (0/1). standard:1}
+
+\item{Ngrense}{Minste antall registreringer for at ei gruppe skal bli vist}
 
 \item{reshID}{Parameter følger fra innlogging helseregister.no og angir
 hvilken enhet i spesialisthelsetjenesten brukeren tilhører}
@@ -71,34 +76,37 @@ Andel som mottar sykepenger er definert som svaralternativene: 'Sykemeldt',
        'Aktiv sykemeldt', 'Delvis sykemeldt', 'Attføring/rehab.', 'Uføretrygdet' 
 Argumentet \emph{valgtVar} har følgende valgmuligheter:
    \itemize{
-    \item Alder: Pasienter over 80år    
+    \item alder70: Pasienter over 75år    
     \item Antibiotika: Er det gitt antibiotikaprofylakse?    
     \item ArbstatusPre: Mottar sykepenger, før operasjon?    
-    \item Arbstatus3mnd: Mottar sykepenger, 3 mnd etter operasjon?    
-    \item Arbstatus12mnd: Mottar sykepenger, 12 mnd. etter operasjon    
+    \item Arbstatus: Mottar sykepenger, etter operasjon?   
     \item ASA: ASA-grad > II    
+ \item BeinsmLavPre: Pasienter med preop. beinsmerte < 2.5 og ikke parese.
+ \item BeinsmEndrLav: Forbedring av beinsmerter under 1.5 poeng
     \item BMI: Pasienter med fedme (BMI>30)    
+    \item degSponFusj: Degenerativ spondylolistese operert  med fusjonskirurgi
+    \item degSponSSSten: Degenerativ spondylolistese og sentral spinal stenose
     \item ErstatningPre: Søkt/planlegger å søke erstatning?    
-    \item Fornoyd3mnd: Fornøyde pasienter, 3 mnd etter operasjon    
-    \item Fornoyd12mnd: Fornøyde pasienter, 12 mnd etter operasjon    
+    \item Fornoyd: Fornøyde pasienter 
+    \item KpInf3Mnd: Sårinfeksjon, pasientrapportert    
     \item Kp3Mnd: Pasientrapporterte komplikasjoner    
-    \item Misfor3mnd:  Andel med Misfornøyd/litt misfornøyd, 3 mnd
-    \item Misfor12mnd: Andel med Misfornøyd/litt misfornøyd, 12 mnd
-    \item Nytte3mnd: Klart bedre, 3 mnd.    
-    \item Nytte12mnd: Klart bedre, 12 mnd. 
- \item Osw30_3mnd: Mer enn 30% forbedring i Oswestry-skår, 3 mnd.
- \item Osw30_12mnd: Mer enn 30% forbedring i Oswestry-skår, 12 mnd.
+    \item Misfornoyd:  Andel med Misfornøyd/litt misfornøyd
+    \item Nytte: Klart bedre   
+ \item OswEndrLav: Forbedring av Oswestry-skår < 13 poeng
+ \item OswEndr20: Forbedring av Oswestry-skår > 20 poeng
+ \item OswEndr30pst: Mer enn 30% forbedring i Oswestry-skår
+ \item Osw22: Oswestry-skår < 22 poeng
+ \item Osw48: Oswestry-skår > 48 poeng
     \item PeropKomp: Komplikasjon ved operasjon
     \item PeropKompDura: Komplikasjon ved operasjon: Durarift
     \item Roker: Røyker du?    
     \item Saardren: Sårdren    
     \item SmStiPre: Bruker smertestillende før operasjonen    
     \item SymptVarighRyggHof: Varighet av rygg-/hoftesmerter > 1år    
-    \item SympVarighUtstr: Varighet av utstrålende smerter > 1 år  
+    \item SympVarighUtstr: Varighet av utstrålende smerter > 1 år 
+    \item tidlOp3: Mer enn to tidligere operasjoner 
     \item UforetrygdPre: Søkt eller planlegger å søke uføretrygd før operasjon?    
     \item Utd: Andel høyskole-/universitetsutdannede    
-    \item Verre3mnd Mye verre/verre enn noen gang, 3 mnd.
-    \item Verre12mnd Mye verre/verre enn noen gang, 12 mnd.
+    \item Verre Mye verre/verre enn noen gang, 3 mnd. 
 	}
 }
-

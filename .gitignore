@@ -4,3 +4,15 @@
 *.png
 nkr.Rproj
 *.csv
+*.xlsx
+*.aux
+*.log
+*.out
+*.pdf
+test
+*.png
+*.jar
+nkr.git/
+doc/gmlRfunk
+AarsrappOff/
+aarsrapp/

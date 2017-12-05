@@ -6,20 +6,29 @@
 #' @param fargepalett - Velge fargepalett, standard:BlaaOff ("offentliggjøringsfargene")
 #'
 #' @export
-RyggUtvalg <- function(RegData, datoFra, datoTil, minald=0, maxald=130, erMann='', hovedkat=99, 
-		tidlOp='', fargepalett='BlaaOff')	#insttype, 
-{
 
+RyggUtvalg <- function(RegData, datoFra, datoTil, minald=0, maxald=130, erMann='', hovedkat=99, #insttype, 'BlaaOff'
+           aar=0, opKat=99, tidlOp='', fargepalett='BlaaOff') {
 
+# Definer intersect-operator
+      "%i%" <- intersect
+      
+      
 Ninn <- dim(RegData)[1]
 
 indAld <- which(RegData$Alder >= minald & RegData$Alder <= maxald)
+indAar <- if (aar[1] > 2000) {which(RegData$OpAar %in% as.numeric(aar))} else {indAar <- 1:Ninn}
 indDato <- which(RegData$InnDato >= as.POSIXlt(datoFra) & RegData$InnDato <= as.POSIXlt(datoTil))
-indKj <- if (erMann %in% 0:1) {which(RegData$erMann == erMann)} else {indKj <- 1:Ninn}
-indHovedInngr <- if (hovedkat %in% 0:7){which(RegData$HovedInngrep == hovedkat)
+indKj <- if (erMann %in% 0:1) {which(RegData$ErMann == erMann)} else {indKj <- 1:Ninn}
+#indHovedInngr <- if (hovedkat %in% 0:7){which(RegData$HovedInngrep == hovedkat)
+#			} else {indHovedInngr <- 1:Ninn}
+#Hovedkategori, flervalgsutvalg
+indHovedInngr <- if (hovedkat[1] %in% 0:7) {which(RegData$HovedInngrep %in% as.numeric(hovedkat))
 			} else {indHovedInngr <- 1:Ninn}
+
 indTidlOp <- if (tidlOp %in% 1:4) {which(RegData$TidlOpr==tidlOp)} else {indTidlOp <- 1:Ninn}
-indMed <- intersect(indAld, intersect(indDato, intersect(indKj, intersect(indHovedInngr, indTidlOp))))
+indOpKat <- if (opKat %in% 1:3) {which(RegData$OpKat == opKat)} else {1:Ninn}
+indMed <- indAld %i% indDato %i% indAar %i% indKj %i% indHovedInngr %i% indTidlOp %i% indOpKat
 RegData <- RegData[indMed,]
 
 
@@ -34,20 +43,26 @@ hkatnavn <- c(
 	'Fjerning/rev. av implantat')
 
 TidlOprtxt <-	c('Tidl. operert samme nivå', 'Tidl. operert annet nivå', 'Tidl. operert annet og sm. nivå', 'Primæroperasjon')
+OpKatTxt <- paste0('Operasjonskategori: ', c('Elektiv', 'Akutt', '1/2-Akutt'))
 
 N <- dim(RegData)[1]
 
 utvalgTxt <- c(paste('Operasjonsdato: ', if (N>0) {min(RegData$InnDato, na.rm=T)} else {datoFra}, 
 			' til ', if (N>0) {max(RegData$InnDato, na.rm=T)} else {datoTil}, sep='' ),
-	if ((minald>0) | (maxald<130)) {paste('Pasienter fra ', if (N>0) {min(RegData$Alder, na.rm=T)} else {minald}, 
-						' til ', if (N>0) {max(RegData$Alder, na.rm=T)} else {maxald}, ' år', sep='')},
-	if (erMann %in% 0:1) {paste('Kjønn: ', c('Kvinner', 'Menn')[erMann+1], sep='')},
-	if (hovedkat %in% 0:7) {paste('Hovedinngrep: ', hkatnavn[hovedkat+1], sep='')},
-	if (tidlOp %in% 1:4) {TidlOprtxt[tidlOp]}
+	#År, flervalgsutvalg, ikke ha med egen tekst for dette?
+#	if (aar[1] > 2000 ){
+#	      AarMed <- min(RegData$OpAar, na.rm=T):max(RegData$OpAar, na.rm=T)
+#	      if (length(AarMed)>1) {paste0('År: ', AarMed[1], ':', max(AarMed))} else {paste0('År: ', AarMed)}},
+	if ((minald>0) | (maxald<130)) {paste0('Pasienter fra ', if (N>0) {min(RegData$Alder, na.rm=T)} else {minald}, 
+						' til ', if (N>0) {max(RegData$Alder, na.rm=T)} else {maxald}, ' år')},
+	if (erMann %in% 0:1) {paste0('Kjønn: ', c('Kvinner', 'Menn')[erMann+1])},
+	if (hovedkat[1] %in% 0:7) {paste0('Hovedinngrep: ', paste(hkatnavn[as.numeric(hovedkat)+1], collapse=','))},
+      if (opKat %in% 1:3) {OpKatTxt[opKat]},
+      if (tidlOp %in% 1:4) {TidlOprtxt[tidlOp]}
 	)
 	
 
 
 UtData <- list(RegData=RegData, utvalgTxt=utvalgTxt, fargepalett=fargepalett) #GronnHNpms624,
-return(invisible(UtData)) 
+return(invisible(UtData))
 }

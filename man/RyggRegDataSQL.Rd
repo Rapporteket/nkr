@@ -12,4 +12,3 @@ RegData data frame
 \description{
 Henter data for Degenerativ Rygg fra "staging" (?)
 }
-

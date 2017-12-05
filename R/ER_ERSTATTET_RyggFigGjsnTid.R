@@ -32,7 +32,7 @@
 #' @return Linjediagram som viser utvikling over tid for valgt variabel
 #'
 #' @export
-RyggFigGjsnTid <- function(RegData, outfile, valgtVar, tidlOp='', erMann='', hovedkat=99, 
+RyggFigGjsnTidUT <- function(RegData, outfile, valgtVar, tidlOp='', erMann='', hovedkat=99, 
                     minald=0, maxald=130, ktr=1, tittel=1, datoFra='2007-01-01', datoTil='3000-01-01', 
                     valgtMaal='',enhetsUtvalg=1, hentData=0, preprosess=1, reshID){
       
@@ -196,15 +196,15 @@ figtype(outfile)
 } else {
 
 
-Aartxt <- min(RegData$Aar):max(RegData$Aar)
-RegData$Aar <- factor(RegData$Aar, levels=Aartxt)
+Aartxt <- min(RegData$OpAar):max(RegData$OpAar)
+RegData$OpAar <- factor(RegData$OpAar, levels=Aartxt)
 AntAar <- length(Aartxt)
 
 
 #Resultat for hovedgruppe
-N <- tapply(RegData[indHoved ,'Variabel'], RegData[indHoved, 'Aar'], length)
+N <- tapply(RegData[indHoved ,'Variabel'], RegData[indHoved, 'OpAar'], length)
 if (valgtMaal=='Med') {
-	MedIQR <- plot(RegData$Aar[indHoved],RegData$Variabel[indHoved],  notch=TRUE, plot=FALSE)
+	MedIQR <- plot(RegData$OpAar[indHoved],RegData$Variabel[indHoved],  notch=TRUE, plot=FALSE)
 	Midt <- as.numeric(MedIQR$stats[3, ])	#as.numeric(MedIQR$stats[3, sortInd])
 	Konf <- MedIQR$conf
 	#Hvis vil bruke vanlige konf.int:
@@ -216,8 +216,8 @@ if (valgtMaal=='Med') {
 #and are said to be rather insensitive to the underlying distributions of the samples. The idea appears to be to give 
 #roughly a 95% confidence interval for the difference in two medians. 	
 } else {	#Gjennomsnitt blir standard.
-	Midt <- tapply(RegData[indHoved ,'Variabel'], RegData[indHoved, 'Aar'], mean)
-	SD <- tapply(RegData[indHoved ,'Variabel'], RegData[indHoved, 'Aar'], sd)
+	Midt <- tapply(RegData[indHoved ,'Variabel'], RegData[indHoved, 'OpAar'], mean)
+	SD <- tapply(RegData[indHoved ,'Variabel'], RegData[indHoved, 'OpAar'], sd)
 	Konf <- rbind(Midt - 2*SD/sqrt(N), Midt + 2*SD/sqrt(N))
 }
 	Konf <- replace(Konf, which(Konf < KIekstrem[1]), KIekstrem[1])
@@ -227,15 +227,15 @@ if (valgtMaal=='Med') {
 MidtRest <- NULL
 KonfRest <- NULL
 if (medSml ==  1) {
-NRest <- tapply(RegData[indRest ,'Variabel'], RegData[indRest, 'Aar'], length)
+NRest <- tapply(RegData[indRest ,'Variabel'], RegData[indRest, 'OpAar'], length)
 	if (valgtMaal=='Med') {
-		MedIQRrest <- plot(RegData$Aar[indRest],RegData$Variabel[indRest],  notch=TRUE, plot=FALSE)
+		MedIQRrest <- plot(RegData$OpAar[indRest],RegData$Variabel[indRest],  notch=TRUE, plot=FALSE)
 		MidtRest <- as.numeric(MedIQRrest$stats[3, ])
 		KonfRest <- MedIQRrest$conf
 	} else {
-	MidtRest <- tapply(RegData[indRest,'Variabel'], RegData[indRest, 'Aar'], mean)	#indRest
-	SDRest <- tapply(RegData[indRest,'Variabel'], RegData[indRest, 'Aar'], sd)
-	NRest <- tapply(RegData[indRest,'Variabel'], RegData[indRest, 'Aar'], length)
+	MidtRest <- tapply(RegData[indRest,'Variabel'], RegData[indRest, 'OpAar'], mean)	#indRest
+	SDRest <- tapply(RegData[indRest,'Variabel'], RegData[indRest, 'OpAar'], sd)
+	NRest <- tapply(RegData[indRest,'Variabel'], RegData[indRest, 'OpAar'], length)
 	KonfRest <- rbind(MidtRest - 2*SDRest/sqrt(NRest), MidtRest + 2*SDRest/sqrt(NRest))
 	}
 	KonfRest <- replace(KonfRest, which(KonfRest < KIekstrem[1]), KIekstrem[1])

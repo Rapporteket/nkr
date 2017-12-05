@@ -1,0 +1,1139 @@
+\documentclass [norsk,a4paper,twoside]{article}
+\addtolength{\hoffset}{-0.5cm}
+\addtolength{\textwidth}{1cm}
+
+\usepackage[utf8x]{inputenc}
+\usepackage[norsk]{babel}
+\usepackage{Sweave}
+%\usepackage[colorlinks]{hyperref}
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\usepackage{amsmath}
+%package odfWeave provides functions for using Sweave in combination with OpenOffice Writer 
+%rather than LATEX.
+
+%add rotating for plain tables
+\usepackage{rotating}
+
+%add rotating/landcape for pdf
+\usepackage{pdflscape}
+
+%add long tables
+\usepackage{longtable}
+\usepackage{afterpage} 
+\afterpage{\clearpage} %unngå sideskift etter floatflsuh
+%\restylefloat{figure} %gjør det mulig å angi H som parameter for plassering av floats
+
+%for nice looking tabs
+\usepackage{booktabs}
+
+
+%bytte font
+\renewcommand{\familydefault}{\sfdefault}
+
+%setter grå skrift fremfort sort
+\usepackage{xcolor}
+\usepackage{graphicx}
+\definecolor{SKDE}{rgb}{0,0.32,0.61}
+\definecolor{lysblaa}{rgb}{0.27,0.51,0.71}
+\definecolor{moerkblaa}{rgb}{0.0,0.0,0.47}
+\definecolor{lysgraa}{rgb}{0.8,0.8,0.8}
+\definecolor{middelsgraa}{rgb}{0.5,0.5,0.5}
+\definecolor{moerkgraa}{rgb}{0.25,0.25,0.25}
+\color{moerkgraa}
+
+\usepackage[pdftex, colorlinks, linkcolor=lysblaa, urlcolor=lysblaa]{hyperref}
+
+%bytte overskrifter og luft etter de
+\usepackage[compact]{titlesec}	%Får ikke lastet ned denne pakken
+\titleformat{\section} {\vspace*{10pt}\color{SKDE}\normalfont\Large\bfseries} {\thesection}{}{}
+\titleformat{\subsection} {\color{middelsgraa}\normalfont\large\bfseries} {\thesection}{}{}
+
+%marger og luft mellom avsnitt
+%\usepackage[strict]{changepage}
+%\usepackage[left=3cm,top=2.7cm,right=4cm, bottom=6cm]{geometry}
+%\setlength{\parindent}{0pt}
+%\setlength{\parskip}{7pt} %1ex plus 0.5 ex minus 0.2ex
+%\setlength{\headsep}{2.5cm}
+%\setlength{\footskip}{3.7cm}
+
+%topptekst og vertikal sidenummer
+\fancyhead{}\fancyfoot{}  % clear all fields
+\fancyheadoffset[LO, RE]{3cm}
+\fancyfootoffset[LO]{1.5cm}
+\fancyfootoffset[RE]{1.5cm}
+\fancyhead[LO]{\colorbox{SKDE}{\textcolor{white}{\hspace*{2cm}\scshape\small Nasjonalt Kvalitetsregister for Ryggkirurgi}}}
+\fancyhead[RE]{\hspace*{2cm}\colorbox{SKDE}{\textcolor{white}{\scshape\small Nasjonalt Kvalitetsregister for Ryggkirurgi \hspace*{3cm}}}}
+\fancyfoot[LO]{\colorbox{SKDE}{\textcolor{white}{\scshape\small\thepage}} \\ \vspace*{-0.1cm}\colorbox{SKDE}{\textcolor{SKDE}{\scshape\small\thepage}} \\ \vspace*{-0.1cm}\colorbox{SKDE}{\textcolor{SKDE}{\scshape\small\thepage}} } 
+\fancyfoot[RE]{\colorbox{SKDE}{\textcolor{white}{\scshape\small\thepage}} \\ \vspace*{-0.1cm}\colorbox{SKDE}{\textcolor{SKDE}{\scshape\small\thepage}} \\ \vspace*{-0.1cm}\colorbox{SKDE}{\textcolor{SKDE}{\scshape\small\thepage}} \\ \vspace*{-0.1cm}\colorbox{SKDE}{\textcolor{SKDE}{\scshape\small\thepage}}} 
+\renewcommand{\headrulewidth}{0pt} %\iffloatpage{0pt}{0.4pt}
+ \renewcommand{\footrulewidth}{0pt}
+%evt. horisontal sidenummer
+\fancyfoot[LO]{\colorbox{SKDE}{\textcolor{white}{\hspace*{2cm} \small \thepage}}} \fancyfootoffset[LO]{4.4cm}
+\fancyfoot[RE]{\hspace*{2cm}\colorbox{SKDE}{\textcolor{white}{\small \thepage \hspace*{3cm}}}}  \fancyfootoffset[RE]{5.3cm}
+\setcounter{secnumdepth}{-1} 
+
+
+%\SweaveOpts{prefix.string=figurer/} %Lokalt
+
+\title{Samlerapport for data rapportert til NKR}
+\author{NKR, SKDE}
+\fancyhead[R]{\includegraphics[width=1cm]{NKRlogo.jpg}}
+%\logo{\includegraphics[height=2cm]{NKRlogo.jpg}}
+
+\begin{document}
+\maketitle
+\tableofcontents
+\newpage
+\listoffigures
+\newpage
+\listoftables
+\newpage
+
+
+
+% supress the '+' continuation prompt
+% adjust the width of R in/output in the document
+<<echo=false>>= 
+options(continue=" ")
+options(width=60)
+@
+
+% remove default spacing between R code and output
+\fvset{listparameters={\setlength{\topsep}{0pt}}}
+\renewenvironment{Schunk}{\vspace{\topsep}}{\vspace{\topsep}}
+
+
+<<'LasteData', echo=FALSE, eval=T>>=
+#Må hente RegData. Lokalt gjøres dette utenfor.
+if (!exists('RegDataALLE')){
+  RegDataALLE <- RyggRegDataSQL()
+  }
+@
+
+<<'FellesParamPreProsess', echo=FALSE, eval=T>>=
+# Preprosessere data:  
+RegDataALLE <- RyggPreprosess(RegData=RegDataALLE)  #, reshID=reshID)
+
+#Felles parametre:
+library(xtable)
+#opdataALLE$Aar <- as.numeric(substr(as.character(opdataALLE$OpDato), 7, 10))
+aarRapp <- 2015	#Årstall for årsrapport
+egenavd <- 0
+reshID <- 0
+kjonn <- 0
+aar <- 0
+hovedkat <- 99
+tidlOp <- 0	# Dvs. alle
+plotType <- 'S'	#S - søyle, L - linje
+mT <- 1
+ktr <- 2
+if (ktr==1) {ktrtxt <- '3 mnd.'} 
+if (ktr==2) {ktrtxt <- '12 mnd.'} 
+s1 <- 0.9	#Skaleringsparameter for enkeltfigurer
+s2 <- 0.68	#Skaleringsparameter for "dobbeltfigurer"
+
+#Bare data fram t.o.m. 31.des årsrapportåret skal være med
+indRapp <- which(opdataALLE$Aar %in% c(2007:aarRapp))
+opdataLand <- opdataALLE[indRapp, ]
+
+source(paste(libkat, 'fun_HovedKatValg.R',sep=''), encoding="UTF-8")
+HKatdata <- HovedKatValg(opdataLand,hovedkat)
+opdataLand <- HKatdata$data
+hovedkattxt <- HKatdata$txt
+
+#Tidsrom	Det vil bare være hensiktsmessig å velge hele år.
+#Kanskje vi bør ha mulighet for å velge flere år?
+source(paste(libkat, 'fun_aarvalg.R',sep=''), encoding="UTF-8")
+aardata <- aarvalg(opdataLand, aar)
+opdataLand <- aardata$data
+aartxt <- aardata$txt
+
+opdataLand$HovedInngrep <- factor(opdataLand$HovedInngrep, levels=0:7)
+opdataLand$Inngrep <- factor(opdataLand$Inngrep, levels=0:19)
+opdataLand$AvdNavn <- factor(as.character(opdataLand$AvdNavn))	#For å ta bort avd. som ikke reg.
+
+NLand <- dim(opdataLand)[1]
+register <- 'NKR'
+@
+
+
+
+\section{Innledning}
+Dette dokumentet gir resultater fra databasen til Norsk Kvalitetsregister for Ryggkirurgi (NKR). 
+Resultatene er basert på de data som ved rapportdato er registrerte i databasen.
+
+Kvaliteten på alle resultater som kommer ut av registeret, inkludert denne samlerapporten, er avhengig 
+av at hvert 
+enkelt sykehus registrer data konsekvent og nøyaktig på så mange pasienter som overhodet mulig, og at 
+pasientene besvarer spørreskjema som sendes ut hhv. 3 og 12 måndeder etter operasjonen. 
+
+I hvor stor grad sykehusene rapporterer til NKR, legges ut offentlig på vår 
+hjemmeside og/eller på frittsykehusvalg.no
+
+Kvaliteten på den informasjonen som kommer ut av registeret er avhengig av 
+dekningsgraden til registeret, komplettheten av de innsamlede data, om opplysningene er 
+korrekte og hvor mange pasienter som svarer på etterkontroll, dvs. responsraten. 
+
+Dekningsgraden er avhengig av to faktorer:
+\begin{itemize}
+\item Hvor mange av de avdelinger som opererer ryggpasienter som leverer data til NKR
+\item Hvor stor andel av de som blir operert ved de enkelte sykehus\/avdelinger som blir registrert.
+\end{itemize}
+	 
+Registeret vil alltid inneholde 
+flere preoperative enn postoperative opplysninger. Dette skyldes at mange pasienter ikke vil ha 
+rukket å svare på spørreskjema etter 3 og 12 måneder. Som eksempel nevnes at de som blir operert 
+i \Sexpr{aarRapp} ikke vil få 12 måneders oppfølgning før i \Sexpr{aarRapp+1}. I tillegg er det en del pasienter som ikke 
+returnerer/besvarer spørreskjema. De får en purring per brev som inneholder et nytt spørreskjema. 
+\par
+
+Komplettheten avhenger av mengden manglende informasjon i spørreskjemaene, dvs. ubesvarte, åpne felter (”missing values”). 
+Nærmere beskrivelse av registerets formål, utforming, innhold, tekniske løsning og 
+bruksområde, samt årsrapporter, finnes og kan lastes ned fra www.ryggregister.no (Se ”Registerbeskrivelse”, 
+”Praktisk veileder” og ”Brukerhåndbok”) med linker.
+
+Det registreres ca 350 ulike variabler i databasen til NKR. Disse kan deles i 3 hovedkategorier:
+\begin{enumerate}
+\item Bakgrunnsdata: \\
+Demografiske og sosioøkonomiske data, samt andre kjente risikofaktorer som kan ha betydning for operasjonsresultatet.
+
+\item Virksomhetsdata: \\
+Diagnose, behandling, liggetid, operasjonstid, antibiotikaprofylakse m.m.
+
+
+\item Resultatmål \\
+Kliniske endepunkter blir brukt som kvalitetsindikatorer. Til dette brukes et sett validerte 
+måleinstrumenter som er anbefalt i internasjonal litteratur.
+Følgende resultatmål brukes:\\
+\begin{itemize}
+\item Endring av Ryggspesifikk funksjon i dagliglivets aktiviteter og sykdomsspesifik livskvalitet (Oswestry Disability Index, ODI).
+\item EQ-5D. Dette er et generelt livskvalitetsmål som gir mulighet til å beregne utkomme etter kirurgi i
+såkalte kvalitetsjusterte leveår (QALYs). Dette målet kan også brukes til å sammenline utkomme på tvers av behandlinger for ulike sykdommer.
+\item Pasientvurdert nytte av operasjon.
+\item Yrkesstatus, andel av de som var sykemeldte før operasjon dom er tilbake i jobb etter 3 og 12 måneder.
+\item Pasientens tilfredshet med behandlingen.
+\item Endring av smerte i rygg og bein (Numerisk smerteskala).
+\item Endring av selvevaluert helsetilstand (VAS-skala).
+\item Komplikasjoner.
+\end{itemize}
+\end{enumerate}
+
+
+Både bakgrunnsvariabler og virksomhetsdata er faktorer kan være med å påvirke utkomme etter kirurgi. 
+Dette kan variere mellom pasientpopulasjonene til de ulike kirurgiske enhetene.  
+Siden resultatene ikke er justert for disse forskjellene, egner de seg ikke til direkte 
+sammenlikning på tvers av sykehus/avdelinger. 
+
+\par
+
+Figurene og tabellene i dette dokumentet representerer et utvalg av det som er tilgjengelig on-line fra 
+NKR’s registerportal på helseregister.no. Etter pålogging kan man ta ut ulike typer informasjon fra NKR, 
+hovedsakelig i form av figurer, som kan lastes ned i ulike  
+filformat, for eksempel PowerPoint. Der kan du få mer omfattende 
+informasjon med valgbare parametre som for eksempel kjønn, hovedinngrep og år. 
+Du kan også få frem 
+bakgrunnsopplysninger om pasientene (f.eks. alder, kjønn, røyking, BMI) innenfor hvert 
+hovedinngrep. Brukerne har kun tilgang til egne data som er sammenstilt med tall for hele landet. \\
+Videre er det mulig å laste ned rådatasett for egne registreringer i ulike filformat, slik at du kan 
+gjøre egne analyser av de data som tilhører ditt sykehus. På grunn av krav fra datatilsynet, er det 
+nødvendig med tofaktorautentisering av brukerene. Dette medfører at passord må sendes per SMS.
+Rapportene er kun tilgjengelig for registrerte brukere. 
+\par
+For å logge seg inn, kan man følge denne linken: 
+\textcolor{blue}{ \href{https://helseregister.no}{helseregister.no}} \\
+%{\url{helseregister.no}}\\ {https://helseregister.no/index_main.html}
+(Er man ikke registrert bruker, finner man også skjema for å bestille brukerkonto her.)
+Det vises for øvrig til informasjon på: \\  
+\textcolor{blue}{\url{www.ryggregisteret.no}}. 
+\par
+
+Rapportsystemet er under kontinuerlig revisjon og utvikling. Tilbakemelding fra de kliniske 
+miljøene er derfor helt nødvendig for at det skal fungere etter hensikten og oppfylle brukernes behov. Har du spørsmål, kommentarer eller andre tilbakemeldinger, kontakt: \\
+\textbf{Mai.Lisbet.Berglund@unn.no} \\
+
+
+\section{Oppsummeringstall for NKR}
+
+\begin{table}[!ht]
+  \caption{Antall registreringer per år og avdeling.}
+  \label{tab:AntReg}
+<<TabAlleReg, results=tex, echo=FALSE>>=
+tabAvdN <- addmargins(as.table(ftable(opdataLand[c('AvdNavn','Aar')])))
+rownames(tabAvdN)[dim(tabAvdN)[1] ]<- 'TOTALT, alle avdelinger:'
+colnames(tabAvdN)[dim(tabAvdN)[2] ]<- 'Alle år'
+
+#xtable(tabAvdN, digits=0, caption="Antall registreringer per år og avdeling", label="tab:AntReg")
+
+tabKjPst <- round(table(opdataLand$Kjonn)/NLand*100, digits=1)
+
+#print tabel here, sideways
+mat <- xtable(tabAvdN, digits=0, align=c('l', rep('r', ncol(tabAvdN))))
+print(mat,
+	#tabular.environment='longtable',
+	floating=FALSE,
+	hline.after=NULL,
+	add.to.row=list(pos=list(-1,0, nrow(mat)),
+	command=c('\\toprule ','\\midrule ','\\bottomrule ')))
+@
+\end{table}
+%\end{sidewaystable}
+
+Registrering av operasjoner i NKR startet i september 2006. Siden det i 2006 var få registreringer, har vi valgt å vise resultater fra og med 2007. 
+Tabell \ref{tab:AntReg} viser antall 
+registreringer gjort ved de respektive avdelinger hvert år. Vi ser at det ved utgangen av \Sexpr{aarRapp} er 
+\Sexpr{dim(tabAvdN)[1]-1} avdelinger som registrerer og at det totalt er registrert \Sexpr{NLand} 
+operasjoner. Av disse er \Sexpr{tabKjPst[1]}\% utført på menn og \Sexpr{tabKjPst[2]}\% på kvinner.
+\clearpage
+
+
+
+Denne rapporten kan genereres for utvalg av de registrerte dataene. Datautvalget i 
+denne rapporten er følgende:\\[0.3cm]
+\textbf{Pasienter operert i perioden: 2007-\Sexpr{aarRapp}}\\
+
+
+
+\section{Bakgrunnsdata}
+
+\subsection{Aldersfordeling}
+
+Figur \ref{fig:Alder} viser aldersfordeling for alle pasienter.
+De nøyaktige tallene for aldersfordelinga framgår av Tabell \ref{tab:Alder}. 
+
+\begin{figure}[ht] 
+  \begin{center}
+\scalebox{\Sexpr{s1}}{
+<<FigAlder, fig=TRUE, echo=FALSE>>=
+AlderFord <- AndelSoyler(opdata=opdataLand, libkat=libkat, variabel='Alder', outfile='', 
+		reshID=reshID, aar=aar, kjonn=kjonn, hovedkat=hovedkat, egenavd=0, tittel=0)
+@
+}
+  \end{center}
+  \caption{\Sexpr{AlderFord$Tittel}}
+  \label{fig:Alder}
+\end{figure}
+
+<<TabAlder, results=tex, echo=FALSE>>=
+AldMSD <- c(round(mean(opdataLand$Alder, na.rm=T),1), 
+		round(sd(opdataLand$Alder, na.rm=T)/sqrt(NLand),1))
+Alder <- paste(round(AlderFord$Andeler, 1), '%', sep='')
+names(Alder) <- names(AlderFord$Andeler)
+xtable(rbind('Andeler'=Alder), caption=AlderFord$Tittel, label="tab:Alder", align=c(rep('c',10)))
+#,digits=1)
+@ 
+
+
+Gjennomsnittlig alder (standardavvik) for pasientene var \Sexpr{AldMSD[1]}
+ (\Sexpr{AldMSD[2]}).
+Andel pasienter over 65 år var
+\Sexpr{round(length(which(opdataLand$Alder>65))/NLand*100,1)}\%.
+
+
+
+\subsection{Sivilstatus}
+Tabell \ref{tab:SivStat} viser sivilstatus for pasienter fra hele landet.
+
+<<TabSivStat, results=tex, echo=FALSE>>=
+SivStat <- cbind('Antall'= c(table(opdataLand$SivilStatus, useNA='always'), NLand),
+		'Andeler'= 
+		c(paste(round(table(opdataLand$SivilStatus, useNA='always')/NLand*100,1),'%', sep=''), ''))
+rownames(SivStat) <- c('Gift', 'Samboer', 'Enslig', 'Ikke svart', 'Tot. ant.')
+xtable(SivStat, caption='Sivilstatus for opererte pasienter', label="tab:SivStat", align=c('l','r','r'))
+@ 
+
+
+\subsection{Morsmål / etnisitet}
+Tabell \ref{tab:Morsm} viser fordeling av norsk, samisk og andre fremmedsåpråklige pasienter
+for hele landet. 
+Andel fremmedspråklige 
+pasienter (inkl. samisk) er \Sexpr{round(sum(table(opdataLand$Morsmal)[2:3])*100/NLand, 1)}\% 
+
+<<TabMorsm, results=tex, echo=FALSE>>=
+Morsm <- cbind('Antall' = table(opdataLand$Morsmal, useNA='a'),
+			'Andeler' = 
+		paste(round(table(opdataLand$Morsmal, useNA='a')/NLand*100, 1), '%', sep=''))
+rownames(Morsm) <- c('Norsk', 'Samisk', 'Annet', 'Ikke svart')
+xtable(Morsm, caption='Pasientenes morsmål', label="tab:Morsm", align=c('l','r','r'))
+@ 
+
+
+\subsection{Utdanning}
+Figur \ref{fig:Utd} viser pasientenes nivå av utdanning.
+Opplysningene om utdanning er rapportert av pasientene selv.
+
+\begin{figure}[ht] 
+  \begin{center}
+\scalebox{\Sexpr{s1}}{
+<<FigUtd, fig=TRUE, echo=FALSE>>=
+Utd <- AndelSoyler(opdata=opdataLand, libkat=libkat, variabel='Utd', outfile='', 
+		reshID=reshID, aar=aar, kjonn=kjonn, hovedkat=hovedkat, egenavd=0,tittel=0)
+@
+}
+  \end{center}
+  \caption{\Sexpr{Utd$Tittel}}
+  \label{fig:Utd}
+\end{figure}
+
+Total andel med høyere utdanning (fra høyskole eller universitet) var 
+\Sexpr{round(sum(Utd$Andeler[4:5]), 1)} \%.
+
+
+
+
+\subsection{Røyking}
+
+<<Royk, results=tex, echo=FALSE>>=
+RoykTot <- round(sum(opdataLand$Roker, na.rm=T)/sum(table(opdataLand$Roker))*100,0)
+Royk <- round(prop.table(ftable(opdataLand[,c('Kjonn','Roker')]),1)[,2]*100, 0)
+names(Royk) <- c('Menn', 'Kvinner')
+@ 
+
+Det er \Sexpr{Royk[1]}\% av mennene og \Sexpr{Royk[2]}\% av kvinnene som røyker. 
+Total andel røykere er \Sexpr{RoykTot}\%. 
+
+
+\subsection{Arbeidsstatus}
+
+<<TabArbstat, results=tex, echo=FALSE>>=
+NsvarArb <- sum(table(opdataLand$ArbstatusPre))
+ArbNum <- round(table(opdataLand$ArbstatusPre)*100/sum(table(opdataLand$ArbstatusPre)), 1)
+Arb <- paste(ArbNum, '%', sep='')
+names(Arb) <- c('I arbeid', 'Hjemmeværende', 'Student/skoleelev', 'Pensjonist', 'Arbeidsledig', 
+	'Sykemeldt', 'Aktiv sykemeldt', 'Delvis Sykemeldt', 'Attføring/rehabiliteirng', 'Uføretrygdet')
+xtable(cbind('Andeler'=Arb), caption='Arbeidsstatus', label="tab:Arb", align=c('l','r'))
+
+indSyk <- which(opdataLand$ArbstatusPre %in% 6:10)
+GjsnSyk<- mean(opdataLand$SykemeldVarighPre[indSyk], na.rm=T)
+SdSyk<- sd(opdataLand$SykemeldVarighPre[indSyk], na.rm=T)
+MedSyk<- median(opdataLand$SykemeldVarighPre[indSyk], na.rm=T)
+@ 
+
+
+Tabell \ref{tab:Arb} viser fordeling av arbeidsstatus for de \Sexpr{round(NsvarArb/NLand*100, 1)}\% 
+av pasientene som har svart på arbeidsstatus.
+Andelen pasienter som mottok sykepenger (sykemeldte, uføretrygdede eller personer 
+på attføring) og av den grunn var helt eller delvis ute av jobb før operasjonen (preop) var 
+\Sexpr{sum(ArbNum[6:10])} \%. 
+Median varighet av sykemelding/attføring/rehabilitering  før operasjon var 
+\Sexpr{MedSyk} uker.
+
+
+\subsection{Har pasienten søkt om uføretrygd? }
+Tabell \ref{tab:Ufor} viser pasientenes svar på spørsmålet: ``Har du søkt om uføretrygd?'' 
+
+
+<<Ufor, results=tex, echo=FALSE>>=
+Ufor <- paste(round(table(opdataLand$UforetrygdPre, useNA='a')*100/NLand, 1), '%', sep='')
+names(Ufor) <- c('Ja', 'Nei', 'Planlegger å søke', 'Er innvilget', 'Ikke besvart')	#, 'Tot. ant.')
+xtable(cbind('Andeler'=Ufor), caption='Spm: Har du søkt om uføretrygd?', label="tab:Ufor", 
+align=c('l','r'), digits=1)
+@ 
+
+
+\subsection{Har pasienten søkt om erstatning?} 
+Tabell \ref{tab:Erst} viser pasientenes svar på spørsmålet: ``Har du søkt om erstatning?''
+
+
+<<TabErst, results=tex, echo=FALSE>>=
+Erst<- paste(round(table(opdataLand$ErstatningPre, useNA='a')*100/NLand, 1), '%', sep='')	#, NLand)
+names(Erst) <- c('Ja', 'Nei', 'Planlegger å søke', 'Er innvilget', 'Ikke besvart')	#, 'Tot. ant.')
+xtable(cbind('Andeler'=Erst), caption='Spm: Har du søkt om erstatning fra forsikringsselskap eller folketrygden, 
+	eventuelt yrkesskadeerstatning)?', label="tab:Erst", align=c('l','r'))
+@ 
+
+
+\subsection{Tidligere ryggoperert}
+Informasjonen er hentet fra legeskjema.
+Figur \ref{fig:TidlOp} viser en prosentvis fordelig mellom primæroperasjon, det vil si første gangs 
+operasjon, og operasjoner hos pasienter som har vært operert tidligere.  
+Søylene representerer hvert år frem til i dag. Tallet på toppen av søylen viser antall 
+operasjoner utført det aktuelle året.
+
+\begin{figure}[ht] 
+  \begin{center}
+\scalebox{\Sexpr{s1}}{
+<<FigTidlOp, fig=TRUE, echo=FALSE>>=
+AndelTidlOp <- AndelStabelTid(opdata=opdataLand, libkat=libkat, outfile='', variabel='TidlOp', egenavd=0,
+		kjonn=kjonn, hovedkat=hovedkat, tidlOp=tidlOp, ktr=ktr, reshID=reshID, tittel=0)	#egenavd=egenavd, 
+TidlOpFord<- rowSums(AndelTidlOp$AndelerAvd)	#AndelerAvd og AndelerRL blir nå det samme.
+TidlOp<- round(TidlOpFord[2:4]*100/sum(TidlOpFord[2:4]), 1)
+@
+}
+  \end{center}
+  \caption{\Sexpr{AndelTidlOp$Tittel}}
+  \label{fig:TidlOp}
+\end{figure}
+
+
+
+Av de pasientene som hadde vært operert tidligere var \Sexpr{TidlOp[1]}\% 
+operert i samme nivå, 
+\Sexpr{TidlOp[2]}\% operert i annet nivå og
+\Sexpr{TidlOp[3]}\% operert i både samme og annet nivå. 
+
+\clearpage
+
+
+\subsection{Kroppsmasseindex (Body Mass Index, BMI)}
+Opplysninger om høyde og vekt er rapportert fra pasientene selv. BMI er gitt ved:
+\begin{equation*}
+\text{BMI} = \frac{\text{Vekt}(kg)}{\text{Høyde}^2 (m^2)}
+\end{equation*} 
+
+Figur \ref{fig:BMI} viser fordeling av BMI for alle pasienter.
+
+\begin{figure}[ht] 
+  \begin{center}
+\scalebox{\Sexpr{s1}}{
+<<FigBMI, fig=TRUE, echo=FALSE>>=
+BMIFord <- AndelSoyler(opdata=opdataLand, libkat=libkat, variabel='BMI', outfile='', egenavd=0,
+		reshID=reshID, aar=aar, kjonn=kjonn, hovedkat=hovedkat, tittel=0)
+@
+}
+  \end{center}
+  \caption{\Sexpr{BMIFord$Tittel}}
+  \label{fig:BMI}
+\end{figure}
+
+
+Total andel med fedme eller kraftig overvekt (BMI > 30) er 
+\Sexpr{round(sum(BMIFord$Andeler[4:6]),0)}\% . 
+
+
+
+
+
+\subsection{ASA-grad}
+ASA angir pasientens ”sårbarhet” i forhold til å få anestesi og operasjon på en skala fra 1 til 5. 
+Data skal hentes fra anestesiskjema som fylles ut av anestesilege/sykepleier før operasjon.
+Tabell \ref{tab:ASA} viser fordeling av ASA grad. Andelen pasienter med ASA grad I-II 
+var \Sexpr{round(sum(table(opdataLand$ASA)[1:2])/NLand*100, 1)}\%. 
+
+<<TabASA, results=tex, echo=FALSE>>=
+ASAant <- table(opdataLand$ASA, useNA='a')
+ASApst <- round(ASAant*100/NLand, 1)
+
+ASA <- cbind('Antall' = ASAant,
+			'Prosent' = paste(ASApst, '%', sep=''))
+rownames(ASA) <- c('I','II','III','IV', 'Ikke besvart')
+xtable(ASA, caption='Fordeling av ASA-grad', 
+			label="tab:ASA", align=c('c','r','r'))
+@ 
+
+
+
+
+
+\subsection{Radiologisk utredning}
+\subsubsection{Radiologisk vurdering}
+
+Tabell \ref{tab:RV} viser hvor stor andel av pasientene som har vært til ulike typer 
+radiologisk undersøkelse. 
+Spørsmålene er besvart av leger. En pasient kan ha vært til flere undersøkelser.
+
+<<TabRV, results=tex, echo=FALSE>>=
+RVvar <- c('RvCt', 'RvMr', 'RvRadigr', 'RvDiscogr', 'RvDpregblok', 'RvRtgLscol', 'RvFunksjo')
+	RVant <- colSums(opdataLand[, RVvar], na.rm=T)
+	RVpst <- round(RVant*100/NLand, 1)
+
+RV <- cbind('Antall' = c(RVant, NLand),
+			'Andeler' = c(paste(RVpst, '%', sep=''),' '))
+rownames(RV) <- c('CT', 'MR', 'Radikulografi', 'Diskografi', 'Diagnostisk blokade', 
+		'Røntgen LS-columna', 'Med fleksjon/ekstensjon', 'Tot. ant.')
+
+xtable(RV, caption='Radiologisk vurdering', 
+			label="tab:RV", align=c('l','r','r'))
+
+@ 
+
+
+\subsubsection{Radiologiske funn/diagnoser}
+Spørsmålene er besvart av leger.
+En pasient kan ha flere diagnoser eller radiologiske funn.
+Tabell \ref{tab:RF} viser diagnoser basert på radiologiske funn. 
+
+
+<<TabRF, results=tex, echo=FALSE>>=
+RFvar <- c("RfNormal", "RfSkive", "RfSentr", "RfLateral", "RfForamino", "RfDegen",                  
+	"RfSpondtypeIsmisk", "RfSpondtypeDegen", "RfDegskol", "RfSynovpre", "RfPseudom")
+
+RFant <- colSums(opdataLand[, RFvar], na.rm=T)[-1]
+RFpst <- round(RFant*100/NLand, 1)
+RF <- cbind('Antall' = c(RFant, NLand),
+			'Andeler' = c(paste(RFpst, '%', sep=''),' '))
+
+#Teller opp de som er diagnostisert som normale:
+RFNorm <- intersect(which(rowSums(opdataLand[, RFvar[2:11]], na.rm=T) == 0), 
+		which(opdataLand$RfNormal == 1))
+rownames(RF) <- c('Skiveprolaps', 'Sentral spinalstenose', 'Lateral spinalstenose', 'Foraminal stenose',
+	'Degenerativ rygg/skivedegenerasjon', 'Istmisk spondylolistese', 'Degenerativ spondylolistese',
+	'Degenerativ skoliose', 'Synovial syste', 'Pseudomeningocele', 'Tot.ant.')
+xtable(RF, caption='Radiologiske diagnoser', 
+			label="tab:RF", align=c('l','r','r'))
+@ 
+
+``Normalt'' er registrert som eneste billedfunn hos \Sexpr{length(RFNorm)} pasienter.
+Dette skyldes sannsynligvis feil/unøyaktig registrering.
+
+
+
+
+\clearpage
+
+\section{Virksomhetsdata}
+
+\subsection{Antall registrerte operasjoner per måned}
+Figur \ref{fig:AntOpMnd} viser hhv. antall 
+innrapporterte operasjoner per måned for landet totalt 
+i \Sexpr{aarRapp}.\\
+De nøyaktige tallene for antall registrerte operasjoner per måned, 
+framgår av Tabell \ref{tab:AntOpMnd}. 
+
+<<FigAntOpMndAvd, echo=FALSE>>=	#fig=TRUE, 
+AntOpMndLand <- AntSoyler(opdata=opdataLand, libkat=libkat, outfile='figurer/AntOpLand.pdf', egenavd=0, 
+	hovedkat=hovedkat, aar=aarRapp, reshID=reshID, tittel=0, variabel='Mnd')
+@
+
+\begin{figure}[ht] 
+  \begin{center}
+ \scalebox{\Sexpr{s1}}{\includegraphics{figurer/AntOpLand.pdf}}
+ \caption{\Sexpr{AntOpMndLand$Tittel}}
+  \label{fig:AntOpMnd}
+    \end{center}
+\end{figure}
+
+%\scalebox{0.9}{
+<<TabAntOpMnd, results=tex, echo=FALSE>>=
+AntOpMnd <- rbind('Antall' = AntOpMndLand$Antall, 
+				'Andeler' = paste(round(AntOpMndLand$Antall/NLand*100, 1),'%',sep=''))
+xtable(AntOpMnd, caption=AntOpMndLand$Tittel[1], label="tab:AntOpMnd", digits=1, align=c('l',rep('c',12)))
+@ 
+%}
+
+
+\subsection{Type operasjon}
+Det er flere variabler i spørreskjema 2A som definerer hvilken type operasjon som er gjort. 
+I databasen til NKR genereres det i alt 8 hovedkategorier operasjoner (”Hovedinngrep”) 
+og disse underkategoriseres i 19 underkategorier (type Hovedinngrep, ”Inngrep”), 
+basert på hva kirurgene har fylt ut i spørreskjema 2A. 
+
+Noen inngrep ved kan være registrert på en slik måte at de ikke lar seg 
+definere inn i noen av gruppene.  
+Dette skyldes i hovedsak legens utfylling av skjema 2A er mangelfull og/eller unøyaktig. 
+Målsetningen er at antall udefinerbare inngrep skal bli så lavt som mulig.
+Totalt er \Sexpr{round(length(which(opdataLand$Inngrep==0))/NLand*100,1)} \% 
+av inngrepene udefinerbare. 
+
+
+\subsubsection{Fordeling av hovedinngrep}
+
+Figur \ref{fig:AntHovedInngrep} viser hhv. antall 
+innrapporterte operasjoner for ulike hovedinngrep .\\
+De nøyaktige tallene for antall registrerte operasjoner for hvert hovedinngrep 
+framgår av Tabell \ref{tab:AntHovedInngrep}. 
+
+<<FigAntHovedInngrepAvd, echo=FALSE>>=	#fig=TRUE, 
+AntHovedInngrepLand <- AntSoyler(opdata=opdataLand, libkat=libkat, outfile='figurer/HinngrLand.pdf', 
+	egenavd=0, aar=aar, reshID=reshID, variabel='HovedInngrep', tittel=0)
+@
+
+\begin{figure}[ht] 
+\scalebox{\Sexpr{s1}}{\includegraphics{figurer/HinngrLand}}
+  \caption{\Sexpr{AntHovedInngrepLand$Tittel}}
+  \label{fig:AntHovedInngrep}
+\end{figure}
+
+
+<<TabAntHovedInngrep, results=tex, echo=FALSE>>=
+AntHovedInngrep <- cbind('Antall' = AntHovedInngrepLand$Antall, 
+					'Andeler' = paste(round(AntHovedInngrepLand$Antall/NLand*100,1),'%', sep='')
+					)
+xtable(AntHovedInngrep, caption=AntHovedInngrepLand$Tittel[1], label="tab:AntHovedInngrep", 
+		align=c('l', 'r', 'r'), digits=1)
+@ 
+
+
+\subsubsection{Oversikt over inngrepstyper}
+Tabell \ref{tab:AndelInngrType} viser fordeling av type operasjon for 
+de hovedinngrepene som har underkategorier. Mikro henspeiler her på at operatøren har brukt
+synsfremmende midler (mikroskop eller lupebriller), mens makro betyr at det har blitt 
+utført åpen kirurgi.
+Med foramenotomi menes kirurgisk dekompresjon med bevaring av midtlinjestrukturer.
+
+
+<<TabInnHinn, results=tex, echo=FALSE>>=
+AntInngrLand<- table(opdataLand$Inngrep)
+AntHinngrLand <- table(opdataLand$HovedInngrep)[HKatdata$inngrHinn$Hnr+1]
+hinngr <- as.character(HKatdata$inngrHinn$Hnavn)
+hinngr[c(3:5, 7:9, 13:16, 19:20)] <- c('', ' ', '  ', '   ', '    ', '     ', '      ', '       ', 
+		'        ', '         ', '          ', '           ')
+AndelInngr <- cbind(#'Hovedinngrep' = hinngr, 	#as.character(HKatdata$inngrHinn$Hnavn),
+					'Type inngrep' = as.character(HKatdata$inngrHinn$Unavn),
+					'Antall' = AntInngrLand, 
+					'Andeler' = 
+					paste(round(AntInngrLand*100/AntHinngrLand, 1), '%', sep=''))
+rownames(AndelInngr) <- hinngr
+AndelInngr4 <- AndelInngr[c(-1,-10,-11,-17), ]
+#cbind(HKatdata$inngrHinn, AntInngrAvd, AntHinngrAvd, AndelInngr)
+
+xtable(AndelInngr4, caption='Hovedinngrep og type inngrep', label="tab:AndelInngrType", 
+		align=c('l','l','r','r'), digits=1)
+@ 
+
+
+
+\subsection{Operasjonskategori, hastegrad}
+Hastegrad er angitt på legeskjema.
+Tabell \ref{tab:OpKat} viser fordeling mellom hasteoperasjoner og elektiv kirurgi. 
+Med {\small 1/2}-øyeblikkelig  
+hjelp menes operasjoner som er gjort utenom vanlig ventetid, for eksempel ved at pasienten har fått 
+rett til ”nødvendig helsehjelp”.
+
+<<TabOpKat, results=tex, echo=FALSE>>=
+NsvarOpKat <- sum(table(opdataLand$OpKat))
+OpKat <- cbind('Antall' = table(opdataLand$OpKat),
+				'Andeler' = 
+				paste(round(table(opdataLand$OpKat)/sum(table(opdataLand$OpKat))*100, 1), '%', sep=''))
+rownames(OpKat) <- c('Elektiv', '1/2-Øyeblikkelig', 'Øyeblikkelig')
+
+xtable(OpKat, caption='Hastegrad av operasjon', label="tab:OpKat", 
+		align=c('l','r','r'), digits=c(0,1,0))
+@ 
+Operasjonskategori er angitt for \Sexpr{round(NsvarOpKat/NLand*100, 1)}\% av pasientene.
+
+\subsection{Liggetid}
+
+Informasjonen er hentet fra legeskjema.
+Figur \ref{fig:Liggedogn} viser gjennomsnittlig antall liggedøgn per år og fordeling av liggedøgn.
+
+
+<<FigLiggetid, echo=FALSE>>=	#fig=TRUE, 
+LiggetidFord <- AndelSoyler(opdata=opdataLand, libkat=libkat, variabel='Liggedogn', 
+outfile='figurer/LiggetidFord.pdf', egenavd=0,
+		reshID=reshID, aar=aar, kjonn=kjonn, hovedkat=hovedkat, tittel=0)
+
+LiggetidBox <- BoxTid(opdata=opdataLand, libkat=libkat, outfile='figurer/LiggetidBox.pdf', 
+reshID=reshID, egenavd=egenavd,
+		variabel='Liggedogn', kjonn=kjonn, hovedkat=hovedkat, ktr=ktr, tittel=0)
+@
+
+
+\begin{figure}[h] 
+  %\begin{center}
+  \scalebox{\Sexpr{s2}}{\includegraphics{figurer/LiggetidFord.pdf}}
+  %\qquad
+  \scalebox{\Sexpr{s2}}{\includegraphics{figurer/LiggetidBox.pdf}}
+  %\end{center}
+  \caption{\Sexpr{LiggetidFord$Tittel}}
+  \label{fig:Liggedogn}
+\end{figure}
+
+
+\subsection{Bruk av antibiotikaprofylakse}
+
+Figur \ref{fig:Antibiotika} viser andelen pasienter som har fått antibiotikaprofylakse
+de respektive år.
+De nøyaktige tallene for hvor stor andel av pasientene som har fått antibiotikaprofylakse 
+framgår av Tabell \ref{tab:AntibiotikaAndel}. 
+
+\begin{figure}[ht] 
+  \begin{center}
+\scalebox{\Sexpr{s1}}{
+<<FigAntibiotika, fig=TRUE, echo=FALSE>>=
+UtData <- AndelTidLinjer(opdata=opdataLand, libkat=libkat, outfile='', reshID=reshID, 
+kjonn=kjonn, hovedkat=hovedkat, variabel='Antibiotika', egenavd=0, tittel=0)	
+@
+}
+  \end{center}
+  \caption{\Sexpr{UtData$Tittel[1]}}
+  \label{fig:Antibiotika}
+\end{figure}
+
+
+%Tabeller og utregninger:
+<<TabAntibiotika, results=tex, echo=FALSE>>=
+Antibiotika <- rbind('Andeler' = paste(round(UtData$Andel[1,],1), '%',sep=''),
+					'Antall' = UtData$AntPrAar[1,])
+xtable(Antibiotika, caption=UtData$Tittel, label="tab:AntibiotikaAndel", 
+		align=c('l',rep('r', aarRapp-2007+1)))
+#xtable(UtData$Ant, caption='Antall pasienter per år som har fått antibiotikaprofylakse', 
+#label="tab:AntibiotikaAnt", digits=0)
+
+#Hele landet:
+NMangel <- NLand - sum(table(opdataLand$Antibiotika))
+AndelAntiLand <- round(UtData$Andeler[1,dim(UtData$Andeler)[2]],1)
+@ 
+
+Samlet svarprosent på om det er gitt Antibiotikaprofylakse er 
+\Sexpr{round((NLand-NMangel)/NLand*100,1)}\%.
+\par
+Det anbefales å gi alle pasienter antibiotikaprofylakse. I \Sexpr{aarRapp} er det gitt antibiotikaprofylakse til 
+\Sexpr{AndelAntiLand}\% av pasientene.
+
+
+\subsection{Varighet av smerter i rygg-/hofte og av utstrålende smerter på operasjonstidspunktet}
+
+Spørsmålene er besvart av pasienten.
+Tabellene \ref{tab:SmRH}  og \ref{tab:Utstr} viser fordeling av hvor lenge pasientene har hatt 
+hhv. smerter i rygg/hofte og utstrålende smerter.
+
+<<TabSmRHUtsr, results=tex, echo=FALSE>>=
+SmRHnum <- round(table(opdataLand$SymptVarighRyggHof, useNA='a')*100/NLand, 1)
+SmRH <- paste(SmRHnum, '%', sep='')
+names(SmRH) <- c('Ingen rygg-/hoftesmerter', '< 3 mnd', 
+			'3 - 12 mnd', '1 - 2 år', '> 2 år', 'Ikke besvart')	#, 'Tot. ant.')
+xtable(cbind('Andeler'=SmRH), caption='Varighet av rygg-/hoftesmerter på operasjonstidspunktet', 
+label="tab:SmRH", align=c('l','r'), digits=1)
+MedRH<- median(opdataLand$SymptVarighRyggHof, na.rm=T)
+
+
+UtsRHnum <- round(table(opdataLand$SympVarighUtstr, useNA='a')*100/NLand, 1)
+UtsRH <- paste(UtsRHnum, '%', sep='')
+names(UtsRH) <- c('Ingen utstrålende smerter', '< 3 mnd', 
+			'3 - 12 mnd', '1 - 2 år', '> 2 år', 'Ikke besvart')	#, 'Tot. ant.')
+xtable(cbind('Andeler'=UtsRH), caption='Varighet av nåværende utstrålende smerter', 
+			label="tab:Utstr", align=c('l','r'), digits=1)
+
+
+dum <- LinjerTidRHF(opdata=opdataLand, libkat, variabel='VarighUtstr', outfile='figurer/VarighUtstrRHF.pdf', hovedkat=99, 
+		kjonn=0, tidlOp=0, tittel=0) 
+dum <- LinjerTidRHF(opdata=opdataLand, libkat, variabel='VarighRyggHof', outfile='figurer/VarighRyggHofRHF.pdf', hovedkat=99, 
+		kjonn=0, tidlOp=0, tittel=0) 
+
+dum <- AndelSoylerAvd(valgtVar='VarighUtstr', opdata=opdataLand, libkat, hovedkat=1,
+		kjonn=0, outfile='figurer/VarighUtstrAvd.pdf')
+dum <- AndelSoylerAvd(valgtVar='VarighRyggHof', opdata=opdataLand, libkat, hovedkat=1,
+		kjonn=0, outfile='figurer/VarighRyggHofAvd.pdf')
+@ 
+
+Figur \ref{fig:VarighSmerteRHF} andelen som har hatt smerter i mer enn ett år før operasjonen
+for hvert år i de ulike regionene, samt i hele landet.
+Figur \ref{fig:VarighSmerteAvd} viser andelen pasienter med smerter i mer enn ett år ved de ulike
+helseforetakene.
+Andelen pasienter som har hatt utstrålende smerter i mer enn ett år er \Sexpr{sum(SmRHnum[4:5])}\%, 
+mens \Sexpr{sum(UtsRHnum[4:5])}\% har hatt rygg-/hoftesmerter i mer enn ett år. (Prosentandelen er ut 
+fra totalt antall pasienter, dvs. inklusive de som ikke har svart. Andelen vil derfor være noe lavere
+enn det vi kan lese av Figur \ref{fig:VarighSmerteAvd} hvor andelene er basert på kun de som har svart.)
+
+
+\begin{figure}[h] 
+  \scalebox{\Sexpr{s2}}{\includegraphics{figurer/VarighUtstrRHF.pdf}}
+  \scalebox{\Sexpr{s2}}{\includegraphics{figurer/VarighRyggHofRHF.pdf}}
+  \caption{Andel av alle ryggopererte pasienter som har hatt hhv smerter i rygg-/hofte og utstrålende 
+  smerter i mer enn ett år før operasjonen for hvert år og for hver region, samt hele landet.}
+  \label{fig:VarighSmerteRHF}
+\end{figure}
+
+\begin{figure}[h] 
+  \scalebox{\Sexpr{s2}}{\includegraphics{figurer/VarighUtstrAvd.pdf}}
+  \scalebox{\Sexpr{s2}}{\includegraphics{figurer/VarighRyggHofAvd.pdf}}
+  \caption{Andel prolapspasienter som har hatt hhv smerter i rygg-/hofte og utstrålende smerter
+			i mer enn ett år før operasjonen ved de ulike HFene.}
+  \label{fig:VarighSmerteAvd}
+\end{figure}
+
+
+
+
+\subsection{Prescore}
+
+Pasientene som i utgangspunktet har mye plager, vil kunne forvente størst gevinst av en operasjon, mens de som har lite plager vil ha mindre potensial for forbedring og større risiko for forverring (”tak og gulveffekter”). Det vil si at en stor del av variasjonen når det gjelder utkomme etter kirurgi, 
+henger sammen med hvor streng indikasjonsstillingen har vært.
+
+Figur \ref{fig:Pre} viser score av EQ5D, ODI, smerter i bein og rygg før operasjon, dvs. 
+hvor dårlig fysisk funksjon og sykdomsspesifikk livskvalitet var.  
+Prescore gir en pekepinn på hvor streng operasjonsindikasjonen har vært.
+
+
+
+
+<<FigPre, echo=FALSE>>=	 #fig=TRUE, 
+dum <- BoxTid(opdata=opdataLand, libkat=libkat, outfile='figurer/EQ5DPre.pdf', reshID=reshID, 
+		variabel='EQ5DPre', kjonn=kjonn, hovedkat=hovedkat, ktr=ktr, egenavd=0, tittel=0)
+dum <- BoxTid(opdata=opdataLand, libkat=libkat, outfile='figurer/OswPre.pdf', reshID=reshID, 
+		variabel='OswTotPre', kjonn=kjonn, hovedkat=hovedkat, ktr=ktr, egenavd=0, tittel=0)
+dum <- BoxTid(opdata=opdataLand, libkat=libkat, outfile='figurer/SmBePre.pdf', reshID=reshID, 
+		variabel='SmBePre', kjonn=kjonn, hovedkat=hovedkat, ktr=ktr, egenavd=0, tittel=0)
+dum <- BoxTid(opdata=opdataLand, libkat=libkat, outfile='figurer/SmRyPre.pdf', reshID=reshID, 
+		variabel='SmRyPre', kjonn=kjonn, hovedkat=hovedkat, ktr=ktr, egenavd=0, tittel=0)
+@
+
+\begin{figure}[h] 
+  \scalebox{\Sexpr{s2}}{\includegraphics{figurer/EQ5DPre.pdf}}
+  \scalebox{\Sexpr{s2}}{\includegraphics{figurer/OswPre.pdf}}
+  \scalebox{\Sexpr{s2}}{\includegraphics{figurer/SmBePre.pdf}}
+  \scalebox{\Sexpr{s2}}{\includegraphics{figurer/SmRyPre.pdf}}
+  \caption{\Sexpr{'Prescore for hhv. EQ5D, Oswestry, bein- og ryggsmerter, tidstrend '}}
+  \label{fig:Pre}
+\end{figure}
+
+
+\clearpage
+
+\section{Resultatmål}
+All informasjon i dette kapitlet er hentet fra pasientskjema. Ingen av resultatmålene er justert
+for eventuelle ulikheter i pasientpopulasjonene.
+
+\subsection{Effekt av operasjon kontra prescore}
+Dette avsnittet oppsummerer hvor stor betydning prescore av Oswestry, EQ5D og smerte har
+for effekten av en operasjon. Er man i utgangspunktet nesten frisk, er sjansen for at man 
+blir verre betydelig, mens er man så dålig at man ikke kan bli verre, kan man forvente ei 
+betydelig forbedring. (Tak og gulv effekter.)
+Figur \ref{fig:EndrPre} viser sammenhengen mellom 
+prescore og endring i de ulike effektmålene. 
+
+
+<<FigEffPre, echo=FALSE>>=	 #fig=TRUE, 
+dum <- EndrPre(opdata=opdataLand, libkat=libkat, outfile='figurer/OswEndrPre.pdf', 
+	reshID=reshID, aar=aar, variabel='Oswestry', kjonn=kjonn, hovedkat=hovedkat, 
+	ktr=ktr, egenavd=0, tittel=0)
+dum <- EndrPre(opdata=opdataLand, libkat=libkat, outfile='figurer/EQ5DEndrPre.pdf', 
+	reshID=reshID, aar=aar, variabel='EQ5D', kjonn=kjonn, hovedkat=hovedkat, 
+	ktr=ktr, egenavd=0, tittel=0)
+dum <- EndrPre(opdata=opdataLand, libkat=libkat, outfile='figurer/SmBeinEndrPre.pdf', 
+	reshID=reshID, aar=aar, variabel='SmBein', kjonn=kjonn, hovedkat=hovedkat, 
+	ktr=ktr, egenavd=0, tittel=0)
+dum <- EndrPre(opdata=opdataLand, libkat=libkat, outfile='figurer/SmRyggEndrPre.pdf', 
+	reshID=reshID, aar=aar, variabel='SmRygg', kjonn=kjonn, hovedkat=hovedkat, 
+	ktr=ktr, egenavd=0, tittel=0)
+@
+
+\begin{figure}[h] 
+  \scalebox{\Sexpr{s2}}{\includegraphics{figurer/EQ5DEndrPre.pdf}}
+  \scalebox{\Sexpr{s2}}{\includegraphics{figurer/OswEndrPre.pdf}}
+  \scalebox{\Sexpr{s2}}{\includegraphics{figurer/SmBeinEndrPre.pdf}}
+  \scalebox{\Sexpr{s2}}{\includegraphics{figurer/SmRyggEndrPre.pdf}}
+  \caption{\Sexpr{paste('Endring vs prescore for hhv EQ5D, Oswestry, smerter i bein og rygg ', ktrtxt, ' etter operasjon', sep='')}}
+  \label{fig:EndrPre}
+\end{figure}
+
+
+\subsection{Oswestry Disability Index (ODI)}
+ODI er en score for fysisk funksjon og et sykdomsspesifikt livskvalitetsmål. Skalaen går fra 0
+til 100, hvor 0 angir ingen funksjonshemming og følgelig beste livskvalitet.
+Figur \ref{fig:OswEndr} viser hhv. fordeling av ODI før og \Sexpr{ktrtxt} etter operasjon,
+og gjennomsnittlig endring i ODI for hvert år.
+%Figur \ref{fig:OswEndrRHF} viser årlig gjennomsnittlig forbedring i ODI-score 12 måneder etter prolapsoperasjon 
+%for hver region, samt i hele landet.
+
+%Figur \ref{fig:OswEndrSml} viser andel pasienter med klinisk signifikant forbedring av ODI 
+%(dvs. minst 30\%) \Sexpr{ktrtxt} etter operasjon. Høyre del av figuren viser gjennomsnittlig 
+%endring hos pasienter 12 måneder
+%etter operasjon sammenliknet med landet forøvrig og de tre avdelingene/sykehusene som har 
+%med størst forbedring i ODI. Merk at resultatene \textit{ikke} justert for forskjeller i pasientpopulasjonene.
+
+
+<<FigOsw, echo=FALSE>>=	 #fig=TRUE, 
+dum <- FordPrePost(opdata=opdataLand, libkat=libkat, outfile='figurer/OswestryPP.pdf', 
+	reshID=reshID, egenavd=egenavd, variabel='Oswestry', plotType='S', aar=aar, kjonn=kjonn, hovedkat=hovedkat, ktr=ktr, tittel=0)
+dum <- BoxTid(opdata=opdataLand, libkat=libkat, outfile='figurer/OswEndr.pdf', reshID=reshID, 
+	variabel='OswEndr', kjonn=kjonn, hovedkat=hovedkat, ktr=ktr, egenavd=egenavd, tittel=0)
+#dum <- Osw_over30pst(opdata=opdataLand, libkat=libkat, outfile='figurer/Osw_over30pst.pdf',
+#		hovedkat=hovedkat, ktr=ktr, tidlOp=tidlOp, shgr=0, aar=aar, kjonn=kjonn, reshID=reshID, tittel=0)
+#dum <- SoyleSml(opdata=opdataLand, libkat=libkat, outfile='figurer/OswEndrSml.pdf', 
+#	reshID=reshID, variabel='OswEndr', tidlOp=tidlOp, aar=aar, kjonn=kjonn, shgr=0, 
+#	hovedkat=hovedkat, ktr=ktr, just=0, tittel=0)
+
+dum <- LinjerTidRHF(opdata=opdataLand, libkat, variabel='OswEndr', outfile='figurer/OswEndrRHF.pdf', 
+		hovedkat=1, kjonn=0, tidlOp=0, tittel=0) 
+
+@
+
+%\begin{figure}[h] 
+%  \scalebox{\Sexpr{s1}}{\includegraphics{figurer/OswEndrRHF.pdf}}
+%  \caption{Forbedring av Oswestry-score hos prolapspasienter 12 mnd etter operasjon}
+%  \label{fig:OswEndrRHF}
+%\end{figure}
+ 
+
+\begin{figure}[h] 
+  \scalebox{\Sexpr{s2}}{\includegraphics{figurer/OswestryPP.pdf}}
+  \scalebox{\Sexpr{s2}}{\includegraphics{figurer/OswEndr.pdf}}
+  \caption{\Sexpr{paste('Fordeling av Oswestry før og ', ktrtxt, ' etter, og gjennomsnittlig endring i Oswestry, ', ktrtxt,  'etter operasjon.', sep='')}}
+  \label{fig:OswEndr}
+\end{figure}
+
+%\begin{figure}[h] 
+ % \scalebox{\Sexpr{s2}}{\includegraphics{figurer/Osw_over30pst.pdf}}
+ % \scalebox{\Sexpr{s2}}{\includegraphics{figurer/OswEndrSml.pdf}}
+  %\caption{\Sexpr{paste('Endring i Oswestry, ', ktrtxt, ' etter operasjon. Diagrammet til venstre viser andel pasienter med minst 30 prosent forbedring i ODI.', sep='')}}
+  %\label{fig:OswEndrSml}
+%\end{figure}
+
+
+
+\subsection{EQ-5D}
+EQ5D er et generelt livskvalitetsmål, tradisjonelt benyttet av helseøkonomer, men det har også
+vist seg å fungere som livskvalitetsmål i ryggkirurgi. Skalaen går fra -0.6 til 1, hvor lav verdi
+angir lav livskvalitet.
+<<FigEQ5D, echo=FALSE>>=	 #fig=TRUE, 
+#FordPrePost(opdata=opdataLand, libkat=libkat, outfile='figurer/EQ5DPP.pdf', reshID=reshID,
+#	egenavd=egenavd, variabel='Oswestry', plotType='', aar=aar, kjonn=kjonn, hovedkat=hovedkat, ktr=ktr, tittel=0)
+dum <- BoxTid(opdata=opdataLand, libkat=libkat, outfile='figurer/EQ5DEndr.pdf', reshID=reshID, 
+	variabel='EQ5DEndr', kjonn=kjonn, hovedkat=hovedkat, ktr=ktr, egenavd=egenavd, tittel=0)
+dum <- SoyleSml(opdata=opdataLand, libkat=libkat, outfile='figurer/EQ5DEndrSml.pdf', 
+	reshID=reshID, variabel='EQ5DEndr', tidlOp=tidlOp, aar=aar, kjonn=kjonn, shgr=0, hovedkat=hovedkat, ktr=ktr, just=0, tittel=0)
+@
+
+\begin{figure}[h] 
+  \scalebox{\Sexpr{s2}}{\includegraphics{figurer/EQ5DEndr.pdf}}
+  \scalebox{\Sexpr{s2}}{\includegraphics{figurer/EQ5DEndrSml.pdf}}
+  \caption{\Sexpr{paste('Endring i EQ5D, ', ktrtxt, 'etter operasjon', sep='')}}
+  \label{fig:EQ5DEndr}
+\end{figure}
+
+Figur \ref{fig:EQ5DEndr} viser endring i EQ-5D score 12 mnd. etter operasjon 
+hos pasienter for hvert år, samt gjennomsnittlig endring for hele landet sammenlignet med de tre 
+avdelingene som har størst forbedring.
+
+
+\subsection{Ryggsmerter}
+Skala for ryggsmerter går fra 0 til 10, hvor 0 betegner ingen smerte.
+<<FigSmRy, echo=FALSE>>=	 #fig=TRUE, 
+dum <- FordPrePost(opdata=opdataLand, libkat=libkat, outfile='figurer/SmRyggPP.pdf', 
+	reshID=reshID, egenavd=egenavd, variabel='SmRygg', plotType=plotType, aar=aar, 
+	kjonn=kjonn, hovedkat=hovedkat, ktr=ktr, tittel=0)
+dum <- BoxTid(opdata=opdataLand, libkat=libkat, outfile='figurer/SmRyggTid.pdf', reshID=reshID, 
+	variabel='SmRyggEndr', kjonn=kjonn, hovedkat=hovedkat, ktr=ktr, egenavd=egenavd, tittel=0)
+@
+
+\begin{figure}[h] 
+  \scalebox{\Sexpr{s2}}{\includegraphics{figurer/SmRyggPP.pdf}}
+  \scalebox{\Sexpr{s2}}{\includegraphics{figurer/SmRyggTid.pdf}}
+  \caption{\Sexpr{paste('Endring i ryggsmerter, ', ktrtxt, 'etter operasjon', sep='')}}
+  \label{fig:SmRygg}
+\end{figure}
+
+Figur \ref{fig:SmRygg} viser hhv fordeling av ryggsmerter før og etter operasjon, 
+samt endring i ryggsmerter \Sexpr{ktrtxt} etter operasjon hos pasienter for hvert år.
+
+
+\subsection{Beinsmerter}
+Skala for beinsmerter går fra 0 til 10, hvor 0 betegner ingen smerte.
+<<FigSmBe, echo=FALSE>>=	 #fig=TRUE, 
+dum <- FordPrePost(opdata=opdataLand, libkat=libkat, outfile='figurer/SmBeinPP.pdf', reshID=reshID, egenavd=egenavd, variabel='SmBein', plotType=plotType, aar=aar, kjonn=kjonn, hovedkat=hovedkat, ktr=ktr, tittel=0)
+dum <- BoxTid(opdata=opdataLand, libkat=libkat, outfile='figurer/SmBeinTid.pdf', reshID=reshID, 
+	variabel='SmBeinEndr', kjonn=kjonn, hovedkat=hovedkat, ktr=ktr, egenavd=egenavd, tittel=0)
+@
+
+\begin{figure}[h] 
+  \scalebox{\Sexpr{s2}}{\includegraphics{figurer/SmBeinPP.pdf}}
+  \scalebox{\Sexpr{s2}}{\includegraphics{figurer/SmBeinTid.pdf}}
+  \caption{\Sexpr{paste('Endring i beinsmerter, ', ktrtxt, 'etter operasjon', sep='')}}
+  \label{fig:SmBein}
+\end{figure}
+
+Figur \ref{fig:SmBein} viser hhv fordeling av ryggsmerter før og etter operasjon, 
+samt endring i ryggsmerter \Sexpr{ktrtxt} etter operasjon hos pasienter 
+for hvert år.
+
+
+\clearpage
+
+
+
+
+\subsection{Opplevd nytte av operasjon}
+Figur \ref{fig:Nytte} viser hvor stor nytte pasientene opplever å hatt av behandlingen 
+\Sexpr{ktrtxt} etter operasjon fordelt på år. 
+Tallet øverst på søyla angir antall pasienter som har svart. 
+I figuren er det gjort følgende aggregering av svaralternativene i spørreskjemaet:
+\begin{itemize}
+	\item Frisk mye/bedre omfatter 'helt bra' og 'mye bedre' 
+	\item Omtrent uendret omfatter 'litt bedre', 'ingen endring' og 'litt verre' 
+	\item Klart verre omfatter 'mye verre' og 'verre enn noen gang før'
+\end{itemize}
+
+\begin{figure}[h] 
+	\begin{center}
+\scalebox{\Sexpr{s1}}{
+<<FigNytte, fig=TRUE, echo=FALSE>>=	 
+	Nytte <- AndelStabelTid(opdata=opdataLand, libkat=libkat, outfile='', variabel='Nytte', 
+	kjonn=kjonn, hovedkat=hovedkat, tidlOp=tidlOp, egenavd=egenavd, ktr=ktr, 
+	reshID=reshID, tittel=0)
+@
+}
+	\end{center}
+  \caption{\Sexpr{Nytte$Tittel}}
+  \label{fig:Nytte}
+\end{figure}
+
+
+
+
+\subsection{Pasienttilfredshet}
+
+Figur \ref{fig:Fornoyd} viser hvor fornøyde pasientene er med behandlinga på sykehuset fordelt på år. 
+Svaret er avgitt \Sexpr{ktrtxt} etter operasjon. Tallet øverst på søyla angir antall pasienter som har svart. 
+
+\begin{figure}[h] 
+	\begin{center}
+\scalebox{\Sexpr{s1}}{
+<<FigFornoyd, fig=TRUE, echo=FALSE>>=	 
+	Fornoyd <- AndelStabelTid(opdata=opdataLand, libkat=libkat, outfile='', variabel='Fornoyd', kjonn=kjonn, 
+		hovedkat=hovedkat, tidlOp=tidlOp, egenavd=egenavd, ktr=ktr, reshID=reshID, 
+		tittel=0)
+@
+}
+	\end{center}
+  \caption{\Sexpr{Fornoyd$Tittel}}
+  \label{fig:Fornoyd}
+\end{figure}
+
+
+%\subsection{Samlefigur, resultatmål}
+
+%Figur \ref{fig:EffAvd} viser antall prosentpoeng forbedring av utgangsscore 
+%før operasjon til hhv. 3 og 12 månender etter, for flere ukommemål: Oswestry Disability Index (sykdomsspesifikt 
+%mål for fysisk funksjon og livskvalitet), EQ-5D (generelt livskvalitetsmål) og Numerisk 
+%smerteskala for smerter i Bein og Rygg.   
+
+<<FigRadar, echo=FALSE, eval=FALSE>>=	#fig=TRUE,  
+EffDiffAvd(op.data=opdataLand, outfile='figurer/EffAvd3mnd.pdf', aar=aar, kjonn=kjonn, 
+	hovedinngrep=hovedkat, kontroll=1, libkat=libkat, egen.resh.id=reshID, tittel=0) 
+EffDiffAvd(op.data=opdataLand, outfile='figurer/EffAvd12mnd.pdf', aar=aar, kjonn=kjonn, 
+	hovedinngrep=hovedkat, kontroll=2, libkat=libkat, egen.resh.id=reshID, tittel=0) 
+@
+
+%\begin{figure}[h] 
+%  \scalebox{\Sexpr{s2}}{\includegraphics{figurer/EffAvd3mnd.pdf}}
+%  %\qquad
+%  \scalebox{\Sexpr{s2}}{\includegraphics{figurer/EffAvd12mnd.pdf}}
+%  \caption{\Sexpr{'Gjennomsnittlig endring i effektmål'}}
+%  \label{fig:EffAvd}
+%\end{figure}
+
+
+\subsection{Arbeidsstatus før og etter operasjon}
+Hvor mange sykemeldte kommer ut i arbeid etter operasjonen?
+
+<<FigFrisk, echo=FALSE>>=	 #fig=TRUE, 
+	Frisk3mnd <- AndelTidLinjer(opdata=opdataLand, libkat=libkat, variabel='Friskmeldt', 
+		outfile='figurer/Frisk1.pdf', reshID=reshID, tidlOp=tidlOp, kjonn=kjonn, 
+		hovedkat=hovedkat, ktr=1, medTall=mT, egenavd=0, tittel=0)
+	Frisk12mnd <- AndelTidLinjer(opdata=opdataLand, libkat=libkat, variabel='Friskmeldt', 
+		outfile='figurer/Frisk2.pdf', reshID=reshID, tidlOp=tidlOp, kjonn=kjonn, 
+		hovedkat=hovedkat, ktr=2, medTall=mT, egenavd=0, tittel=0)
+@
+
+\begin{figure}[h] 
+  \scalebox{\Sexpr{s2}}{\includegraphics{figurer/Frisk1.pdf}}
+  \scalebox{\Sexpr{s2}}{\includegraphics{figurer/Frisk2.pdf}}
+  \caption{\Sexpr{'Andel sykemeldte pasienter som er tilbake i jobb hhv 3 og 12 mnd etter operasjon.'}}
+  \label{fig:Frisk}
+\end{figure}
+
+
+Figure \ref{fig:Frisk} viser andel av de som ble operert som var helt eller delvis 
+sykemeldt før operasjonen og som er 100\% friskmeldt etter operasjonen, 
+hhv. 3 og 12 måneder etter operasjonen. 
+
+\clearpage
+
+\input{\Sexpr{svnRootPath}lib/latex/ansvarsforhold}
+% server: \input{\Sexpr{svnRootPath}jasper/nkr/trunk/lib/latex/ansvarsforhold}
+
+
+\end{document}
+
