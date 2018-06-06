@@ -12,5 +12,8 @@ nkr.Rproj
 test
 *.png
 *.jar
+*.docx
 nkr.git/
 doc/gmlRfunk
+AarsrappOff/
+aarsrapp/
