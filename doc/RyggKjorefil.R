@@ -51,7 +51,7 @@ texi2pdf('SamleRappNKR.tex')
 library(nkr)
 #  Laste data og parametre
 rm(list=ls())
-NKRdata <- read.table('A:/Rygg/NKR2010-2016aarsrapp.csv', sep=';', header=T, encoding = 'UTF-8')
+NKRdata <- read.table('A:/Rygg/NKR2010-2017aarsrapp.csv', sep=';', header=T, encoding = 'UTF-8')
 RegData <- NKRdata
 #load('A:/Nakke/NakkeAarsrapp2016.Rdata') #Preprossesserte data
 #__Inndata til RyggFigAndeler.R:
@@ -228,8 +228,7 @@ valgtVar <- 'SympVarighUtstr'   #, #BeinsmEndrLav', BeinsmLavPre, DegSponSSSten,
 outfile <- paste0(valgtVar, '_', grVar,'Aar.pdf')
 
 RyggFigAndelerGrVarAar(RegData=RegData, valgtVar=valgtVar, datoFra=datoFra, datoTil=datoTil, 
-#RyggFigAndelerGrVar(RegData=RegData, valgtVar=valgtVar, datoFra=datoFra, datoTil=datoTil, 
-                  siste3aar = 1,
+#RyggFigAndelerGrVar(RegData=RegData, valgtVar=valgtVar, datoFra=datoFra, datoTil=datoTil, siste3aar = 1,
                 minald=minald, maxald=maxald, erMann=erMann, ktr=ktr, hovedkat=hovedkat, grVar=grVar,
                 preprosess=1, enhetsUtvalg=enhetsUtvalg, reshID=reshID, outfile=outfile)
 
