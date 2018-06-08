@@ -130,8 +130,6 @@ for (valgtVar in variable) {
       utdata <- FigAndeler(RegData <- NKRdata, valgtVar = valgtVar, hovedkat=1, outfile = outfile, reshID=reshID)
 }
 		 
-
-#----------------------------------------------------------
 #                   RyggFigGjsnBox
 #----------------------------------------------------------
 #Endring i effektmål som funksjon av tid eller prescore

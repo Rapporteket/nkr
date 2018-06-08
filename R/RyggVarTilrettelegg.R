@@ -301,7 +301,7 @@ RyggVarTilrettelegg  <- function(RegData, valgtVar, ktr=0, figurtype='andeler'){
             tittel <- paste0('Minst 30% forbedring av Oswestry-skår', ktrtxt)
       }
       if (valgtVar == 'Osw22') { #AndelGrVar
-            #Andel med Oswestry-skår under 22 etter op. 
+            #Andel med Oswestry-skår under 23 etter op. 
             RegData$OswPost <- switch(as.character(ktr),
                                       '1' = RegData$OswTot3mnd,
                                       '2' = RegData$OswTot12mnd)
