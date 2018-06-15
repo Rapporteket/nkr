@@ -73,7 +73,7 @@ tidlOp <- 4			#Tidl.operert: 1-sm, 2-annet, 3, sm+annet, 4-primær, Standard: 0,
 grVar <- 'ShNavn'  #ShNavn, Fylke, BoHF, BoRHF
 valgtMaal <- 'Gjsn'
 aar <- 2010:2016	#Standard: 0, dvs. alle år
-tidsenhet <- 'Aar' #Oppløsning på tidsaksen: 'Aar' (standard), 'Halvaar', 'Kvartal','Mnd'
+tidsenhet <- 'Mnd' #Oppløsning på tidsaksen: 'Aar' (standard), 'Halvaar', 'Kvartal','Mnd'
 offData <- 0
 Ngrense <- 10
 medKI <- 1
@@ -85,8 +85,9 @@ outfile <- ''#paste0(valgtVar, '.png')	#Navn angis av Jasper
 
 
 RyggFigAndelTid(RegData=RegData, outfile=outfile, valgtVar=valgtVar, hovedkat=hovedkat, preprosess=1,
-                      minald = minald, maxald = maxald, aar=aar,
-                      erMann=erMann, ktr=ktr, tidlOp=tidlOp, enhetsUtvalg=enhetsUtvalg, tittel=1, reshID=reshID)
+                      minald = minald, maxald = maxald, aar=aar, tidsenhet = tidsenhet,
+                      erMann=erMann, ktr=ktr, tidlOp=tidlOp, enhetsUtvalg=enhetsUtvalg, tittel=1, 
+                reshID=reshID)
 variable <- c('alder70', 'degSponFusj', 'KpInf3Mnd', 'OswEndr20')
 for (var in variable) {
       outfile <- paste0(var, 'ATid.png')
@@ -429,3 +430,16 @@ library(xtable)
 require(RJDBC)
 Sweave('KvalKtrAvData.Rnw')
 
+#---------------------------KVALITETSSJEKK-----------------------------
+RegData <- RyggPreprosess(RegData=RegData)
+#Dobbeltregistrering
+PIDop <- table(RegData$PID, RegData$OpDato)
+names(PIDop[which(PIDop>1)])
+testDato <- aggregate(RegData$PID, by=RegData[ ,c('PID','OpDato')], drop=TRUE, FUN=length)
+test[which(test$x >1), ]
+testMnd <- aggregate(RegData$InnDato, by=RegData[ ,c('PID','Mnd','OpAar')], drop=TRUE, FUN=length)
+duplMnd <- testMnd[which(testMnd$x >1), ]
+testAar <- aggregate(RegData$PID, by=RegData[ ,c('PID','OpAar')], drop=TRUE, FUN=length)
+sum(testAar$x >1)
+
+test

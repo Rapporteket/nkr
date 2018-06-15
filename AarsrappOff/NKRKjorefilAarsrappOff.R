@@ -221,4 +221,16 @@ RyggFigAndelerGrVarAar(RegData=RegData, preprosess=0, valgtVar=valgtVar, datoFra
 
 
 
+#---------------------------KVALITETSSJEKK-----------------------------
+RegData <- RyggPreprosess(RegData=RegData)
+#Dobbeltregistrering
+PIDop <- table(RegData$PID, RegData$OpDato)
+names(PIDop[which(PIDop>1)])
+testDato <- aggregate(RegData$PID, by=RegData[ ,c('PID','OpDato')], drop=TRUE, FUN=length)
+test[which(test$x >1), ]
+testMnd <- aggregate(RegData$InnDato, by=RegData[ ,c('PID','Mnd','OpAar')], drop=TRUE, FUN=length)
+duplMnd <- testMnd[which(testMnd$x >1), ]
+testAar <- aggregate(RegData$PID, by=RegData[ ,c('PID','OpAar')], drop=TRUE, FUN=length)
+sum(testAar$x >1)
 
+test

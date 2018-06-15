@@ -77,6 +77,10 @@ RyggFigAndelTid <- function(RegData, valgtVar, datoFra='2011-01-01', datoTil='30
       RegData <- RyggUtvalg$RegData
       
       #------------------------Klargjøre tidsenhet--------------
+      RegData$Mnd <- RegData$InnDato$mon +1
+      RegData$Kvartal <- ceiling(RegData$Mnd/3)
+      RegData$Halvaar <- ceiling(RegData$Mnd/6)
+      RegData$Aar <- 1900 + RegData$InnDato$year #strptime(RegData$Innleggelsestidspunkt, format="%Y")$year
       
       #Brukes til sortering
       RegData$TidsEnhet <- switch(tidsenhet,
