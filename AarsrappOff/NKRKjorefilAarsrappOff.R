@@ -219,18 +219,34 @@ outfile <- paste0(valgtVar, '_1', grVar,'.png')
 RyggFigAndelerGrVarAar(RegData=RegData, preprosess=0, valgtVar=valgtVar, datoFra=datoFra, datoTil=datoTil, 
                     ktr=ktr, hovedkat=hovedkat, opKat=opKat, tidlOp=tidlOp, enhetsUtvalg=enhetsUtvalg, reshID=reshID, outfile=outfile)
 
+#---------------------------------------------------------------
+#				Kvalitetskontroll av data
+#---------------------------------------------------------------
+# RYGG
+library(nkr)
+load('A:/Rygg/NKR2010-2017aarsrapp.Rdata')
 
-
-#---------------------------KVALITETSSJEKK-----------------------------
 RegData <- RyggPreprosess(RegData=RegData)
 #Dobbeltregistrering
 PIDop <- table(RegData$PID, RegData$OpDato)
-names(PIDop[which(PIDop>1)])
 testDato <- aggregate(RegData$PID, by=RegData[ ,c('PID','OpDato')], drop=TRUE, FUN=length)
-test[which(test$x >1), ]
+testDato[which(testDato$x >1), ]
 testMnd <- aggregate(RegData$InnDato, by=RegData[ ,c('PID','Mnd','OpAar')], drop=TRUE, FUN=length)
 duplMnd <- testMnd[which(testMnd$x >1), ]
 testAar <- aggregate(RegData$PID, by=RegData[ ,c('PID','OpAar')], drop=TRUE, FUN=length)
 sum(testAar$x >1)
 
-test
+# NAKKE
+library(Nakke)
+load('A:/Nakke/NakkeAarsrapp2017.Rdata')
+RegData <- NakkePreprosess(RegData=NakkeData)
+#Dobbeltregistrering
+#PIDop <- table(RegData$PasientID, RegData$OprDato)
+testDato <- aggregate(RegData$PasientID, by=RegData[ ,c('PasientID','OprDato')], drop=TRUE, FUN=length)
+testDato[which(testDato$x >1), ]
+RegData$Mnd <- RegData$InnDato$mon +1
+RegData$Mnd <- RegData$Mnd-min(RegData$Mnd[RegData$Aar==min(RegData$Aar)])+1
+testMnd <- aggregate(RegData$OprDato, by=RegData[ ,c('PasientID','Mnd','Aar')], drop=TRUE, FUN=length)
+duplMnd <- testMnd[which(testMnd$x >1), ]
+testAar <- aggregate(RegData$PasientID, by=RegData[ ,c('PasientID','Aar')], drop=TRUE, FUN=length)
+sum(testAar$x >1)
