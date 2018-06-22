@@ -238,6 +238,10 @@ sum(testAar$x >1)
 
 # NAKKE
 library(Nakke)
+setwd('C:/ResultattjenesteGIT/nkr/inst/')
+NakkeData <- read.table('A:/Nakke/AlleVarNum2018-06-21.csv', sep=';', header=T, encoding = 'UTF-8', stringsAsFactors = FALSE)  # na.strings = "NULL", 
+
+
 load('A:/Nakke/NakkeAarsrapp2017.Rdata')
 RegData <- NakkePreprosess(RegData=NakkeData)
 #Dobbeltregistrering
