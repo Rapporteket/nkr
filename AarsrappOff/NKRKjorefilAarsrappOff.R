@@ -12,7 +12,12 @@ library(tools)
 knit('ResultaterAarsrapp.Rnw', encoding = 'UTF-8')
 texi2pdf('ResultaterAarsrapp.tex') 
 
-load('A:/Rygg/NKR2010-2017aarsrapp.Rdata')
+#rm(list=ls())
+#NKRdata <- read.table('A:/Rygg/NKR2010-2017aarsrapp.csv', sep=';', header=T, encoding = 'UTF-8')
+#RegData <- NKRdata
+#save(RegData, file=paste0('A:/Rygg/NKR2010-2017aarsrapp', '.Rdata'))
+
+load('A:/Rygg/NKR2010-2017aarsrapp.Rdata') #IKKE preprossessert
 preprosess <- 0
 #save(RegData, file='C:/Registre/nkr/data/NKR2010-2016aarsrapp.Rdata')
 #__Inndata til funksjon:
@@ -223,8 +228,9 @@ RyggFigAndelerGrVarAar(RegData=RegData, preprosess=0, valgtVar=valgtVar, datoFra
 #				Kvalitetskontroll av data
 #---------------------------------------------------------------
 # RYGG
+rm(list=ls())
 library(nkr)
-load('A:/Rygg/NKR2010-2017aarsrapp.Rdata')
+load('A:/Rygg/NKR2010-2017aarsrapp.Rdata') #IKKE preprossessert
 
 RegData <- RyggPreprosess(RegData=RegData)
 #Dobbeltregistrering
@@ -235,6 +241,7 @@ testMnd <- aggregate(RegData$InnDato, by=RegData[ ,c('PID','Mnd','OpAar')], drop
 duplMnd <- testMnd[which(testMnd$x >1), ]
 testAar <- aggregate(RegData$PID, by=RegData[ ,c('PID','OpAar')], drop=TRUE, FUN=length)
 sum(testAar$x >1)
+
 
 # NAKKE
 library(Nakke)
@@ -254,3 +261,22 @@ testMnd <- aggregate(RegData$OprDato, by=RegData[ ,c('PasientID','Mnd','Aar')], 
 duplMnd <- testMnd[which(testMnd$x >1), ]
 testAar <- aggregate(RegData$PasientID, by=RegData[ ,c('PasientID','Aar')], drop=TRUE, FUN=length)
 sum(testAar$x >1)
+
+#---------------------------Dekningsgrad-----------------------------------------
+DekningsgradRygg2017
+DeknData <- read.table('P:/Registerinfo og historie/nkr/AarsrappOff/DekningsgradRygg2017.csv', sep=';', header=T, encoding = 'UTF-8')
+head(DeknData)
+RegData <- DeknData
+
+RyggFigAndelerGrVar(RegData=DeknData, preprosess = 0, valgtVar='deknGrad', datoFra='2016-01-01',outfile=outfile)
+
+
+
+
+
+
+
+
+
+
+

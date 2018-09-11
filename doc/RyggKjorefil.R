@@ -53,7 +53,8 @@ library(nkr)
 rm(list=ls())
 NKRdata <- read.table('A:/Rygg/NKR2010-2017aarsrapp.csv', sep=';', header=T, encoding = 'UTF-8')
 RegData <- NKRdata
-#load('A:/Nakke/NakkeAarsrapp2016.Rdata') #Preprossesserte data
+save(RegData, file=paste0(fil, '.Rdata'))
+load('A:/Nakke/NakkeAarsrapp2016.Rdata') #Preprossesserte data
 #__Inndata til RyggFigAndeler.R:
 tittel=1
 reshID <- 601161 #999999	#601161 #100133	#111065 #105783	#103618	#102949	#   #Må sendes med til funksjon
@@ -178,9 +179,9 @@ valgtMaal <- 'Med'
 #-------- Andel per sykehus eller annen gr.variabel (AndelGrVar)-----------------------------------------
 #----------------------------------------------------------------------------------------------------------------
 valgtVar <- 'BeinsmLavPre'
-outfile <- paste0(valgtVar, 'Sh.pdf')
+outfile <- '' #paste0(valgtVar, 'Sh.pdf')
 RyggFigAndelerGrVar(valgtVar=valgtVar, RegData=RegData, hovedkat = hovedkat, tidlOp=tidlOp,  Ngrense=20, opKat=opKat,
-                    datoFra='2015-01-01', ktr=1, outfile=outfile)
+                    datoFra='2016-01-01', ktr=1, outfile=outfile)
 
 variable <- c('alder70', 'Antibiotika', 'ArbstatusPre', 'Arbstatus', 'ASA', 'BeinsmLavPre', 
               'BeinsmEndrLav', 'BMI', 'degSponFusj', 'degSponSSSten', 'ErstatningPre', 'Fornoyd', 
@@ -442,4 +443,18 @@ duplMnd <- testMnd[which(testMnd$x >1), ]
 testAar <- aggregate(RegData$PID, by=RegData[ ,c('PID','OpAar')], drop=TRUE, FUN=length)
 sum(testAar$x >1)
 
-test
+#------------------------------ Data til NPR, Dekningsgradsanalyse-------------
+load('A:/Rygg/NKR2010-2017aarsrapp.Rdata')
+query <- 
+      'SELECT loepenummer, Alder, Kjonn, HFNavn, HFID, HFReshID, AvdNavn, AvdID, AvdReshID, 
+OpDato, Dagkirurgi, HovedInngrep, HovedInngreptxt, Inngrep, Inngreptxt, ProsKode1, ProsKode2
+FROM Uttrekk_Rapport
+WHERE OpAar=2017'
+# variable <- c('PID', 'Alder', 'Kjonn', 'HFNavn', 'HFID', 'HFReshID', 
+#               'AvdNavn', 'AvdID', 'AvdReshID', 'OpDato', 'Dagkirurgi', 
+#               'HovedInngrep', 'HovedInngreptxt', 'Inngrep', 'Inngreptxt', 'ProsKode1', 'ProsKode2')
+NKR2017 <- read.table('A:/Rygg/NPR2017.csv', sep=';', header=T, encoding = 'UTF-8')
+NKR2017 <- RegData[which(NKR2017$OpDato<2017), ]
+sort(variable)[which(!(sort(variable) %in% sort(names(RegData))))]
+
+

@@ -232,10 +232,8 @@ RyggFigAndelTid <- function(RegData, valgtVar, datoFra='2011-01-01', datoTil='30
             
             
             
-            
-            
-            
 #                  }
+      return(invisible(FigDataParam))
       
 }	#end function
 

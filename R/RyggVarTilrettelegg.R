@@ -62,6 +62,12 @@ RyggVarTilrettelegg  <- function(RegData, valgtVar, ktr=0, figurtype='andeler'){
       
       
       #------------------------------------- 
+      if (valgtVar=='deknGrad') {        #andelerGrVar
+            tittel <- 'Dekningsgrad 2017'
+            xAkseTxt <- 'dekningsgrad, NKR'
+            KImaal <- 0.8
+      }
+            
       
       if (valgtVar=='alder') {	#Fordeling, GjsnGrVar, GjsnTid
             RegData <- RegData[which(RegData$Alder>=0), ]    #Tar bort alder<0
@@ -118,10 +124,10 @@ RyggVarTilrettelegg  <- function(RegData, valgtVar, ktr=0, figurtype='andeler'){
       }
       if (valgtVar == 'BeinsmLavPre') { #AndelGrVar
             #Lav beinsmerte og ingen parese. (Først og fremst prolaps)
-            RegData$Variabel[which(is.na(RegData$OpIndParese) & (RegData$SmBePre < 2.5))] <- 1
+            RegData$Variabel[which(is.na(RegData$OpIndParese) & (RegData$SmBePre < 3.5))] <- 1
             #tittel <- paste0('Beinsmerte ',expression(""<=2),' og ingen parese')
             sortAvtagende <- F
-            tittel <- 'Beinsmerte \u2264 2 og ingen parese'
+            tittel <- 'Beinsmerte \u2264 3 og ingen parese'
             #intToUtf8(2264)
       }
       if (valgtVar == 'BeinsmEndrLav') { #AndelGrVar
