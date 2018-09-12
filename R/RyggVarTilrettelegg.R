@@ -163,12 +163,13 @@ RyggVarTilrettelegg  <- function(RegData, valgtVar, ktr=0, figurtype='andeler'){
             tittel <- 'Degenerativ spondylolistese og sentral spinal stenose'
             sortAvtagende <- FALSE
       }
-      if (valgtVar == 'ErstatningPre') { #AndelGrVar
+      if (valgtVar == 'ErstatningPre') { #AndelGrVar, #AndelTid
             #Pasientskjema. Andel med ErstatningPre 1 el 3
             #Kode 1:4,9: 'Ja', 'Nei', 'Planlegger', 'Innvilget', 'Ukjent'
             RegData <- RegData[which(RegData$ErstatningPre %in% 1:4), ]
             RegData$Variabel[which(RegData[ ,valgtVar] %in% c(1,3))] <- 1
             tittel <- 'Pasienten har søkt/planlegger å søke erstatning'
+            varTxt <- 'søkt erstatning'
             sortAvtagende <- FALSE
       }
       if (valgtVar=='EQ5DEndr') {#gjsnGrVar
@@ -220,11 +221,12 @@ RyggVarTilrettelegg  <- function(RegData, valgtVar, ktr=0, figurtype='andeler'){
             tittel <- paste0('Misfornøyde pasienter' ,ktrtxt)
             sortAvtagende <- FALSE
       }
-      if (valgtVar == 'Morsmal') { #AndelGrVar
+      if (valgtVar == 'Morsmal') { #AndelGrVar, AndelTid
             #           Kode 1:3:'Norsk', 'Samisk', 'Annet'
             RegData <- RegData[which(RegData$Morsmal %in% 1:3), ]
             RegData$Variabel[which(RegData$Morsmal %in% 2:3)] <- 1 
             tittel <- 'Fremmedspråklige (ikke norsk som morsmål)'
+            varTxt <- 'fremmedspråklige'
             sortAvtagende <- F
       }
       
@@ -341,12 +343,13 @@ RyggVarTilrettelegg  <- function(RegData, valgtVar, ktr=0, figurtype='andeler'){
             sortAvtagende <- FALSE
             xAkseTxt <- 'Andel durarift (%)'
       }
-      if (valgtVar=='Roker') { #AndelGrVar
+      if (valgtVar=='Roker') { #AndelGrVar, #AndelTid
             #PasientSkjema. Andel med Roker=1
             #Kode 0,1,tom: Nei, Ja Ukjent
             RegData <- RegData[which(RegData$Roker %in% 0:1), ]
             RegData$Variabel <- RegData$Roker
             tittel <- 'Røykere'
+            varTxt <- 'røykere'
             sortAvtagende <- FALSE
       }
       
@@ -416,7 +419,7 @@ RyggVarTilrettelegg  <- function(RegData, valgtVar, ktr=0, figurtype='andeler'){
             tittel <- 'Har søkt eller planlegger å søke uføretrygd'
             sortAvtagende <- F
       }
-      if (valgtVar == 'Utd') { #AndelGrVar
+      if (valgtVar == 'Utd') { #AndelGrVar, AndelTid
             #PasientSkjema. Andel med Utdanning 4 el 5
             #Kode 1:5,9: 'Grunnskole++, 7-10år','Real-, yrkes- el vg skole', 'Allmennfaglig vg skole',
             #Høyskole/universitet, <4 år', 'Høyskole/universitet, 4år+', 'Ukjent'
