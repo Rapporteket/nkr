@@ -82,26 +82,16 @@
 
 
 
-\begin{knitrout}
-\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
 
 
-{\ttfamily\noindent\itshape\color{messagecolor}{\#\# The following objects are masked \_by\_ .GlobalEnv:\\\#\# \\\#\#\ \ \ \  ASA, HovedInngrep, UforetrygdPre}}\end{kframe}
-\end{knitrout}
 
 
-\begin{knitrout}
-\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
-
-
-{\ttfamily\noindent\bfseries\color{errorcolor}{\#\# Error in sprintf("{}\%.0f"{}, (N1aar - sum(NakkeData1aar\$ErMann))/Ntot1aarNakke * : object 'N1aar' not found}}\end{kframe}
-\end{knitrout}
 
 
 \section{Forbruksrater av rygg- og nakkekirurgi i Norge (kilde: NPR/SSB)}
 Variasjon i forbruksrater av rygg og nakkekirurgi mellom regioner kan 
 gjenspeile ulik tilgjengelighet til helsetjenesten, men også praksisvariasjon som kan
-representere i kvalitetsforskjeller i behandlingstilbudet. Figur \ref{fig:AA_Nakkekirurgi_BoRHF1}, \ref{fig:AA_Ryggkirurgi_BoHF1} og \ref{fig:AA_Ryggkirurgi_BoRHF1} viser at det
+representere i kvalitetsforskjeller i behandlingstilbudet. Figur \ref{fig:AA_Ryggkirurgi_BoRHF1}, \ref{fig:AA_Ryggkirurgi_BoHF1} og \ref{fig:AA_Nakkekirurgi_BoRHF1} viser at det
 er forskjeller i forbruksrater mellom ulike boområder i Norge. Disse kan ikke
 forklares ut fra forskjeller i sykelighet. Forbruksraten er spesielt lav i boområdet til
 Helse Nord, både når det gjelder nakke og ryggkirurgi, mens Helse Vest har gjennomgående høyest operasjonsrate. Forskjellene er størst for nakkekirurgi.
@@ -138,17 +128,75 @@ Helse Nord, både når det gjelder nakke og ryggkirurgi, mens Helse Vest har gje
 
 \section{Oppsummeringstall for NKR}
 
-\begin{kframe}
+% latex table generated in R 3.5.0 by xtable 1.8-2 package
+% Thu Sep 13 12:13:53 2018
+\begin{table}[ht]
+\centering
+\begin{tabular}{lrrrrrr}
+  \hline
+ & 2013 & 2014 & 2015 & 2016 & 2017 & Sum \\ 
+  \hline
+Ahus & 151 & 67 & 137 & 186 & 226 & 824 \\ 
+  Aleris, Bergen & 266 & 145 & 95 & 59 & 52 & 980 \\ 
+  Aleris, Oslo & 4 & 38 & 190 & 72 & 7 & 633 \\ 
+  Arendal & 95 & 87 & 82 & 73 & 47 & 533 \\ 
+  Bodø & 0 & 0 & 27 & 20 & 42 & 107 \\ 
+  Bærum & 88 & 65 & 112 & 134 & 145 & 707 \\ 
+  Drammen & 102 & 186 & 249 & 273 & 235 & 1283 \\ 
+  Elverum & 127 & 147 & 140 & 128 & 109 & 873 \\ 
+  Flekkefjord & 10 & 2 & 8 & 6 & 3 & 47 \\ 
+  Førde & 0 & 0 & 0 & 25 & 86 & 111 \\ 
+  Gjøvik & 75 & 94 & 76 & 118 & 110 & 654 \\ 
+  Haugesund & 38 & 54 & 42 & 84 & 87 & 310 \\ 
+  Haukeland, nevrokir & 170 & 186 & 168 & 170 & 137 & 1091 \\ 
+  Haukeland, ort & 0 & 1 & 18 & 23 & 34 & 81 \\ 
+  Ibsensykehuset & 0 & 0 & 0 & 1 & 7 & 8 \\ 
+  Kolibri Medical Group & 18 & 3 & 0 & 0 & 0 & 21 \\ 
+  Kristiansand & 112 & 110 & 137 & 165 & 145 & 864 \\ 
+  Kristiansund & 0 & 0 & 0 & 34 & 134 & 168 \\ 
+  Kysthospitalet Hagevik & 245 & 269 & 275 & 291 & 361 & 1859 \\ 
+  Larvik & 0 & 0 & 0 & 117 & 184 & 382 \\ 
+  Levanger & 99 & 112 & 116 & 109 & 82 & 657 \\ 
+  Lillehammer & 61 & 62 & 100 & 77 & 99 & 572 \\ 
+  Martina Hansens & 270 & 304 & 341 & 307 & 413 & 2191 \\ 
+  Namsos & 55 & 93 & 73 & 71 & 75 & 477 \\ 
+  NIMI & 24 & 129 & 111 & 116 & 98 & 538 \\ 
+  Oslofjordklinikken Vest & 0 & 6 & 59 & 96 & 90 & 251 \\ 
+  Oslofjordklinikken Øst & 303 & 345 & 341 & 327 & 327 & 2126 \\ 
+  Rana & 19 & 23 & 23 & 30 & 25 & 143 \\ 
+  Rikshospitalet, nevrokir & 52 & 55 & 63 & 33 & 34 & 344 \\ 
+  Rikshospitalet, ort & 4 & 2 & 0 & 0 & 0 & 22 \\ 
+  Skien & 23 & 41 & 39 & 66 & 92 & 262 \\ 
+  St.Olavs, nevrokir & 325 & 348 & 356 & 300 & 375 & 2362 \\ 
+  St.Olavs, ort & 46 & 50 & 32 & 39 & 23 & 313 \\ 
+  Stavanger, nevrokir & 200 & 172 & 156 & 131 & 158 & 1137 \\ 
+  Stavanger, ort & 234 & 237 & 274 & 270 & 236 & 1567 \\ 
+  Teres Colloseum, Oslo & 41 & 26 & 26 & 79 & 156 & 334 \\ 
+  Teres Colloseum, Stavanger & 0 & 31 & 46 & 32 & 21 & 173 \\ 
+  Teres, Bergen & 0 & 0 & 0 & 0 & 0 & 11 \\ 
+  Teres, Drammen & 37 & 0 & 0 & 0 & 0 & 116 \\ 
+  Ullevål, nevrokir & 80 & 30 & 42 & 88 & 167 & 441 \\ 
+  Ullevål, ort & 136 & 126 & 162 & 166 & 145 & 983 \\ 
+  Ulriksdal & 9 & 0 & 0 & 0 & 0 & 177 \\ 
+  UNN, nevrokir & 221 & 222 & 245 & 215 & 245 & 1725 \\ 
+  Volda & 29 & 27 & 38 & 31 & 20 & 177 \\ 
+  Volvat & 22 & 81 & 139 & 136 & 132 & 510 \\ 
+  Østfold & 0 & 61 & 48 & 44 & 38 & 191 \\ 
+  Ålesund & 103 & 127 & 102 & 110 & 109 & 772 \\ 
+  Sum & 3894 & 4164 & 4688 & 4852 & 5311 & 30108 \\ 
+   \hline
+\end{tabular}
+\caption{Antall registreringer ved hver avdeling siste 5 år, samt totalt siden 2011.} 
+\label{tab:AntReg}
+\end{table}
 
-
-{\ttfamily\noindent\bfseries\color{errorcolor}{\#\# Error in gsub("{}\$"{}, "{}\textbackslash{}\textbackslash{}\$"{}, result, fixed = TRUE): input string 1 is invalid UTF-8}}\end{kframe}
 
 
 \subsection{Degenerativ rygg}
 
 Tabell \ref{tab:AntReg} viser antall 
 registreringer gjort ved de respektive avdelinger hvert år. Vi ser at det er  
-47 avdelinger som registrerer og at det i perioden 2011 til 2017 totalt er registrert 5810 
+47 avdelinger som registrerer og at det i perioden 2011 til 2017 totalt er registrert 30108 
 operasjoner. Av disse er 52.7\% utført på menn og 47.3\% på kvinner.
 Siste nakkeinngrep registrert i datauttrekket som ligger til grunn for denne rapporten, ble utført 
 2017-12-30. I peroden før 2010, det vil si fra og med 2007 til og med 2009 er det 
@@ -161,7 +209,7 @@ Flere enheter har hatt en stor og gledelig økning av antall registreringer til 
 \subsection{Degenerativ nakke}
 
 % latex table generated in R 3.5.0 by xtable 1.8-2 package
-% Wed Sep 12 15:11:22 2018
+% Thu Sep 13 12:13:53 2018
 \begin{table}[ht]
 \centering
 \begin{tabular}{lrrrrrr}
@@ -171,11 +219,11 @@ Flere enheter har hatt en stor og gledelig økning av antall registreringer til 
 Aleris Helse AS & 0 & 0 & 0 & 5 & 17 & 22 \\ 
   Haukeland USH & 94 & 139 & 118 & 98 & 111 & 637 \\ 
   Oslo, RH & 222 & 303 & 307 & 281 & 318 & 1628 \\ 
-  Oslo, Ullev�l USH & 83 & 88 & 148 & 113 & 182 & 659 \\ 
-  Oslofjordklin., �st & 102 & 195 & 173 & 180 & 178 & 828 \\ 
+  Oslo, Ullevål USH & 83 & 88 & 148 & 113 & 182 & 659 \\ 
+  Oslofjordklin., øst & 102 & 195 & 173 & 180 & 178 & 828 \\ 
   Oslofjordklinikken Vest & 0 & 13 & 47 & 50 & 50 & 160 \\ 
   Stavanger USH & 119 & 145 & 186 & 146 & 164 & 867 \\ 
-  Troms�, UNN & 47 & 70 & 49 & 57 & 61 & 331 \\ 
+  Tromsø, UNN & 47 & 70 & 49 & 57 & 61 & 331 \\ 
   Trondheim, St. Olav & 104 & 123 & 114 & 123 & 119 & 671 \\ 
   Volvat & 0 & 0 & 2 & 5 & 0 & 7 \\ 
   Sum & 771 & 1076 & 1144 & 1058 & 1200 & 5810 \\ 
@@ -189,7 +237,7 @@ Aleris Helse AS & 0 & 0 & 0 & 5 & 17 & 22 \\
 
 Tabell \ref{tab:AntRegNakke} viser antall 
 registreringer gjort ved de respektive avdelinger hvert år. Vi ser at det er  
-10 avdelinger som registrerer og at det i perioden 2012 til 2017 totalt er registrert 30108 
+10 avdelinger som registrerer og at det i perioden 2012 til 2017 totalt er registrert 5810 
 operasjoner. Av disse er 54.9\% utført på menn og 45.1\% på kvinner.
 Siste inngrep registrert i datauttrekket som ligger til grunn for denne rapporten, ble utført 
 2017-12-27. 
@@ -202,25 +250,26 @@ Siste inngrep registrert i datauttrekket som ligger til grunn for denne rapporte
 
 \section{Bakgrunnsdata}
 
-ALLE TIDSFIGURER FRA 2011
 
 \subsection{Alder}
 
 
 
 
-Gjennomsnittsalderen har økt jevnt fra NA år 
+Gjennomsnittsalderen har økt jevnt fra 54.3 år 
 i 2011 til 57.0 år i 2017. 
 Ryggkirurgi øker mest i den eldste og mest sårbare delen av
 befolkningen. Disse pasientene vet vi at trenger mer omfattende utredning og
 lengre liggetid. Dette medfører økte kostnader, spesielt for offentlige sykehus som i
-all hovedsak håndterer denne pasientgruppen. I 2017 ble 25.7 \% (1354 
+all hovedsak håndterer denne pasientgruppen. I 2017 ble 25.7 \% 
+(1354 
 operasjoner) av alle
-ryggoperasjonene meldt til NKR utført på personer over 70 år, mot 18.8288288 i 2011 
+ryggoperasjonene meldt til NKR utført på personer over 70 år, mot 18.8288288 
+i 2011 
 
 \begin{figure}[ht]
 \scalebox{0.7}{\includegraphics{Figurer/FigAlder70.pdf}}
-\caption{\label{fig:Alder70} Andel ryggoperasjoner utført på personer som er 70 år eller mer.}}
+\caption{\label{fig:Alder70} Andel ryggoperasjoner utført på personer som er 70 år eller mer.}
 \end{figure}
 
 
@@ -237,7 +286,8 @@ ryggoperasjonene meldt til NKR utført på personer over 70 år, mot 18.8288288 
 
 
 Opplysninger om høyde og vekt er rapportert fra pasientene selv.
-Andelen pasienter med fedme har vært jevt økende fra NA \% 
+Andelen pasienter med fedme har vært jevt økende fra 
+20.6 \% 
 i 2011
 til 25.6 \%
 i  2017.
@@ -256,7 +306,8 @@ Andelen fremmedspråklige (inkl. samisk) som opereres har økt fra 4.6 \% til 6.
 Beslutning om ryggkirurgi baserer seg på en felles forståelse mellom kirurg og
 pasient av hva helseproblemene består i og hva som kan oppnås med operasjon
 («shared desicion making»). I behandling av fremmedspråklige er kommunikasjon
-en utfordring. Eksempelvis var suksessraten ved lumbal prolapskirurgi for de med norsk som morsmål 65 \% mot 56 \% \it{Tore sjekk tall} 
+en utfordring. Eksempelvis var suksessraten ved lumbal prolapskirurgi for de med norsk som morsmål 65 \% mot 56 \% 
+\textit{Tore sjekk tall} 
 for fremmedspråklige. Bedre kommunikasjon kan bidra å redusere disse
 forskjellene. Figur \ref{fig:Morsmal} viser andelen fremmedspråklige operert ved de ulike avdelingene i 2017.
 
@@ -286,7 +337,7 @@ med høyskole eller universitetsutdanning ved hvert sykehus/avdeling.
 \subsection{Arbeidsstatus}
 
 % latex table generated in R 3.5.0 by xtable 1.8-2 package
-% Wed Sep 12 15:11:31 2018
+% Thu Sep 13 12:13:59 2018
 \begin{table}[ht]
 \centering
 \begin{tabular}{lr}
@@ -369,7 +420,7 @@ og 3.1 \% for spinal stenosepasienter i perioden 2011-2017.
 ASA angir pasientens ”sårbarhet” i forhold til å få anestesi og operasjon på en skala fra 1 til 5. 
 Opplysningene hentes fra legeskjema.
 % latex table generated in R 3.5.0 by xtable 1.8-2 package
-% Wed Sep 12 15:11:36 2018
+% Thu Sep 13 12:14:04 2018
 \begin{table}[ht]
 \centering
 \begin{tabular}{crr}
@@ -400,7 +451,7 @@ Andel røykere har gått fra 28.2 i 2011 til 19.1 i 2017.
 \subsection{Radiologisk utredning}
 
 % latex table generated in R 3.5.0 by xtable 1.8-2 package
-% Wed Sep 12 15:11:38 2018
+% Thu Sep 13 12:14:06 2018
 \begin{table}[ht]
 \centering
 \begin{tabular}{lrr}
@@ -430,7 +481,7 @@ Spørsmålene er besvart av leger.
 
 
 % latex table generated in R 3.5.0 by xtable 1.8-2 package
-% Wed Sep 12 15:11:38 2018
+% Thu Sep 13 12:14:06 2018
 \begin{table}[ht]
 \centering
 \begin{tabular}{lrr}
@@ -482,7 +533,7 @@ De hyppigste tilstandene pasienter ble operert for i 2017 var prolapskirurgi (41
 ''Foramenotomi'' betyr at det er gjort dekompresjon for spinal stenose med bevaring av midtlinjestrukturer.
 
 % latex table generated in R 3.5.0 by xtable 1.8-2 package
-% Wed Sep 12 15:11:38 2018
+% Thu Sep 13 12:14:06 2018
 \begin{table}[ht]
 \centering
 \begin{tabular}{lrr}
@@ -515,27 +566,32 @@ Udefinerbart & 161 & 3\% \\
 \subsubsection{Degen. spondylolistese operert med fusjonskirurgi}
 
 
- LENA:
-
-XX \% av de som ble operert for spinal stenose i 2017 hadde også en forskyvning mellom ryggvirvlene (Degenerativ spondylolistese). I faglitteraturen er det sprikende anbefalinger for om denne undergruppen skal ha tilleggsbehandling med avstivningsoperasjon (fusjonskirurgi).
+I 2017 hadde 18.3 \% av de som ble operert for spinal stenose  også en forskyvning mellom ryggvirvlene (Degenerativ spondylolistese). I faglitteraturen er det sprikende anbefalinger for om denne undergruppen skal ha tilleggsbehandling med avstivningsoperasjon (fusjonskirurgi).
 Figur \ref{fig:degSponFusj} viser at det er stor variasjon i bruk av denne fusjonskirurgi, 
 for denne pasientgruppen i Norge, også mellom avdelinger på samme sykehus. 
 
 Norske studier baser på data fra NKR har vist at tilleggseffekten er liten og assosiert til høyere kostnader. 
 I 2018 blir det publisert en studie baser på data fra NKR, og tilsvarende registre i Sverige og Danmark (SWEspine og DANEspine). Denne viser  at tilleggbehandling med fusjonskirurgi ikke er assosiert til større behandlingseffektivitet, men lengre liggetid på sykehus. En pågående nasjonal RCT studie skal se nærmere på dette. Denne studien vil blant annet kunne svare på om undergrupper av pasienter med spinal stenose og degenerativ spondylolistese kan ha nytte av fusjonskirurgi.
 
-
-Figur...(Ny figur: andel pasienter med degenerativ spondylolistese og spinal stenose som blir operert med fusjonskirurgi per år.) viser at andelen spinal stenoseopererte som får tilleggsbehandling med fusjonskirurgi er redusert fra ..\% i 2011 til ...\% i 2017.
-\textit{LENA: AndelTid}
-
 \begin{figure}[ht]
 \scalebox{0.7}{\includegraphics{Figurer/FigdegSponFusj.pdf}}
 \caption{\label{fig:degSponFusj} Degenerativ spondylolistese operert med fusjonskirurgi}
 \end{figure}
 
-Nevrokirurgiske avdelinger fikserer lite sammenliknet med ortopeder.
+Figur \ref{fig:degSponFusjSStid} viser at andelen spinal stenoseopererte som får 
+tilleggsbehandling med fusjonskirurgi er redusert fra 50.9 \% 
+i 2011 til 29.7 \% i 2017.
+
+
+\begin{figure}[ht]
+\scalebox{0.7}{\includegraphics{Figurer/FigdegSponFusjSStid.pdf}}
+\caption{\label{fig:degSponFusjSStid} Andel pasienter med degenerativ spondylolistese og spinal stenose som blir operert med fusjonskirurgi}
+\end{figure}
+
+Nevrokirurgiske avdelinger fikserer lite sammenliknet med ortopediske.
 
 \clearpage
+
 
 \subsection{Liggetid}
 
@@ -546,10 +602,10 @@ Det har vært en klar reduksjon i liggetid  på sykehus (ca 1 døgn) fram til 20
 Dette kan henge sammen med økt bruk av mindre invasive operasjonsmetoder og mer dagkirurgi. 
 
 
-
-
-
-%\begin{figure}[h] 
+      
+      
+      
+      %\begin{figure}[h] 
 %\scalebox{s1}{\includegraphics{Figurer/FigLiggetidFord.pdf}}
 %\caption{LiggetidFord$Tittel}
 %\label{fig:Liggedogn}
@@ -557,9 +613,9 @@ Dette kan henge sammen med økt bruk av mindre invasive operasjonsmetoder og mer
 
 % \begin{figure}[h] 
 % \centerline{
-% \scalebox{s2}{\includegraphics{Figurer/LiggetidBoxPro.pdf}}
-% \scalebox{s2}{\includegraphics{Figurer/LiggetidBoxSS.pdf}}
-% }
+      % \scalebox{s2}{\includegraphics{Figurer/LiggetidBoxPro.pdf}}
+      % \scalebox{s2}{\includegraphics{Figurer/LiggetidBoxSS.pdf}}
+      % }
 % \caption{Gjennomsnittlig liggetid for hhv. prolaps og spinal stenose. }
 % \label{fig:LiggedognTid}
 % \end{figure}
@@ -577,11 +633,11 @@ Dette kan henge sammen med økt bruk av mindre invasive operasjonsmetoder og mer
 \end{figure}
 
 
-
-
-
-
-\clearpage
+      
+      
+      
+      
+      \clearpage
 
 \section{Resultatmål}
 All informasjon i dette kapitlet er hentet fra pasientskjema. Ingen av resultatmålene er justert
@@ -595,24 +651,24 @@ Viktige årsaker til variasjon i operasjonsresultat kan være at sykehusene beha
 ulike pasientgrupper. Viktig for operasjonsresultatet er imidlertid fortsatt
 indikasjonsstillingen («inngangsbilletten») til kirurgi; Fikk riktig person, rett
 behandling til rett tid?
-
-Forekomst av risikofaktorer blant pasientene påvirker operasjonsresultatene og kan
+      
+      Forekomst av risikofaktorer blant pasientene påvirker operasjonsresultatene og kan
 si noe om hvor godt behandlingstilbudet fungerer på ulike sykehus. Noen av disse
 faktorene kan modifiseres/bedres gjennom bedre styring og planlegging av
 virksomheten, strengere indikasjonsstilling og bedret pasientsikkerhet.
 
 
-
-
-\subsection{ Resultater etter ryggkirurgi, 2011 til 2017}
+      
+      
+      \subsection{ Resultater etter ryggkirurgi, 2011 til 2017}
 
 \subsection{Oswestry Disability Index (ODI)}
 
 
-
-
-
-ODI brukes som hovedeffektmål og uttrykker smerterelatert fysisk funksjon og sykdomsspesifikk livskvalitet hos ryggpasienter. Skalaen går fra 0
+      
+      
+      
+      ODI brukes som hovedeffektmål og uttrykker smerterelatert fysisk funksjon og sykdomsspesifikk livskvalitet hos ryggpasienter. Skalaen går fra 0
 til 100, hvor 0 angir ingen funksjonshemming og følgelig beste livskvalitet.
 Pasienten angir smerteintensitet i henholdsvis ben og rygg på en numerisk smerteskala (NRS), 
 fra 0 (ingen smerte) til 10 (verst tenkelige smerte).
@@ -642,8 +698,8 @@ Merk at resultatene \textit{ikke} er justert for forskjeller i pasientpopulasjon
 
 
 
-
-Figurene \ref{fig:OswEndrAvdPro} og \ref{fig:OswEndrAvdSS} viser gjennomsnittlig endring 12 måneder etter for hver avdeling for henholdsvis prolaps og spinal stenose pasienter. Forskjellene er små. Vi ser også at konfidensintervallene er relativt brede og overlappende.
+      
+      Figurene \ref{fig:OswEndrAvdPro} og \ref{fig:OswEndrAvdSS} viser gjennomsnittlig endring 12 måneder etter for hver avdeling for henholdsvis prolaps og spinal stenose pasienter. Forskjellene er små. Vi ser også at konfidensintervallene er relativt brede og overlappende.
 
 \begin{figure}[h] 
 \scalebox{0.7}{\includegraphics{Figurer/OswEndrAvdPro.pdf}}
@@ -666,18 +722,19 @@ For spinal stenosepasienter er "suksess" forbedring i Oswestry på mer enn 30 \%
 
 \clearpage
 
+
 ODI skår  under 22 poeng oppleves av de fleste pasientene som et helt akseptabelt fysisk funksjonsnivå 12 mnd etter ryggopersjon. Figurene \ref{fig:Osw22Pro} og \ref{fig:Osw22SS} angir hvor stor andel av henholdsvis prolaps og spinal stenose opererete som oppnår dette.
 
 \begin{figure}[ht]
 \scalebox{0.7}{\includegraphics{Figurer/FigOsw22Pro.pdf}}
 \caption{\label{fig:Osw22Pro}   Andel pasienter med ODI under 22 ett år
-etter prolapsoperasjon. Pasienter operert i 2015 og 2016.}
+      etter prolapsoperasjon. Pasienter operert i 2015 og 2016.}
 \end{figure}
 
 \begin{figure}[ht]
 \scalebox{0.7}{\includegraphics{Figurer/FigOsw22SS.pdf}}
 \caption{\label{fig:Osw22SS}   Andel pasienter med ODI under 22 ett år
-etter spinal stenose operasjon. Pasienter operert i 2015 og 2016.}
+      etter spinal stenose operasjon. Pasienter operert i 2015 og 2016.}
 \end{figure}
 
 
@@ -686,7 +743,7 @@ etter spinal stenose operasjon. Pasienter operert i 2015 og 2016.}
 
 % Figur \ref{fig:Nytte} viser hvor stor nytte pasientene opplever å ha hatt av behandlingen ett år etter operasjon fordelt på år. Tallet øverst på søyla angir antall pasienter som har svart. 
 % I figuren er det gjort følgende aggregering av svaralternativene i spørreskjemaet:
-% \begin{itemize}
+      % \begin{itemize}
 % \item ''Frisk mye/bedre'' omfatter ''helt bra'' og ''mye bedre'' 
 % \item ''Omtrent uendret'' omfatter ''litt bedre'', ''ingen endring'' og ''litt verre'' 
 % \item ''Klart verre'' omfatter ''mye verre'' og ''verre enn noen gang før''
@@ -697,8 +754,8 @@ Vi ser at en mindre andel av spinal stenose pasienter opplever å ha hatt stor n
 med prolapspasienter.
 
 
-
-% \begin{figure}[h] 
+      
+      % \begin{figure}[h] 
 % \begin{center}
 % \scalebox{s2}{\includegraphics{Figurer/FigNyttePro.pdf}}
 % \scalebox{s2}{\includegraphics{Figurer/FigNytteSS.pdf}}
@@ -712,17 +769,17 @@ med prolapspasienter.
 % Figur \ref{fig:Fornoyd} viser hvor fornøyde pasientene var med behandlinga de fikk på sykehuset ktrtxt 
 % etter operasjon fordelt på operasjonsår. Tallet øverst på søyla angir antall pasienter som har svart. 
 På spørreskjemaet kan pasienten angi ett av 5 svaralternativer:
-\begin{itemize}
+      \begin{itemize}
 \item Fornøyd
 \item Litt fornøyd
 \item Hverken fornøyd eller misfornøyd
 \item Litt misfornøyd
 \item Misfornøyd
-
+\end{itemize} 
 
 Andelen prolapspasienter som ett år etter behandlinga er fornøyde med behandlingen de fikk på sykehuset (PREM) 
 ligger mellom 78 \% og 81 \% 
-for pasienter operert i perioden 2011-2016. 
+      for pasienter operert i perioden 2011-2016. 
 Tilsvarende ligger andel fornøyde spinal stenosepasienter mellom 73 \% 
 og 77 \%
 Vi ser at spinal stenose pasienter gjennomgående er litt mindre fornøyde enn prolapspasienter.
@@ -731,8 +788,8 @@ Vi ser at spinal stenose pasienter gjennomgående er litt mindre fornøyde enn p
 
 
 
-
-% \begin{figure}[h] 
+      
+      % \begin{figure}[h] 
 % \begin{center}
 % \scalebox{s2}{\includegraphics{Figurer/FigFornoydPro.pdf}}
 % \scalebox{s2}{\includegraphics{Figurer/FigFornoydSS.pdf}}
@@ -757,8 +814,8 @@ Vi ser at spinal stenose pasienter gjennomgående er litt mindre fornøyde enn p
 \subsection{Prolapskirurgi (alle kategorier)}
 
 
-
-% Gjennomsnittlig liggetid på sykehus i forbindelse med prolapsoperasjon har gått ned med 
+      
+      % Gjennomsnittlig liggetid på sykehus i forbindelse med prolapsoperasjon har gått ned med 
 % NedgLiggetidPro døgn fra 2010 til rappAar.
 
 
@@ -774,8 +831,8 @@ med kvalitet. Om indikatoren peker på et område som kan forbedres, må vurdere
 %\subsubsection{Sykehusvise resultater}
 
 
-
-Resultatene nedenfor gjelder planlagt, første gangs operasjon for lumbal spinal stenose og prolaps.
+      
+      Resultatene nedenfor gjelder planlagt, første gangs operasjon for lumbal spinal stenose og prolaps.
 Kun avdelinger med mer enn 10 evt. 20 (avhenger av type resultat) registrerte operasjoner i er med i
 analysen.
 Grunnen til at gjentatt kirurgi (reoperasjon) og øyeblikkelig hjelp (ø-hjelp)
@@ -785,7 +842,7 @@ er filtrert bort er at dette er ulikt fordelt mellom sykehusene.
 
 Hos prolapspasienter som ikke har vært operert i ryggen tidligere er 
 suksessraten 63.4 \% mot 54.8 \%
-hos de som har vært operert før. 
+      hos de som har vært operert før. 
 ''Suksess'' er definert som mer enn 20 poengs forbedring av ODI. 
 
 Dersom man har vært operert mer enn 2 ganger tidligere i
@@ -805,8 +862,8 @@ operert planlagt (elektivt).
 \subsubsection{God indikasjonsstilling (rett pasient)}
 
 
-
-Pasienter som har mye plager, vil kunne forvente størst nytte av ryggoperasjon,
+      
+      Pasienter som har mye plager, vil kunne forvente størst nytte av ryggoperasjon,
 mens de som har lite plager vil ha mindre potensial for forbedring og større risiko
 for forverring. Gevinst av kirurgi henger derfor sammen med hvor streng
 indikasjonsstillingen («inngangsbilletten» til kirurgi) har vært. Figur \ref{fig:BeinsmEndrPre} viser denne
@@ -823,10 +880,10 @@ ut av analysen, da de ofte må opereres uansett grad av smerte.
 \begin{figure}[ht]
 \scalebox{0.7}{\includegraphics{Figurer/FigBeinsmEndrPre.pdf}}
 \caption{\label{fig:BeinsmEndrPre}  Sammenheng mellom intensitet av bensmerte før operasjon og
-forbedring etter operasjon. Skala for bensmerter går fra 0 til 10, hvor 0 betegner
-ingen og 10 verst tenkelige smerte før operasjon (horisontal akse). Negativ endring
-av bensmerten (vertikal akse) tilsvarer forverring, 0 betyr uendret smerte etter
-operasjon.}
+      forbedring etter operasjon. Skala for bensmerter går fra 0 til 10, hvor 0 betegner
+      ingen og 10 verst tenkelige smerte før operasjon (horisontal akse). Negativ endring
+      av bensmerten (vertikal akse) tilsvarer forverring, 0 betyr uendret smerte etter
+      operasjon.}
 \end{figure}
 
 \begin{figure}[ht]
@@ -838,9 +895,9 @@ operasjon.}
 
 \subsubsection{Varighet av smerter i rygg-/hofte og av utstrålende smerter på operasjonstidspunktet}
 
-\it{Deles i Prolaps og SS?}
+\textit{Deles i Prolaps og SS?}
 % latex table generated in R 3.5.0 by xtable 1.8-2 package
-% Wed Sep 12 15:11:54 2018
+% Thu Sep 13 12:14:23 2018
 \begin{table}[ht]
 \centering
 \begin{tabular}{lr}
@@ -859,8 +916,8 @@ Ingen utstrålende smerter & 3\% \\
 \label{tab:Utstr}
 \end{table}
 
-
-Andelen pasienter som har hatt beinsmerter mer enn ett år på
+      
+      Andelen pasienter som har hatt beinsmerter mer enn ett år på
 operasjonstidspunkt av de som er registrert i NKR var uendret fra 2011 til 2017 (47\%). 
 I nasjonale retningslinjer (2007) er det anbefalt å operere pasienter for prolaps før
 beinsmertene har vart for lenge, helst innen ett år. Derfor bør
@@ -895,8 +952,8 @@ Figur \ref{fig:VarighSmerteUtstrTid} viser utvikling over tid for andel pasiente
 
 \begin{figure}[h] 
 \center{
-\scalebox{0.55}{\includegraphics{Figurer/VarighUtstrTidPro.pdf}}
-\scalebox{0.55}{\includegraphics{Figurer/VarighUtstrTidSS.pdf}}} 
+      \scalebox{0.55}{\includegraphics{Figurer/VarighUtstrTidPro.pdf}}
+      \scalebox{0.55}{\includegraphics{Figurer/VarighUtstrTidSS.pdf}}} 
 \caption{Prolaps- og Spinal stenosepasienter som har utstrålende smerter i mer enn ett år før operasjonen, utvikling over tid.}
 \label{fig:VarighSmerteUtstrTid}
 \end{figure}
@@ -906,24 +963,18 @@ Figur \ref{fig:VarighSmerteUtstrTid} viser utvikling over tid for andel pasiente
 %\begin{figure}[h] 
 %\scalebox{s1}{\includegraphics{Figurer/VarighRyggHofAvdPro.pdf}}
 %\caption{Prolapspasienter som har hatt smerter i rygg-/hofte
-%i mer enn ett år før operasjonen.}
+      %i mer enn ett år før operasjonen.}
 %\label{fig:VarighSmerteRyggAvdPro}
 %\end{figure}
 
 %\begin{figure}[h] 
 %\scalebox{s1}{\includegraphics{Figurer/VarighRyggHofAvdSS.pdf}}
 %\caption{Spinal stenosepasienter som har hatt smerter i rygg-/hofte
-%i mer enn ett år før operasjonen.}
+      %i mer enn ett år før operasjonen.}
 %\label{fig:VarighSmerteRyggAvdSS}
 %\end{figure}
 
-
-
-
 \clearpage
-
-
-
 
 
 \subsubsection{Resultatindikatorer (behandlings-effektivitet)}
@@ -938,16 +989,11 @@ ulik risikoprofil. Resultatene som vist i figurene nedenfor er ikke justert for 
 forskjellene. Kunnskap om risiko kan dette bidra til bedre utvelgelse av pasienter til
 kirurgi.
 
-\begin{knitrout}
-\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
 
-
-{\ttfamily\noindent\bfseries\color{errorcolor}{\#\# Error: <text>:17:58: unexpected '='\\\#\# 16: \\\#\# 17: OswEndr20 <- RyggFigAndelerGrVar(RegData=RegData, aar=aar=\\\#\#\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textasciicircum{}}}\end{kframe}
-\end{knitrout}
-
-
-
-% \subsubsection{Uønsket resultat}
+      
+      
+      
+      % \subsubsection{Uønsket resultat}
 % 
 % Pasienter som 1 år etter prolapskirurgi har en ODIskår over 48 har fortsatt alvorlig
 % smerterelatert funksjonshemming i dagliglivet. 
@@ -958,7 +1004,7 @@ kirurgi.
 % \begin{figure}[ht]
 % \scalebox{s1}{\includegraphics{Figurer/FigOsw48.pdf}}
 % \caption{\label{fig:Osw48}  Andel pasienter med alvorlig smerterelatert funksjonssvikt 1 år etter
-% prolapskirurgi. Pasienter operert i 2014 og 2015.}
+      % prolapskirurgi. Pasienter operert i 2014 og 2015.}
 % \end{figure}
 
 
@@ -971,7 +1017,7 @@ kirurgi.
 % \begin{figure}[ht]
 % \scalebox{s1}{\includegraphics{Figurer/FigOswEndrLav.pdf}}
 % \caption{\label{fig:OswEndrLav}   Andel pasienter som ikke oppnår et tilfredsstillende resultat, ODI
-% forbedring under 13 poeng, etter prolapskirurgi. Pasienter operert i 2014 og 2015.}
+      % forbedring under 13 poeng, etter prolapskirurgi. Pasienter operert i 2014 og 2015.}
 % \end{figure}
 % 
 
@@ -986,8 +1032,8 @@ kirurgi.
 % \begin{figure}[ht]
 % \scalebox{s1}{\includegraphics{Figurer/FigOswEndr20.pdf}}
 % \caption{\label{fig:OswEndr20}   Andel pasienter med betydelig forbedring av selvrapportert
-% smerterelatert funksjon i dagliglivet («suksess», ODI forbedring over 20 poeng) 1 år
-% etter prolapsoperasjon. Pasienter operert i 2014 og 2015.}
+      % smerterelatert funksjon i dagliglivet («suksess», ODI forbedring over 20 poeng) 1 år
+      % etter prolapsoperasjon. Pasienter operert i 2014 og 2015.}
 % \end{figure}
 
 
@@ -997,8 +1043,8 @@ Nyere forskning knyttet til NKR viser at pasienter operert for spinal stenose b�
 \begin{figure}[ht]
 \scalebox{0.7}{\includegraphics{Figurer/FigOswEndr30pstSS.pdf}}
 \caption{\label{fig:OswEndr30pstSS} Andel spinal stenose pasienter med betydelig forbedring av selvrapportert
-smerterelatert funksjon i dagliglivet («suksess», ODI forbedring over 30 \% poeng) 1 år
-etter prolapsoperasjon. Pasienter operert i 2015 og 2016.}
+      smerterelatert funksjon i dagliglivet («suksess», ODI forbedring over 30 \% poeng) 1 år
+      etter prolapsoperasjon. Pasienter operert i 2015 og 2016.}
 \end{figure}
 
 
@@ -1017,7 +1063,7 @@ etter prolapsoperasjon. Pasienter operert i 2015 og 2016.}
 
 \textbf{I. Sårinfeksjon.}
 
-For alle typer prolapsoperasjoner har
+      For alle typer prolapsoperasjoner har
 andel sårinfeksjoner (pasientrapportert) har blitt noe redusert fram til 2011, mens bruk av  forbyggende antibiotikabehandling har økte sterkt og i dag får nesten alle forebyggende antibiotikabehandling ved kirurgi. Siden 2011 har andelen sårinfeksjoner ligget stabilt rundt 2 \% for prolapsopererte og rundt 3 \% for spinal stenose opererte.
 
 
@@ -1025,7 +1071,7 @@ andel sårinfeksjoner (pasientrapportert) har blitt noe redusert fram til 2011, 
 %      \centering \scalebox{s2}{\includegraphics{Figurer/FigKpInf3MndTidPro.pdf}}
 %      \centering \scalebox{s2}{\includegraphics{Figurer/FigKpInf3MndTidSS.pdf}}
 %      \caption{\label{fig:KpInfTid} Andel pasienter som rapporterer om sårinfeksjon 3 måneder etter
-%hhv. prolapskirurgi og spinal stenose, utvikling over tid.}
+      %hhv. prolapskirurgi og spinal stenose, utvikling over tid.}
 %\end{figure}
 
 Årsakene til sårinfeksjon er komplekse. I 2017 fikk 98-100 \% av pasienter som
@@ -1035,16 +1081,17 @@ viste for mange år siden at dette har god forbyggende effekt. Figurene \ref{fig
 \begin{figure}[ht]
 \scalebox{0.7}{\includegraphics{Figurer/FigKpInf3MndPro.pdf}}
 \caption{\label{fig:KpInfAvdPro} Andel pasienter som rapporterer om sårinfeksjon 
-(overfladisk og dyp) 3 måneder etter lumbal prolapskirurgi.}
+      (overfladisk og dyp) 3 måneder etter lumbal prolapskirurgi.}
 \end{figure}
 
 \begin{figure}[ht]
 \scalebox{0.7}{\includegraphics{Figurer/FigKpInf3MndSS.pdf}}
 \caption{\label{fig:KpInfAvdSS} Andel pasienter som rapporterer om sårinfeksjon 
-(overfladisk og dyp) 3 måneder etter lumbal spinal stenose operasjon.}
+      (overfladisk og dyp) 3 måneder etter lumbal spinal stenose operasjon.}
 \end{figure}
 
 %\clearpage
+
 
 
 
@@ -1053,167 +1100,164 @@ ubehag for pasienten, lengre liggetid og i noen tilfeller behov for reoperasjon.
 Unntaksvis kan også konsekvensen være nerveskade og alvorlig infeksjon. Figur \ref{fig:Dura} viser andelen som får durarift for prolaps og spinal stenose pasienter.
 
 \begin{figure}[ht]
-\centering \includegraphics[width= 0.55\textwidth]{Figurer/FigDuraPro.pdf}
-\caption{\label{fig:Dura} Andel pasienter som får durarift etter kirurgi for lumbalt prolaps, , elektive pasienter, ikke tidligere ryggopererte.}
-\end{figure}
-
+\scalebox{0.7}{\includegraphics{Figurer/FigDuraPro.pdf}}
+      \caption{\label{fig:Dura} Andel pasienter som får durarift etter kirurgi for lumbalt prolaps, 
+      elektive pasienter, ikke tidligere ryggopererte.}
+      \end{figure}
+      
 \begin{figure}[ht]
-\centering \includegraphics[width= 0.55\textwidth]{Figurer/FigDuraSS.pdf}
+\scalebox{0.7}{\includegraphics{Figurer/FigDuraSS.pdf}}
 \caption{\label{fig:Dura} Andel pasienter som får durarift etter kirurgi for lumbal 
-spinal stenose, elektive pasienter, ikke tidligere ryggopererte.}
-\end{figure}
-
-
-
-
-
-
-
-
-\clearpage
-
-\section{Nakkekirurgi}
-\textit{Må omskrives, Tore}
-
-Da  det ikke finnes etablerte kvalitetsindikatorer for nakkekirurgi vil dette bli en
-viktig oppgave for NKR.  Her presenteres sykehusvise data splittet på diagnose, behandling.
-I Norge drives nakkekirurgi kun ved nevrokirurgiske avdelinger knyttet til de fem
-universitetssykehusene i Oslo, Bergen, Trondheim, Stavanger og Tromsø, samt ved
-hovedsakelig ett privat sykehus (Oslofjordklinikken, øst og vest).
-Pasienter som opereres i nakken for degenerative tilstander har armsmerte med eller 
-uten funksjonssvikt (radikulopati), varierende grad av nakkesmerter og noen har ryggmargspåvirkning (myelopati). 
-
-
-
-\subsection{Bakgrunnsdata}
-
-
-
-\subsubsection{Alder, kjønn og komorbiditet}
-Gjennomsnittsalder ved nakkeoperasjon var 52 år i 2017. 46 \% var kvinner. 84 \% ble operert elektivt, planlagt kirurgi. Rundt  9 \% hadde ASA grad over II. Andelen eldre over 70 år som nakkeopereres har ligget jevnt rundt 5 \% frem til og med 2017, men varierer noe mellom sykehus, spesielt mellom offentlige og private, Figur \ref{fig:NakkeAlder70Sh}.
-
-
-\begin{figure}[ht]
-\scalebox{0.8}{\includegraphics{Figurer/Nakkealder70Sh.pdf}}
-\caption{\label{fig:NakkeAlder70Sh} Andel nakkeopererte med alder over 70 år per sykehus}
-\end{figure}
-
-\subsection{Virksomhetsdata}
-
-Som hovedregel kan ikke pasienter som opereres på grunn av ryggmargspåvirkning (myelopati) påregne bedring etter kirurgi i motsetning til de som behandles for nerverotspåvirkning (radikulopati). Hensikten med å operere de som har ryggmargsskade er snarere å forhindre forverring. Figur \ref{fig:NakkeOprIndikMyelopatiSh} viser at andelen som opereres for myelopati varierer mellom sykehusene.
-
-\begin{figure}[ht]
-\scalebox{0.8}{\includegraphics{Figurer/NakkeOprIndikMyelopatiSh.pdf}}
-\caption{\label{fig:NakkeOprIndikMyelopatiSh} Andel nakkeoperete med diagnosen myelopati}
-\end{figure}
-
-%\subsubsection{Antibiotika}
-
- 
-% Ved bakre nakkekirurgi er det også relativt liten variasjonen i bruk av antibiotika, 
-% Figur \ref{fig:NakkeAntibiotikaBakSh}. 
-
-% \begin{figure}[ht]
-% \scalebox{0.8}{\includegraphics{Figurer/NakkeAntibiotikaBakSh.pdf}}
-% \caption{\label{fig:NakkeAntibiotikaBakSh} Andel som har fått profylaktisk antibiotika ved bakre nakkekirurgi ved ulike sykehus. }
-% \end{figure}
-
-\subsubsection{Sårdren}
-
-Bruk av sårdren etter fremre nakkekirurgi har vært omdiskutert i litteraturen. Tidligere norske studier kan tyde på at bruk av sårdren er unødvendig. Figur \ref{fig:NakkeSaardrenUmFTid} viser at bruk av sårdren ved fremre nakkekirurgi er avtagende i Norge, men variasjonen mellom sykehus er stor, Figur \ref{fig:NakkeSaardrenUmFSh}.
-
-\begin{figure}[ht]
-\scalebox{0.8}{\includegraphics{Figurer/NakkeSaardrenUmFTid.pdf}}
-\caption{\label{fig:NakkeSaardrenUmFTid} Andel som har hatt sårdren etter fremre nakkekirurgi i Norge per år.}
-\end{figure}
-
-\begin{figure}[ht]
-\scalebox{0.8}{\includegraphics{Figurer/NakkeSaardrenUmFSh.pdf}}
-\caption{\label{fig:NakkeSaardrenUmFSh} Andel som har hatt sårdren etter fremre nakkekirurgi per sykehus.}
-\end{figure}
-
-\subsection{Resultatmål}
-
-Pasientene er fulgt opp med spørreskjema 3 og 12 måneder etter kirurgi.
-Resultatene er ikke justert for forskjeller i pasientpopulasjonene.
-I litteraturen er vanligvis bruk av profylaktisk antibiotikabehandling  anbefalt ved 
-nakkekirurgi. Andelen som får dette har ligget stabilt over 96 \% i Norge frem til og med
-\Sexpr[rappAar}.
-
-\subsubsection{Sårinfeksjon etter bakre nakkekirurgi}
-
-
-En av de hyppigste komplikasjonene etter nakkekirurgi er sårinfeksjon. Forekomsten i 2017 var 7 \% (totalt for bakre og fremre nakkekirurgi). 
-\textit{LENA sjekk}, 
-Ved  3 måneders etterkontroll svarer pasientene selv 
-på to spørsmål  for å kartlegge dette: ''Ble du behandlet med antibiotika for overfladisk sårinfeksjon i operasjonssåret i løpet av de 4 første ukene etter operasjonen?" og 
-''Har du blitt eller blir du behandlet i over 6 uker med antibiotika for dyp infeksjon i operasjonssåret?''   Andelen som har svart ja, ved hvert sykehus, på minst ett av disse spørsmålene er vist i Figur \ref{fig:NakkeKomplinfek3mndSh}.  
-
-
-%\subsubsection{Sårinfeksjon}
-
-\subsubsection{Resultat etter fremre nakkekirurgi for nerverotssmerte og funksjonssvikt (cervical radikulopati)}
-
-Neck Disability Index (NDI) er et godt validert mål for å vurdere bedring i smerterelatert
-funksjonshemming  i dagliglivets aktiviteter samt sykdomsspesifikk livskvalitet hos 
-nakkeopererte. Til å måle armsmerteintensitet før og etter operasjon brukes numerisk 
-smerteskala (NRS, 0-10). Figurene nedenfor viser resultater etter fremre nakkekirurgi hos 
-pasienter som har nerverotssmerte og funkssjonsvikt (radikulopati) uten tegn til 
-ryggmargsskade 
-(myelopati). Figur \ref{fig:NakkeNRSsmerteArmEndr12mndUmFSh} og  
-\ref{fig:NakkeNDIendr12mndUmFSh} at viser at mellom 60 og 70 \% har en betydelig forbedring av 
-armsmerte og funksjonssvikt (NRS og NDI reduksjon tilsvarende 30 \%  eller mer) ett år etter 
-kirurgi. Det et er variasjon i resultater mellom sykehus. Over 80 \% av pasientene er fonøyde 
-med behandlingen de fikk, Figur \ref{fig:NakkeFornoydBeh12mndFremSh}.  
-
-\subsubsection{Komplikasjoner etter fremre nakkekirurgi}
-De hyppigste komplikasjonene etter fremre nakkekirurgi er svelg og stemmevansker som følge 
-av nervepåvirkning og arrdannelser. Ved etterkontroll etter 3 måneder svarer pasientene på
-følgende spørsmål: ''Har du etter operasjonen vedvarende problemer med stemmen din 
-(f.eks. hesthet/svak stemme)? " og " Har du etter operasjonen hatt vedvarende ubehag ved svelging av mat og drikke? "
-Andelen som har svart ja på disse to spørsmålene er henholdsvis 9 \% og 15 \%, men dette  varierer mellom sykehus, Figur \ref{fig:NakkeStemme3mndSh} og \ref{fig:NakkeSvelg3mndSh}. Årsaken til disse forskjellene er uklar. 
-
-textit{LENA sjekk \%}
-
-
-
-\begin{figure}[ht]
-\scalebox{0.8}{\includegraphics{Figurer/NakkeNDIendr12mndUmFSh.pdf}}
-\caption{\label{fig:NakkeNDIendr12mndUmFSh} Andel pasienter som har fått betydelig bedring av fysisk funksjon i dagliglivet etter fremre nakkekirurgi.}
-\end{figure}
-
-\begin{figure}[ht]
-\scalebox{0.8}{\includegraphics{Figurer/NakkeNRSsmerteArmEndr12mndUmFSh.pdf}}
-\caption{\label{fig:NakkeNRSsmerteArmEndr12mndUmFSh} Andel som har fått betydelig bedring av nerverotsmerte  etter fremre nakkekirurgi.}
-\end{figure}
-
-\begin{figure}[ht]
-\scalebox{0.8}{\includegraphics{Figurer/NakkeFornoydBeh12mndFremSh.pdf}}
-\caption{\label{fig:NakkeFornoydBeh12mndFremSh} Andel pasienter som er godt fornøyd med behandlingen de fikk på sykehuset.}
-\end{figure}
-
-\begin{figure}[ht]
-\scalebox{0.8}{\includegraphics{Figurer/NakkeStemme3mndSh.pdf}}
-\caption{\label{fig:NakkeStemme3mndSh} Andel pasienter som rapporterer stemmeproblemer 3 måneder etter fremre nakkekirurgi.}
-\end{figure}
-
-\begin{figure}[ht]
-\scalebox{0.8}{\includegraphics{Figurer/NakkeSvelg3mndSh.pdf}}
-\caption{\label{fig:NakkeSvelg3mndSh} Andel pasienter som rapporterer svelgproblemer 3 måneder etter fremre nakkekirurgi.}
-\end{figure}
-
-\begin{figure}[ht]
-\scalebox{0.8}{\includegraphics{Figurer/NakkeKomplinfek3mndSh.pdf}}
-\caption{\label{fig:NakkeKomplinfek3mndSh} Andel pasienter som rapporterer om sårinfeksjon 3 måneder etter nakkekirurgi.}
+                  spinal stenose, elektive pasienter, ikke tidligere ryggopererte.}
 \end{figure}
 
 \clearpage
 
+LENA
 
 
+            
+            \section{Nakkekirurgi}
+            \textit{Må omskrives, Tore}
+            
+            Da  det ikke finnes etablerte kvalitetsindikatorer for nakkekirurgi vil dette bli en
+            viktig oppgave for NKR.  Her presenteres sykehusvise data splittet på diagnose, behandling.
+            I Norge drives nakkekirurgi kun ved nevrokirurgiske avdelinger knyttet til de fem
+            universitetssykehusene i Oslo, Bergen, Trondheim, Stavanger og Tromsø, samt ved
+            hovedsakelig ett privat sykehus (Oslofjordklinikken, øst og vest).
+            Pasienter som opereres i nakken for degenerative tilstander har armsmerte med eller 
+            uten funksjonssvikt (radikulopati), varierende grad av nakkesmerter og noen har ryggmargspåvirkning (myelopati). 
+            
 
+                  
+                  \subsection{Bakgrunnsdata}
+            
 
+                  \subsubsection{Alder, kjønn og komorbiditet}
+            Gjennomsnittsalder ved nakkeoperasjon var 52 år i 2017. 46 \% var kvinner. 84 \% ble operert elektivt, planlagt kirurgi. Rundt  9 \% hadde ASA grad over II. Andelen eldre over 70 år som nakkeopereres har ligget jevnt rundt 5 \% frem til og med 2017, men varierer noe mellom sykehus, spesielt mellom offentlige og private, Figur \ref{fig:NakkeAlder70Sh}.
+            
+            
+            \begin{figure}[ht]
+            \scalebox{0.8}{\includegraphics{Figurer/NakkeAlder70Sh.pdf}}
+            \caption{\label{fig:NakkeAlder70Sh} Andel nakkeopererte med alder over 70 år per sykehus}
+            \end{figure}
+            
+            \subsection{Virksomhetsdata}
+            
+            Som hovedregel kan ikke pasienter som opereres på grunn av ryggmargspåvirkning (myelopati) påregne bedring etter kirurgi i motsetning til de som behandles for nerverotspåvirkning (radikulopati). Hensikten med å operere de som har ryggmargsskade er snarere å forhindre forverring. Figur \ref{fig:NakkeOprIndikMyelopatiSh} viser at andelen som opereres for myelopati varierer mellom sykehusene.
+            
+            \begin{figure}[ht]
+            \scalebox{0.8}{\includegraphics{Figurer/NakkeOprIndikMyelopatiSh.pdf}}
+            \caption{\label{fig:NakkeOprIndikMyelopatiSh} Andel nakkeoperete med diagnosen myelopati}
+            \end{figure}
+            
+            %\subsubsection{Antibiotika}
+            
+            
+            % Ved bakre nakkekirurgi er det også relativt liten variasjonen i bruk av antibiotika, 
+            % Figur \ref{fig:NakkeAntibiotikaBakSh}. 
+            
+            % \begin{figure}[ht]
+            % \scalebox{0.8}{\includegraphics{Figurer/NakkeAntibiotikaBakSh.pdf}}
+            % \caption{\label{fig:NakkeAntibiotikaBakSh} Andel som har fått profylaktisk antibiotika ved bakre nakkekirurgi ved ulike sykehus. }
+            % \end{figure}
+            
+            \subsubsection{Sårdren}
+            
+            Bruk av sårdren etter fremre nakkekirurgi har vært omdiskutert i litteraturen. Tidligere norske studier kan tyde på at bruk av sårdren er unødvendig. Figur \ref{fig:NakkeSaardrenUmFTid} viser at bruk av sårdren ved fremre nakkekirurgi er avtagende i Norge, men variasjonen mellom sykehus er stor, Figur \ref{fig:NakkeSaardrenUmFSh}.
+            
+            \begin{figure}[ht]
+            \scalebox{0.8}{\includegraphics{Figurer/NakkeSaardrenUmFTid.pdf}}
+            \caption{\label{fig:NakkeSaardrenUmFTid} Andel som har hatt sårdren etter fremre nakkekirurgi i Norge per år.}
+            \end{figure}
+            
+            \begin{figure}[ht]
+            \scalebox{0.8}{\includegraphics{Figurer/NakkeSaardrenUmFSh.pdf}}
+            \caption{\label{fig:NakkeSaardrenUmFSh} Andel som har hatt sårdren etter fremre nakkekirurgi per sykehus.}
+            \end{figure}
+            
+            \subsection{Resultatmål}
+            
+            Pasientene er fulgt opp med spørreskjema 3 og 12 måneder etter kirurgi.
+            Resultatene er ikke justert for forskjeller i pasientpopulasjonene.
+            I litteraturen er vanligvis bruk av profylaktisk antibiotikabehandling  anbefalt ved 
+            nakkekirurgi. Andelen som får dette har ligget stabilt over 96 \% i Norge frem til og med
+            \Sexpr[rappAar}.
+      
+      \subsubsection{Sårinfeksjon }
+      \textit{tidl: Sårinfeksjon etter bakre nakkekirurgi}
+      
 
+                  En av de hyppigste komplikasjonene etter nakkekirurgi er sårinfeksjon. Forekomsten i 2017 var 
+            2.9 \% (totalt for bakre og fremre nakkekirurgi). 
+            \large{Tore sjekk. Fra før sto tallet 7...}, 
+            Ved  3 måneders etterkontroll svarer pasientene selv 
+            på to spørsmål  for å kartlegge dette: ''Ble du behandlet med antibiotika for overfladisk sårinfeksjon i operasjonssåret i løpet av de 4 første ukene etter operasjonen?" og 
+            ''Har du blitt eller blir du behandlet i over 6 uker med antibiotika for dyp infeksjon i operasjonssåret?''   Andelen som har svart ja, ved hvert sykehus, på minst ett av disse spørsmålene er vist i Figur \ref{fig:NakkeKomplinfekSh}.  
+            
+            
+            %\subsubsection{Sårinfeksjon}
+            
+            \subsubsection{Resultat etter fremre nakkekirurgi for nerverotssmerte og funksjonssvikt (cervical radikulopati)}
+            
 
+            
+            
+            Neck Disability Index (NDI) er et godt validert mål for å vurdere bedring i smerterelatert
+            funksjonshemming  i dagliglivets aktiviteter samt sykdomsspesifikk livskvalitet hos 
+            nakkeopererte. Til å måle armsmerteintensitet før og etter operasjon brukes numerisk 
+            smerteskala (NRS, 0-10). Figurene nedenfor viser resultater etter fremre nakkekirurgi hos 
+            pasienter som har nerverotssmerte og funkssjonsvikt (radikulopati) uten tegn til 
+            ryggmargsskade 
+            (myelopati). Figur \ref{fig:NakkeNRSsmerteArmEndr12mndUmFSh} og  
+            \ref{fig:NakkeNDIendr12mndUmFSh} at viser at mellom 60 og 70 \% har en betydelig forbedring av 
+            armsmerte og funksjonssvikt (NRS og NDI reduksjon tilsvarende 30 \%  eller mer) ett år etter 
+            kirurgi. Det et er variasjon i resultater mellom sykehus. Over 80 \% av pasientene er fonøyde 
+            med behandlingen de fikk, Figur \ref{fig:NakkeFornoydBeh12mndFremSh}.  
+            
+            \subsubsection{Komplikasjoner etter fremre nakkekirurgi}
+            De hyppigste komplikasjonene etter fremre nakkekirurgi er svelg og stemmevansker som følge 
+            av nervepåvirkning og arrdannelser. Ved etterkontroll etter 3 måneder svarer pasientene på
+            følgende spørsmål: ''Har du etter operasjonen vedvarende problemer med stemmen din 
+            (f.eks. hesthet/svak stemme)? " og " Har du etter operasjonen hatt vedvarende ubehag ved svelging av mat og drikke? "
+            Andelen som har svart ja på disse to spørsmålene er henholdsvis 9 \% og 15 \%, men dette  varierer mellom sykehus, Figur \ref{fig:NakkeStemme3mndSh} og \ref{fig:NakkeSvelg3mndSh}. Årsaken til disse forskjellene er uklar. 
+            
+            textit{LENA sjekk \%}
+            
+            
+            
+            \begin{figure}[ht]
+            \scalebox{0.8}{\includegraphics{Figurer/NakkeNDIendr12mndUmFSh.pdf}}
+            \caption{\label{fig:NakkeNDIendr12mndUmFSh} Andel pasienter som har fått betydelig bedring av fysisk funksjon i dagliglivet etter fremre nakkekirurgi.}
+            \end{figure}
+            
+            \begin{figure}[ht]
+            \scalebox{0.8}{\includegraphics{Figurer/NakkeNRSsmerteArmEndr12mndUmFSh.pdf}}
+            \caption{\label{fig:NakkeNRSsmerteArmEndr12mndUmFSh} Andel som har fått betydelig bedring av nerverotsmerte  etter fremre nakkekirurgi.}
+            \end{figure}
+            
+            \begin{figure}[ht]
+            \scalebox{0.8}{\includegraphics{Figurer/NakkeFornoydBeh12mndFremSh.pdf}}
+            \caption{\label{fig:NakkeFornoydBeh12mndFremSh} Andel pasienter som er godt fornøyd med behandlingen de fikk på sykehuset.}
+            \end{figure}
+            
+            \begin{figure}[ht]
+            \scalebox{0.8}{\includegraphics{Figurer/NakkeStemme3mndSh.pdf}}
+            \caption{\label{fig:NakkeStemme3mndSh} Andel pasienter som rapporterer stemmeproblemer 3 måneder etter fremre nakkekirurgi.}
+            \end{figure}
+            
+            \begin{figure}[ht]
+            \scalebox{0.8}{\includegraphics{Figurer/NakkeSvelg3mndSh.pdf}}
+            \caption{\label{fig:NakkeSvelg3mndSh} Andel pasienter som rapporterer svelgproblemer 3 måneder etter fremre nakkekirurgi.}
+            \end{figure}
+            
+            \begin{figure}[ht]
+            \scalebox{0.8}{\includegraphics{Figurer/NakkeKomplinfekSh.pdf}}
+            \caption{\label{fig:NakkeKomplinfek3mndSh} Andel pasienter som rapporterer om sårinfeksjon 3 måneder etter nakkekirurgi.}
+            \end{figure}
+            
+            \clearpage
+            
+      
 
 \end{document}

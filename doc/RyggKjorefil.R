@@ -35,6 +35,7 @@ reshID <- 601161 #Haukeland nevr.kir: 105588, NIMI:  104279, Unn: 601161, St Ola
 #RyggDataALLE <- read.table('C:/Registre/nkr/data/NKR2015-03-02.csv', header = T, sep = ";")
 #RegData <- read.table('A:/Rygg/NKR2010-2016aarsrapp.csv', sep=';', header=T, encoding = 'UTF-8') 
 fil <- 'A:/Rygg/NKR2017-11-20'
+fil <- 'A:/Rygg/NKR2010-2017aarsrapp'
 RegData <- read.table(paste0(fil, '.csv'), sep=';', header=T, encoding = 'UTF-8', stringsAsFactors = FALSE)  # na.strings = "NULL", 
 save(RegData, file=paste0(fil, '.Rdata'))
 load(file=paste0(fil, '.Rdata'))
@@ -42,6 +43,10 @@ load(file=paste0(fil, '.Rdata'))
 knit('SamleRappNKR.Rnw') #, encoding = 'UTF-8')
 texi2pdf('SamleRappNKR.tex')
 
+library(knitr)
+knit('C:/ResultattjenesteGIT/nkr/AarsrappOff/ResultaterAarsrapp.Rnw') #, encoding = 'UTF-8')
+library(tools)
+texi2pdf('ResultaterAarsrapp.tex')
 #_________________________________________________________________________________________
 #_________________________________________________________________________________________
 #
