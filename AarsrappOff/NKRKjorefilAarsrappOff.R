@@ -9,8 +9,8 @@ setwd('C:/ResultattjenesteGIT/nkr/AarsrappOff/')
 
 library(knitr)
 library(tools)
-knit('ResultaterAarsrapp.Rnw', encoding = 'UTF-8')
-texi2pdf('ResultaterAarsrapp.tex') 
+knit('ResultaterAarsrappTore24sept.Rnw', encoding = 'UTF-8')
+texi2pdf('ResultaterAarsrappTore24sept.tex') 
 
 #rm(list=ls())
 #NKRdata <- read.table('A:/Rygg/NKR2010-2017aarsrapp.csv', sep=';', header=T, encoding = 'UTF-8')

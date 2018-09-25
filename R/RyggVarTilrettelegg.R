@@ -42,7 +42,7 @@ RyggVarTilrettelegg  <- function(RegData, valgtVar, ktr=0, figurtype='andeler'){
       tittel <- 'Mangler tittel' 
       variable <- 'Ingen'
       #deltittel <- ''
-      RegData$Variabel <- 0
+      if (RegData != 0) {RegData$Variabel <- 0}
       #Kan her definere opp alle aktuelle grupperingsvariable og deres tekst, eller 
       #sende inn grupperingsvariabel og så gjøre beregninger. (Ulempe: Ekstra avhengigheter)
       #Sentralt spm: Hvor skal det avgjøres hvilken figurtype som vises???
@@ -62,12 +62,17 @@ RyggVarTilrettelegg  <- function(RegData, valgtVar, ktr=0, figurtype='andeler'){
       
       
       #------------------------------------- 
-      if (valgtVar=='deknGrad') {        #andelerGrVar
-            tittel <- 'Dekningsgrad 2017'
+      if (valgtVar=='DeknRygg17') {        #andelerGrVar
+            tittel <- 'Dekningsgrad, NKR Degenerativ Rygg, 2017'
             xAkseTxt <- 'dekningsgrad, NKR'
             KImaal <- 0.8
       }
-            
+      if (valgtVar=='DeknNakke17') {        #andelerGrVar
+            tittel <- 'Dekningsgrad, NKR Degenerativ Nakke, 2017'
+            xAkseTxt <- 'dekningsgrad, NKR'
+            KImaal <- 0.8
+      }
+      
       
       if (valgtVar=='alder') {	#Fordeling, GjsnGrVar, GjsnTid
             RegData <- RegData[which(RegData$Alder>=0), ]    #Tar bort alder<0
@@ -127,7 +132,7 @@ RyggVarTilrettelegg  <- function(RegData, valgtVar, ktr=0, figurtype='andeler'){
             RegData$Variabel[which(is.na(RegData$OpIndParese) & (RegData$SmBePre < 3.5))] <- 1
             #tittel <- paste0('Beinsmerte ',expression(""<=2),' og ingen parese')
             sortAvtagende <- F
-            tittel <- 'Beinsmerte \u2264 3 og ingen parese'
+            tittel <- expression("Beinsmerte "<="3 og ingen parese") #paste0('Beinsmerte ', expression(""<="3"), ' og ingen parese')
             #intToUtf8(2264)
       }
       if (valgtVar == 'BeinsmEndrLav') { #AndelGrVar
@@ -138,7 +143,7 @@ RyggVarTilrettelegg  <- function(RegData, valgtVar, ktr=0, figurtype='andeler'){
             RegData <- RegData[which(RegData$BeinsmEndr >= -10), ]	#Fjerne tomme og ugyldige
             #          RegData$Variabel[which(RegData$BeinsmEndr <1.5)] <- 1
             RegData$Variabel[which(is.na(RegData$OpIndParese) & (RegData$BeinsmEndr < 1.5))] <- 1
-            tittel <- paste0('Forbedring av beinsmerte-skår \u2264 1 poeng', ktrtxt)
+            tittel <- paste0("Forbedring av beinsmerte-skår <= 1 poeng, ", ktrtxt) 
             sortAvtagende <- FALSE
       }
       if (valgtVar == 'BMI') { #AndelGrVar

@@ -24,7 +24,20 @@ RyggUtvalgEnh(RegData, datoFra = "2009-01-01", datoTil = "3000-01-01",
 0: Kvinner
 1: Menn}
 
-\item{hovedkat}{Hvilken type hovedinngrep, numerisk 0-7, standard: 99, dvs. alle}
+\item{hovedkat}{Hvilken type hovedinngrep, numerisk 0-9, standard: 99, dvs. alle. Valgmuligheter:
+\itemize{
+ \item 0:'Operasjonskategori: "ukjent"',    #hkat=0
+ \item 1:'Prolapskirurgi',
+ \item 2:'Foramenotomi',
+ \item 3:'Laminektomi',
+ \item 4:'Interspinøst implantat',    
+ \item 5:'Fusjonskirurgi',
+ \item 6:'Skiveprotese',
+ \item 7:'Fjerning/rev. av implantat',
+ \item 8:'Spinal stenose',
+ \item 9:'Degen. spondylolistese'
+ \item 99: Alle
+ }}
 
 \item{aar}{- Operasjonsår}
 

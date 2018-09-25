@@ -83,6 +83,15 @@ tidsenhet <- 'Mnd' #Oppløsning på tidsaksen: 'Aar' (standard), 'Halvaar', 'Kva
 offData <- 0
 Ngrense <- 10
 medKI <- 1
+
+#---------------------------Dekningsgrad-------------------------------------
+RegData=0
+preprosess=0 
+outfile='' 
+valgtVar='DeknNakke17' #DeknNakke17, 'DeknRygg17'
+RyggFigAndelerGrVarDeknGr(RegData=0, preprosess=0, outfile='DeknRygg17.pdf', valgtVar='DeknRygg17')
+
+
 #-------------------------------------------------------	
 #---------AndelTid
 #-------------------------------------------------------	
@@ -183,7 +192,7 @@ valgtMaal <- 'Med'
 #----------------------------------------------------------------------------------------------------------------
 #-------- Andel per sykehus eller annen gr.variabel (AndelGrVar)-----------------------------------------
 #----------------------------------------------------------------------------------------------------------------
-valgtVar <- 'BeinsmLavPre'
+valgtVar <- 'BeinsmEndrLav'
 outfile <- '' #paste0(valgtVar, 'Sh.pdf')
 RyggFigAndelerGrVar(valgtVar=valgtVar, RegData=RegData, hovedkat = hovedkat, tidlOp=tidlOp,  Ngrense=20, opKat=opKat,
                     datoFra='2016-01-01', ktr=1, outfile=outfile)
