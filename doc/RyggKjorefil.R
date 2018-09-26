@@ -34,10 +34,10 @@ reshID <- 601161 #Haukeland nevr.kir: 105588, NIMI:  104279, Unn: 601161, St Ola
 	#Lillehammer: 111185, Gjøvik: 111150, Rana ortopediske avd. 102224, Ullevål, ortopediske avd. 999995
 #RyggDataALLE <- read.table('C:/Registre/nkr/data/NKR2015-03-02.csv', header = T, sep = ";")
 #RegData <- read.table('A:/Rygg/NKR2010-2016aarsrapp.csv', sep=';', header=T, encoding = 'UTF-8') 
-fil <- 'A:/Rygg/NKR2017-11-20'
+#fil <- 'A:/Rygg/NKR2017-11-20'
 fil <- 'A:/Rygg/NKR2010-2017aarsrapp'
-RegData <- read.table(paste0(fil, '.csv'), sep=';', header=T, encoding = 'UTF-8', stringsAsFactors = FALSE)  # na.strings = "NULL", 
-save(RegData, file=paste0(fil, '.Rdata'))
+#RegData <- read.table(paste0(fil, '.csv'), sep=';', header=T, encoding = 'UTF-8', stringsAsFactors = FALSE)  # na.strings = "NULL", 
+#save(RegData, file=paste0(fil, '.Rdata'))
 load(file=paste0(fil, '.Rdata'))
 #RegData <- RegData[sample(1:dim(RegData)[1],10000), ]
 knit('SamleRappNKR.Rnw') #, encoding = 'UTF-8')
@@ -59,7 +59,7 @@ rm(list=ls())
 NKRdata <- read.table('A:/Rygg/NKR2010-2017aarsrapp.csv', sep=';', header=T, encoding = 'UTF-8')
 RegData <- NKRdata
 save(RegData, file=paste0(fil, '.Rdata'))
-load('A:/Nakke/NakkeAarsrapp2016.Rdata') #Preprossesserte data
+#load('A:/Nakke/NakkeAarsrapp2016.Rdata') #Preprossesserte data
 #__Inndata til RyggFigAndeler.R:
 tittel=1
 reshID <- 601161 #999999	#601161 #100133	#111065 #105783	#103618	#102949	#   #Må sendes med til funksjon
@@ -89,8 +89,9 @@ RegData=0
 preprosess=0 
 outfile='' 
 valgtVar='DeknNakke17' #DeknNakke17, 'DeknRygg17'
-RyggFigAndelerGrVarDeknGr(RegData=0, preprosess=0, outfile='DeknRygg17.pdf', valgtVar='DeknRygg17')
-
+#RyggFigAndelerGrVarDeknGr(RegData=0, preprosess=0, outfile='', valgtVar='DeknNakke17')
+RyggFigAndelerGrVarDeknGr(RegData=RegData, outfile='', valgtVar='SymptVarighRyggHof')
+RyggFigAndelerGrVar(RegData = RegData, valgtVar='Morsmal', outfile = '')
 
 #-------------------------------------------------------	
 #---------AndelTid

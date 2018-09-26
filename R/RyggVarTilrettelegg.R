@@ -408,6 +408,8 @@ RyggVarTilrettelegg  <- function(RegData, valgtVar, ktr=0, figurtype='andeler'){
             varTxt <- 'med varighet minst 1år'
             tittel <- 'Varighet av utstrålende smerter minst ett år'
             sortAvtagende <- F
+            KIretn <- 'lav'
+            KImaalGrenser <- c(0,20,40) 
       }
       if (valgtVar == 'tidlOp3'){ #AndelTid, AndelGrVar
             RegData$Variabel[RegData$TidlOprAntall>2] <- 1
@@ -554,7 +556,8 @@ RyggVarTilrettelegg  <- function(RegData, valgtVar, ktr=0, figurtype='andeler'){
       }
 
       
-      UtData <- list(RegData=RegData, grtxt=grtxt, cexgr=cexgr, varTxt=varTxt, xAkseTxt=xAkseTxt, KImaal=KImaal, retn=retn,
+      UtData <- list(RegData=RegData, grtxt=grtxt, cexgr=cexgr, varTxt=varTxt, xAkseTxt=xAkseTxt, 
+                     KImaalGrenser, KImaal=KImaal, retn=retn,
                      tittel=tittel, flerevar=flerevar, variable=variable, sortAvtagende=sortAvtagende)
       #RegData inneholder nå variablene 'Variabel' og 'VariabelGr'
       return(invisible(UtData)) 

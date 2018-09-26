@@ -216,7 +216,7 @@ RyggFigAndelerGrVarAar <- function(RegData, valgtVar, datoFra='2007-01-01', dato
             soyleFarger <- farger[4] #rep(farger[3], AntGrNgr)
             prikkFarge <- farger[3]
             #Hvis Norge egen søyle: soyleFarger[which(names(AndelerSisteSort)=='Norge')] <- farger[4]
-            fargerMaalNiva <- c('#ddffcc', '#ffffcc', '#fff0e6') #Grønn, gul, rød
+            fargerMaalNiva <- c('#ddffcc', '#ffffcc') #, '#fff0e6') #Grønn, gul, rød
             #Tilpasse marger for å kunne skrive utvalgsteksten
             NutvTxt <- length(utvalgTxt)
             vmarg <- max(0, strwidth(GrNavnSort, units='figure', cex=cexShNavn)*0.85)
@@ -227,13 +227,14 @@ RyggFigAndelerGrVarAar <- function(RegData, valgtVar, datoFra='2007-01-01', dato
             xAkseTxt <- ifelse (AKjust==1, paste0(RyggVarSpes$xAkseTxt, ', justert for alder og kjønn'), 
                                 RyggVarSpes$xAkseTxt)
             
-            maalGrenser <- c(2,4,xmax)
+            KImaalGrenser <- RyggVarSpes$KImaalGrenser #c(0,20,40) #,xmax)
             pos <- barplot(as.numeric(AndelerSisteSort), horiz=T, border=NA, col=soyleFarger, #add=TRUE , #plot=T,
                            xlim=c(0,xmax), ylim=c(0.05, 1.32)*length(GrNavnSort), font.main=1, #xlab=xAkseTxt, 
                            las=1, cex.names=cexShNavn*0.9)
             #Legge på målnivå
-            #rect(xleft=c(0, maalGrenser[1:2]), ybottom=0, xright=maalGrenser, ytop=max(pos)+0.4, #pos[AntGrNgr+1], 
-            #    col = fargerMaalNiva, border = NA) #add = TRUE,
+            antMaalNivaa <- length(KImaalGrenser)
+            rect(xleft=KImaalGrenser[1:(antMaalNivaa-1)], ybottom=0, xright=maalGrenser[2:antMaalNivaa], ytop=max(pos)+0.4, #pos[AntGrNgr+1], 
+                col = fargerMaalNiva, border = NA) #add = TRUE,
             ybunn <- 0.1
             ytopp <- max(pos)+ 0.4 #pos[2]-pos[1] #pos[AntGrNgr]+ 0.4	#
             if (tidlAar != 0) {
@@ -255,12 +256,15 @@ RyggFigAndelerGrVarAar <- function(RegData, valgtVar, datoFra='2007-01-01', dato
                                paste0(AarTxt, ' (', sprintf('%.1f', ResAar[2]), '%, ', 'N=', Naar[2],')'),
                                paste0('Hele landet, ',AarTxt)) 
                   )
-                  # legend(x=0, y=-3.5, pch=c(NA,15,15,15), col=c(NA, fargerMaalNiva), ncol=4, xpd=TRUE, border=NA,
-                  #        box.col='white',cex=0.8, pt.cex=1.5, 
-                  #        legend=c('Måloppnåelse:', 'Meget god', 'God', 'Mindre god')) #paste(c('Meget god', 'God', 'Mindre god'), 'måloppnåelse')
+                  legend(x=0, y=-4.5, pch=c(NA,rep(15, antMaalNivaa-1)), col=c(NA, fargerMaalNiva), ncol=antMaalNivaa+1, 
+                         xpd=TRUE, border=NA, box.col='white',cex=0.8, pt.cex=1.5, 
+                         legend=c('Måloppnåelse:', 'Meget god', 'God')) #, 'Mindre god' 
+                  # legend('right', pch=c(NA,rep(15, antMaalNivaa-1)), col=c(NA, fargerMaalNiva), #ncol=antMaalNivaa+1, 
+                  #        xpd=TRUE, border=NA, box.col='white',cex=0.8, pt.cex=1.5, 
+                  #         legend=c('Måloppnåelse:', 'Meget god', 'God')) #, 'Mindre god' 
                   
-                  mtext(signTxt, side=1, las=1, cex=cexShNavn, adj=0, line=3, col='#FF7260')
-                  mtext(xAkseTxt, side=1, las=1, cex=cexShNavn, adj=0.5, line=2)
+                  mtext(signTxt, side=1, las=1, cex=cexShNavn, adj=0, line=3.8, col='#FF7260')
+                  mtext(xAkseTxt, side=1, las=1, cex=cexShNavn, adj=0.5, line=1.8)
                   overPos <- max(pos)+0.4*log(max(pos))
                   mtext(at=overPos, paste0('(N, ', AarTxt, ')'), side=2, las=1, cex=cexShNavn, adj=1, line=0.25)	
             } else {

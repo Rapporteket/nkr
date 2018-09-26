@@ -3,6 +3,8 @@
 #' Funksjon som genererer en figur med andeler av en variabel for en valgt grupperingsvariabel,
 #' f.eks. sykehus.
 #' Funksjonen er delvis skrevet for å kunne brukes til andre grupperingsvariable enn sykehus
+#' Den kan også benyttes til å lage figurer som viser dekningsgrad. Datasettet må da inkluderes i
+#' pakken og navnes DeknXXYY.Rdata, hvor XX er Rygg eller Nakke og YY er årstall.
 #'
 #' Andel som mottar sykepenger er definert som svaralternativene: 'Sykemeldt',
 #'        'Aktiv sykemeldt', 'Delvis sykemeldt', 'Attføring/rehab.', 'Uføretrygdet' 
@@ -75,49 +77,72 @@ RyggFigAndelerGrVar <- function(RegData, valgtVar, datoFra='2007-01-01', datoTil
             varTxt <- RyggVarSpes$varTxt
             KImaal <- RyggVarSpes$KImaal
             
-     
-     RegData[ ,grVar] <- factor(RegData[ ,grVar])
-     
-	#------- Gjøre utvalg
-     smltxt <- ''
-     medSml <- 0
-     
-     if (reshID==0) {enhetsUtvalg <- 0}
-     RyggUtvalg <- RyggUtvalgEnh(RegData=RegData, reshID=reshID, datoFra=datoFra, datoTil=datoTil, 
-                                 minald=minald, maxald=maxald, erMann=erMann, aar=aar,
-                                 hovedkat=hovedkat, opKat=opKat, tidlOp=tidlOp,enhetsUtvalg=enhetsUtvalg)
-     smltxt <- RyggUtvalg$smltxt
-     medSml <- RyggUtvalg$medSml 
-     hovedgrTxt <- RyggUtvalg$hovedgrTxt
-     utvalgTxt <- RyggUtvalg$utvalgTxt
-     ind <- RyggUtvalg$ind
-     RegData <- RyggUtvalg$RegData
-     
-     
-#---------------Beregninger
+            if (RegData != 0) {
+                  RegData[ ,grVar] <- factor(RegData[ ,grVar])
+              
+                  #------- Gjøre utvalg
+                  smltxt <- ''
+                  medSml <- 0
+                  
+                  if (reshID==0) {enhetsUtvalg <- 0}
+                  RyggUtvalg <- RyggUtvalgEnh(RegData=RegData, reshID=reshID, datoFra=datoFra, datoTil=datoTil, 
+                                              minald=minald, maxald=maxald, erMann=erMann, aar=aar,
+                                              hovedkat=hovedkat, opKat=opKat, tidlOp=tidlOp,enhetsUtvalg=enhetsUtvalg)
+                  fargepalett <- RyggUtvalg$fargepalett
+                  smltxt <- RyggUtvalg$smltxt
+                  medSml <- RyggUtvalg$medSml 
+                  hovedgrTxt <- RyggUtvalg$hovedgrTxt
+                  utvalgTxt <- RyggUtvalg$utvalgTxt
+                  ind <- RyggUtvalg$ind
+                  RegData <- RyggUtvalg$RegData
+                  
+            }
+            #---------------Beregninger
 # Variabelen Variabel er definert som indikatorvariabel for den valgte variabelen. 
-     
-     if(dim(RegData)[1] > 0) {
-           RegData <- RegData[which(RegData[ ,grVar] != ''),] #Tar ut registreringer uten grupperingsnavn
-           RegData[ ,grVar] <- as.factor(RegData[ ,grVar])	
-           Ngr <- table(RegData[ ,grVar])
-     }	else {Ngr <- 0}
-     N <- dim(RegData)[1]
-     AntGr <- length(which(Ngr >= Ngrense))	#Alle som har gyldig resultat
-     AndelHele <- round(100*sum(RegData$Variabel)/N, 2)
-     AndelerGr <- round(100*tapply(RegData$Variabel, RegData[ ,grVar], sum, na.rm=T)/Ngr,2)
-     Ngrtxt <- as.character(Ngr) 
-     GrNavn <- names(Ngr)
-      
-     indGrUt <- which(Ngr < Ngrense)
-     if (sum(indGrUt)>0) {
-           AndelGrUt <- sum(AndelerGr[indGrUt]*Ngr[indGrUt], na.rm = T)/sum(Ngr[indGrUt])
-           AndelerGr <- c(AndelerGr[-indGrUt],AndelGrUt) #AndelerGr[indGrUt] <- NA
-           #GrNavn <- c(names(Ngr)[-indGrUt], paste0(length(indGrUt), ' avd. med N<',Ngrense), )
-           GrUtNavn <- paste0(length(indGrUt), ' avd. med N<',Ngrense)
-           Ngrtxt <- c(Ngrtxt[-indGrUt],sum(Ngr[indGrUt]))  #Ngrtxt[indGrUt] <- paste0('<', Ngrense)
-           GrNavn <- paste0(c(GrNavn[-indGrUt], GrUtNavn),' (',Ngrtxt , ')')
+     #grep('Dekn',valgtVar)
+     if (length(grep('Dekn',valgtVar)) == 1) {
+           #Dekningsgradsfigur
+       #DeknData <- read.table(paste0('data/',valgtVar, '.csv'), sep=';', header=T, stringsAsFactors = FALSE)  # na.strings = "NULL", encoding = 'UTF-8', 
+       #save(DeknData, file = 'data/DeknNakke17.Rdata')
+      load(paste0('data/',valgtVar,'.Rdata'))
+           Ngr <- 100
+           indLandet <- which(DeknData$ShNavn== 'Hele landet')
+           AndelHele <- DeknData$DekningsgradNKR[indLandet]
+           AndelerGr <- DeknData$DekningsgradNKR[-indLandet]
+           fargepalett='BlaaOff'
+           utvalgTxt <- ''
+           medSml=0
+           AntGr <- length(AndelerGr)
+           GrNavn <- paste0(DeknData$ShNavn,' (',DeknData$Totalt , ')')[-indLandet]
+           hovedgrTxt <- 'Hele landet'
+           N <- DeknData$Totalt[indLandet]
+           xAkseTxt <- RyggVarSpes$xAkseTxt
            
+     } else { 
+           #Ikke dekningsgradsfigur
+           if(dim(RegData)[1] > 0) {
+                 RegData <- RegData[which(RegData[ ,grVar] != ''),] #Tar ut registreringer uten grupperingsnavn
+                 RegData[ ,grVar] <- as.factor(RegData[ ,grVar])	
+                 Ngr <- table(RegData[ ,grVar])
+           }	else {Ngr <- 0}
+           N <- dim(RegData)[1]
+           AntGr <- length(which(Ngr >= Ngrense))	#Alle som har gyldig resultat
+           AndelHele <- round(100*sum(RegData$Variabel)/N, 2)
+           AndelerGr <- round(100*tapply(RegData$Variabel, RegData[ ,grVar], sum, na.rm=T)/Ngr,2)
+           Ngrtxt <- as.character(Ngr) 
+           GrNavn <- names(Ngr)
+           xAkseTxt <- "Andel opphold (%)"	
+           
+           indGrUt <- which(Ngr < Ngrense)
+           if (sum(indGrUt)>0) {
+                 AndelGrUt <- sum(AndelerGr[indGrUt]*Ngr[indGrUt], na.rm = T)/sum(Ngr[indGrUt])
+                 AndelerGr <- c(AndelerGr[-indGrUt],AndelGrUt) #AndelerGr[indGrUt] <- NA
+                 #GrNavn <- c(names(Ngr)[-indGrUt], paste0(length(indGrUt), ' avd. med N<',Ngrense), )
+                 GrUtNavn <- paste0(length(indGrUt), ' avd. med N<',Ngrense)
+                 Ngrtxt <- c(Ngrtxt[-indGrUt],sum(Ngr[indGrUt]))  #Ngrtxt[indGrUt] <- paste0('<', Ngrense)
+                 GrNavn <- paste0(c(GrNavn[-indGrUt], GrUtNavn),' (',Ngrtxt , ')')
+                 
+           }
      }
      sortInd <- order(as.numeric(AndelerGr), decreasing=sortAvtagende, na.last = FALSE) 
      AndelerGrSort <- AndelerGr[sortInd]
@@ -125,13 +150,12 @@ RyggFigAndelerGrVar <- function(RegData, valgtVar, datoFra='2007-01-01', datoTil
      
      andeltxtUsort <- paste0(sprintf('%.1f',AndelerGr), ' %') 	
      andeltxt <- andeltxtUsort[sortInd]
-
-     
-     xAkseTxt <- "Andel opphold (%)"	
      
      if (tittel==0) {Tittel<-''} else {Tittel <- RyggVarSpes$tittel}
      
-     #-----------Figur---------------------------------------
+     
+     
+#-----------Figur---------------------------------------
      if 	( max(Ngr) < Ngrense)	{#Dvs. hvis ALLE er mindre enn grensa.
            FigTypUt <- rapbase::figtype(outfile)
            farger <- FigTypUt$farger
@@ -152,7 +176,7 @@ RyggFigAndelerGrVar <- function(RegData, valgtVar, datoFra='2007-01-01', datoTil
            cexShNavn <- 1 #0.85
            
            
-           FigTypUt <- figtype(outfile, height=3*800, fargepalett=RyggUtvalg$fargepalett)
+           FigTypUt <- figtype(outfile, height=3*800, fargepalett=fargepalett)
            farger <- FigTypUt$farger
            #Tilpasse marger for å kunne skrive utvalgsteksten
            NutvTxt <- length(utvalgTxt)

@@ -194,34 +194,7 @@ For degenerativ rygg har operasjonsraten hatt en svak økning (2\%) i Norge fra 
 
 \section{Oppsummeringstall for NKR}
 
-<<TabAlleRegRygg, results='asis', echo=FALSE>>=
-#tabAvdN <- addmargins(as.table(ftable(RegData[c('ShNavn','OpAar')])))
-tabAvdN <- addmargins(table(RegData[c('ShNavn','OpAar')]))
-antKol <- ncol(tabAvdN)
-tabAvdN5 <- tabAvdN[,(antKol-5):antKol]
-rownames(tabAvdN)[dim(tabAvdN)[1] ]<- 'TOTALT, alle avdelinger:'
-colnames(tabAvdN)[dim(tabAvdN)[2] ]<- paste(min(RegData$OpAar),'-',rappAar)
 
-xtable(tabAvdN5, digits=0, align=c('l', rep('r', 6)),
-       caption=paste0('Antall registreringer ved hver avdeling siste 5 år, samt totalt siden ', min(RegData$OpAar, na.rm=T),'.'), 
-       label = 'tab:AntReg')
-
-tabKjPst <- sprintf('%.1f',table(RegData$Kjonn)/Ntot*100)
-
-@
-
-
-\subsection{Degenerativ rygg}
-
-Tabell \ref{tab:AntReg} viser antall 
-registreringer gjort ved de respektive avdelinger siste 5 år. Vi ser at det er  
-\Sexpr{dim(tabAvdN)[1]-1} avdelinger som registrerer og at det i perioden \Sexpr{min(RegData$OpAar)} til \Sexpr{rappAar} totalt er registrert \Sexpr{Ntot} 
-operasjoner. Av disse er \Sexpr{tabKjPst[1]}\% utført på menn og \Sexpr{tabKjPst[2]}\% på kvinner.
-Siste rygginngrep registrert i datauttrekket som ligger til grunn for denne rapporten, ble utført 
-\Sexpr{datomax}. Siden oppstart i 2007 til og med \Sexpr{rappAar} er det totalt registrert 38612 operasjoner i NKR degenerativ rygg. 
-\par
-
-Flere enheter har hatt en stor og gledelig økning av antall registreringer til NKR, degenerativ rygg. Spesielt gjelder dette Kristiansund, Larvik, Førde og Ullevål (nevrokirurgisk avd.).
 
 
 \subsection{Degenerativ nakke}
@@ -252,6 +225,35 @@ Siste inngrep registrert i datauttrekket som ligger til grunn for denne rapporte
 \Sexpr{datomaxNakke}. 
 \par
 
+
+
+
+\subsection{Degenerativ rygg}
+
+Tabell \ref{tab:AntReg} viser antall 
+registreringer gjort ved de respektive avdelinger siste 5 år. Det er  
+\Sexpr{dim(tabAvdN)[1]-1} avdelinger som har registrerer i perioden \Sexpr{min(RegData$OpAar)} til \Sexpr{rappAar}. Totalt er det registrert \Sexpr{Ntot} 
+operasjoner. Av disse er \Sexpr{tabKjPst[1]}\% utført på menn og \Sexpr{tabKjPst[2]}\% på kvinner.
+Siste rygginngrep registrert i datauttrekket som ligger til grunn for denne rapporten, ble utført 
+\Sexpr{datomax}. Siden oppstart i 2007 til og med \Sexpr{rappAar} er det totalt registrert 38612 operasjoner i NKR degenerativ rygg. 
+\par
+
+Flere enheter har hatt en stor og gledelig økning av antall registreringer til NKR, degenerativ rygg. Spesielt gjelder dette Kristiansund, Larvik, Førde og Ullevål (nevrokirurgisk avd.).
+<<TabAlleRegRygg, results='asis', echo=FALSE>>=
+#tabAvdN <- addmargins(as.table(ftable(RegData[c('ShNavn','OpAar')])))
+tabAvdN <- addmargins(table(RegData[c('ShNavn','OpAar')]))
+antKol <- ncol(tabAvdN)
+tabAvdN5 <- tabAvdN[,(antKol-5):antKol]
+rownames(tabAvdN)[dim(tabAvdN)[1] ]<- 'TOTALT, alle avdelinger:'
+colnames(tabAvdN)[dim(tabAvdN)[2] ]<- paste(min(RegData$OpAar),'-',rappAar)
+
+xtable(tabAvdN5, digits=0, align=c('l', rep('r', 6)),
+       caption=paste0('Antall registreringer ved hver avdeling siste 5 år, samt totalt siden ', min(RegData$OpAar, na.rm=T),'.'), 
+       label = 'tab:AntReg')
+
+tabKjPst <- sprintf('%.1f',table(RegData$Kjonn)/Ntot*100)
+
+@
 
 \clearpage
 
@@ -285,7 +287,7 @@ Alder70Aar <- sprintf('%.1f',Alder70Tid$AggVerdier$Hoved)
 Gjennomsnittsalderen har økt jevnt fra \Sexpr{AlderAar[1]} år 
 i \Sexpr{startAar} til \Sexpr{rev(AlderAar)[1]} år i \Sexpr{rappAar}. 
 Ryggkirurgi øker mest i den eldste og mest sårbare delen av
-befolkningen. Disse pasientene vet vi at trenger mer omfattende utredning og
+befolkningen. Disse pasientene trenger mer omfattende utredning før operasjon og
 lengre liggetid. Dette medfører økte kostnader, spesielt for offentlige sykehus som i
 all hovedsak håndterer denne pasientgruppen. I \Sexpr{rappAar} ble \Sexpr{Andel70} \% 
 (\Sexpr{sum(RegData1aar$Alder>=70)} 
@@ -390,6 +392,7 @@ med høyskole eller universitetsutdanning ved hvert sykehus/avdeling.
 \clearpage
 Avdelinger som har en pasientpopulasjon med lav utdanning og mange fremmedspråklige pasienter vil kunne forvente svakere operasjonsresultater bedømt ut fra pasient rapporterte resultatmål (PROM).
 \subsection{Arbeidsstatus}
+Kun  20% er i fullt arbeid når de blir ryggoperert.
 
 <<TabArbstat, results='asis', echo=FALSE>>=
 indSyk <- which(RegData1aar$ArbstatusPre %in% 6:10)
@@ -461,7 +464,7 @@ Informasjonen er hentet fra legeskjema.
 %operasjon, og operasjoner hos pasienter som har vært operert tidligere.  
 %Søylene representerer hvert år frem til i dag. Tallet på toppen av søylen viser antall operasjoner utført 
 %det aktuelle året. 
-Reoperasjon gir generelt dårligere operasjonsresultat enn første gangs operasjon.
+Reoperasjoner har generelt dårligere effekt enn første gangs operasjon.
 
 <<FigTidlOp, echo=FALSE>>=
 #1: Samme nivå, 2:Annet nivå, 3: Annet og sm. nivå, 4: Primæroperasjon
@@ -520,7 +523,7 @@ NKR har tidligere vist at multiple reoperasjoner har minimal effekt. Andelen som
 mer enn 2 ganger tidligere ligger mellom \Sexpr{min(AndelTidlOp3Pro)} \%
 og \Sexpr{max(AndelTidlOp3Pro)} \% for prolapspasienter og mellom \Sexpr{min(AndelTidlOp3SS)} \%
 og \Sexpr{max(AndelTidlOp3SS)} \% for lumbal spinal stenosepasienter i perioden \Sexpr{startAar}-\Sexpr{rappAar}. 
-Undergrupper av pasientene kan imidlertid ha god effekt av reoperasjon, men det gjenstår å identifisere disse samt hvilken kirurgisk behandling som kan være mest aktuell.
+Det gjenstår å evaluere om undergrupper av pasientene kan ha god nytte av flere reoperasjoner og type kirurgi som kan være mest aktuell for dem.
 
 
 \subsection{ASA-grad og røyking}
@@ -551,7 +554,7 @@ RoykAar <- sprintf('%.1f', RoykTid$AggVerdier$Hoved)
 Tabell \ref{tab:ASA} viser fordeling av ASA grad. Andelen pasienter med ASA grad I-II 
 var \Sexpr{round(sum(table(RegData1aar$ASA)[1:2])/Ntot1aar*100, 1)}\%. Pasienter som røyker, havner 
 automatisk i ASA-grad II eller høyere. Data fra NKR har vist at røyking er assosiert til dåligere operasjonsresultat.
-Mange kirurger krever eller anbefaler røykeslutt før mer omfattende inngrep slik som fusjonskirurgi gjennomføres.
+Mange kirurger krever eller anbefaler røykeslutt før mer omfattende inngrep slik som fusjonskirurgi.
 %\Sexpr{txt}
 Andel røykere som ryggopereres har gått ned fra \Sexpr{RoykAar[1]} \% i \Sexpr{startAar} til \Sexpr{rev(RoykAar)[1]} \% i \Sexpr{rappAar}. 
 
@@ -620,7 +623,7 @@ xtable(RF, caption=paste0('Radiologiske diagnoser, ', rappAar),
 
 Andelen som er operert ved hjelp av synsfremmende midler (mikroskop eller
 lupebriller), som har åpenbare fordeler, har økt fra \Sexpr{BruktMikroAarPro[1]} \% i \Sexpr{startAar} til 
-\Sexpr{BruktMikroAarPro[length(BruktMikroAarPro)]} \% i \Sexpr{rappAar} for prolapsoperasjoner. 
+\Sexpr{BruktMikroAarPro[length(BruktMikroAarPro)]} \% i \Sexpr{rappAar} for lumbalt prolaps. 
 Tilsvarende tall for lumbal spinal stenose var en økning fra \Sexpr{BruktMikroAarSS[1]} \% i \Sexpr{startAar} til 
 \Sexpr{BruktMikroAarSS[length(BruktMikroAarSS)]} \% i \Sexpr{rappAar}.
 
@@ -681,30 +684,30 @@ SSDagPst <- prop.table(SSDagTid[1:2,],2)*100
 SSDag11_naa <- c(round(SSDagPst['1','2011']), round(SSDagPst['1',as.character(rappAar)]))
 @
 
-I \Sexpr{rappAar} hadde \Sexpr{AndelDegSponSS} \% av de som ble operert for spinal stenose  også en forskyvning mellom ryggvirvlene (Degenerativ spondylolistese). I internasjonal litteratur er det sprikende anbefalinger for om denne undergruppen skal ha tilleggsbehandling med avstivningsoperasjon (fusjonskirurgi).
+I \Sexpr{rappAar} hadde \Sexpr{AndelDegSponSS} \% av de som ble operert for spinal stenose  også en forskyvning mellom ryggvirvlene (Degenerativ spondylolistese). I internasjonal litteratur er det sprikende anbefalinger i forhold til om de bør få tilleggsbehandling med avstivningsoperasjon (fusjonskirurgi).
  
 
-Norske studier baser på data fra NKR har vist at tilleggseffekten er liten og assosiert til høyere kostnader (flere liggedøgn på sykehus). 
-I 2018 blir det publisert en ny studie baser på data fra NKR og tilsvarende registre i Sverige og Danmark (SWEspine og DANEspine). Denne viser stor praksisvariasjon mellom landene, men at tilleggbehandling med fusjonskirurgi ikke er assosiert til større behandlingseffektivitet, men økte kostnader. En pågående nasjonal RCT multisenter studie skal i samarbeid med NKR se nærmere på dette. Her vil man blant annet vurdere om undergrupper av pasienter med spinal stenose og degenerativ spondylolistese kan ha spesiell nytte av fusjonskirurgi.
+Norske studier basert på data fra NKR har vist at tilleggseffekten er liten og assosiert til høyere kostnader (flere liggedøgn på sykehus). 
+I 2018 blir det publisert en ny studie fra NKR i samarbeid med  tilsvarende registre i Sverige og Danmark. Denne viser stor forskjell i bruk av fusjonskirurgi mellom landene og at denne tilleggbehandlingen ikke er assosiert til større behandlingseffektivitet, men økte kostnader. En pågående nasjonal RCT multisenter studie skal i samarbeid med NKR evaluere om undergrupper av pasientene med spinal stenose og degenerativ spondylolistese kan ha spesiell nytte av fusjonskirurgi.
 \clearpage
 
-Figur \ref{fig:degSponFusj} viser at det er stor variasjon i bruk av  fusjonskirurgi, 
-for denne pasientgruppen, også mellom avdelinger på samme sykehus.
+Figur \ref{fig:degSponFusj} viser at det er stor variasjon i bruk av fusjonskirurgi, 
+for denne pasientgruppen, også mellom avdelinger på samme sykehus. Nevrokirurgiske avdelinger bruker mindre fusjonskirurgi enn de ortopediske.
 \begin{figure}[ht]
 \scalebox{\Sexpr{s1}}{\includegraphics{Figurer/FigdegSponFusj.pdf}}
-\caption{\label{fig:degSponFusj} Degenerativ spondylolistese operert med fusjonskirurgi}
+\caption{\label{fig:degSponFusj} Lumbal spinal stenose og degenerativ spondylolistese operert med fusjonskirurgi}
 \end{figure}
 
-Figur \ref{fig:degSponFusjSStid} viser at andelen spinal stenoseopererte som får 
+Figur \ref{fig:degSponFusjSStid} viser at andelen som får 
 tilleggsbehandling med fusjonskirurgi er redusert fra \Sexpr{DegSponFusjSSAar[1]} \% 
 i \Sexpr{startAar} til \Sexpr{rev(DegSponFusjSSAar)[1]} \% i \Sexpr{rappAar}.
 
 \begin{figure}[ht]
 \scalebox{\Sexpr{s1}}{\includegraphics{Figurer/FigdegSponFusjSStid.pdf}}
-\caption{\label{fig:degSponFusjSStid} Andel pasienter med degenerativ spondylolistese og spinal stenose som blir operert med fusjonskirurgi}
+\caption{\label{fig:degSponFusjSStid} Andel pasienter med degenerativ spondylolistese og spinal stenose som blir operert med fusjonskirurgi per år}
 \end{figure}
 
-Nevrokirurgiske avdelinger bruker mindre fusjonskirurgi enn de ortopediske.
+
 
 \clearpage
 
@@ -843,24 +846,23 @@ fra 0 (ingen smerte) til 10 (verst tenkelige smerte).
 
 Gjennomsnittlig ODI score var \Sexpr{ODIprePro} før operasjon og \Sexpr{ODIpostPro} ett år etter
 operasjon for lumbalt prolaps i \Sexpr{rappAar-1}. Dette betyr at funksjonssvikten ble redusert 
-fra alvorlig til minimal for gjennomsnittspasienten. \\
-
+fra alvorlig til minimal for gjennomsnittspasienten. 
 Pasienter operert for lumbal spinal stenose fikk også
 betydelig bedring (ODI redusert fra \Sexpr{ODIpreSS} (betydelig funksjonssvikt) til \Sexpr{ODIpostSS}) (lett til moderat funksjonssvikt) ett år etter kirurgi. 
 De som ble operert med fusjonkirurgi har
-omtrent samme forbedring (ODI redusert fra \Sexpr{ODIpreFusj} til \Sexpr{ODIpostFusj}). 
+omtrent samme forbedring (ODI redusert fra \Sexpr{ODIpreFusj} til \Sexpr{ODIpostFusj}). Resultatene synes å være omtrent de samme fra år til år. Suksessrate, det vil si forbedring av ODI på mer enn 20 poeng, ligger stabilt rundt 60 \% for prolapspasienter, ett år etter operasjon. 
+For spinal stenosepasienter ligger "suksessraten" ett år etter operasjon (forbedring av ODI på mer enn 30 \%) stabilt rundt 60\%.
 Dette betyr at selv om
 pasientene kan forvente en betydelig bedring, vil mange fortsatt ha en del restplager
-ett år etter kirurgi.
+ett år etter kirurgi. \\
  
-Resultatene synes å være omtrent de samme fra år til år. NKR
+ NKR
 sammenstiller også norske resultater tilsvarende registre i Sverige og
 Danmark. Indikasjonsstillen for kirurgi er lik og resultatene synes å være de samme i de tre nordiske landene.
-Resultatene varierer imidlertid mye mellom sykehus og fra pasient til pasient.
-
+Resultatene varierer imidlertid mye mellom sykehus og fra pasient til pasient. \\
 
 %Figur \ref{fig:OswEndr} viser gjennomsnittlig endring av ODI fra før operasjon til ett år etter.
-Endring av funksjon i dagliglivet og sykdomsspesifik livskvalitet
+
 
 
 
@@ -900,11 +902,6 @@ dum <- RyggFigGjsnBox(RegData=RegData, outfile='Figurer/OswEndrTidSS.pdf',
 \label{fig:OswEndrAvdSS}
 \end{figure}
 
-
-
-
-Suksessrate, det vil si forbedring i Oswestry på mer enn 20 poeng, ligger stabilt rundt 60 \% for prolapspasienter, ett år etter operasjon. 
-For spinal stenosepasienter er "suksess" forbedring i Oswestry på mer enn 30 \% , ett år etter operasjon. Denne raten ligger også stabilt rundt 60\%.
 
 
 \clearpage
@@ -1370,7 +1367,7 @@ dum <- NakkeFigAndelerGrVar(RegData=NakkeData, valgtVar='NRSsmerteArmEndr12mnd',
                             datoFra=datoFra3aar, datoTil = datoTil12mnd, 
                             fremBak = 1, myelopati = 0, outfile='Figurer/NakkeNRSsmerteArmEndr12mndUmFSh.pdf')
 
-dum <- NakkeFigAndelerGrVar(RegData=NakkeData, valgtVar='NDIendr12mnd30pst', datoTil = datoTil12mnd, 
+dum <- NakkeFigAndelerGrVar(RegData=NakkeData, valgtVar='NDIendr12mnd30pst', datoFra = datoFra3aar , datoTil = datoTil12mnd, 
                             fremBak = 1, myelopati = 0, outfile='Figurer/NakkeNDIendr12mndUmFSh.pdf')
 
 dum <- NakkeFigAndelerGrVar(RegData=NakkeData, valgtVar='FornoydBeh12mnd', 

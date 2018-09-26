@@ -9,8 +9,8 @@ setwd('C:/ResultattjenesteGIT/nkr/AarsrappOff/')
 
 library(knitr)
 library(tools)
-knit('ResultaterAarsrappTore25sept.Rnw', encoding = 'UTF-8')
-texi2pdf('ResultaterAarsrappTore25sept.tex') 
+knit('ResultaterAarsrapp.Rnw', encoding = 'UTF-8')
+texi2pdf('ResultaterAarsrapp.tex') 
 
 #rm(list=ls())
 #NKRdata <- read.table('A:/Rygg/NKR2010-2017aarsrapp.csv', sep=';', header=T, encoding = 'UTF-8')
@@ -18,10 +18,9 @@ texi2pdf('ResultaterAarsrappTore25sept.tex')
 #save(RegData, file=paste0('A:/Rygg/NKR2010-2017aarsrapp', '.Rdata'))
 
 load('A:/Rygg/NKR2010-2017aarsrapp.Rdata') #IKKE preprossessert
-preprosess <- 0
 #save(RegData, file='C:/Registre/nkr/data/NKR2010-2016aarsrapp.Rdata')
 #__Inndata til funksjon:
-datoFra <- '2010-01-01'
+datoFra <- '2011-01-01'
 datoTil <- '2017-12-31'
 aarsRappAar <- 2017
 aarsStart <- paste0(aarsRappAar,'-01-01')
@@ -30,18 +29,18 @@ aar2 <- (aarsRappAar-1):aarsRappAar  #2015:2016
 tidlAar <- aarsRappAar-1
 tidlAar2 <- (aarsRappAar-3):(aarsRappAar-2) #2013:2014
 #aar <- 0 #2010:2017
-minald <- 0
-maxald <- 110
-erMann <- 99
 hovedkat <- 99 		#Hovedinngrep, 0-9, Standard: 99, dvs alle operasjoner
 opKat <- 99  #Bare elektive pasienter
 tidlOp <- 99 #4 - Bare primæroperasjoner
 enhetsUtvalg <- 0 # 0-hele landet, 4–egen shusgruppe, 7–egen region
 grVar <- 'ShNavn'  #ShNavn, Fylke, BoHF, BoRHF
+minald<- 0 
+maxald<-130
+erMann<-''
 ktr <- 2
-Ngrense <- 10
+Ngrense <- 20
 AKjust <- 0
-reshID <- 0
+reshID<-0
 
 
 #Nakke
@@ -76,7 +75,47 @@ NakkeFigAndelerGrVarAar(RegData=RegData, preprosess=0, valgtVar='Komplinfek',
                    ktr=0,aar=aar2,tidlAar=tidlAar2, outfile='')
 
 # 
-#----- RYGG ---------------------
+#-------------------------- RYGG ---------------------
+#Kvalitetsindikatorer, 2017
+#-----------Dekningsgrad
+#Mål: 		<60 % lav måloppnåelse (rød), 60-80 % middel måloppnåelse (gul) >80 % høy måloppnåelse (grønn)
+
+#-----------Symptomvarighet, utstrålende smerter, før operasjon (andel ventet >1 år)
+#Mål: 		Under 30 % (grønn) ventet mer enn ett år
+#Hensikt: 	Redusere andel pasienter som har hatt symptomer for lenge før ryggoperasjon. 
+#Utvalg: prolapskirurgi og  foraminotomi + laminectomi slått sammen i en gruppe.
+aar=aar2
+tidlAar=tidlAar2
+hovedkat=1
+valgtVar='SympVarighUtstr'
+RyggFigAndelerGrVarAar(RegData=RegData, valgtVar='SympVarighUtstr', hovedkat=2,  
+                       Ngrense=20, aar=aar2, tidlAar=tidlAar2, outfile='') #SympVarighUtstrProAar.png')
+
+
+#-----------Bensmerter mindre eller lik 3 på numerisk smerteskala
+#Mål: 		Cutt off på 3 % (grønn)
+#Hensikt: 	Redusere andel pasienter som opereres på dårlig operasjonsindikasjon (lite bensmerter). 
+#Utvalg: prolaps
+RyggFigAndelerGrVarAar(RegData=RegData, valgtVar='BeinsmLavPre', aar=aar2, tidlAar=tidlAar2, #datoFra=datoFra, datoTil=datoTil, 
+                       hovedkat=1, Ngrense=20, outfile='BeinsmLavPreAar.png') #opKat=opKat, tidlOp=tidlOp, 
+
+#-----------Sårinfeksjon, dyp og overfladisk
+# Mål: 		Prolaps 2 % høy måloppnåelse (grønt),
+# Stenose 3 % høy måloppnåelse (grønt)
+# Hensikt: 	Redusere postoperative sårinfeksjoner
+RyggFigAndelerGrVarAar(RegData=RegData, valgtVar='KpInf3Mnd', hovedkat=1,  
+                       Ngrense=30, aar=aar2, tidlAar=tidlAar2, outfile='KpInf3MndProAar.png') 
+#-----------Durarift
+#Mål: 		Prolaps 2 % høy måloppnåelse (grønt),
+#Stenose 3 % høy måloppnåelse (grønt), 
+#Hensikt: 	Redusere forekomst av peroperativ komplikasjon 
+#Komplikasjon durarift ved operasjon (prolaps, elektiv, primærop.), - lav
+RyggFigAndelerGrVarAar(RegData=RegData, valgtVar='PeropKompDura', hovedkat=1, tidlOp=4, opKat=1, 
+                       Ngrense=30, aar=aar2, tidlAar=tidlAar2, outfile='PeropKompDuraProAar.png')
+
+
+
+#------------------------------Tidligere Kvalitetsindikatorer og andre figurer til årsrapp/off----------------------
 #KpInf3Mnd, #15 mot 16
 #Sårinfeksjon, pasientrapportert (prolaps) – lav
 RyggFigAndelerGrVarAar(RegData=RegData, preprosess=0, valgtVar='KpInf3Mnd', hovedkat=1,  
@@ -84,15 +123,12 @@ RyggFigAndelerGrVarAar(RegData=RegData, preprosess=0, valgtVar='KpInf3Mnd', hove
 #Sårinfeksjon, pasientrapportert (spinal stenose) – lav
 RyggFigAndelerGrVarAar(RegData=RegData, valgtVar='KpInf3Mnd', hovedkat=8,  
                        Ngrense=30, aar=aar2, tidlAar=tidlAar2, outfile='KpInf3MndSS.png') 
-
-
 #Komplikasjon durarift ved operasjon (prolaps, elektiv, primærop.), - lav
 RyggFigAndelerGrVarAar(RegData=RegData, preprosess=0, valgtVar='PeropKompDura', hovedkat=1, tidlOp=4, opKat=1, 
                        Ngrense=30, aar=aar2, tidlAar=tidlAar2, outfile='PeropKompDuraPro.png') 
 #Komplikasjon durarift ved operasjon (spinal stenose, elektiv, primærop.) – lav
 RyggFigAndelerGrVarAar(RegData=RegData, valgtVar='PeropKompDura', hovedkat=8, tidlOp=4, opKat=1, 
                        Ngrense=30, aar=aar2, tidlAar=tidlAar2, outfile='PeropKompDuraSS.png') 
-
 #Degen. spondylolistese operert med fusjonskirurgi, hele tidsperioden
 RyggFigAndelerGrVar(RegData=RegData, preprosess=0, valgtVar='degSponFusj', aar = (aarsRappAar-4):aarsRappAar,#
                        Ngrense=30, outfile='DegSponFusj.png') #aar=2016, 
@@ -119,8 +155,6 @@ RyggFigAndelerGrVarAar(RegData=RegData, preprosess=0, valgtVar='PeropKompDura', 
 #Andel durarift, prolaps
 RyggFigAndelerGrVarAar(RegData=RegData, preprosess=0, valgtVar='PeropKompDura', hovedkat=8, opKat=1, tidlOp=4, 
                        Ngrense=30, aar=aar2, tidlAar=tidlAar2, outfile='PeropKompDuraSS.png')
-
-
 #Gjennomsnittlig liggetid (spinal stenose)
 # Ett år mot forrige
 RyggFigGjsnBox(valgtVar='Liggedogn', RegData=RegData, preprosess=0, datoFra='2010-01-01', hovedkat=8, 
@@ -135,7 +169,7 @@ RyggFigAndelerGrVarAar(RegData=RegData, preprosess=0, valgtVar='SympVarighUtstr'
                        Ngrense=30, aar=aar2, tidlAar=tidlAar2, outfile='SympVarighUtstrPro.png')
 
 
-#--------------------------------------N>30: ---------------------------
+#--------------------------------------N>30:
 #??Andel fusjonskirurgi over 75 år. Andel foramenotomi over 75 år
 valgtVar <- 'Alder'
 ktr <- 1
@@ -166,7 +200,7 @@ RyggFigAndelerGrVarAar(RegData=RegData, valgtVar=valgtVar, datoFra=datoFra, dato
 					
 
 
-#--------------------------------------N>50: ---------------------------
+#--------------------------------------N>50
 
 #Andel med  bensmerte endring < 1,5 (failure)
 #Utvalg: prolaps
@@ -208,15 +242,12 @@ ktr <- 2
 outfile <- paste0(valgtVar, '_1', grVar,'.png')
 RyggFigAndelerGrVarAar(RegData=RegData, preprosess=0, valgtVar=valgtVar, datoFra=datoFra, datoTil=datoTil, 
                     ktr=ktr, hovedkat=hovedkat, opKat=opKat, tidlOp=tidlOp, enhetsUtvalg=enhetsUtvalg, reshID=reshID, outfile=outfile)
-
 #Andel prolapsopererte ODI endring < 13 (failure)
 valgtVar <- 'OswEndrLav'
 ktr <- 2
 outfile <- paste0(valgtVar, '_1', grVar,'.png')
 RyggFigAndelerGrVarAar(RegData=RegData, preprosess=0, valgtVar=valgtVar, datoFra=datoFra, datoTil=datoTil, 
                     ktr=ktr, hovedkat=hovedkat, opKat=opKat, tidlOp=tidlOp, enhetsUtvalg=enhetsUtvalg, reshID=reshID, outfile=outfile)
-
-
 #Andel  mye verre/verre enn noen sinne. 
 valgtVar <- 'Verre'
 ktr <- 1
