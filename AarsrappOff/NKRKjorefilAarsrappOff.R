@@ -9,8 +9,8 @@ setwd('C:/ResultattjenesteGIT/nkr/AarsrappOff/')
 
 library(knitr)
 library(tools)
-knit('ResultaterAarsrapp.Rnw', encoding = 'UTF-8')
-texi2pdf('ResultaterAarsrapp.tex') 
+knit('ResultaterAarsrapp_260918.Rnw', encoding = 'UTF-8')
+texi2pdf('ResultaterAarsrapp_260918.tex') 
 
 #rm(list=ls())
 #NKRdata <- read.table('A:/Rygg/NKR2010-2017aarsrapp.csv', sep=';', header=T, encoding = 'UTF-8')
@@ -79,6 +79,13 @@ NakkeFigAndelerGrVarAar(RegData=RegData, preprosess=0, valgtVar='Komplinfek',
 #Kvalitetsindikatorer, 2017
 #-----------Dekningsgrad
 #Mål: 		<60 % lav måloppnåelse (rød), 60-80 % middel måloppnåelse (gul) >80 % høy måloppnåelse (grønn)
+RegData=0
+valgtVar='deknNakke17' 
+hovedkat=1
+Ngrense=20 
+outfile=''
+RyggFigAndelerGrVar(RegData=0, valgtVar='deknRygg17', outfile='deknRygg17.pdf')
+RyggFigAndelerGrVar(RegData=0, valgtVar='deknNakke17', outfile='deknNakke17.pdf')
 
 #-----------Symptomvarighet, utstrålende smerter, før operasjon (andel ventet >1 år)
 #Mål: 		Under 30 % (grønn) ventet mer enn ett år
@@ -88,30 +95,39 @@ aar=aar2
 tidlAar=tidlAar2
 hovedkat=1
 valgtVar='SympVarighUtstr'
-RyggFigAndelerGrVarAar(RegData=RegData, valgtVar='SympVarighUtstr', hovedkat=2,  
-                       Ngrense=20, aar=aar2, tidlAar=tidlAar2, outfile='') #SympVarighUtstrProAar.png')
-
+RyggFigAndelerGrVarAar(RegData=RegData, valgtVar='SympVarighUtstr', hovedkat=1,
+                       Ngrense=20, aar=aar2, tidlAar=tidlAar2, outfile='SympVarighUtstrProAar.pdf')
+RyggFigAndelerGrVar(RegData=RegData, valgtVar='SympVarighUtstr', hovedkat=1,
+                       Ngrense=20, aar=2016:2017, outfile='SympVarighUtstrPro.pdf')
+#RyggFigAndelerGrVarAar(RegData=RegData, valgtVar='SympVarighUtstr', hovedkat=2:3,
+#                       Ngrense=20, aar=aar2, tidlAar=tidlAar2, outfile='SympVarighUtstrProAar.pdf')
 
 #-----------Bensmerter mindre eller lik 3 på numerisk smerteskala
 #Mål: 		Cutt off på 3 % (grønn)
 #Hensikt: 	Redusere andel pasienter som opereres på dårlig operasjonsindikasjon (lite bensmerter). 
 #Utvalg: prolaps
 RyggFigAndelerGrVarAar(RegData=RegData, valgtVar='BeinsmLavPre', aar=aar2, tidlAar=tidlAar2, #datoFra=datoFra, datoTil=datoTil, 
-                       hovedkat=1, Ngrense=20, outfile='BeinsmLavPreAar.png') #opKat=opKat, tidlOp=tidlOp, 
+                       hovedkat=1, Ngrense=20, outfile='BeinsmLavPreAar.pdf') #opKat=opKat, tidlOp=tidlOp, 
 
 #-----------Sårinfeksjon, dyp og overfladisk
 # Mål: 		Prolaps 2 % høy måloppnåelse (grønt),
 # Stenose 3 % høy måloppnåelse (grønt)
 # Hensikt: 	Redusere postoperative sårinfeksjoner
 RyggFigAndelerGrVarAar(RegData=RegData, valgtVar='KpInf3Mnd', hovedkat=1,  
-                       Ngrense=30, aar=aar2, tidlAar=tidlAar2, outfile='KpInf3MndProAar.png') 
+                       Ngrense=30, aar=aar2, tidlAar=tidlAar2, outfile='KpInf3MndProAar.pdf') 
+RyggFigAndelerGrVarAar(RegData=RegData, valgtVar='KpInf3Mnd', hovedkat=8,  
+                       Ngrense=30, aar=aar2, tidlAar=tidlAar2, outfile='KpInf3MndSSAar.pdf') 
 #-----------Durarift
 #Mål: 		Prolaps 2 % høy måloppnåelse (grønt),
 #Stenose 3 % høy måloppnåelse (grønt), 
 #Hensikt: 	Redusere forekomst av peroperativ komplikasjon 
 #Komplikasjon durarift ved operasjon (prolaps, elektiv, primærop.), - lav
 RyggFigAndelerGrVarAar(RegData=RegData, valgtVar='PeropKompDura', hovedkat=1, tidlOp=4, opKat=1, 
-                       Ngrense=30, aar=aar2, tidlAar=tidlAar2, outfile='PeropKompDuraProAar.png')
+                       Ngrense=30, aar=aar2, tidlAar=tidlAar2, outfile='PeropKompDuraProAar.pdf')
+RyggFigAndelerGrVarAar(RegData=RegData, valgtVar='PeropKompDura', hovedkat=8, tidlOp=4, opKat=1, 
+                       Ngrense=30, aar=aar2, tidlAar=tidlAar2, outfile='PeropKompDuraSSAar.pdf')
+
+
 
 
 
@@ -295,7 +311,7 @@ sum(testAar$x >1)
 
 #---------------------------Dekningsgrad-----------------------------------------
 DekningsgradRygg2017
-DeknData <- read.table('P:/Registerinfo og historie/nkr/AarsrappOff/DekningsgradRygg2017.csv', sep=';', header=T, encoding = 'UTF-8')
+DeknData <- read.table('P:/Registerinfo og historie/nkr/AarsrappOff/Deknin.csv', sep=';', header=T, encoding = 'UTF-8')
 head(DeknData)
 RegData <- DeknData
 

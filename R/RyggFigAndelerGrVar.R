@@ -67,7 +67,7 @@ RyggFigAndelerGrVar <- function(RegData, valgtVar, datoFra='2007-01-01', datoTil
 	}
 
      # Preprosessere data
-     if (preprosess){
+     if ((preprosess=1) & (RegData != 0)){
           RegData <- RyggPreprosess(RegData=RegData)
      }
       #------- Tilrettelegge variable
@@ -75,9 +75,10 @@ RyggFigAndelerGrVar <- function(RegData, valgtVar, datoFra='2007-01-01', datoTil
             RegData <- RyggVarSpes$RegData
             sortAvtagende <- RyggVarSpes$sortAvtagende
             varTxt <- RyggVarSpes$varTxt
-            KImaal <- RyggVarSpes$KImaal
+            KImaalGrenser <- RyggVarSpes$KImaalGrenser #c(0,20,40) #,xmax)
+            #KImaal <- RyggVarSpes$KImaal
             
-            if (RegData != 0) {
+            if (!is.null(dim(RegData))) {
                   RegData[ ,grVar] <- factor(RegData[ ,grVar])
               
                   #------- Gjøre utvalg
@@ -95,16 +96,21 @@ RyggFigAndelerGrVar <- function(RegData, valgtVar, datoFra='2007-01-01', datoTil
                   utvalgTxt <- RyggUtvalg$utvalgTxt
                   ind <- RyggUtvalg$ind
                   RegData <- RyggUtvalg$RegData
-                  
             }
             #---------------Beregninger
 # Variabelen Variabel er definert som indikatorvariabel for den valgte variabelen. 
      #grep('Dekn',valgtVar)
-     if (length(grep('Dekn',valgtVar)) == 1) {
+     if (length(grep('dekn',valgtVar)) == 1) {
            #Dekningsgradsfigur
-       #DeknData <- read.table(paste0('data/',valgtVar, '.csv'), sep=';', header=T, stringsAsFactors = FALSE)  # na.strings = "NULL", encoding = 'UTF-8', 
-       #save(DeknData, file = 'data/DeknNakke17.Rdata')
-      load(paste0('data/',valgtVar,'.Rdata'))
+       #DeknData <- read.table(paste0('../data/',valgtVar, '.csv'), sep=';', header=T, stringsAsFactors = FALSE)  # na.strings = "NULL", encoding = 'UTF-8', 
+       #save(deknNakke17, file = '../data/deknNakke17.Rdata')
+       #devtools::use_data(deknRygg17)
+           #RegData=NULL
+           #valgtVar <- 'deknRygg17'
+           #data(paste0(valgtVar,'.Rdata'), package = 'nkr')
+           #load(paste0(valgtVar,'.Rdata'))
+           #load(paste0('../data/',valgtVar,'.Rdata'))
+           #DeknData <- deknRygg17 #paste0(valgtVar)
            Ngr <- 100
            indLandet <- which(DeknData$ShNavn== 'Hele landet')
            AndelHele <- DeknData$DekningsgradNKR[indLandet]
@@ -117,8 +123,9 @@ RyggFigAndelerGrVar <- function(RegData, valgtVar, datoFra='2007-01-01', datoTil
            hovedgrTxt <- 'Hele landet'
            N <- DeknData$Totalt[indLandet]
            xAkseTxt <- RyggVarSpes$xAkseTxt
+           KImaalGrenser <- c(0,60,80,100)
            
-     } else { 
+     } else {
            #Ikke dekningsgradsfigur
            if(dim(RegData)[1] > 0) {
                  RegData <- RegData[which(RegData[ ,grVar] != ''),] #Tar ut registreringer uten grupperingsnavn
@@ -160,7 +167,7 @@ RyggFigAndelerGrVar <- function(RegData, valgtVar, datoFra='2007-01-01', datoTil
            FigTypUt <- rapbase::figtype(outfile)
            farger <- FigTypUt$farger
            plot.new()
-           if (dim(RegData)[1]>0) {
+           if (!is.null(dim(RegData))) { #>0
                  tekst <- paste0('Færre enn ', Ngrense, ' registreringer ved hvert av sykehusene')
            } else {tekst <- 'Ingen registrerte data for dette utvalget'}
            title(main=Tittel)
@@ -175,7 +182,6 @@ RyggFigAndelerGrVar <- function(RegData, valgtVar, datoFra='2007-01-01', datoTil
            #----------- Figurparametre ------------------------------
            cexShNavn <- 1 #0.85
            
-           
            FigTypUt <- figtype(outfile, height=3*800, fargepalett=fargepalett)
            farger <- FigTypUt$farger
            #Tilpasse marger for å kunne skrive utvalgsteksten
@@ -188,6 +194,23 @@ RyggFigAndelerGrVar <- function(RegData, valgtVar, datoFra='2007-01-01', datoTil
            pos <- rev(barplot(rev(as.numeric(AndelerGrSort)), horiz=T, border=NA, col=farger[4], #main=Tittel,
                               xlim=c(0,xmax), ylim=c(0.05, 1.25)*length(GrNavnSort), font.main=1, #xlab='Andel (%)', 
                               las=1, cex.names=cexShNavn*0.9))
+           #Legge på målnivå
+           if (!is.na(KImaalGrenser[1])) {
+                 antMaalNivaa <- length(KImaalGrenser)-1
+                 rekkef <- 1:antMaalNivaa
+                 if (sortAvtagende == TRUE) {rekkef <- rev(rekkef)} 
+                 fargerMaalNiva <-  c('#4fc63f', '#fbf850', '#c6312a')[rekkef] #c('green','yellow')# #c('#ddffcc', '#ffffcc') #, '#fff0e6') #Grønn, gul, rød
+                 maalOppTxt <- c('Høy', 'Moderat', 'Lav')[rekkef]
+                 rect(xleft=KImaalGrenser[1:antMaalNivaa], ybottom=0, xright=KImaalGrenser[2:(antMaalNivaa+1)], 
+                      ytop=max(pos)+0.4, col = fargerMaalNiva[1:antMaalNivaa], border = NA) #add = TRUE, #pos[AntGrNgr+1], 
+                 legend(x=0, y=-4, pch=c(NA,rep(15, antMaalNivaa)), col=c(NA, fargerMaalNiva[1:antMaalNivaa]), 
+                        ncol=antMaalNivaa+1, 
+                        xpd=TRUE, border=NA, box.col='white',cex=0.8, pt.cex=1.5, 
+                        legend=c('Måloppnåelse:', maalOppTxt[1:antMaalNivaa])) #,  
+           }
+           pos <- rev(barplot(rev(as.numeric(AndelerGrSort)), horiz=T, border=NA, col=farger[4], #main=Tittel,
+                              xlim=c(0,xmax), ylim=c(0.05, 1.25)*length(GrNavnSort), font.main=1, #xlab='Andel (%)', 
+                              las=1, cex.names=cexShNavn*0.9, add=T))
            mtext('Andel (%)', side=1, line=2)
            ybunn <- 0.1
            ytopp <- rev(pos)[AntGr]+1	

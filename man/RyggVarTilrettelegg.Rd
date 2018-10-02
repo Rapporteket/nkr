@@ -4,12 +4,15 @@
 \alias{RyggVarTilrettelegg}
 \title{Funksjon for å tilrettelegge variable for beregning.}
 \usage{
-RyggVarTilrettelegg(RegData, valgtVar, ktr = 0, figurtype = "andeler")
+RyggVarTilrettelegg(RegData = NULL, valgtVar, ktr = 0, hovedkat = 99,
+  figurtype = "andeler")
 }
 \arguments{
 \item{RegData}{En dataramme med alle nødvendige variabler fra registeret}
 
 \item{valgtVar}{Hvilken variabel som skal visualiseres. Se \strong{Details} for oversikt.}
+
+\item{hovedkat}{Hvilken type hovedinngrep, numerisk 0-7, standard: 99, dvs. alle}
 
 \item{figurtype}{Hvilken figurtype det skal tilrettelegges variable for: 
 'andeler', 'andelGrVar', 'andelTid', 'gjsnGrVar', 'gjsnTid'}

@@ -16,7 +16,7 @@
 #' @export
 #'
 
-RyggVarTilrettelegg  <- function(RegData, valgtVar, ktr=0, figurtype='andeler'){ #grVar='', 
+RyggVarTilrettelegg  <- function(RegData=NULL, valgtVar, ktr=0, hovedkat=99, figurtype='andeler'){ #grVar='', 
 
       
       "%i%" <- intersect
@@ -38,11 +38,11 @@ RyggVarTilrettelegg  <- function(RegData, valgtVar, ktr=0, figurtype='andeler'){
       verdiTxt <- '' 	#pstTxt, ...
       strIfig <- ''		#cex
       sortAvtagende <- TRUE  #Sortering av resultater
-      KImaal <- NA
+      KImaalGrenser <- NA
       tittel <- 'Mangler tittel' 
       variable <- 'Ingen'
       #deltittel <- ''
-      if (RegData != 0) {RegData$Variabel <- 0}
+      if (!is.null(RegData)) {RegData$Variabel <- 0}
       #Kan her definere opp alle aktuelle grupperingsvariable og deres tekst, eller 
       #sende inn grupperingsvariabel og så gjøre beregninger. (Ulempe: Ekstra avhengigheter)
       #Sentralt spm: Hvor skal det avgjøres hvilken figurtype som vises???
@@ -62,15 +62,19 @@ RyggVarTilrettelegg  <- function(RegData, valgtVar, ktr=0, figurtype='andeler'){
       
       
       #------------------------------------- 
-      if (valgtVar=='DeknRygg17') {        #andelerGrVar
+      if (valgtVar=='deknRygg17') {        #andelerGrVar
             tittel <- 'Dekningsgrad, NKR Degenerativ Rygg, 2017'
             xAkseTxt <- 'dekningsgrad, NKR'
             KImaal <- 0.8
+            data(paste0(valgtVar,'.Rdata'), package = 'nkr')
+            RegData <- deknRygg17 #paste0(valgtVar)
       }
-      if (valgtVar=='DeknNakke17') {        #andelerGrVar
+      if (valgtVar=='deknNakke17') {        #andelerGrVar
             tittel <- 'Dekningsgrad, NKR Degenerativ Nakke, 2017'
             xAkseTxt <- 'dekningsgrad, NKR'
             KImaal <- 0.8
+            data(paste0(valgtVar,'.Rdata'), package = 'nkr')
+            RegData <- deknNakke17 #paste0(valgtVar)
       }
       
       
@@ -132,8 +136,11 @@ RyggVarTilrettelegg  <- function(RegData, valgtVar, ktr=0, figurtype='andeler'){
             RegData$Variabel[which(is.na(RegData$OpIndParese) & (RegData$SmBePre < 3.5))] <- 1
             #tittel <- paste0('Beinsmerte ',expression(""<=2),' og ingen parese')
             sortAvtagende <- F
-            tittel <- expression("Beinsmerte "<="3 og ingen parese") #paste0('Beinsmerte ', expression(""<="3"), ' og ingen parese')
+            tittel <- expression("Lite beinsmerter og ingen parese") #paste0('Beinsmerte ', expression(""<="3"), ' og ingen parese')
             #intToUtf8(2264)
+            #KImaalRetn <- 'lav'
+            KImaalGrenser <- c(0,3) 
+            
       }
       if (valgtVar == 'BeinsmEndrLav') { #AndelGrVar
             #Mislykkede operasjoner
@@ -214,6 +221,9 @@ RyggVarTilrettelegg  <- function(RegData, valgtVar, ktr=0, figurtype='andeler'){
             tittel <- 'Sårinfeksjon, pasientrapportert'
             sortAvtagende <- FALSE
             xAkseTxt <- 'Andel sårinfeksjoner (%)'
+            #KImaalRetn <- 'lav'
+            if (hovedkat == 1) {KImaalGrenser <- c(0,2)}
+            if (hovedkat == 8) {KImaalGrenser <- c(0,3)}
       }
       if (valgtVar == 'Misfornoyd') { #AndelGrVar	#%in% c('Misfor3mnd','Misfor12mnd')) { #AndelGrVar
             #3/12mndSkjema. Andel med Misfornøyd/litt misfornøyd (1,2)
@@ -347,6 +357,9 @@ RyggVarTilrettelegg  <- function(RegData, valgtVar, ktr=0, figurtype='andeler'){
             tittel <- 'Komplikasjon ved operasjon: Durarift'
             sortAvtagende <- FALSE
             xAkseTxt <- 'Andel durarift (%)'
+            #KImaalRetn <- 'lav'
+            if (hovedkat == 1) {KImaalGrenser <- c(0,2)}
+            if (hovedkat == 8) {KImaalGrenser <- c(0,3)}
       }
       if (valgtVar=='Roker') { #AndelGrVar, #AndelTid
             #PasientSkjema. Andel med Roker=1
@@ -408,7 +421,7 @@ RyggVarTilrettelegg  <- function(RegData, valgtVar, ktr=0, figurtype='andeler'){
             varTxt <- 'med varighet minst 1år'
             tittel <- 'Varighet av utstrålende smerter minst ett år'
             sortAvtagende <- F
-            KIretn <- 'lav'
+            #KImaalRetn <- 'lav'
             KImaalGrenser <- c(0,20,40) 
       }
       if (valgtVar == 'tidlOp3'){ #AndelTid, AndelGrVar
@@ -557,7 +570,7 @@ RyggVarTilrettelegg  <- function(RegData, valgtVar, ktr=0, figurtype='andeler'){
 
       
       UtData <- list(RegData=RegData, grtxt=grtxt, cexgr=cexgr, varTxt=varTxt, xAkseTxt=xAkseTxt, 
-                     KImaalGrenser, KImaal=KImaal, retn=retn,
+                     KImaalGrenser=KImaalGrenser, retn=retn, #KImaal=KImaalRetn, 
                      tittel=tittel, flerevar=flerevar, variable=variable, sortAvtagende=sortAvtagende)
       #RegData inneholder nå variablene 'Variabel' og 'VariabelGr'
       return(invisible(UtData)) 

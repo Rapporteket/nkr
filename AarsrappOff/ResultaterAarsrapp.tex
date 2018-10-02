@@ -1,93 +1,88 @@
-\documentclass [norsk,a4paper,twoside]{article}\usepackage[]{graphicx}\usepackage[]{color}
-%% maxwidth is the original width if it is less than linewidth
-%% otherwise use linewidth (to make sure the graphics do not exceed the margin)
-\makeatletter
-\def\maxwidth{ %
-  \ifdim\Gin@nat@width>\linewidth
-    \linewidth
-  \else
-    \Gin@nat@width
-  \fi
-}
-\makeatother
-
-\definecolor{fgcolor}{rgb}{0.345, 0.345, 0.345}
-\newcommand{\hlnum}[1]{\textcolor[rgb]{0.686,0.059,0.569}{#1}}%
-\newcommand{\hlstr}[1]{\textcolor[rgb]{0.192,0.494,0.8}{#1}}%
-\newcommand{\hlcom}[1]{\textcolor[rgb]{0.678,0.584,0.686}{\textit{#1}}}%
-\newcommand{\hlopt}[1]{\textcolor[rgb]{0,0,0}{#1}}%
-\newcommand{\hlstd}[1]{\textcolor[rgb]{0.345,0.345,0.345}{#1}}%
-\newcommand{\hlkwa}[1]{\textcolor[rgb]{0.161,0.373,0.58}{\textbf{#1}}}%
-\newcommand{\hlkwb}[1]{\textcolor[rgb]{0.69,0.353,0.396}{#1}}%
-\newcommand{\hlkwc}[1]{\textcolor[rgb]{0.333,0.667,0.333}{#1}}%
-\newcommand{\hlkwd}[1]{\textcolor[rgb]{0.737,0.353,0.396}{\textbf{#1}}}%
-\let\hlipl\hlkwb
-
-\usepackage{framed}
-\makeatletter
-\newenvironment{kframe}{%
- \def\at@end@of@kframe{}%
- \ifinner\ifhmode%
-  \def\at@end@of@kframe{\end{minipage}}%
-  \begin{minipage}{\columnwidth}%
- \fi\fi%
- \def\FrameCommand##1{\hskip\@totalleftmargin \hskip-\fboxsep
- \colorbox{shadecolor}{##1}\hskip-\fboxsep
-     % There is no \\@totalrightmargin, so:
-     \hskip-\linewidth \hskip-\@totalleftmargin \hskip\columnwidth}%
- \MakeFramed {\advance\hsize-\width
-   \@totalleftmargin\z@ \linewidth\hsize
-   \@setminipage}}%
- {\par\unskip\endMakeFramed%
- \at@end@of@kframe}
-\makeatother
-
-\definecolor{shadecolor}{rgb}{.97, .97, .97}
-\definecolor{messagecolor}{rgb}{0, 0, 0}
-\definecolor{warningcolor}{rgb}{1, 0, 1}
-\definecolor{errorcolor}{rgb}{1, 0, 0}
-\newenvironment{knitrout}{}{} % an empty environment to be redefined in TeX
-
-\usepackage{alltt}
-\addtolength{\hoffset}{-0.5cm}
-\addtolength{\textwidth}{1cm}
-\addtolength{\voffset}{-1cm}
-\addtolength{\textheight}{2cm}
-
-
-%for nice looking tabs
-\usepackage{booktabs}
-
-\usepackage[norsk]{babel}
-\usepackage[utf8x]{inputenc}
-\usepackage{textcomp}
-\usepackage{fancyhdr}
-\pagestyle{fancy}
-\usepackage{amsmath}
-\usepackage{rotating} %add rotating for plain tables
-\usepackage{pdflscape} %add rotating/landcape for pdf
-
-%bytte font
-\renewcommand{\familydefault}{\sfdefault}
-
-%setter grå skrift fremfort sort
-\usepackage{xcolor}
-\usepackage{graphicx}
-\usepackage[pdftex, colorlinks, linkcolor=OffBlaa3, urlcolor=OffBlaa3]{hyperref}
-\newcommand{\kommentar}[1]{\cbstart\textcolor{red}{#1\cbend}}
-\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+% \documentclass [norsk,a4paper,twoside]{article}\usepackage[]{graphicx}\usepackage[]{color}
+% %% maxwidth is the original width if it is less than linewidth
+% %% otherwise use linewidth (to make sure the graphics do not exceed the margin)
+% \makeatletter
+% \def\maxwidth{ %
+%   \ifdim\Gin@nat@width>\linewidth
+%     \linewidth
+%   \else
+%     \Gin@nat@width
+%   \fi
+% }
+% \makeatother
+% 
+% \definecolor{fgcolor}{rgb}{0.345, 0.345, 0.345}
+% \newcommand{\hlnum}[1]{\textcolor[rgb]{0.686,0.059,0.569}{#1}}%
+% \newcommand{\hlstr}[1]{\textcolor[rgb]{0.192,0.494,0.8}{#1}}%
+% \newcommand{\hlcom}[1]{\textcolor[rgb]{0.678,0.584,0.686}{\textit{#1}}}%
+% \newcommand{\hlopt}[1]{\textcolor[rgb]{0,0,0}{#1}}%
+% \newcommand{\hlstd}[1]{\textcolor[rgb]{0.345,0.345,0.345}{#1}}%
+% \newcommand{\hlkwa}[1]{\textcolor[rgb]{0.161,0.373,0.58}{\textbf{#1}}}%
+% \newcommand{\hlkwb}[1]{\textcolor[rgb]{0.69,0.353,0.396}{#1}}%
+% \newcommand{\hlkwc}[1]{\textcolor[rgb]{0.333,0.667,0.333}{#1}}%
+% \newcommand{\hlkwd}[1]{\textcolor[rgb]{0.737,0.353,0.396}{\textbf{#1}}}%
+% \let\hlipl\hlkwb
+% 
+% \usepackage{framed}
+% \makeatletter
+% \newenvironment{kframe}{%
+%  \def\at@end@of@kframe{}%
+%  \ifinner\ifhmode%
+%   \def\at@end@of@kframe{\end{minipage}}%
+%   \begin{minipage}{\columnwidth}%
+%  \fi\fi%
+%  \def\FrameCommand##1{\hskip\@totalleftmargin \hskip-\fboxsep
+%  \colorbox{shadecolor}{##1}\hskip-\fboxsep
+%      % There is no \\@totalrightmargin, so:
+%      \hskip-\linewidth \hskip-\@totalleftmargin \hskip\columnwidth}%
+%  \MakeFramed {\advance\hsize-\width
+%    \@totalleftmargin\z@ \linewidth\hsize
+%    \@setminipage}}%
+%  {\par\unskip\endMakeFramed%
+%  \at@end@of@kframe}
+% \makeatother
+% 
+% \definecolor{shadecolor}{rgb}{.97, .97, .97}
+% \definecolor{messagecolor}{rgb}{0, 0, 0}
+% \definecolor{warningcolor}{rgb}{1, 0, 1}
+% \definecolor{errorcolor}{rgb}{1, 0, 0}
+% \newenvironment{knitrout}{}{} % an empty environment to be redefined in TeX
+% 
+% \usepackage{alltt}
+% \addtolength{\hoffset}{-0.5cm}
+% \addtolength{\textwidth}{1cm}
+% \addtolength{\voffset}{-1cm}
+% \addtolength{\textheight}{2cm}
+% 
+% 
+% %for nice looking tabs
+% \usepackage{booktabs}
+% 
+% \usepackage[norsk]{babel}
+% \usepackage[utf8x]{inputenc}
+% \usepackage{textcomp}
+% \usepackage{fancyhdr}
+% \pagestyle{fancy}
+% \usepackage{amsmath}
+% \usepackage{rotating} %add rotating for plain tables
+% \usepackage{pdflscape} %add rotating/landcape for pdf
+% 
+% %bytte font
+% \renewcommand{\familydefault}{\sfdefault}
+% 
+% %setter grå skrift fremfort sort
+% \usepackage{xcolor}
+% \usepackage{graphicx}
+% \usepackage[pdftex, colorlinks, linkcolor=OffBlaa3, urlcolor=OffBlaa3]{hyperref}
+% \newcommand{\kommentar}[1]{\cbstart\textcolor{red}{#1\cbend}}
+% \IfFileExists{upquote.sty}{\usepackage{upquote}}{}
 \begin{document}
 
 
 
 
 
-\begin{knitrout}
-\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
 
-
-{\ttfamily\noindent\itshape\color{messagecolor}{\#\# The following objects are masked \_by\_ .GlobalEnv:\\\#\# \\\#\#\ \ \ \  ASA, HovedInngrep, UforetrygdPre}}\end{kframe}
-\end{knitrout}
 
 
 
@@ -154,7 +149,7 @@ For degenerativ rygg har operasjonsraten hatt en svak økning (2\%) i Norge fra 
 \subsection{Degenerativ nakke}
 
 % latex table generated in R 3.5.0 by xtable 1.8-2 package
-% Wed Sep 26 12:16:31 2018
+% Mon Oct 01 09:27:06 2018
 \begin{table}[ht]
 \centering
 \begin{tabular}{lrrrrrr}
@@ -193,17 +188,8 @@ Siste inngrep registrert i datauttrekket som ligger til grunn for denne rapporte
 
 \subsection{Degenerativ rygg}
 
-Tabell \ref{tab:AntReg} viser antall 
-registreringer gjort ved de respektive avdelinger siste 5 år. Det er  
-47 avdelinger som har registrerer i perioden 2011 til 2017. Totalt er det registrert 30108 
-operasjoner. Av disse er 52.7\% utført på menn og 47.3\% på kvinner.
-Siste rygginngrep registrert i datauttrekket som ligger til grunn for denne rapporten, ble utført 
-2017-12-30. Siden oppstart i 2007 til og med 2017 er det totalt registrert 38612 operasjoner i NKR degenerativ rygg. 
-\par
-
-Flere enheter har hatt en stor og gledelig økning av antall registreringer til NKR, degenerativ rygg. Spesielt gjelder dette Kristiansund, Larvik, Førde og Ullevål (nevrokirurgisk avd.).
 % latex table generated in R 3.5.0 by xtable 1.8-2 package
-% Wed Sep 26 12:16:31 2018
+% Mon Oct 01 09:27:06 2018
 \begin{table}[ht]
 \centering
 \begin{tabular}{lrrrrrr}
@@ -264,6 +250,16 @@ Ahus & 151 & 67 & 137 & 186 & 226 & 824 \\
 \label{tab:AntReg}
 \end{table}
 
+
+Tabell \ref{tab:AntReg} viser antall 
+registreringer gjort ved de respektive avdelinger siste 5 år. Det er  
+47 avdelinger som har registrerer i perioden 2011 til 2017. Totalt er det registrert 30108 
+operasjoner. Av disse er 52.7\% utført på menn og 47.3\% på kvinner.
+Siste rygginngrep registrert i datauttrekket som ligger til grunn for denne rapporten, ble utført 
+2017-12-30. Siden oppstart i 2007 til og med 2017 er det totalt registrert 38612 operasjoner i NKR degenerativ rygg. 
+\par
+
+Flere enheter har hatt en stor og gledelig økning av antall registreringer til NKR, degenerativ rygg. Spesielt gjelder dette Kristiansund, Larvik, Førde og Ullevål (nevrokirurgisk avd.).
 
 \clearpage
 
@@ -359,7 +355,7 @@ Avdelinger som har en pasientpopulasjon med lav utdanning og mange fremmedspråk
 Kun  20% er i fullt arbeid når de blir ryggoperert.
 
 % latex table generated in R 3.5.0 by xtable 1.8-2 package
-% Wed Sep 26 12:16:39 2018
+% Mon Oct 01 09:27:14 2018
 \begin{table}[ht]
 \centering
 \begin{tabular}{lr}
@@ -442,7 +438,7 @@ Det gjenstår å evaluere om undergrupper av pasientene kan ha god nytte av fler
 ASA angir pasientens fysiske ”sårbarhet” ved anestesi og operasjon på en skala fra 1 til 5. 
 Opplysningene hentes fra legeskjema.
 % latex table generated in R 3.5.0 by xtable 1.8-2 package
-% Wed Sep 26 12:16:45 2018
+% Mon Oct 01 09:27:21 2018
 \begin{table}[ht]
 \centering
 \begin{tabular}{crr}
@@ -478,7 +474,7 @@ radiologisk undersøkelser. En pasient kan ha vært til flere undersøkelser. Hy
 Spørsmålene er besvart av leger. 
 
 % latex table generated in R 3.5.0 by xtable 1.8-2 package
-% Wed Sep 26 12:16:47 2018
+% Mon Oct 01 09:27:23 2018
 \begin{table}[ht]
 \centering
 \begin{tabular}{lrr}
@@ -510,7 +506,7 @@ En pasient kan ha flere diagnoser.
 
 
 % latex table generated in R 3.5.0 by xtable 1.8-2 package
-% Wed Sep 26 12:16:47 2018
+% Mon Oct 01 09:27:23 2018
 \begin{table}[ht]
 \centering
 \begin{tabular}{lrr}
@@ -556,7 +552,7 @@ De hyppigste tilstandene pasienter ble operert for i 2017 var lumbalt prolaps (4
 ''Foramenotomi'' betyr at det er gjort dekompresjon for lumbal spinal stenose med bevaring av midtlinjestrukturer. 
 
 % latex table generated in R 3.5.0 by xtable 1.8-2 package
-% Wed Sep 26 12:16:47 2018
+% Mon Oct 01 09:27:24 2018
 \begin{table}[ht]
 \centering
 \begin{tabular}{lrr}
@@ -597,7 +593,7 @@ I 2018 blir det publisert en ny studie fra NKR i samarbeid med  tilsvarende regi
 \clearpage
 
 Figur \ref{fig:degSponFusj} viser at det er stor variasjon i bruk av fusjonskirurgi, 
-for denne pasientgruppen, også mellom avdelinger på samme sykehus. Nevrokirurgiske avdelinger bruker mindre fusjonskirurgi enn de ortopediske.
+for denne pasientgruppen i tidsperioden, også mellom avdelinger på samme sykehus. Nevrokirurgiske avdelinger gjør mindre fusjonskirurgi enn de ortopediske.
 \begin{figure}[ht]
 \scalebox{0.7}{\includegraphics{Figurer/FigdegSponFusj.pdf}}
 \caption{\label{fig:degSponFusj} Lumbal spinal stenose og degenerativ spondylolistese operert med fusjonskirurgi}
@@ -609,7 +605,7 @@ i 2011 til 29.7 \% i 2017.
 
 \begin{figure}[ht]
 \scalebox{0.7}{\includegraphics{Figurer/FigdegSponFusjSStid.pdf}}
-\caption{\label{fig:degSponFusjSStid} Andel pasienter med degenerativ spondylolistese og spinal stenose som blir operert med fusjonskirurgi per år}
+\caption{\label{fig:degSponFusjSStid} Andel pasienter med degenerativ spondylolistese og spinal stenose som blir operert med fusjonskirurgi per år.}
 \end{figure}
 
 
@@ -701,14 +697,13 @@ I tillegg angir pasienten smerteintensitet i henholdsvis ben og rygg på en nume
 fra 0 (ingen smerte) til 10 (verst tenkelige smerte).
 \\
 
-Gjennomsnittlig ODI score var 46.4 før operasjon og 16.7 ett år etter
-operasjon for lumbalt prolaps i 2016. Dette betyr at funksjonssvikten ble redusert 
+For lumbalt prolaps kirurgi var gjennomsnittlig ODI score rapportert i 2017 46.4 før operasjon og 16.7 ett år etter. Dette betyr at funksjonssvikten ble redusert 
 fra alvorlig til minimal for gjennomsnittspasienten. 
 Pasienter operert for lumbal spinal stenose fikk også
 betydelig bedring (ODI redusert fra 39.2 (betydelig funksjonssvikt) til 23.2) (lett til moderat funksjonssvikt) ett år etter kirurgi. 
 De som ble operert med fusjonkirurgi har
-omtrent samme forbedring (ODI redusert fra 42.0 til 25.1). Resultatene synes å være omtrent de samme fra år til år. Suksessrate, det vil si forbedring av ODI på mer enn 20 poeng, ligger stabilt rundt 60 \% for prolapspasienter, ett år etter operasjon. 
-For spinal stenosepasienter ligger "suksessraten" ett år etter operasjon (forbedring av ODI på mer enn 30 \%) stabilt rundt 60\%.
+omtrent samme forbedring. ODI ble redusert fra 42.0 til 25.1). Resultatene synes å være omtrent de samme fra år til år. Suksessrate, det vil si forbedring av ODI på mer enn 20 poeng, ligger stabilt rundt 60 \% for prolapspasienter, ett år etter operasjon. 
+For spinal stenosepasienter ligger "suksessraten"  ett år etter operasjon (forbedring av ODI på mer enn 30 \%) stabilt rundt 60\%.
 Dette betyr at selv om
 pasientene kan forvente en betydelig bedring, vil mange fortsatt ha en del restplager
 ett år etter kirurgi. \\
@@ -879,7 +874,6 @@ i kapittel \ref{sec:regspe}.
 
 \subsubsection{Dekningsgrad (Strukturmål)}
 Høy dekningsgrad er en forutsetning for å kunne drive kvalitetssikring av egen virksomhet. Dekningsgraden gjenspeiler de ulike sykehusenes evne til og interesse for å evaluere sine egne resultater.
-Lena: sett inn figur med fagekoder.
 
 \clearpage
 
@@ -896,16 +890,12 @@ dårligere prognose.
 Det er stor variasjon i varighet av beinsmerter hos pasienter som blir
 operert ved ulike sykehus. Det har sannsynligvis sammenheng med ventetid for
 utredning og operasjon og tilgjengelig operasjonskapasitet i forhold til etterspørsel.
-Lena: sett inn figur med fagekoder, dvs. varighet av bensmerter før operasjon.
+Tabell  \ref{tab:Utstr} viser fordeling av hvor lenge pasientene har hatt utstrålende smerter. 
 
-Tabellen  \ref{tab:Utstr} viser fordeling av hvor lenge pasientene har hatt utstrålende smerter. 
-Figurene \ref{fig:VarighSmerteUtstrAvdPro} og \ref{fig:VarighSmerteUtstrAvdSS} viser hvor stor andel av henholdsvis prolaps- og spinal stenosepasienter som har hatt ustrålende smerter i mer enn ett år ved hvert sykehus.
-
-Det er bekymringsfult liten reduksjon i symptomvarighet før kirurgi fra år til år, spesielt for gruppen som ble opereret for lumbalt prolaps.
 
 
 % latex table generated in R 3.5.0 by xtable 1.8-2 package
-% Wed Sep 26 12:17:09 2018
+% Mon Oct 01 09:27:43 2018
 \begin{table}[ht]
 \centering
 \begin{tabular}{lr}
@@ -927,6 +917,9 @@ Ingen utstrålende smerter & 3\% \\
       
       
 
+Figurene \ref{fig:VarighSmerteUtstrAvdPro} og \ref{fig:VarighSmerteUtstrAvdSS} viser hvor stor andel av henholdsvis prolaps- og spinal stenosepasienter som har hatt ustrålende smerter i mer enn ett år ved hvert sykehus.
+
+Det er bekymringsfullt liten reduksjon i symptomvarighet før kirurgi fra år til år, spesielt for gruppen som ble opereret for lumbalt prolaps.
 
 
 
@@ -973,7 +966,7 @@ Figur \ref{fig:VarighSmerteUtstrTid} viser utvikling over tid for andel pasiente
 %\end{figure}
 									
 
-
+\clearpage
  \subsubsection{Lite symptomer før operasjon (Prosessmål)}     
       Pasienter som har mye plager, vil kunne forvente størst nytte av ryggoperasjon,
 mens de som har lite plager vil ha mindre potensial for forbedring og større risiko
@@ -989,7 +982,7 @@ operasjon (mindre enn 0 på den vertikale skalaen). \\
 \caption{\label{fig:BeinsmEndrPre}  Sammenheng mellom intensitet av bensmerte før operasjon og
       forbedring etter operasjon. Skala for bensmerter går fra 0 til 10, hvor 0 betegner
       ingen og 10 verst tenkelige smerte før operasjon (horisontal akse). Negativ endring
-      av bensmerten (vertikal akse) tilsvarer forverring, 0 betyr uendret smerte etter
+      av bensmerten (under 0 på vertikal akse) tilsvarer forverring, 0 betyr uendret smerte etter
       operasjon.}
 \end{figure}
 
@@ -1004,7 +997,7 @@ ut av analysen, da de ofte må opereres uansett grad av smerte.
 
 \begin{figure}[ht]
 \scalebox{0.7}{\includegraphics{Figurer/FigBeinsmLavPre.pdf}}
-\caption{\label{fig:BeinsmLavPre}  Andel pasienter med lite beinsmerter ($\leq 3$) operert for prolaps.}
+\caption{\label{fig:BeinsmLavPre}  Andel pasienter med lite beinsmerter ($\leq 3$) operert for prolaps siste to år.}
 \end{figure}
 
 
@@ -1019,7 +1012,7 @@ ut av analysen, da de ofte må opereres uansett grad av smerte.
 
 \textbf{I. Sårinfeksjon.}
 
-Årsakene til sårinfeksjon er komplekse. NKR viste for mange år siden at dette har god forbyggende effekt. For lumbale prolaps operasjoner har
+Årsakene til sårinfeksjoner er komplekse. NKR viste for mange år siden at dette har god forbyggende effekt. For lumbale prolaps operasjoner har
 andel sårinfeksjoner (pasientrapportert) har blitt noe redusert fram til 2011, samtidig med at forbyggende antibiotikabehandling økte sterkt. I dag får 99\% antibiotika ved kirurgi for lumbalt prolaps og spinal stenose. Siden 2011 har andelen sårinfeksjoner ligget stabilt rundt 2 \% for prolapsopererte og rundt 3 \% for spinal stenose opererte.
 Figurene \ref{fig:KpInfAvdPro} og \ref{fig:KpInfAvdSS} viser andel pasienter som fikk sårinfeksjon ved hver avdeling i årene 2016 og 2017.
 
@@ -1038,13 +1031,13 @@ Figurene \ref{fig:KpInfAvdPro} og \ref{fig:KpInfAvdSS} viser andel pasienter som
 \begin{figure}[ht]
 \scalebox{0.7}{\includegraphics{Figurer/FigKpInf3MndPro.pdf}}
 \caption{\label{fig:KpInfAvdPro} Andel pasienter som rapporterer om sårinfeksjon 
-      (overfladisk og dyp) 3 måneder etter lumbal prolapskirurgi.}
+      (overfladisk og dyp) 3 måneder etter lumbal prolapskirurgi siste 2 år.}
 \end{figure}
 
 \begin{figure}[ht]
 \scalebox{0.7}{\includegraphics{Figurer/FigKpInf3MndSS.pdf}}
 \caption{\label{fig:KpInfAvdSS} Andel pasienter som rapporterer om sårinfeksjon 
-      (overfladisk og dyp) 3 måneder etter lumbal spinal stenose operasjon.}
+      (overfladisk og dyp) 3 måneder etter lumbal spinal stenose operasjon siste 2 år.}
 \end{figure}
 
 \clearpage
@@ -1055,18 +1048,18 @@ Figurene \ref{fig:KpInfAvdPro} og \ref{fig:KpInfAvdSS} viser andel pasienter som
 Durarift er oftest en ufarlig komplikasjon, men kan medføre væskelekkasje og
 ubehag for pasienten, lengre liggetid og i noen tilfeller behov for reoperasjon.
 Unntaksvis kan også konsekvensen være nerveskade og alvorlig infeksjon. Figurene \ref{fig:DuraPro} og \ref{fig:DuraSS} 
-viser andelen som får durarift etter første gangs operasjon for henholdsvis lumbalt prolaps og spinal stenose i løpet av de to siste år.
+viser andelen som får durarift etter første gangs operasjon for henholdsvis lumbalt prolaps og spinal stenose i løpet av de 2 siste år.
 
 \begin{figure}[ht]
 \scalebox{0.7}{\includegraphics{Figurer/FigDuraPro.pdf}}
-      \caption{\label{fig:DuraPro} Andel pasienter som fikk durarift etter kirurgi for lumbalt prolaps, 
+      \caption{\label{fig:DuraPro} Andel pasienter som fikk durarift etter kirurgi for lumbalt prolaps siste 2 år, 
       elektive pasienter, ikke tidligere ryggopererte.}
       \end{figure}
       
 \begin{figure}[ht]
 \scalebox{0.7}{\includegraphics{Figurer/FigDuraSS.pdf}}
 \caption{\label{fig:DuraSS} Andel pasienter som fikk durarift etter kirurgi for lumbal 
-                  spinal stenose, elektive pasienter, ikke tidligere ryggopererte.}
+                  spinal stenose siste 2 år, elektive pasienter, ikke tidligere ryggopererte.}
 \end{figure}
 
 \clearpage
@@ -1077,7 +1070,7 @@ viser andelen som får durarift etter første gangs operasjon for henholdsvis lu
 
 I Norge drives nakkekirurgi kun ved nevrokirurgiske avdelinger knyttet til de fem
 universitetssykehusene i Oslo, Bergen, Trondheim, Stavanger og Tromsø, samt ved
-hovedsakelig ett privat sykehus (Oslofjordklinikken, øst og vest).
+hovedsakelig ett privat sykehus (Oslofjordklinikken).
 
 Pasienter som opereres i nakken for degenerative tilstander har armsmerte med eller 
 uten funksjonssvikt (radikulopati), varierende grad av nakkesmerter og noen har ryggmargspåvirkning (myelopati). 
@@ -1101,7 +1094,7 @@ Figur \ref{fig:NakkeAlder70Sh}.
 
 \begin{figure}[ht]
 \scalebox{0.65}{\includegraphics{Figurer/NakkeAlder70Sh.pdf}}
-\caption{\label{fig:NakkeAlder70Sh} Andel nakkeopererte med alder over 70 år per sykehus}
+\caption{\label{fig:NakkeAlder70Sh} Andel nakkeopererte med alder over 70 år per sykehus siste år}
 \end{figure}
 
 \clearpage
@@ -1112,7 +1105,7 @@ Som hovedregel kan ikke pasienter som opereres på grunn av ryggmargspåvirkning
 
 \begin{figure}[ht]
 \scalebox{0.7}{\includegraphics{Figurer/NakkeOprIndikMyelopatiSh.pdf}}
-\caption{\label{fig:NakkeOprIndikMyelopatiSh} Andel nakkeoperete med diagnosen myelopati}
+\caption{\label{fig:NakkeOprIndikMyelopatiSh} Andel nakkeoperete med diagnosen myelopati siste år}
 \end{figure}
 
 
@@ -1131,7 +1124,7 @@ Bruk av sårdren etter fremre nakkekirurgi har vært omdiskutert i litteraturen.
 
 \begin{figure}[ht]
 \scalebox{0.7}{\includegraphics{Figurer/NakkeSaardrenUmFSh.pdf}}
-\caption{\label{fig:NakkeSaardrenUmFSh} Andel som har hatt sårdren etter fremre nakkekirurgi per sykehus.}
+\caption{\label{fig:NakkeSaardrenUmFSh} Andel som har hatt sårdren etter fremre nakkekirurgi per sykehus siste år.}
 \end{figure}
 
 \clearpage
@@ -1194,7 +1187,7 @@ på to spørsmål  for å kartlegge dette: ''Ble du behandlet med antibiotika fo
 
 \begin{figure}[ht]
 \scalebox{0.65}{\includegraphics{Figurer/NakkeKomplinfekSh.pdf}}
-\caption{\label{fig:NakkeKomplinfek3mndSh} Andel pasienter som rapporterer om sårinfeksjon 3 måneder etter nakkekirurgi (fremre og bakre) i 2017. }
+\caption{\label{fig:NakkeKomplinfek3mndSh} Andel pasienter som rapporterer om sårinfeksjon 3 måneder etter nakkekirurgi (fremre og bakre) siste 2 år. }
 \end{figure}
 
 \clearpage

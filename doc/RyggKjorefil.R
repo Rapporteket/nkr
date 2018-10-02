@@ -193,10 +193,10 @@ valgtMaal <- 'Med'
 #----------------------------------------------------------------------------------------------------------------
 #-------- Andel per sykehus eller annen gr.variabel (AndelGrVar)-----------------------------------------
 #----------------------------------------------------------------------------------------------------------------
-valgtVar <- 'BeinsmEndrLav'
+valgtVar <- 'SympVarighUtstr'
 outfile <- '' #paste0(valgtVar, 'Sh.pdf')
 RyggFigAndelerGrVar(valgtVar=valgtVar, RegData=RegData, hovedkat = hovedkat, tidlOp=tidlOp,  Ngrense=20, opKat=opKat,
-                    datoFra='2016-01-01', ktr=1, outfile=outfile)
+                    datoFra='2017-01-01', ktr=1, outfile=outfile)
 
 variable <- c('alder70', 'Antibiotika', 'ArbstatusPre', 'Arbstatus', 'ASA', 'BeinsmLavPre', 
               'BeinsmEndrLav', 'BMI', 'degSponFusj', 'degSponSSSten', 'ErstatningPre', 'Fornoyd', 

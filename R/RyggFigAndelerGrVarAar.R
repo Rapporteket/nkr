@@ -70,12 +70,12 @@ RyggFigAndelerGrVarAar <- function(RegData, valgtVar, datoFra='2007-01-01', dato
             RegData <- RyggPreprosess(RegData=RegData)
       }
       #------- Tilrettelegge variable
-      RyggVarSpes <- RyggVarTilrettelegg(RegData=RegData, valgtVar=valgtVar, ktr=ktr, figurtype = 'andelGrVar')
+      RyggVarSpes <- RyggVarTilrettelegg(RegData=RegData, valgtVar=valgtVar, ktr=ktr, hovedkat=hovedkat,
+                                         figurtype = 'andelGrVar')
       RegData <- RyggVarSpes$RegData
-      sortAvtagende <- !RyggVarSpes$sortAvtagende
+      sortAvtagende <- !RyggVarSpes$sortAvtagende #Kan evt. bruke denne til å snu retn for kval.ind. som har "høy" som mål.
       varTxt <- RyggVarSpes$varTxt
-      KImaal <- RyggVarSpes$KImaal
-      
+      #KImaalRetn <- RyggVarSpes$KImaalRetn
       
       
       if ((AKjust==1) & !(grVar %in% c('BoHF', 'BoRHF'))) { AKjust=0}
@@ -216,7 +216,7 @@ RyggFigAndelerGrVarAar <- function(RegData, valgtVar, datoFra='2007-01-01', dato
             soyleFarger <- farger[4] #rep(farger[3], AntGrNgr)
             prikkFarge <- farger[3]
             #Hvis Norge egen søyle: soyleFarger[which(names(AndelerSisteSort)=='Norge')] <- farger[4]
-            fargerMaalNiva <- c('#ddffcc', '#ffffcc') #, '#fff0e6') #Grønn, gul, rød
+            fargerMaalNiva <-  c('#4fc63f', '#fbf850','#c6312a') #c('green','yellow', 'red')# #c('#ddffcc', '#ffffcc') #, '#fff0e6') #Grønn, gul, rød
             #Tilpasse marger for å kunne skrive utvalgsteksten
             NutvTxt <- length(utvalgTxt)
             vmarg <- max(0, strwidth(GrNavnSort, units='figure', cex=cexShNavn)*0.85)
@@ -227,14 +227,15 @@ RyggFigAndelerGrVarAar <- function(RegData, valgtVar, datoFra='2007-01-01', dato
             xAkseTxt <- ifelse (AKjust==1, paste0(RyggVarSpes$xAkseTxt, ', justert for alder og kjønn'), 
                                 RyggVarSpes$xAkseTxt)
             
-            KImaalGrenser <- RyggVarSpes$KImaalGrenser #c(0,20,40) #,xmax)
             pos <- barplot(as.numeric(AndelerSisteSort), horiz=T, border=NA, col=soyleFarger, #add=TRUE , #plot=T,
                            xlim=c(0,xmax), ylim=c(0.05, 1.32)*length(GrNavnSort), font.main=1, #xlab=xAkseTxt, 
                            las=1, cex.names=cexShNavn*0.9)
             #Legge på målnivå
-            antMaalNivaa <- length(KImaalGrenser)
-            rect(xleft=KImaalGrenser[1:(antMaalNivaa-1)], ybottom=0, xright=maalGrenser[2:antMaalNivaa], ytop=max(pos)+0.4, #pos[AntGrNgr+1], 
-                col = fargerMaalNiva, border = NA) #add = TRUE,
+            KImaalGrenser <- RyggVarSpes$KImaalGrenser #c(0,20,40) #,xmax)
+            antMaalNivaa <- length(KImaalGrenser)-1
+            maalOppTxt <- c('Høy', 'Moderat', 'Lav')
+            rect(xleft=KImaalGrenser[1:antMaalNivaa], ybottom=0, xright=KImaalGrenser[2:(antMaalNivaa+1)], 
+                 ytop=max(pos)+0.4, col = fargerMaalNiva[1:antMaalNivaa], border = NA) #add = TRUE, #pos[AntGrNgr+1], 
             ybunn <- 0.1
             ytopp <- max(pos)+ 0.4 #pos[2]-pos[1] #pos[AntGrNgr]+ 0.4	#
             if (tidlAar != 0) {
@@ -256,9 +257,10 @@ RyggFigAndelerGrVarAar <- function(RegData, valgtVar, datoFra='2007-01-01', dato
                                paste0(AarTxt, ' (', sprintf('%.1f', ResAar[2]), '%, ', 'N=', Naar[2],')'),
                                paste0('Hele landet, ',AarTxt)) 
                   )
-                  legend(x=0, y=-4.5, pch=c(NA,rep(15, antMaalNivaa-1)), col=c(NA, fargerMaalNiva), ncol=antMaalNivaa+1, 
+                  legend(x=0, y=-3.2, pch=c(NA,rep(15, antMaalNivaa)), col=c(NA, fargerMaalNiva[1:antMaalNivaa]), 
+                         ncol=antMaalNivaa+1, 
                          xpd=TRUE, border=NA, box.col='white',cex=0.8, pt.cex=1.5, 
-                         legend=c('Måloppnåelse:', 'Meget god', 'God')) #, 'Mindre god' 
+                         legend=c('Måloppnåelse:', maalOppTxt[1:antMaalNivaa])) #,  
                   # legend('right', pch=c(NA,rep(15, antMaalNivaa-1)), col=c(NA, fargerMaalNiva), #ncol=antMaalNivaa+1, 
                   #        xpd=TRUE, border=NA, box.col='white',cex=0.8, pt.cex=1.5, 
                   #         legend=c('Måloppnåelse:', 'Meget god', 'God')) #, 'Mindre god' 
