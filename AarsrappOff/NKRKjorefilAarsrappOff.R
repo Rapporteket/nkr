@@ -95,10 +95,11 @@ aar=aar2
 tidlAar=tidlAar2
 hovedkat=1
 valgtVar='SympVarighUtstr'
+format <- 'png'
 RyggFigAndelerGrVarAar(RegData=RegData, valgtVar='SympVarighUtstr', hovedkat=1,
-                       Ngrense=20, aar=aar2, tidlAar=tidlAar2, outfile='SympVarighUtstrProAar.pdf')
+                       Ngrense=20, aar=aar2, tidlAar=tidlAar2, outfile=paste0('SympVarighUtstrProAar.', format))
 RyggFigAndelerGrVar(RegData=RegData, valgtVar='SympVarighUtstr', hovedkat=1,
-                       Ngrense=20, aar=2016:2017, outfile='SympVarighUtstrPro.pdf')
+                       Ngrense=20, aar=2016:2017, outfile=paste0('SympVarighUtstrPro.', format))
 #RyggFigAndelerGrVarAar(RegData=RegData, valgtVar='SympVarighUtstr', hovedkat=2:3,
 #                       Ngrense=20, aar=aar2, tidlAar=tidlAar2, outfile='SympVarighUtstrProAar.pdf')
 
@@ -107,25 +108,25 @@ RyggFigAndelerGrVar(RegData=RegData, valgtVar='SympVarighUtstr', hovedkat=1,
 #Hensikt: 	Redusere andel pasienter som opereres på dårlig operasjonsindikasjon (lite bensmerter). 
 #Utvalg: prolaps
 RyggFigAndelerGrVarAar(RegData=RegData, valgtVar='BeinsmLavPre', aar=aar2, tidlAar=tidlAar2, #datoFra=datoFra, datoTil=datoTil, 
-                       hovedkat=1, Ngrense=20, outfile='BeinsmLavPreAar.pdf') #opKat=opKat, tidlOp=tidlOp, 
+                       hovedkat=1, Ngrense=20, outfile=paste0('BeinsmLavPreAar.', format)) #opKat=opKat, tidlOp=tidlOp, 
 
 #-----------Sårinfeksjon, dyp og overfladisk
 # Mål: 		Prolaps 2 % høy måloppnåelse (grønt),
 # Stenose 3 % høy måloppnåelse (grønt)
 # Hensikt: 	Redusere postoperative sårinfeksjoner
 RyggFigAndelerGrVarAar(RegData=RegData, valgtVar='KpInf3Mnd', hovedkat=1,  
-                       Ngrense=30, aar=aar2, tidlAar=tidlAar2, outfile='KpInf3MndProAar.pdf') 
+                       Ngrense=30, aar=aar2, tidlAar=tidlAar2, outfile=paste0('KpInf3MndProAar.', format))
 RyggFigAndelerGrVarAar(RegData=RegData, valgtVar='KpInf3Mnd', hovedkat=8,  
-                       Ngrense=30, aar=aar2, tidlAar=tidlAar2, outfile='KpInf3MndSSAar.pdf') 
+                       Ngrense=30, aar=aar2, tidlAar=tidlAar2, outfile=paste0('KpInf3MndSSAar.', format))
 #-----------Durarift
 #Mål: 		Prolaps 2 % høy måloppnåelse (grønt),
 #Stenose 3 % høy måloppnåelse (grønt), 
 #Hensikt: 	Redusere forekomst av peroperativ komplikasjon 
 #Komplikasjon durarift ved operasjon (prolaps, elektiv, primærop.), - lav
 RyggFigAndelerGrVarAar(RegData=RegData, valgtVar='PeropKompDura', hovedkat=1, tidlOp=4, opKat=1, 
-                       Ngrense=30, aar=aar2, tidlAar=tidlAar2, outfile='PeropKompDuraProAar.pdf')
+                       Ngrense=30, aar=aar2, tidlAar=tidlAar2, outfile=paste0('PeropKompDuraProAar.', format))
 RyggFigAndelerGrVarAar(RegData=RegData, valgtVar='PeropKompDura', hovedkat=8, tidlOp=4, opKat=1, 
-                       Ngrense=30, aar=aar2, tidlAar=tidlAar2, outfile='PeropKompDuraSSAar.pdf')
+                       Ngrense=30, aar=aar2, tidlAar=tidlAar2, outfile=paste0('PeropKompDuraSSAar.', format))
 
 
 

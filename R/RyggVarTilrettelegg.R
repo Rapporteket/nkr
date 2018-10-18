@@ -66,14 +66,14 @@ RyggVarTilrettelegg  <- function(RegData=NULL, valgtVar, ktr=0, hovedkat=99, fig
             tittel <- 'Dekningsgrad, NKR Degenerativ Rygg, 2017'
             xAkseTxt <- 'dekningsgrad, NKR'
             KImaal <- 0.8
-            data(paste0(valgtVar,'.Rdata'), package = 'nkr')
+            data('deknRygg17', package = 'nkr') #paste0(valgtVar,'.Rdata')
             RegData <- deknRygg17 #paste0(valgtVar)
       }
       if (valgtVar=='deknNakke17') {        #andelerGrVar
             tittel <- 'Dekningsgrad, NKR Degenerativ Nakke, 2017'
             xAkseTxt <- 'dekningsgrad, NKR'
             KImaal <- 0.8
-            data(paste0(valgtVar,'.Rdata'), package = 'nkr')
+            data(deknNakke17, package = 'nkr')
             RegData <- deknNakke17 #paste0(valgtVar)
       }
       

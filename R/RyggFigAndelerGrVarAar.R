@@ -257,16 +257,17 @@ RyggFigAndelerGrVarAar <- function(RegData, valgtVar, datoFra='2007-01-01', dato
                                paste0(AarTxt, ' (', sprintf('%.1f', ResAar[2]), '%, ', 'N=', Naar[2],')'),
                                paste0('Hele landet, ',AarTxt)) 
                   )
-                  legend(x=0, y=-3.2, pch=c(NA,rep(15, antMaalNivaa)), col=c(NA, fargerMaalNiva[1:antMaalNivaa]), 
+                  legend(x=0, y=-2.5, pch=c(NA,rep(15, antMaalNivaa)), col=c(NA, fargerMaalNiva[1:antMaalNivaa]), 
                          ncol=antMaalNivaa+1, 
                          xpd=TRUE, border=NA, box.col='white',cex=0.8, pt.cex=1.5, 
                          legend=c('Måloppnåelse:', maalOppTxt[1:antMaalNivaa])) #,  
-                  # legend('right', pch=c(NA,rep(15, antMaalNivaa-1)), col=c(NA, fargerMaalNiva), #ncol=antMaalNivaa+1, 
+                  # legend(x=0, y=-3, pch=c(NA,rep(15, antMaalNivaa)), col=c(NA, fargerMaalNiva[1:antMaalNivaa]), 
+                  #        ncol=antMaalNivaa+1, 
                   #        xpd=TRUE, border=NA, box.col='white',cex=0.8, pt.cex=1.5, 
-                  #         legend=c('Måloppnåelse:', 'Meget god', 'God')) #, 'Mindre god' 
+                  #        legend=c('Måloppnåelse:', maalOppTxt[1:antMaalNivaa])) #,  
                   
-                  mtext(signTxt, side=1, las=1, cex=cexShNavn, adj=0, line=3.8, col='#FF7260')
                   mtext(xAkseTxt, side=1, las=1, cex=cexShNavn, adj=0.5, line=1.8)
+                  mtext(signTxt, line=4, side=1, las=1, cex=cexShNavn, adj=0, col='#FF7260') #line=3.8, 
                   overPos <- max(pos)+0.4*log(max(pos))
                   mtext(at=overPos, paste0('(N, ', AarTxt, ')'), side=2, las=1, cex=cexShNavn, adj=1, line=0.25)	
             } else {
