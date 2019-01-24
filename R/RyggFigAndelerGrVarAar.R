@@ -257,10 +257,12 @@ RyggFigAndelerGrVarAar <- function(RegData, valgtVar, datoFra='2007-01-01', dato
                                paste0(AarTxt, ' (', sprintf('%.1f', ResAar[2]), '%, ', 'N=', Naar[2],')'),
                                paste0('Hele landet, ',AarTxt)) 
                   )
+                  if (!is.na(KImaalGrenser[1])) {
                   legend(x=0, y=-2.5, pch=c(NA,rep(15, antMaalNivaa)), col=c(NA, fargerMaalNiva[1:antMaalNivaa]), 
                          ncol=antMaalNivaa+1, 
                          xpd=TRUE, border=NA, box.col='white',cex=0.8, pt.cex=1.5, 
                          legend=c('Måloppnåelse:', maalOppTxt[1:antMaalNivaa])) #,  
+                  }
                   # legend(x=0, y=-3, pch=c(NA,rep(15, antMaalNivaa)), col=c(NA, fargerMaalNiva[1:antMaalNivaa]), 
                   #        ncol=antMaalNivaa+1, 
                   #        xpd=TRUE, border=NA, box.col='white',cex=0.8, pt.cex=1.5, 

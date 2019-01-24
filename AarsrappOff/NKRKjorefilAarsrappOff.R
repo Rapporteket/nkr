@@ -4,7 +4,6 @@
 #------------------Resultatkapittel--------------------------------
 library(nkr)
 rm(list=ls())
-library(nkr)
 setwd('C:/ResultattjenesteGIT/nkr/AarsrappOff/')
 
 library(knitr)
@@ -129,11 +128,48 @@ RyggFigAndelerGrVarAar(RegData=RegData, valgtVar='PeropKompDura', hovedkat=8, ti
                        Ngrense=30, aar=aar2, tidlAar=tidlAar2, outfile=paste0('PeropKompDuraSSAar.', format))
 
 
+#Helt fornøyde pasienter 12 mnd. etter (prolaps og spinal stenose, elektiv, primær) - høy
+RyggFigAndelerGrVarAar(RegData=RegData, valgtVar='Fornoyd', ktr = 2, hovedkat=1, tidlOp=4, opKat=1, 
+                       Ngrense=30, aar=aar2-1, tidlAar=tidlAar2-1, outfile= paste0('FornoydPro.', format))
+RyggFigAndelerGrVarAar(RegData=RegData, valgtVar='Fornoyd', ktr = 2, hovedkat=8, tidlOp=4, opKat=1, 
+                       Ngrense=30, aar=aar2-1, tidlAar=tidlAar2-1, outfile=paste0('FornoydSS.', format)) 
 
+#Andel prolapsopererte ODI endring < 13 (failure)
+RyggFigAndelerGrVarAar(RegData=RegData, valgtVar='OswEndrLav', ktr = 2, hovedkat=1, tidlOp=4, opKat=1, 
+                       Ngrense=30, aar=aar2-1, tidlAar=tidlAar2-1, outfile=paste0('OswEndrLavPro.', format)) 
+RyggFigAndelerGrVarAar(RegData=RegData, valgtVar='OswEndrLav', ktr = 2, hovedkat=8, tidlOp=4, opKat=1, 
+                       Ngrense=30, aar=aar2-1, tidlAar=tidlAar2-1, outfile=paste0('OswEndrLavSS.', format))
+
+#Oswestry-skår =<22p, 12 mnd. etter (prolaps, elektiv, primærop.) – høy
+RyggFigAndelerGrVarAar(RegData=RegData, valgtVar='Osw22', ktr = 2, hovedkat=1, tidlOp=4, opKat=1, 
+                       Ngrense=30, aar=aar2-1, tidlAar=tidlAar2-1, outfile=paste0('Osw22Pro.', format)) 
+#Oswestry-skår =<22p, 12 mnd. etter (spinal stenose, elektiv, primærop.), 12 og 13 mot 14 og 15 – høy
+RyggFigAndelerGrVarAar(RegData=RegData, valgtVar='Osw22', ktr = 2, hovedkat=8, tidlOp=4, opKat=1, 
+                       Ngrense=30, aar=aar2-1, tidlAar=tidlAar2-1, outfile=paste0('Osw22SS.', format)) 
+
+
+#-----------Filer til Resultatportalen -----------------------
+NKRdata <- read.table('A:/Rygg/NKR2019-01-16.csv', sep=';', header=T, encoding = 'UTF-8')
+RegData <- RyggPreprosess(RegData=RegData)
+datoFra = '2011-01-01'
+
+DataTilResultatportalen(RegData = RegData, valgtVar='SympVarighUtstr', datoFra = '2011-01-01', hovedkat=1)
+
+
+DataTilResultatportalen <- function(RegData = RegData, valgtVar, datoFra = '2011-01-01',
+                                    hovedkat=99){
+      filUt <- paste0('RyggTilOff', valgtVar, '.csv')
+      RyggVarSpes <- RyggVarTilrettelegg(RegData=RegData, valgtVar=valgtVar, figurtype = 'andelGrVar')
+      RyggUtvalg <- RyggUtvalgEnh(RegData=RyggVarSpes$RegData, datoFra = datoFra, hovedkat=hovedkat) #, datoFra=datoFra, datoTil=datoTil, aar=aar)
+      RegData <- RyggUtvalg$RegData
+      RyggTilOffvalgtVar <- RegData[,c('OpAar', "ShNavn", "ReshId", "Variabel")]
+      info <- c(RyggVarSpes$tittel, RyggUtvalg$utvalgTxt)
+      RyggTilOffvalgtVar$info <- c(info, rep(NA, dim(RyggTilOffvalgtVar)[1]-length(info)))
+      write.table(RyggTilOffvalgtVar, file = paste0('A:/Resultatportalen/', filUt), sep = ';', row.names = F) #, fileEncoding = 'UTF-8')
+}
 
 
 #------------------------------Tidligere Kvalitetsindikatorer og andre figurer til årsrapp/off----------------------
-#KpInf3Mnd, #15 mot 16
 #Sårinfeksjon, pasientrapportert (prolaps) – lav
 RyggFigAndelerGrVarAar(RegData=RegData, preprosess=0, valgtVar='KpInf3Mnd', hovedkat=1,  
                        Ngrense=30, aar=aar2, tidlAar=tidlAar2, outfile='KpInf3MndPro.png') 
@@ -192,7 +228,8 @@ valgtVar <- 'Alder'
 ktr <- 1
 outfile <- paste0(valgtVar='alder75', '_1', grVar,'.png')
 RyggFigAndelerGrVarAar(RegData=RegData, preprosess=0, valgtVar=valgtVar, datoFra=datoFra, datoTil=datoTil, 
-                    ktr=ktr, hovedkat=hovedkat, opKat=opKat, tidlOp=tidlOp, enhetsUtvalg=enhetsUtvalg, reshID=reshID, outfile=outfile)
+                    ktr=ktr, hovedkat=hovedkat, opKat=opKat, tidlOp=tidlOp, enhetsUtvalg=enhetsUtvalg, 
+                    reshID=reshID, outfile=outfile)
 
 #Andel prolapsoperte uten parese (OpIndParese != 1) med NRS bensmerte < 2,5 preoperativt
 valgtVar <- 'BeinsmLavPre'
