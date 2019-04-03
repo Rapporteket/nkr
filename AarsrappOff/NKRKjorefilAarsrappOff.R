@@ -147,20 +147,40 @@ RyggFigAndelerGrVarAar(RegData=RegData, valgtVar='Osw22', ktr = 2, hovedkat=1, t
 RyggFigAndelerGrVarAar(RegData=RegData, valgtVar='Osw22', ktr = 2, hovedkat=8, tidlOp=4, opKat=1, 
                        Ngrense=30, aar=aar2-1, tidlAar=tidlAar2-1, outfile=paste0('Osw22SS.', format)) 
 
-
+#------------------------------------------------------------------------------------
 #-----------Filer til Resultatportalen -----------------------
-NKRdata <- read.table('A:/Rygg/NKR2019-01-16.csv', sep=';', header=T, encoding = 'UTF-8')
-RegData <- RyggPreprosess(RegData=RegData)
+#------------------------------------------------------------------------------------
+rm(list=ls())
+NKRdata <- read.table('A:/Rygg/NKR2019-01-16.csv', sep=';', header=T) #, encoding = 'UTF-8')
+RegData <- RyggPreprosess(RegData=NKRdata)
 datoFra = '2011-01-01'
 
 DataTilResultatportalen(RegData = RegData, valgtVar='SympVarighUtstr', datoFra = '2011-01-01', hovedkat=1)
 
+#--Bensmerter mindre eller lik 3 på numerisk smerteskala
+DataTilResultatportalen(RegData = RegData, valgtVar='BeinsmLavPre', datoFra = '2011-01-01', hovedkat=1)
+
+#--Sårinfeksjon, dyp og overfladisk
+DataTilResultatportalen(RegData = RegData, valgtVar='KpInf3Mnd', datoFra = '2011-01-01', hovedkat=1, 
+                        filUt = 'KpInf3MndProlaps')
+DataTilResultatportalen(RegData = RegData, valgtVar='KpInf3Mnd', datoFra = '2011-01-01', hovedkat=8,
+                        filUt = 'KpInf3MndStenose')
+
+#-----------Durarift
+DataTilResultatportalen(RegData = RegData, valgtVar='PeropKompDura', datoFra = '2011-01-01', hovedkat=1, 
+                        tidlOp=4, opKat=1, filUt = 'PeropKompDuraProlaps')
+DataTilResultatportalen(RegData = RegData, valgtVar='PeropKompDura', datoFra = '2011-01-01', hovedkat=8, 
+                        tidlOp=4, opKat=1, filUt = 'PeropKompDuraStenose')
+
+#Alle sykehus og resh:
+ShResh <- unique(RegData[c('ReshId', 'ShNavn')])
+write.table(ShResh, file = 'A:/Resultatportalen/RyggShResh', sep = ';', row.names = F)
 
 DataTilResultatportalen <- function(RegData = RegData, valgtVar, datoFra = '2011-01-01',
-                                    hovedkat=99){
-      filUt <- paste0('RyggTilOff', valgtVar, '.csv')
+                                    hovedkat=99, opKat=99, tidlOp='', filUt='dummy'){
+      filUt <- paste0('RyggTilOff', ifelse(filUt=='dummy',  valgtVar, filUt), '.csv')
       RyggVarSpes <- RyggVarTilrettelegg(RegData=RegData, valgtVar=valgtVar, figurtype = 'andelGrVar')
-      RyggUtvalg <- RyggUtvalgEnh(RegData=RyggVarSpes$RegData, datoFra = datoFra, hovedkat=hovedkat) #, datoFra=datoFra, datoTil=datoTil, aar=aar)
+      RyggUtvalg <- RyggUtvalgEnh(RegData=RyggVarSpes$RegData, datoFra = datoFra, hovedkat=hovedkat, tidlOp=tidlOp, opKat=opKat) #, datoTil=datoTil, aar=aar)
       RegData <- RyggUtvalg$RegData
       RyggTilOffvalgtVar <- RegData[,c('OpAar', "ShNavn", "ReshId", "Variabel")]
       info <- c(RyggVarSpes$tittel, RyggUtvalg$utvalgTxt)

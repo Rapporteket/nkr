@@ -48,6 +48,19 @@ knit('C:/ResultattjenesteGIT/nkr/AarsrappOff/ResultaterAarsrapp.Rnw') #, encodin
 library(tools)
 texi2pdf('ResultaterAarsrapp.tex')
 #_________________________________________________________________________________________
+#Registreringsoversikter for 2019-data
+#_________________________________________________________________________________________
+SkjemaOversikt <- read.table('A:/Rygg/NKR_Degenerativ_Rygg_SkjemaOversikt_datadump.csv_03.04.2019.csv', sep=';', header=T, encoding = 'UTF-8')
+SkjemaOversikt$Skjemanavn <- SkjemaOversikt$X.U.FEFF.Skjemanavn
+SkjemaOversikt$MndAar <- format(as.Date(SkjemaOversikt$HovedDato), '%y.%m')
+table(SkjemaOversikt$MndAar)
+
+indPasientskjema <- which(SkjemaOversikt$SkjemaRekkeflg==5)
+table(SkjemaOversikt[indPasientskjema, c('Sykehusnavn','MndAar', "SkjemaStatus")]) # ,
+
+
+#_________________________________________________________________________________________
+#_________________________________________________________________________________________
 #_________________________________________________________________________________________
 #
 #""""""""""""""""""""""""""""" F I G U R F U N K S J O N E R """"""""""""""""""""""""""""""""""""" 

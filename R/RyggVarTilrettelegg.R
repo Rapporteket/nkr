@@ -136,7 +136,7 @@ RyggVarTilrettelegg  <- function(RegData=NULL, valgtVar, ktr=0, hovedkat=99, fig
             RegData$Variabel[which(is.na(RegData$OpIndParese) & (RegData$SmBePre < 3.5))] <- 1
             #tittel <- paste0('Beinsmerte ',expression(""<=2),' og ingen parese')
             sortAvtagende <- F
-            tittel <- expression("Lite beinsmerter og ingen parese") #paste0('Beinsmerte ', expression(""<="3"), ' og ingen parese')
+            tittel <- "Lite beinsmerter og ingen parese" #expression("Lite beinsmerter og ingen parese") #paste0('Beinsmerte ', expression(""<="3"), ' og ingen parese')
             #intToUtf8(2264)
             #KImaalRetn <- 'lav'
             KImaalGrenser <- c(0,3) 
