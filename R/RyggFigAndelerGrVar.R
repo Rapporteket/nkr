@@ -67,14 +67,14 @@ RyggFigAndelerGrVar <- function(RegData, valgtVar, datoFra='2007-01-01', datoTil
       }
       
       # Preprosessere data
-      if ((preprosess=1) & (RegData != 0)){
+      if ((preprosess=1) & (dim(RegData)[1] >1)){
             RegData <- RyggPreprosess(RegData=RegData)
       }
       #------- Tilrettelegge variable
       RyggVarSpes <- RyggVarTilrettelegg(RegData=RegData, valgtVar=valgtVar, ktr=ktr, figurtype = 'andelGrVar')
       RegData <- RyggVarSpes$RegData
       sortAvtagende <- RyggVarSpes$sortAvtagende
-      varTxt <- RyggVarSpes$varTxt
+      #varTxt <- RyggVarSpes$varTxt
       KImaalGrenser <- RyggVarSpes$KImaalGrenser #c(0,20,40) #,xmax)
       #KImaal <- RyggVarSpes$KImaal
       if (length(grep('dekn',valgtVar)) == 1) { #Bruke vedlagte dekningsdata

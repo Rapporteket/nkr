@@ -462,38 +462,6 @@ RyggVarTilrettelegg  <- function(RegData=NULL, valgtVar, ktr=0, hovedkat=99, fig
       }
       
       
-      if (valgtVar == 'nyreBeh' ) {   # Andeler, andelerGrVar
-            tittel <- 'Andel av opphold med registrert nyreerstattende behandling'
-            RegData <- RegData[which(RegData$InnDato>=as.POSIXlt('2015-01-01')), ] 
-            if (figurtype == 'andelGrVar') {
-                  RegData <- RegData[RegData$KidneyReplacingTreatment %in% 1:2,]
-                  RegData$Variabel[which(RegData$KidneyReplacingTreatment ==1)] <- 1
-            }
-            if (figurtype == 'andeler') {
-                  RegData <- RegData[which(RegData$KidneyReplacingTreatment ==1), ]		#Bare de som har fått behandling
-                  RegData$VariabelGr <- 9
-                  RegData$VariabelGr[which(RegData$Kontinuerlig == TRUE)] <- 1	
-                  RegData$VariabelGr[which(RegData$Intermitterende == TRUE)] <- 2
-                  RegData$VariabelGr[(RegData$Kontinuerlig & RegData$Intermitterende) == TRUE] <- 3 #Overskriver tidl 1 eller 2
-                  RegData$VariabelGr <- factor(RegData$VariabelGr, levels=c(1:3,9))	
-            }
-            grtxt <- c('Kontinuerlig \n(hemo-/dia-filtrasjon)', 'Intermitterende \n(hemodialyse)', 'Begge', 'Ukjent')
-            retn <- 'H'
-            #xAkseTxt <- 'Andel (%)'
-      }
-      
-      
-      if (valgtVar == 'trakeostomi') { #andelGrVar 
-            #-1: Velg verdi, 1 = Nei, 2 = Ja – perkutan teknikk på intensiv/oppv., 3 = Ja – åpen teknikk (operativ)
-            
-            RegData <- RegData[which((RegData$Trakeostomi %in% 1:3) 
-                                     & (RegData$InnDato >= as.POSIXlt('2016-01-01'))), ] #Innført ila 2015
-            retn <- 'H'
-            tittel <- 'Trakeostomi utført'
-            RegData$Variabel[which(RegData$Trakeostomi %in% 2:3)] <- 1
-            cexgr <- 0.9
-      } 
-      
       #---------------KATEGORISKE
       
       if (valgtVar=='InnMaate') { #andeler
@@ -504,21 +472,6 @@ RyggVarTilrettelegg  <- function(RegData=NULL, valgtVar, ktr=0, hovedkat=99, fig
             grtxt <- c('Elektivt','Akutt med.', 'Akutt kir.') #InnMaate - 0-El, 6-Ak.m, 8-Ak.k, standard: alle (alt unntatt 0,6,8)
             xAkseTxt <- 'Innkomstmåte'
       }
-      if (valgtVar == 'PrimaryReasonAdmitted') { #Andeler 
-            #                       1:Respiratorisk svikt, 2:Sirk./kardiovaskulær svikt, 3:Gastroenterologisk svikt, 
-            #                       4:Nevrologisk svikt, 5:Sepsis, 6:Skade/traume, 7:Metabolsk/intoksikasjon, 8:Hematologisk svikt, 
-            #                       9:Nyresvikt, 10:Postoperativt, 11:Annet
-            gr <- 1:11
-            RegData <- RegData[which((RegData$PrimaryReasonAdmitted %in% gr) 
-                                     & (RegData$InnDato >= as.POSIXlt('2016-01-01'))), ] #Innført ila 2015
-            retn <- 'H'
-            tittel <- 'Primærårsak til intensivoppholdet'
-            RegData$VariabelGr <- factor(RegData$PrimaryReasonAdmitted, levels=gr)
-            grtxt <- c('Respiratorisk svikt', 'Sirk./kardiovaskulær svikt', 'Gastroenterologisk svikt', 
-                       'Nevrologisk svikt', 'Sepsis', 'Skade/traume', 'Metabolsk/intoksikasjon', 'Hematologisk svikt', 
-                       'Nyresvikt', 'Postoperativt', 'Annet')
-            cexgr <- 0.9
-      } 
       #-------------- SAMMENSATTE variable
       #For flerevar=1 må vi omdefinere variablene slik at alle gyldige registreringer 
       #(dvs. alle registreringer som skal telles med) er 0 eller 1. De som har oppfylt spørsmålet

@@ -1,45 +1,61 @@
 #**************************************************
-#********************* Årsrapport****************************
+#********************* Tilrettelegge filer ****************************
+NKRdata <- read.table('A:/Rygg/RyggAarsrapp2018.csv', sep=';', header=TRUE) #, fileEncoding = 'UTF-8') #, encoding = 'UTF-8') # #, ) #
+#NKRdata <- read.csv2('A:/Rygg/RyggAarsrapp2018.csv', sep=';', header=T,encoding = 'UTF-8') #fileEncoding = 'UTF-8')
+table(NKRdata$Region)
 
+RegData <- NKRdata
+save(RegData, file=paste0('A:/Rygg/Rygg2010-2018aarsrapp', '.Rdata'))
+
+#load('A:/Rygg/NKR2010-2017aarsrapp.Rdata') #IKKE preprossessert
+#save(RegData, file='C:/Registre/nkr/data/NKR2010-2016aarsrapp.Rdata')
+
+#Nakke
+NakkeSkjemaDataRaa <- read.table(paste0('A:/Nakke/SkjemaOversiktAarsrappRaa.csv'), sep=';', header=T, fileEncoding = 'UTF-8') #, encoding = 'UTF-8')
+NakkeSkjemaData <- SkjemaData[which(as.Date(SkjemaData$HovedDato) <= '2018-12-31'), ]
+write.table(NakkeSkjemaData, file = 'A:/Nakke/NakkeSkjemaDataAarsrapp2018.csv', sep = ';', row.names = F, fileEncoding = 'UTF-8')
+
+NakkeDataRaa <- read.table(paste0('A:/Nakke/AlleVarNumAarsrappRaa.csv'), sep=';', header=T, encoding = 'UTF-8')
+NakkeData <- NakkeDataRaa[which(as.Date(NakkeDataRaa$OprDato) <= '2018-12-31'), ]
+write.table(NakkeData, file = 'A:/Nakke/NakkeDataAarsrapp2018.csv', sep = ';', row.names = F, fileEncoding = 'UTF-8')
+
+NakkeAarsrapp2018 <- save(NakkeSkjemaData, NakkeData, file = 'A:/Nakke/NakkeAarsrapp2018.Rdata')
+load('A:/Nakke/NakkeAarsrapp2018.Rdata')
 #------------------Resultatkapittel--------------------------------
 library(nkr)
-rm(list=ls())
-setwd('C:/ResultattjenesteGIT/nkr/AarsrappOff/')
-
 library(knitr)
 library(tools)
-knit('ResultaterAarsrapp_260918.Rnw', encoding = 'UTF-8')
-texi2pdf('ResultaterAarsrapp_260918.tex') 
 
-#rm(list=ls())
-#NKRdata <- read.table('A:/Rygg/NKR2010-2017aarsrapp.csv', sep=';', header=T, encoding = 'UTF-8')
-#RegData <- NKRdata
-#save(RegData, file=paste0('A:/Rygg/NKR2010-2017aarsrapp', '.Rdata'))
+rm(list=ls())
+setwd('C:/ResultattjenesteGIT/nkr/AarsrappOff/')
+#load('A:/Rygg/Rygg2010-2018aarsrapp.Rdata') #IKKE preprossessert
+#load('A:/Rygg/NKR2010-2017aarsrapp.Rdata') #IKKE preprossessert
 
-load('A:/Rygg/NKR2010-2017aarsrapp.Rdata') #IKKE preprossessert
-#save(RegData, file='C:/Registre/nkr/data/NKR2010-2016aarsrapp.Rdata')
-#__Inndata til funksjon:
-datoFra <- '2011-01-01'
-datoTil <- '2017-12-31'
-aarsRappAar <- 2017
-aarsStart <- paste0(aarsRappAar,'-01-01')
-aar <- aarsRappAar
-aar2 <- (aarsRappAar-1):aarsRappAar  #2015:2016
-tidlAar <- aarsRappAar-1
-tidlAar2 <- (aarsRappAar-3):(aarsRappAar-2) #2013:2014
-#aar <- 0 #2010:2017
-hovedkat <- 99 		#Hovedinngrep, 0-9, Standard: 99, dvs alle operasjoner
-opKat <- 99  #Bare elektive pasienter
-tidlOp <- 99 #4 - Bare primæroperasjoner
-enhetsUtvalg <- 0 # 0-hele landet, 4–egen shusgruppe, 7–egen region
-grVar <- 'ShNavn'  #ShNavn, Fylke, BoHF, BoRHF
-minald<- 0 
-maxald<-130
-erMann<-''
-ktr <- 2
-Ngrense <- 20
-AKjust <- 0
-reshID<-0
+knit('ResultaterAarsrapp.Rnw', encoding = 'UTF-8')
+texi2pdf('ResultaterAarsrapp.tex') 
+
+
+#__Inndata til funksjon (Står i Rnw-fila)
+# datoFra <- '2011-01-01'
+# datoTil <- '2017-12-31'
+# aarsRappAar <- 2017
+# aarsStart <- paste0(aarsRappAar,'-01-01')
+# aar <- aarsRappAar
+# aar2 <- (aarsRappAar-1):aarsRappAar  #2015:2016
+# tidlAar <- aarsRappAar-1
+# tidlAar2 <- (aarsRappAar-3):(aarsRappAar-2) #2013:2014
+# hovedkat <- 99 		#Hovedinngrep, 0-9, Standard: 99, dvs alle operasjoner
+# opKat <- 99  #Bare elektive pasienter
+# tidlOp <- 99 #4 - Bare primæroperasjoner
+# enhetsUtvalg <- 0 # 0-hele landet, 4–egen shusgruppe, 7–egen region
+# grVar <- 'ShNavn'  #ShNavn, Fylke, BoHF, BoRHF
+# minald<- 0 
+# maxald<-130
+# erMann<-''
+# ktr <- 2
+# Ngrense <- 20
+# AKjust <- 0
+# reshID<-0
 
 
 #Nakke

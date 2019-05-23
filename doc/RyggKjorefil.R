@@ -50,7 +50,7 @@ texi2pdf('ResultaterAarsrapp.tex')
 #_________________________________________________________________________________________
 #Registreringsoversikter for 2019-data
 #_________________________________________________________________________________________
-SkjemaOversikt <- read.table('A:/Rygg/NKR_Degenerativ_Rygg_SkjemaOversikt_datadump.csv_03.04.2019.csv', sep=';', header=T, encoding = 'UTF-8')
+SkjemaOversikt <- read.table('A:/Rygg/NKR_Degenerativ_Rygg_SkjemaOversikt_datadump.csv_10.05.2019.csv', sep=';', header=T, encoding = 'UTF-8')
 SkjemaOversikt$Skjemanavn <- SkjemaOversikt$X.U.FEFF.Skjemanavn
 SkjemaOversikt$MndAar <- format(as.Date(SkjemaOversikt$HovedDato), '%y.%m')
 table(SkjemaOversikt$MndAar)

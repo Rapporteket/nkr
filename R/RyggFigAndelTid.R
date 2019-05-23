@@ -20,7 +20,7 @@
 RyggFigAndelTid <- function(RegData, valgtVar, datoFra='2011-01-01', datoTil='3000-12-31', aar=0,
                             tidsenhet='Aar', hovedkat = 99, ktr = 2, tidlOp = 99, tittel = 1,
                         minald=0, maxald=130, erMann=99, reshID=0, outfile='', opKat=99, 
-                        enhetsUtvalg=1, preprosess=1, hentData=0, lagFig=1, offData=0) {
+                        enhetsUtvalg=0, preprosess=1, hentData=0, lagFig=1, offData=0) {
       
       if (hentData == 1) {		
             RegData <- RyggRegDataSQL()
@@ -180,7 +180,7 @@ RyggFigAndelTid <- function(RegData, valgtVar, datoFra='2011-01-01', datoTil='30
                         hmarg <- 0.04+0.01*NutvTxt
                         par('fig' = c(0,1,0,1-hmarg)) 
                         cexleg <- 1	#St?rrelse p? legendtekst
-                        ylabtext <- "Andel (%)"
+                       # ylabtext <- "Andel (%)"
                         xskala <- 1:length(tidtxt)
                         xmax <- max(xskala)
                         
@@ -201,13 +201,15 @@ RyggFigAndelTid <- function(RegData, valgtVar, datoFra='2011-01-01', datoTil='30
                         lines(xskala, AggVerdier$Hoved, col=fargeHoved, lwd=3)
                         points(xskala, AggVerdier$Hoved, pch="'", cex=2, col=fargeHoved)
                         text(xskala, AggVerdier$Hoved, pos=3, Ngr$Hoved, cex=0.9, col=fargeHoved)
-                        
+                        if (medSml==1) {
                         lines(xskala, AggVerdier$Rest, col=fargeRest, lwd=3)
                         points(xskala, AggVerdier$Rest, pch="'", cex=2, col=fargeRest)
-                        
+                        }
                         #KImål
-                        lines(xskala,rep(KImaal,length(xskala)), col= '#FF7260', lwd=3)
-                        text(max(xskala), KImaal, pos=4, 'Mål', cex=0.9, col='#FF7260')
+                        if (valgtVar=='SympVarighUtstr') {
+                        lines(xskala, rep(KImaal[2],length(xskala)), col= '#FF7260', lwd=3)
+                        text(max(xskala), KImaal[2], pos=4, 'Mål', cex=0.9, col='#FF7260')
+                        }
                         
                         Ttxt <- paste0('(Tall ved punktene angir antall ', varTxt, ')') 
                         if (medSml == 1) { 
