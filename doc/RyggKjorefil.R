@@ -3,6 +3,18 @@
 #> tos-hreg-db-01.nreg.no\HELSEREG
 #> 172.29.180.20, port:49375
 #> 172.29.180.20\HELSEREG
+
+#Installere R-pakke fra github og publisere på Shinyapps
+install.packages("devtools") 
+library("devtools")
+#Denne: 
+Sys.setenv(http_proxy="www-proxy.helsenord.no:8080")
+Sys.setenv(https_proxy="www-proxy.helsenord.no:8080")
+#Så:
+devtools::install_github("Rapporteket/rapbase", ref='rel')
+devtools::install_github("Rapporteket/register", ref = 'rel')
+publiser
+
 #________________________________________________________________________________________
 ##_________________________________________________________________________________________
 
