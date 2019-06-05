@@ -5,28 +5,24 @@
 #'
 #' Argumentet \emph{valgtVar} har følgende valgmuligheter:
 #'    \itemize{
-#'     \item Alder: Aldersfordeling 
+#'     \item alder: Aldersfordeling 
 #'     \item AntDagerInnl: Liggetid 
 #'     \item Antibiotika: Er det gitt antibiotikaprofylakse?
 #'     \item AntNivOpr: Antall nivå operert'
-#'     \item ArbstatusPre: Arbeidsstatus før operasjon'
-#'     \item Arbstatus3mnd: Arbeidsstatus 3 mnd. etter operasjon
-#'     \item Arbstatus12mnd: Arbeidsstatus 12 mnd. etter operasjon
+#'     \item arbstatus: Arbeidsstatus før, 3 el. 12 mnd. etter operasjon
 #'     \item ASA: ASA-grad
 #'     \item BMI: Pasientenes BMI (Body Mass Index)
 #'     \item EqangstPre: Helsetilstand: Angst
 #'     \item EqgangePre: Helsetilstand: Gange
 #'     \item ErstatningPre: Har pasienten søkt erstatning?
-#'     \item Fornoyd3mnd: Fornøydhet 3 mnd etter operasjon
-#'     \item Fornoyd12mnd: Fornøydhet 12 mnd etter operasjon
+#'     \item fornoydhet: Fornøydhet 3 eller 12 mnd etter operasjon
 #'     \item HovedInngrep: Hovedinngrep
 #'     \item Komorbiditet: Komorbiditet
 #'     \item KomplPer: Peroperative komplikasjoner
 #'     \item KomplPost: Pasientrapporterte komplikasjoner
 #'     \item Liggedogn: Liggetid ved operasjon
 #'     \item Morsmal: Morsmål
-#'     \item Nytte3mnd: Hvilken nytte har du hatt av operasjonen? (svar 3 måneder etter)
-#'     \item Nytte12mnd: Hvilken nytte har du hatt av operasjonen? (svar 12 måneder etter)
+#'     \item nytte: Hvilken nytte har du hatt av operasjonen? (svar 3 eller 12 måneder etter)
 #'     \item OpInd: Operasjonsindikasjon
 #'     \item OpIndPareseGrad: Operasjonsindikasjon, paresegrad
 #'     \item OpIndSmeType: Operasjonsindikasjon, smertetype
@@ -128,260 +124,21 @@ antDes <- 1
 cexgr <- 1	#Kan endres for enkeltvariable
 
 #Noen variable settes som "Variabel" for å standardisere beregninga ytterligere:
-if (valgtVar %in% c('Alder', 'BMI', 'HovedInngrep', 'Liggedogn', 'Utd', 
-					'SymptVarighRyggHof','SympVarighUtstr')) {
-	RegData$Variabel <- RegData[ ,valgtVar] 
-	}
-	
+#if (valgtVar %in% c('Alder', 'BMI', 'HovedInngrep', 'Liggedogn', 'Utd', 
+#					'SymptVarighRyggHof','SympVarighUtstr')) {
+#	RegData$Variabel <- RegData[ ,valgtVar] 
+#	}
+
+# 'Utd', 'SymptVarighRyggHof','SympVarighUtstr'
+					
 dato <- as.POSIXlt(RegData$OpDato,format="%d.%m.%Y")	#evt strptime()
 NB <- ''
 	
-if (valgtVar=='Underkat'){RegData$Variabel <- RegData$Inngrep }
-	
-if (valgtVar=='Liggedogn') {
-	#For opphold registrert som dagkirurgi uten at liggedogn er reg., settes liggedogn=0
-	dagind <- which( (is.na(RegData$Liggedogn) | is.nan(RegData$Liggedogn))  & RegData$Dagkirurgi==1)
-	RegData$Liggedogn[dagind]<-0
-	gr <- c(0:7,100)	
-	RegData$VariabelGr <- cut(RegData$Liggedogn, breaks=gr, include.lowest=TRUE, right=FALSE)
-	grtxt <- c(0:6, '7+')
-	subtxt <- 'Antall liggedøgn'
-}
-if (valgtVar=='Utd') {
-	grtxt <- c('Grunnskole++, 7-10år','Real-, yrkes- el vg skole', #'Real-, yrkes-/yrkesfaglig vg skole',
-		'Allmennfaglig vg skole','Høyskole/universitet, <4 år','Høyskole/universitet, 4år+')
-	RegData$VariabelGr <- factor(RegData$Utd, levels = 1:5) 
-	retn <- 'H'
-	}
 
-if (valgtVar=='HovedInngrep'){
-	grtxt <- c('Udefinerbart', 'Prolapskirurgi', 'Foramenotomi', 'Laminektomi',
-	'Interspin. implantat', 'Fusjonskirurgi', 'Skiveprotese', 'Rev. av implantat')
-	RegData$VariabelGr <- factor(RegData$HovedInngrep, levels = 0:7) 
-	retn <- 'H'
-	}
-
-if (valgtVar=='Underkat'){
-	if (hovedkat %in% 0:7) {
-		gr_nr <- c(0:19)
-		txt <- c('Annet','Mikro','Makro','Tubekirurgi','Udefinert','Mikro','Makro','Tubekirurgi',
-			'Udefinert','Laminektomi', 'Interspinøst impl.','PLF','PLIF','TLIF','ALIF',
-			'Udefinert fusjon', 'Skiveprotese','Fjern interspinøst impl.','Fjerne ostemat.',
-			'Revisjon ostemat.')
-		hgr <- c(0,1,1,1,1,2,2,2,2,3,4,5,5,5,5,5,6,7,7,7)
-		kat <- data.frame(hgr, gr_nr, txt)	#hkatnavn[hgr+1], 
-		underkat_num <- kat$gr_nr[kat$hgr==hovedkat]
-		
-		RegData <- RegData[which(RegData$Inngrep %in% underkat_num), ]
-		grtxt <- as.character(kat$txt[underkat_num+1])
-		RegData$VariabelGr <- factor(RegData$Inngrep, levels = underkat_num) 
-		}
-	}
-	
-	
-if (valgtVar=='Alder') {
-	gr <- c(0,seq(20,90,10),150)
-	RegData$VariabelGr <- cut(RegData$Variabel, breaks=gr, include.lowest=TRUE, right=FALSE)
-	grtxt <- c('0-19', '20-29', '30-39', '40-49', '50-59', '60-69', '70-79', '80-89', '90+')	#c(levels(RegData$VariabelGr)[-length(gr)], '90+')	#c(names(AndelLand)[-length(gr)], '90+')
-	subtxt <- 'Aldersgruppe'
-}
-if (valgtVar=='AntNivOpr') {
-	gr <- c(0:5,1000)
-	RegData$VariabelGr <- cut(RegData$AntNivOpr, breaks=gr, include.lowest=TRUE, right=FALSE)
-	grtxt <- c(0:4,'5+')	#sort(unique(RegData$AntNivOpr))
-	subtxt <- 'Antall'
-}
-if (valgtVar == 'Antibiotika') {
-	grtxt <- c('Nei', 'Ja', 'Ukjent')
-	RegData$VariabelGr <- 9
-	indDum <- RegData$Antibiotika %in% 0:1
-	RegData$VariabelGr[indDum] <- RegData$Antibiotika[indDum]
-	RegData$VariabelGr <- factor(RegData$VariabelGr, levels = c(0,1,9)) 
-	}
-if (valgtVar == 'ArbstatusPre') {
-	retn <- 'H'
-	grtxt <- c('I arbeid','Hjemmeværende', 'Studie/skole', 'Pensjonist', 'Arbeidsledig', 'Sykemeldt', 	
-		'Aktiv sykemeldt', 'Delvis sykemeldt', 'Attføring/rehab.', 'Uføretrygdet', 'Ukjent')
-	RegData$VariabelGr <- 99
-	indDum <- which(RegData$ArbstatusPre %in% 1:10)
-	RegData$VariabelGr[indDum] <- RegData$ArbstatusPre[indDum]
-	RegData$VariabelGr <- factor(RegData$VariabelGr, levels = c(1:10,99)) 
-	}
-if (valgtVar == 'Arbstatus3mnd') {
-	datoTil <- min(datoTil, as.character(Sys.Date()-90))
-	RegData <- RegData[which(RegData$Utfylt3Mnd==1), ]
-	retn <- 'H'
-	grtxt <- c('I arbeid','Hjemmeværende', 'Studie/skole', 'Pensjonist', 'Arbeidsledig', 'Sykemeldt', 	
-		'Aktiv sykemeldt', 'Delvis sykemeldt', 'Attføring/rehab.', 'Uføretrygdet', 'Ukjent')
-	RegData$VariabelGr <- 99
-	indDum <- which(RegData$Arbstatus3mnd %in% 1:10)
-	RegData$VariabelGr[indDum] <- RegData$Arbstatus3mnd[indDum]
-	RegData$VariabelGr <- factor(RegData$VariabelGr, levels = c(1:10,99)) 
-	}
-if (valgtVar == 'Arbstatus12mnd') {
-	datoTil <- min(datoTil, as.character(Sys.Date()-365))
-	RegData <- RegData[which(RegData$Utfylt12Mnd==1), ]
-	retn <- 'H'
-	grtxt <- c('I arbeid','Hjemmeværende', 'Studie/skole', 'Pensjonist', 'Arbeidsledig', 'Sykemeldt', 	
-		'Aktiv sykemeldt', 'Delvis sykemeldt', 'Attføring/rehab.', 'Uføretrygdet', 'Ukjent')
-	RegData$VariabelGr <- 99
-	indDum <- which(RegData$Arbstatus12mnd %in% 1:10)
-	RegData$VariabelGr[indDum] <- RegData$Arbstatus12mnd[indDum]
-	RegData$VariabelGr <- factor(RegData$VariabelGr, levels = c(1:10,99)) 
-	}
-if (valgtVar == 'ASA') {
-	#retn <- 'H'
-	grtxt <- c('I:Ingen','II:Moderat', 'III:Alvorlig', 'IV:Livstruende', 'Ukjent')
-	subtxt <- 'Sykdomsgrad'
-	RegData$VariabelGr <- 99
-	indDum <- which(RegData$ASA %in% 1:4)	#Antar ikke opererer døde...
-	RegData$VariabelGr[indDum] <- RegData$ASA[indDum]
-	RegData$VariabelGr <- factor(RegData$VariabelGr, levels = c(1:4,99)) 
-	}
-if (valgtVar=='BMI') {
-	gr <- c(0, 18.5, 25, 30, 35, 40, 1000)
-	RegData$VariabelGr <- cut(RegData$Variabel, breaks=gr, include.lowest=TRUE, right=FALSE)
-	#AndelSh <- table(cut(RegData$BMI[ind_sh], gr, right=F))/NSh*100
-	#AndelLand <- table(cut(RegData$BMI[ind_resten], gr, right=F))/NLand*100
-	grtxt <- c('<18,5', levels(RegData$VariabelGr)[2:(length(gr)-2)],'40+')
-	grtxt2 <- c('Undervekt', 'Normalvekt', 'Overvekt', 'Fedme', 'Fedme kl II', 'Fedme kl III')
-	subtxt <- '"Body Mass Index"'
-}
-if (valgtVar == 'EqangstPre') {
-	RegData$VariabelGr <- 9
-	grtxt <- c('Ingen', 'Litt', 'Svært', 'Ukjent')
-	indDum <- which(RegData$EqangstPre %in% 1:3)
-	RegData$VariabelGr[indDum] <- RegData$EqangstPre[indDum]
-	RegData$VariabelGr <- factor(RegData$VariabelGr, levels = c(1:3,9)) 
-	subtxt <- 'Grad av engstelighet/deprimerthet'	#Tilstand i forhold til angst'
-	}
-if (valgtVar == 'EqgangePre') {
-	grtxt <- c('Ingen problemer', 'Litt problemer', 'Sengeliggende', 'Ukjent')
-	RegData$VariabelGr <- 9
-	indDum <- which(RegData$EqgangePre %in% 1:3)
-	RegData$VariabelGr[indDum] <- RegData$EqgangePre[indDum]
-	RegData$VariabelGr <- factor(RegData$VariabelGr, levels = c(1:3,9)) 
-	subtxt <- ''	#'Tilstand i forhold til gange'
-	}
-if (valgtVar == 'ErstatningPre') {
-	grtxt <- c('Ja', 'Nei', 'Planlegger', 'Innvilget', 'Ukjent')
-	RegData$VariabelGr <- 9
-	indDum <- which(RegData$ErstatningPre %in% 1:4)
-	RegData$VariabelGr[indDum] <- RegData$ErstatningPre[indDum]
-	RegData$VariabelGr <- factor(RegData$VariabelGr, levels = c(1:4,9)) 
-	}
-
-if (valgtVar == 'Fornoyd3mnd') {
-	datoTil <- min(datoTil, as.character(Sys.Date()-90))
-	RegData <- RegData[which(RegData$Utfylt3Mnd==1), ]
-	retn <- 'H'
-	grtxt <- c('Fornøyd', 'Litt fornøyd', 'Verken eller', 'Litt misfornøyd', 'Misfornøyd', 'Ukjent')
-	RegData$VariabelGr <- 9
-	indDum <- which(RegData$Fornoyd3mnd %in% 1:5)
-	RegData$VariabelGr[indDum] <- RegData$Fornoyd3mnd[indDum]
-	RegData$VariabelGr <- factor(RegData$VariabelGr, levels = c(1:5,9)) 
-	}
-if (valgtVar == 'Fornoyd12mnd') {
-	datoTil <- min(datoTil, as.character(Sys.Date()-365))
-	RegData <- RegData[which(RegData$Utfylt12Mnd==1), ]
-	retn <- 'H'
-	grtxt <- c('Fornøyd', 'Litt fornøyd', 'Verken eller', 'Litt misfornøyd', 'Misfornøyd', 'Ukjent')
-	RegData$VariabelGr <- 9
-	indDum <- which(RegData$Fornoyd12mnd %in% 1:5)
-	RegData$VariabelGr[indDum] <- RegData$Fornoyd12mnd[indDum]
-	RegData$VariabelGr <- factor(RegData$VariabelGr, levels = c(1:5,9)) 
-	}
-if (valgtVar == 'Morsmal') {
-	grtxt <- c('Norsk', 'Samisk', 'Annet', 'Ukjent')
-	RegData$VariabelGr <- 9
-	indDum <- which(RegData$Morsmal %in% 1:3)
-	RegData$VariabelGr[indDum] <- RegData$Morsmal[indDum]
-	RegData$VariabelGr <- factor(RegData$VariabelGr, levels = c(1:3,9)) 
-	}
-if (valgtVar == 'Nytte3mnd') {
-	datoTil <- min(datoTil, as.character(Sys.Date()-90))
-	retn <- 'H'
-	grtxt <- c('Helt bra', 'Mye bedre', 'Litt bedre', 'Uendret', 'Litt verre', 'Mye verre', 
-					'Verre enn noen gang', 'Ukjent')
-	RegData$VariabelGr <- 9
-	indDum <- which(RegData$Nytte3mnd %in% 1:7)
-	RegData$VariabelGr[indDum] <- RegData$Nytte3mnd[indDum]
-	RegData$VariabelGr <- factor(RegData$VariabelGr, levels = c(1:7,9)) 
-	}
-if (valgtVar == 'Nytte12mnd') {
-	datoTil <- min(datoTil, as.character(Sys.Date()-365))
-	#RegData <- RegData[which(RegData$Utfylt12Mnd==1), ]
-	retn <- 'H'
-	grtxt <- c('Helt bra', 'Mye bedre', 'Litt bedre', 'Uendret', 'Litt verre', 'Mye verre', 
-					'Verre enn noen gang', 'Ukjent')
-	RegData$VariabelGr <- 9
-	indDum <- which(RegData$Nytte12mnd %in% 1:7)
-	RegData$VariabelGr[indDum] <- RegData$Nytte12mnd[indDum]
-	RegData$VariabelGr <- factor(RegData$VariabelGr, levels = c(1:7,9)) 
-	}
-if (valgtVar == 'OpIndPareseGrad') {
-	grtxt <- c(0:5, 'Ukjent')
-	RegData <- RegData[which(RegData$OpIndParese ==1),]
-	indDum <- which(RegData$OpIndPareseGrad %in% 0:5)
-	RegData$VariabelGr <- 9
-	RegData$VariabelGr[indDum] <- RegData$OpIndPareseGrad[indDum]
-	RegData$VariabelGr <- factor(RegData$VariabelGr, levels = c(0:5,9)) 
-	}
-if (valgtVar == 'OpIndSmeType') {
-	grtxt <- c('Rygg/hofte', 'Bein', 'Begge deler', 'Ukjent')
-	RegData <- RegData[which(RegData$OpIndSme ==1),]
-	indDum <- which(RegData$OpIndSmeType %in% 1:3)
-	RegData$VariabelGr <- 9
-	RegData$VariabelGr[indDum] <- RegData$OpIndSmeType[indDum]
-	RegData$VariabelGr <- factor(RegData$VariabelGr, levels = c(1:3,9)) 
-}
-if (valgtVar == 'OpKat') {
-	#retn <- 'H'
-	grtxt <- c('Elektiv', 'Akutt', '1/2-Akutt', 'Ukjent')
-	indDum <- which(RegData$OpKat %in% 1:3)
-	RegData$VariabelGr <- 9
-	RegData$VariabelGr[indDum] <- RegData$OpKat[indDum]
-	RegData$VariabelGr <- factor(RegData$VariabelGr, levels = c(1:3,9)) 
-}
-if (valgtVar == 'Roker') {
-	grtxt <- c('Nei', 'Ja', 'Ukjent')
-	RegData$VariabelGr <- 9
-	indDum <- RegData$Roker %in% 0:1
-	RegData$VariabelGr[indDum] <- RegData$Roker[indDum]
-	RegData$VariabelGr <- factor(RegData$VariabelGr, levels = c(0,1,9)) 
-	}
-if (valgtVar == 'Saardren') {
-	#grtxt <- c('Nei', 'Ja', 'Ukjent')
-	#RegData$VariabelGr <- 9
-	#indDum <- which(RegData$Saardren %in% 0:1)
-	#indDum <- which(RegData$Saardren %in% 0:1)
-	#RegData$VariabelGr[indDum] <- RegData$Saardren[indDum]
-	#RegData$VariabelGr <- factor(RegData$VariabelGr, levels = c(0:1,9)) 
-	grtxt <- c('Nei', 'Ja')
-	RegData$VariabelGr <- 0
-	RegData$VariabelGr[which(RegData$Saardren==1)] <- 1
-	}
-if (valgtVar == 'SivilStatus') {
-	grtxt <- c('Gift', 'Samboer', 'Enslig', 'Ukjent')
-	RegData$VariabelGr <- 9
-	indDum <- which(RegData$SivilStatus %in% 1:3)
-	RegData$VariabelGr[indDum] <- RegData$SivilStatus[indDum]
-	RegData$VariabelGr <- factor(RegData$VariabelGr, levels = c(1:3,9)) 
-	}
-if (valgtVar == 'SmStiPre') {
-	grtxt <- c('Nei', 'Ja', 'Ukjent')
-	RegData$VariabelGr <- 9
-	indDum <- which(RegData$SmStiPre %in% 0:1)
-	RegData$VariabelGr[indDum] <- RegData$SmStiPre[indDum]
-	RegData$VariabelGr <- factor(RegData$VariabelGr, levels = c(0:1,9)) 
-	}
-if (valgtVar == 'SmHyppPre') {
-	grtxt <- c('Sjeldnere', 'Månedlig', 'Ukentlig', 'Daglig', 'Oftere', 'Ukjent')
-	RegData$VariabelGr <- 9
-	indDum <- which(RegData$SmHyppPre %in% 1:5)
-	RegData$VariabelGr[indDum] <- RegData$SmHyppPre[indDum]
-	RegData$VariabelGr <- factor(RegData$VariabelGr, levels = c(1:5,9)) 
-	}
+TittelUt <- switch(valgtVar, 
+				SymptVarighRyggHof = 'Varighet av rygg-/hoftesmerter',
+				SympVarighUtstr = 'Varighet av utstrålende smerter',
+				)
 if (valgtVar %in% c('SymptVarighRyggHof','SympVarighUtstr')) {
 	grtxt <- c('Ingen', '<3 mnd', '3-12 mnd', '1-2 år', '> 2 år', 'Ukjent')
 	#grtxt <- c('Ingen smerter', 'Under 3 mnd', '3-12 mnd', '1-2 år', 'Mer enn 2 år', 'Ukjent')
@@ -390,126 +147,6 @@ if (valgtVar %in% c('SymptVarighRyggHof','SympVarighUtstr')) {
 	RegData$VariabelGr[indDum] <- RegData$Variabel[indDum]
 	RegData$VariabelGr <- factor(RegData$VariabelGr, levels = c(1:5,9)) 
 	}
-if (valgtVar == 'TidlOpr') {
-	retn <- 'H'
-	grtxt <- c('Samme nivå', 'Annet nivå', 'Annet og sm. nivå', 'Primæroperasjon', 'Ukjent')
-	RegData$VariabelGr <- 9
-	indDum <- which(RegData$TidlOpr %in% 1:4)
-	RegData$VariabelGr[indDum] <- RegData$TidlOpr[indDum]
-	RegData$VariabelGr <- factor(RegData$VariabelGr, levels = c(1:4,9)) 
-	}
-if (valgtVar=='TidlOprAntall') {
-	gr <- c(0:5, 1000)
-	RegData$Variabel <- 0
-	#indDum <- which(is.na(RegData$TidlOprAntall) == FALSE)
-	indDum <- which(RegData$TidlOprAntall>0)
-	RegData$Variabel[indDum] <- RegData$TidlOprAntall[indDum]
-	RegData$VariabelGr <- cut(RegData$Variabel, breaks=gr, include.lowest=TRUE, right=FALSE)
-	grtxt <- c(0:4,paste0('5-', max(RegData$TidlOprAntall, na.rm=T)))
-}
-if (valgtVar == 'UforetrygdPre') {
-	retn <- 'H'
-	grtxt <- c('Ja', 'Nei', 'Planlegger søknad', 'Innvilget', 'Ukjent')
-	RegData$VariabelGr <- 9
-	indDum <- which(RegData$UforetrygdPre %in% 1:4)
-	RegData$VariabelGr[indDum] <- RegData$UforetrygdPre[indDum]
-	RegData$VariabelGr <- factor(RegData$VariabelGr, levels = c(1:4,9)) 
-	}
-
-#FIGURER SATT SAMMEN AV FLERE VARIABLE FRA SAMME TOTALUTVALG
-if (valgtVar=='OpInd') {
-	retn <- 'H'
-	flerevar <- 1
-	variable <- c('OpIndCauda', 'OpIndParese', 'OpIndSme')
-	grtxt <- c('Cauda equlina', 'Parese', 'Smerter')
-		}
-if (valgtVar=='RadUnders') {
-	retn <- 'H'
-	flerevar <- 1
-	variable <- c('RvCt', 'RvMr', 'RvRadigr', 'RvDiscogr', 'RvDpregblok', 'RvRtgLscol', 'RvFunksjo')
-	grtxt <- c('CT', 'MR', 'Radikulografi', 'Diskografi', 'Diag.blokade', 'Rtg.LS-columna', 'Fleks./Ekst.')
-		}
-if (valgtVar=='Komorbiditet') {
-	retn <- 'H'
-	flerevar <- 1
-	variable <- c('SykdAndreRelevanteSykdBechtrew', 'SykdAnnenendokrin', 'SykdAnnenreumatisk', 
-			'SykdCerebrovaskular', 'SykdDepresjonAngst', 'SykdHjertekar', 'SykdHoftekneartose',
-			'SykdHypertensjon', 'SykdKreft', 'SykdKroniskLunge', 'SykdKroniskNevrologisk', 
-			'SykdKroniskSmerterMuskelSkjelettsyst', 'SykdOsteoporose', 'SykDprebetesMellitus', 
-			'SykdReumatoidartritt', 'SykdVaskulærClaudicatio', 'Sykd')
-	grtxt <- c('Bechterew', 'Endokrin', 'Reumatisk', 
-			'Cerebrovaskulær', 'Depresjon/Angst', 'Hjerte-kar', 'Hoftekneartose',
-			'Hypertensjon', 'Kreft', 'Lungesykd.', 'Nevrologisk sykd.', 
-			'Muskel-/skjelettsm.', 'Osteoporose', 'Diabetes Mell.', 
-			'Reumatoid artritt', 'Vask. Claudicatio', 'Tot. Komorb.')
-			
-	cexgr <- 0.9	#Kan endres for enkeltvariable
-}
-if (valgtVar=='KomplPer') {
-	retn <- 'H'
-	flerevar <- 1
-	RegData <- RegData[which(dato > as.POSIXlt('2009-12-31')), ]
-	NB <- '(Komplikasjoner rapporteres kun f.o.m. 2010)'
-	variable <- c('PeropKompDura', 'PeropKompFeilnivSide', 'PeropKompNerve', 'PeropKompTransfuBlodning',
-			'PeropKompKardio','PeropKompFeilplassImp','PeropKompResp','PeropKompAnafy')
-	grtxt <- c('Durarift', 'Operert feil nivå/side', 'Nerveskade', 'Transfusjonskrevende blødning',
-		'Kardiovaskulær komplikasjon', 'Feilplassert implantat', 'Respiratorisk komplikasjon', 'Anafylaksi')
-	#RegData$Variabel <- rowSums(RegData[ ,variable], na.rm=T)
-		}
-if (valgtVar=='KomplPost') {
-	datoTil <- min(datoTil, as.character(Sys.Date()-90))
-	retn <- 'H'
-	flerevar <- 1
-	subtxt <- '(Komplikasjoner rapporteres kun f.o.m. 2010)'
-	RegData <- RegData[which(dato > as.POSIXlt('2009-12-31')), ]
-	#Andel kun av de som har svart på 3 mnd ktr:
-	RegData <- RegData[which(RegData$Utfylt3Mnd==1), ]
-	variable <- c('KpInfOverfla3Mnd','KpInfDyp3Mnd', 'KpMiktProb3Mnd','KpUVI3Mnd',
-			'KpLungebet3Mnd', 'KpBlod3Mnd','KpDVT3Mnd','KpLE3Mnd', 'Kp3Mnd')
-	grtxt <- c('Overfladisk sårinfeksjon', 'Dyp sårinfeksjon', 
-			'Problem, vannlatning/avføring','Urinveisinfeksjon', 'Pneumoni', 
-			'Transf./opr. pga. blødning', 'DVT','Lungeemboli', 'Tot. komplikasjoner')	
-	#RegData$Variabel <- colSums(RegData[ ,kompl])
-			}
-TittelUt <- switch(valgtVar, 
-				Alder = 'Aldersfordeling',
-				Antibiotika = 'Er det gitt antibiotikaprofylakse?',
-				AntNivOpr = 'Antall nivå operert',
-				ArbstatusPre = 'Arbeidsstatus før operasjon',
-				Arbstatus3mnd = 'Arbeidsstatus 3 mnd. etter operasjon',
-				Arbstatus12mnd = 'Arbeidsstatus 12 mnd. etter operasjon',
-				ASA = 'ASA-grad',
-				BMI = 'Pasientenes BMI (Body Mass Index)',
-				EqangstPre = 'Helsetilstand: Angst',
-				EqgangePre = 'Helsetilstand: Gange',
-				ErstatningPre = 'Har pasienten søkt erstatning?',
-				Fornoyd3mnd = 'Fornøydhet, 3 mnd etter operasjon',
-				Fornoyd12mnd = 'Fornøydhet, 12 mnd etter operasjon',
-				HovedInngrep = 'Hovedinngrep',
-				Komorbiditet = 'Komorbiditet',
-				KomplPer = 'Peroperative komplikasjoner',
-				KomplPost = 'Pasientrapporterte komplikasjoner',
-				Liggedogn = 'Liggetid ved operasjon',
-				Morsmal = 'Morsmål',
-				Nytte3mnd = c('Hvilken nytte har du hatt av operasjonen?','(svar 3 måneder etter)'),
-				Nytte12mnd = c('Hvilken nytte har du hatt av operasjonen?','(svar 12 måneder etter)'),
-				OpInd = 'Operasjonsindikasjon',
-				OpIndPareseGrad = 'Operasjonsindikasjon, paresegrad',
-				OpIndSmeType = 'Operasjonsindikasjon, smertetype',
-				OpKat = 'Operasjonskategori', 
-				RadUnders = 'Radiologisk undersøkelse',
-				Roker = 'Røyker du?',
-				Saardren = 'Sårdren',
-				SivilStatus = 'Sivilstatus',
-				SmHyppPre = 'Hyppighet av smertestillende før operasjonen',
-				SmStiPre = 'Bruk av smertestillende før operasjonen',
-				SymptVarighRyggHof = 'Varighet av rygg-/hoftesmerter',
-				SympVarighUtstr = 'Varighet av utstrålende smerter',
-				TidlOpr = 'Tidligere ryggoperert?',
-				TidlOprAntall = 'Antall tidligere operasjoner',
-				UforetrygdPre = 'Har pasienten søkt uføretrygd?',
-				Underkat = 'Fordeling av inngrepstyper',
-				Utd = 'Høyeste fullførte utdanning')
 
 #Gjør utvalg
 RyggUtvalg <- RyggUtvalgEnh(RegData=RegData, reshID=reshID, datoFra=datoFra, datoTil=datoTil, 

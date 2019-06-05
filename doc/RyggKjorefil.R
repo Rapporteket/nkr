@@ -1,8 +1,5 @@
-# Prod heter tos-hreg-db-01.nreg.no\HELSEREG For å få kontakt, prøv en 
-#> av disse:
-#> tos-hreg-db-01.nreg.no\HELSEREG
-#> 172.29.180.20, port:49375
-#> 172.29.180.20\HELSEREG
+
+#------NB NB: Alle variabele for fordeling må testes!!
 #________________________________________________________________________________________
 ##_________________________________________________________________________________________
 
@@ -76,8 +73,8 @@ save(RegData, file=paste0(fil, '.Rdata'))
 #__Inndata til RyggFigAndeler.R:
 tittel=1
 reshID <- 601161 #999999	#601161 #100133	#111065 #105783	#103618	#102949	#   #Må sendes med til funksjon
-datoFra <- '2011-01-01'
-datoTil <- '2017-12-31'
+datoFra <- '2017-01-01'
+datoTil <- '2019-12-31'
 minald <- 0		#alder, fra og med
 maxald <- 130	#alder, til og med
 erMann <- 99			#kjønn, 1-menn, 0-kvinner, standard: '' (alt annet enn 0 og 1), dvs. begge
@@ -138,7 +135,6 @@ valgtVar <- 'Underkat'	#Må velge...  'Alder', 'Antibiotika', 'AntNivOpr', 'Arbs
 #      'Roker', 'SivilStatus','SmStiPre', 'SmHyppPre', 'SymptVarighRyggHof', 
 #      'SympVarighUtstr', 'Saardren', 'TidlOpr', 'TidlOprAntall','UforetrygdPre', 'Utd', 'Underkat'
 #NB: Hvis variabel='Underkat', MÅ hovedkat velges, dvs. ikke 99.
-
 setwd("C:/ResultattjenesteGIT/nkr")
 outfile <- ''	#paste(valgtVar, '.pdf', sep='')	#Navn angis av Jasper ''
 FordUt <- RyggFigAndeler(RegData=RegData, valgtVar=valgtVar, datoFra=datoFra, datoTil=datoTil, 
