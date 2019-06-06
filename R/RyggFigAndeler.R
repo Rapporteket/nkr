@@ -6,40 +6,40 @@
 #' Argumentet \emph{valgtVar} har følgende valgmuligheter:
 #'    \itemize{
 #'     \item alder: Aldersfordeling 
-#'     \item AntDagerInnl: Liggetid 
-#'     \item Antibiotika: Er det gitt antibiotikaprofylakse?
-#'     \item AntNivOpr: Antall nivå operert'
+#'     \item antDagerInnl: Liggetid 
+#'     \item antibiotika: Er det gitt antibiotikaprofylakse?
+#'     \item antNivOpr: Antall nivå operert'
 #'     \item arbstatus: Arbeidsstatus før, 3 el. 12 mnd. etter operasjon
 #'     \item ASA: ASA-grad
 #'     \item BMI: Pasientenes BMI (Body Mass Index)
-#'     \item EqangstPre: Helsetilstand: Angst
-#'     \item EqgangePre: Helsetilstand: Gange
-#'     \item ErstatningPre: Har pasienten søkt erstatning?
+#'     \item EQangstPre: Helsetilstand: Angst
+#'     \item EQgangePre: Helsetilstand: Gange
+#'     \item erstatningPre: Har pasienten søkt erstatning?
 #'     \item fornoydhet: Fornøydhet 3 eller 12 mnd etter operasjon
-#'     \item HovedInngrep: Hovedinngrep
-#'     \item Komorbiditet: Komorbiditet
-#'     \item KomplPer: Peroperative komplikasjoner
-#'     \item KomplPost: Pasientrapporterte komplikasjoner
-#'     \item Liggedogn: Liggetid ved operasjon
-#'     \item Morsmal: Morsmål
+#'     \item hovedInngrep: Hovedinngrep
+#'     \item komorbiditet: Komorbiditet
+#'     \item komplPer: Peroperative komplikasjoner
+#'     \item komplPost: Pasientrapporterte komplikasjoner
+#'     \item liggedogn: Liggetid ved operasjon
+#'     \item morsmal: Morsmål
 #'     \item nytte: Hvilken nytte har du hatt av operasjonen? (svar 3 eller 12 måneder etter)
-#'     \item OpInd: Operasjonsindikasjon
-#'     \item OpIndPareseGrad: Operasjonsindikasjon, paresegrad
-#'     \item OpIndSmeType: Operasjonsindikasjon, smertetype
-#'     \item OpKat: Operasjonskategori 
-#'     \item RadUnders: Radiologisk undersøkelse
-#'     \item Roker: Røyker du?
-#'     \item Saardren: Sårdren
-#'     \item SivilStatus: Sivilstatus
-#'     \item SmHyppPre: Hyppighet av smertestillende før operasjonen
-#'     \item SmStiPre: Bruk av smertestillende før operasjonen
+#'     \item opInd: Operasjonsindikasjon
+#'     \item opIndPareseGrad: Operasjonsindikasjon, paresegrad
+#'     \item opIndSmeType: Operasjonsindikasjon, smertetype
+#'     \item opKat: Operasjonskategori 
+#'     \item radUnders: Radiologisk undersøkelse
+#'     \item roker: Røyker du?
+#'     \item saardren: Sårdren
+#'     \item sivilStatus: Sivilstatus
+#'     \item smHyppPre: Hyppighet av smertestillende før operasjonen
+#'     \item smStiPre: Bruk av smertestillende før operasjonen
 #'     \item SymptVarighRyggHof: Varighet av rygg-/hoftesmerter
-#'     \item SympVarighUtstr: Varighet av utstrålende smerter
-#'     \item TidlOpr: Tidligere ryggoperert?
-#'     \item TidlOprAntall: Antall tidligere operasjoner
-#'     \item UforetrygdPre: Har pasienten søkt uføretrygd?
-#'     \item Underkat: Fordeling av inngrepstyper. NB: hovedkategori MÅ velges
-#'     \item Utd: Høyeste fullførte utdanning
+#'     \item SymptVarighUtstr: Varighet av utstrålende smerter
+#'     \item tidlOpr: Tidligere ryggoperert?
+#'     \item tidlOprAntall: Antall tidligere operasjoner
+#'     \item uforetrygdPre: Har pasienten søkt uføretrygd?
+#'     \item underkat: Fordeling av inngrepstyper. NB: hovedkategori MÅ velges
+#'     \item utd: Høyeste fullførte utdanning
 #'    }
 #' Argumentet \emph{hovedkat} har følgende valgmuligheter:
 #'    \itemize{
@@ -66,25 +66,12 @@
 #'	   \item 8: Egen region mot resten
 #'    	}							
 #' @param RegData En dataramme med alle nødvendige variabler fra registeret
+#' @inheritParams RyggUtvalgEnh
 #' @param valgtVar Hvilken variabel som skal visualiseres. Se \strong{Details} for oversikt.
-#' @param datoFra Tidligste operasjonsdato i utvalget (vises alltid i figuren).
-#' @param datoTil Seneste operasjonsdato i utvalget (vises alltid i figuren).
-#' @param erMann Kjønn, standard: alt annet enn 0/1 gir begge kjønn
-#'          0: Kvinner
-#'          1: Menn
-#' @param minald Alder, fra og med (Standardverdi: 0)
-#' @param maxald Alder, til og med (Standardverdi: 130)
-#' @param tidlOp Tidligere operert, numerisk 1-4. Alt annet gir alle data uten utvalg.
-#'                1: Tidl. operert samme nivå, 
-#'                2: Tidl. operert annet nivå, 
-#'			3: Tidl. operert annet og sm. nivå,
-#'			4: Primæroperasjon
-#' @param opKat Hastegrad av operasjon 1: Elektivt, 2: Akutt, 3: Halvøyeblikkelig
-#' @param hovedkat Hvilken type hovedinngrep, numerisk 0-7, standard: 99, dvs. alle
 
 #' @param outfile Navn på fil figuren skrives til. Standard: '' (Figur skrives
 #'    til systemets standard utdataenhet (som regel skjerm))
-#' @param tittel Vise tittel i figuren eller ikke (0/1). standard:1
+#' @param tittelMed Vise tittel i figuren eller ikke (0/1). standard:1
 #' @param reshID Parameter følger fra innlogging helseregister.no og angir
 #'    hvilken enhet i spesialisthelsetjenesten brukeren tilhører
 #' @param enhetsUtvalg Gjør gruppeutvalg med eller uten sammenlikning. Se \strong{Details} for oversikt.
@@ -101,7 +88,7 @@
 #'
 RyggFigAndeler  <- function(RegData, valgtVar, datoFra='2007-01-01', datoTil='2999-12-31', aar=0, 
                             hentData=0, preprosess=1,minald=0, maxald=130, erMann='', hovedkat=99,
-                            opKat=99, tidlOp='', tittel=1, outfile='', reshID=0, enhetsUtvalg=0)
+                            opKat=99, tidlOp='', ktr=0, tittelMed=1, outfile='', reshID=0, enhetsUtvalg=0)
 {
 
 
@@ -134,19 +121,15 @@ cexgr <- 1	#Kan endres for enkeltvariable
 dato <- as.POSIXlt(RegData$OpDato,format="%d.%m.%Y")	#evt strptime()
 NB <- ''
 	
+RyggVarSpes <- RyggVarTilrettelegg(RegData=RegData, valgtVar=valgtVar, ktr=ktr, figurtype='andeler')
+RegData <- RyggVarSpes$RegData
+flerevar <- RyggVarSpes$flerevar
+variable <- RyggVarSpes$variable
+grtxt <- RyggVarSpes$grtxt
+retn <- RyggVarSpes$retn
+subtxt <- RyggVarSpes$subtxt
 
-TittelUt <- switch(valgtVar, 
-				SymptVarighRyggHof = 'Varighet av rygg-/hoftesmerter',
-				SympVarighUtstr = 'Varighet av utstrålende smerter',
-				)
-if (valgtVar %in% c('SymptVarighRyggHof','SympVarighUtstr')) {
-	grtxt <- c('Ingen', '<3 mnd', '3-12 mnd', '1-2 år', '> 2 år', 'Ukjent')
-	#grtxt <- c('Ingen smerter', 'Under 3 mnd', '3-12 mnd', '1-2 år', 'Mer enn 2 år', 'Ukjent')
-	RegData$VariabelGr <- 9
-	indDum <- which(RegData$Variabel %in% 1:5)
-	RegData$VariabelGr[indDum] <- RegData$Variabel[indDum]
-	RegData$VariabelGr <- factor(RegData$VariabelGr, levels = c(1:5,9)) 
-	}
+
 
 #Gjør utvalg
 RyggUtvalg <- RyggUtvalgEnh(RegData=RegData, reshID=reshID, datoFra=datoFra, datoTil=datoTil, 
@@ -160,39 +143,59 @@ hovedgrTxt <- RyggUtvalg$hovedgrTxt
 smltxt <- RyggUtvalg$smltxt
 #Skal endres til ind$Hoved og ind$Rest
 
-if (tittel==0) {Tittel<-''} else {Tittel <- TittelUt} 
+if (tittelMed==0) {tittel<-''} else {tittel <- RyggVarSpes$tittel
+} 
 			
 #--------------- Gjøre beregninger ------------------------------
 #Gjør beregninger selv om det evt ikke skal vise figur ut. Trenger utdata.
-Andeler <- list(Hoved = 0, Rest =0)
-NRest <- 0
+AggVerdier <- list(Hoved = 0, Rest =0)
+N <- list(Hoved=0, Rest=0)
 AntRest <- 0
 AntHoved <- switch(as.character(flerevar), 
 				'0' = table(RegData$VariabelGr[ind$Hoved]),
 				'1' = colSums(sapply(RegData[ind$Hoved ,variable], as.numeric), na.rm=T))
-NHoved <- switch(as.character(flerevar), 
+N$Hoved <- switch(as.character(flerevar), 
 				'0' = sum(AntHoved),	#length(ind$Hoved)- Kan inneholde NA
 				'1' = length(ind$Hoved))
-Andeler$Hoved <- 100*AntHoved/NHoved
+AggVerdier$Hoved <- 100*AntHoved/N$Hoved
 
 if (medSml==1) {
 	AntRest <- switch(as.character(flerevar), 
 					'0' = table(RegData$VariabelGr[ind$Rest]),
 					'1' = colSums(sapply(RegData[ind$Rest ,variable], as.numeric), na.rm=T))
-	NRest <- switch(as.character(flerevar), 
+	N$Rest <- switch(as.character(flerevar), 
 					'0' = sum(AntRest),	#length(ind$Rest)- Kan inneholde NA
 					'1' = length(ind$Rest))
-	Andeler$Rest <- 100*AntRest/NRest
+	AggVerdier$Rest <- 100*AntRest/N$Rest
 }
+
+     FigDataParam <- list(AggVerdier=AggVerdier,
+                           # N=Nfig,
+                           # Ngr=Nfig,
+                           # Nvar=Ngr,
+                           #KImaal <- RyggVarSpes$KImaal,
+                           #grtxt2=grtxt2,
+                           grtxt=grtxt,
+                           #grTypeTxt=grTypeTxt,
+                           tittel= RyggVarSpes$tittel,
+                           retn=retn,
+                           subtxt=subtxt,
+                           #yAkseTxt=yAkseTxt,
+                           utvalgTxt=utvalgTxt,
+                           fargepalett=RyggUtvalg$fargepalett,
+                           medSml=medSml,
+                           hovedgrTxt=hovedgrTxt,
+                           smltxt=smltxt)
+
 #-----------Figur---------------------------------------
 #Hvis for få observasjoner..
 #if (dim(RegData)[1] < 10 | (length(which(RegData$ReshId == reshID))<5 & egenavd==1)) {
-if ((valgtVar=='Underkat' & all(hovedkat != c(1,2,5,7))) | NHoved < 10 | 
-		(medSml ==1 & NRest<10)) {
+if ((valgtVar=='Underkat' & all(hovedkat != c(1,2,5,7))) | N$Hoved < 10 | 
+		(medSml ==1 & N$Rest<10)) {
 FigTypUt <- rapbase::figtype(outfile, fargepalett=RyggUtvalg$fargepalett)
 farger <- FigTypUt$farger
 	plot.new()
-	title(Tittel)	#, line=-6)
+	title(tittel)	#, line=-6)
 	legend('topleft',utvalgTxt, bty='n', cex=0.9, text.col=farger[1])
 	if (valgtVar=='Underkat' & all(hovedkat != c(1,2,5,7))) {
 		text(0.5, 0.6, 'Velg Hovedkategori: 
@@ -212,7 +215,7 @@ FigTypUt <- rapbase::figtype(outfile, fargepalett=RyggUtvalg$fargepalett)
 #Tilpasse marger for å kunne skrive utvalgsteksten
 NutvTxt <- length(utvalgTxt)
 antDesTxt <- paste0('%.', antDes, 'f')
-grtxtpst <- paste0(rev(grtxt), ' \n(', rev(sprintf(antDesTxt, Andeler$Hoved)), '%)')
+grtxtpst <- paste0(rev(grtxt), ' \n(', rev(sprintf(antDesTxt, AggVerdier$Hoved)), '%)')
 vmarg <- switch(retn, V=0, H=max(0, strwidth(grtxtpst, units='figure', cex=cexgr)*0.7))
 #vmarg <- max(0, strwidth(grtxtpst, units='figure', cex=cexgr)*0.7)
 par('fig'=c(vmarg, 1, 0, 1-0.02*(NutvTxt-1)))	#Har alltid datoutvalg med
@@ -226,59 +229,59 @@ cexleg <- 1	#Størrelse på legendtekst
 
 #Horisontale søyler
 if (retn == 'H') {
-	xmax <- max(c(Andeler$Hoved, Andeler$Rest),na.rm=T)*1.15
-	pos <- barplot(rev(as.numeric(Andeler$Hoved)), horiz=TRUE, beside=TRUE, las=1, xlab="Andel pasienter (%)", #main=tittel, 
+	xmax <- max(c(AggVerdier$Hoved, AggVerdier$Rest),na.rm=T)*1.15
+	pos <- barplot(rev(as.numeric(AggVerdier$Hoved)), horiz=TRUE, beside=TRUE, las=1, xlab="Andel pasienter (%)", #main=tittel, 
 		col=fargeHoved, border='white', font.main=1, xlim=c(0, xmax), ylim=c(0.05,1.4)*antGr)	#  
 	mtext(at=pos+0.05, text=grtxtpst, side=2, las=1, cex=cexgr, adj=1, line=0.25)
 
 	if (medSml == 1) {
-		points(as.numeric(rev(Andeler$Rest)), pos, col=fargeRest,  cex=2, pch=18) #c("p","b","o"), 
-		legend('top', c(paste0(hovedgrTxt, ' (N=', NHoved,')'), 
-						paste0(smltxt, ' (N=', NRest,')')), 
+		points(as.numeric(rev(AggVerdier$Rest)), pos, col=fargeRest,  cex=2, pch=18) #c("p","b","o"), 
+		legend('top', c(paste0(hovedgrTxt, ' (N=', N$Hoved,')'), 
+						paste0(smltxt, ' (N=', N$Rest,')')), 
 			border=c(fargeHoved,NA), col=c(fargeHoved,fargeRest), bty='n', pch=c(15,18), pt.cex=2, 
 			lwd=lwdRest,	lty=NA, ncol=1, cex=cexleg)
 		} else {	
-		legend('top', paste0(hovedgrTxt, ' (N=', NHoved,')'), 
+		legend('top', paste0(hovedgrTxt, ' (N=', N$Hoved,')'), 
 			border=NA, fill=fargeHoved, bty='n', ncol=1, cex=cexleg)
 		}
 }
 
 if (retn == 'V' ) {
 #Vertikale søyler eller linje
-	if (length(grtxt2) == 0) {grtxt2 <- paste0('(', sprintf(antDesTxt, Andeler$Hoved), '%)')}
-	ymax <- max(c(Andeler$Hoved, Andeler$Rest),na.rm=T)*1.15
-	pos <- barplot(as.numeric(Andeler$Hoved), beside=TRUE, las=1, ylab="Andel pasienter (%)",	
+	if (length(grtxt2) == 0) {grtxt2 <- paste0('(', sprintf(antDesTxt, AggVerdier$Hoved), '%)')}
+	ymax <- max(c(AggVerdier$Hoved, AggVerdier$Rest),na.rm=T)*1.15
+	pos <- barplot(as.numeric(AggVerdier$Hoved), beside=TRUE, las=1, ylab="Andel pasienter (%)",	
 		xlab=subtxt, col=fargeHoved, border='white', ylim=c(0, ymax))	#sub=subtxt,	
 	mtext(at=pos, grtxt, side=1, las=1, cex=cexgr, adj=0.5, line=0.5)
 	mtext(at=pos, grtxt2, side=1, las=1, cex=cexgr, adj=0.5, line=1.5)
 if (medSml == 1) {
-	points(pos, as.numeric(Andeler$Rest), col=fargeRest,  cex=2, pch=18) #c("p","b","o"), 
-	legend('top', c(paste0(hovedgrTxt, ' (N=', NHoved,')'), paste0(smltxt, ' (N=', NRest,')')), 
+	points(pos, as.numeric(AggVerdier$Rest), col=fargeRest,  cex=2, pch=18) #c("p","b","o"), 
+	legend('top', c(paste0(hovedgrTxt, ' (N=', N$Hoved,')'), paste0(smltxt, ' (N=', N$Rest,')')), 
 		border=c(fargeHoved,NA), col=c(fargeHoved,fargeRest), bty='n', pch=c(15,18), pt.cex=2, lty=c(NA,NA), 
 		lwd=lwdRest, ncol=2, cex=cexleg)
 	} else {	
-	legend('top', paste0(hovedgrTxt, ' (N=', NHoved,')'), 
+	legend('top', paste0(hovedgrTxt, ' (N=', N$Hoved,')'), 
 		border=NA, fill=fargeHoved, bty='n', ncol=1, cex=cexleg)
 	}
 } 
 
-if (tittel==1) {title(Tittel, line=1, font.main=1)}
+if (tittelMed==1) {title(tittel, line=1, font.main=1)}
 
 #Tekst som angir hvilket utvalg som er gjort
-mtext(utvalgTxt, side=3, las=1, cex=0.9, adj=0, col=farger[1], line=c(3-(1-tittel)+0.8*((NutvTxt-1):0)))
+mtext(utvalgTxt, side=3, las=1, cex=0.9, adj=0, col=farger[1], line=c(3-(1-tittelMed)+0.8*((NutvTxt-1):0)))
 
 par('fig'=c(0, 1, 0, 1)) 
 if ( outfile != '') {dev.off()}
 }
 
 
-AndelerUt <- rbind(Andeler$Hoved, Andeler$Rest)
-rownames(AndelerUt) <- c(hovedgrTxt, smltxt)
-AntallUt <- rbind(AntHoved, AntRest)
-rownames(AntallUt) <- c(hovedgrTxt, smltxt)
-
-UtData <- list(paste(toString(TittelUt),'.', sep=''), AndelerUt, AntallUt, grtxt )
-names(UtData) <- c('Tittel', 'Andeler', 'Antall', 'GruppeTekst')
-return(invisible(UtData))
+# AndelerUt <- rbind(AggVerdier$Hoved, AggVerdier$Rest)
+# rownames(AndelerUt) <- c(hovedgrTxt, smltxt)
+# AntallUt <- rbind(AntHoved, AntRest)
+# rownames(AntallUt) <- c(hovedgrTxt, smltxt)
+# 
+# UtData <- list(paste(toString(TittelUt),'.', sep=''), AggVerdierUt, AntallUt, grtxt )
+# names(UtData) <- c('Tittel', 'Andeler', 'Antall', 'GruppeTekst')
+return(invisible(FigDataParam))
 
 }

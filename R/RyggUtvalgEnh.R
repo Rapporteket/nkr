@@ -16,6 +16,19 @@
 #'	   \item 8: Egen region mot resten
 #'    	}							
 #' @inheritParams RyggFigAndeler
+#' @param datoFra Tidligste operasjonsdato i utvalget (vises alltid i figuren).
+#' @param datoTil Seneste operasjonsdato i utvalget (vises alltid i figuren).
+#' @param erMann Kjønn, standard: alt annet enn 0/1 gir begge kjønn
+#'          0: Kvinner
+#'          1: Menn
+#' @param minald Alder, fra og med (Standardverdi: 0)
+#' @param maxald Alder, til og med (Standardverdi: 130)
+#' @param tidlOp Tidligere operert, numerisk 1-4. Alt annet gir alle data uten utvalg.
+#'                1: Tidl. operert samme nivå, 
+#'                2: Tidl. operert annet nivå, 
+#'			3: Tidl. operert annet og sm. nivå,
+#'			4: Primæroperasjon
+#' @param opKat Hastegrad av operasjon 1: Elektivt, 2: Akutt, 3: Halvøyeblikkelig
 #' @param aar - Operasjonsår 
 #' @param hovedkat Hvilken type hovedinngrep, numerisk 0-9, standard: 99, dvs. alle. Valgmuligheter:
 #'    \itemize{

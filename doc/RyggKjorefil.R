@@ -10,8 +10,8 @@
 #noen ekstra pakker installeres. Siden JDBC er basert på Javateknologi trenger
 #vi R klargjort for java:
 
-install.packages('rJava')
-install.packages('RJDBC')
+#install.packages('rJava')
+#install.packages('RJDBC')
 install.packages('xtable')
 
 #Trenger pakkene:
@@ -66,10 +66,10 @@ table(SkjemaOversikt[indPasientskjema, c('Sykehusnavn','MndAar', "SkjemaStatus")
 library(nkr)
 #  Laste data og parametre
 rm(list=ls())
-NKRdata <- read.table('A:/Rygg/NKR2010-2017aarsrapp.csv', sep=';', header=T, encoding = 'UTF-8')
-RegData <- NKRdata
-save(RegData, file=paste0(fil, '.Rdata'))
-#load('A:/Nakke/NakkeAarsrapp2016.Rdata') #Preprossesserte data
+#NKRdata <- read.table('A:/Rygg/NKR2010-2017aarsrapp.csv', sep=';', header=T, encoding = 'UTF-8')
+#RegData <- NKRdata
+#save(RegData, file=paste0(fil, '.Rdata'))
+load('A:/Rygg/Rygg2010-2018aarsrapp.Rdata') #TESTER FØRST MED gamle data
 #__Inndata til RyggFigAndeler.R:
 tittel=1
 reshID <- 601161 #999999	#601161 #100133	#111065 #105783	#103618	#102949	#   #Må sendes med til funksjon
@@ -128,32 +128,25 @@ RyggFigAndelTid(RegData=0, preprosess=1,valgtVar=valgtVar, datoFra=datoFra, dato
 #----------------------------------------------------------------
 #			FigAndeler (RyggFigAndeler.r
 #----------------------------------------------------------------
-valgtVar <- 'Underkat'	#Må velge...  'Alder', 'Antibiotika', 'AntNivOpr', 'ArbstatusPre', 'Arbstatus3mnd', 
-#      'Arbstatus12mnd', 'ASA', 'BMI', 'EqangstPre', 'EqgangePre', 'ErstatningPre', 'Fornoyd12mnd','Fornoyd3mnd', 
-#      'HovedInngrep', 'Komorbiditet', 'KomplPer', 'KomplPost', 'Liggedogn', 'Morsmal', 'Nytte3mnd', 'Nytte12mnd', 
-#      'OpIndPareseGrad', 'OpInd', 'OpIndSmeType', 'OpKat', 'RadUnders', 
-#      'Roker', 'SivilStatus','SmStiPre', 'SmHyppPre', 'SymptVarighRyggHof', 
-#      'SympVarighUtstr', 'Saardren', 'TidlOpr', 'TidlOprAntall','UforetrygdPre', 'Utd', 'Underkat'
+valgtVar <- 'arbstatus'	#Må velge...  
 #NB: Hvis variabel='Underkat', MÅ hovedkat velges, dvs. ikke 99.
-setwd("C:/ResultattjenesteGIT/nkr")
 outfile <- ''	#paste(valgtVar, '.pdf', sep='')	#Navn angis av Jasper ''
 FordUt <- RyggFigAndeler(RegData=RegData, valgtVar=valgtVar, datoFra=datoFra, datoTil=datoTil, 
 		minald=minald, maxald=maxald, erMann=erMann, hovedkat=hovedkat, preprosess=1,
 		 enhetsUtvalg=enhetsUtvalg, reshID=reshID, outfile=outfile)
-hovedkat <-2 		#HovedInngrep, 0-7, Standard: 99, dvs alle op
 
-
-variable <- c('Alder', 'Antibiotika', 'AntNivOpr', 'ArbstatusPre', 'Arbstatus3mnd', 
-'Arbstatus12mnd', 'ASA', 'BMI', 'EqangstPre', 'EqgangePre', 'ErstatningPre', 'Fornoyd12mnd','Fornoyd3mnd', 
-'HovedInngrep', 'Komorbiditet', 'KomplPer', 'KomplPost', 'Liggedogn', 'Morsmal', 'Nytte3mnd', 'Nytte12mnd', 
-'OpIndPareseGrad', 'OpInd', 'OpIndSmeType', 'OpKat', 'RadUnders', 
-'Roker', 'SivilStatus','SmStiPre', 'SmHyppPre', 'SymptVarighRyggHof', 
-'SympVarighUtstr', 'Saardren', 'TidlOpr', 'TidlOprAntall','UforetrygdPre', 'Utd', 'Underkat')
-
+variable <- c('alder', 'antibiotika', 'antNivOpr', 'arbstatus', #'Arbstatus3mnd', 'Arbstatus12mnd', 
+              'ASA', 'BMI', 'EQangstPre', 'EQgangePre', 'erstatningPre', 'fornoydhet',  'hovedInngrep', 
+             'komorbiditet', 'komplPer', 'komplPost', 'liggedogn', 'morsmal', 'nytte', #3mnd', 'Nytte12mnd', 
+              'opIndPareseGrad', 'opInd', 'opIndSmeType', 'opKat','radUnders', 
+              'roker', 'sivilStatus','smStiPre', 'smStiPreHypp', 'SymptVarighRyggHof', 
+              'SympVarighUtstr', 'saardren', 'tidlOpr', 'tidlOprAntall','uforetrygdPre', 'utd', 'underkat')
 
 for (valgtVar in variable) {
+      print(valgtVar)
       outfile <- paste0(valgtVar, '.png')
-      utdata <- FigAndeler(RegData <- NKRdata, valgtVar = valgtVar, hovedkat=1, outfile = outfile, reshID=reshID)
+      utdata <- RyggFigAndeler(RegData <- RegData, valgtVar = valgtVar,  
+                           outfile = outfile, reshID=reshID)
 }
 		 
 #                   RyggFigGjsnBox
