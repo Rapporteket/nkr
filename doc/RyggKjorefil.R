@@ -58,11 +58,11 @@ table(SkjemaOversikt[indPasientskjema, c('Sykehusnavn','MndAar', "SkjemaStatus")
 
 #_________________________________________________________________________________________
 #_________________________________________________________________________________________
-#_________________________________________________________________________________________
 #
 #""""""""""""""""""""""""""""" F I G U R F U N K S J O N E R """"""""""""""""""""""""""""""""""""" 
 #_________________________________________________________________________________________
 
+#-----------------------------Data og Parametre
 library(nkr)
 #  Laste data og parametre
 rm(list=ls())
@@ -128,24 +128,25 @@ RyggFigAndelTid(RegData=0, preprosess=1,valgtVar=valgtVar, datoFra=datoFra, dato
 #----------------------------------------------------------------
 #			FigAndeler (RyggFigAndeler.r
 #----------------------------------------------------------------
-valgtVar <- 'arbstatus'	#Må velge...  
+valgtVar <- 'fornoydhet'	#Må velge...  
 #NB: Hvis variabel='Underkat', MÅ hovedkat velges, dvs. ikke 99.
 outfile <- ''	#paste(valgtVar, '.pdf', sep='')	#Navn angis av Jasper ''
 FordUt <- RyggFigAndeler(RegData=RegData, valgtVar=valgtVar, datoFra=datoFra, datoTil=datoTil, 
 		minald=minald, maxald=maxald, erMann=erMann, hovedkat=hovedkat, preprosess=1,
 		 enhetsUtvalg=enhetsUtvalg, reshID=reshID, outfile=outfile)
 
-variable <- c('alder', 'antibiotika', 'antNivOpr', 'arbstatus', #'Arbstatus3mnd', 'Arbstatus12mnd', 
-              'ASA', 'BMI', 'EQangstPre', 'EQgangePre', 'erstatningPre', 'fornoydhet',  'hovedInngrep', 
-             'komorbiditet', 'komplPer', 'komplPost', 'liggedogn', 'morsmal', 'nytte', #3mnd', 'Nytte12mnd', 
+ variable <- c('alder', 'antibiotika', 'antNivOpr', 'arbstatus', #'Arbstatus3mnd', 'Arbstatus12mnd', 
+               'ASA', 'BMI', 'EQangstPre', 'EQgangePre', 'erstatningPre', 'fornoydhet',  'hovedInngrep', 
+              'komorbiditet', 'komplPer', 'komplPost', 'liggedogn', 'morsmal', 'nytte', #3mnd', 'Nytte12mnd', 
               'opIndPareseGrad', 'opInd', 'opIndSmeType', 'opKat','radUnders', 
               'roker', 'sivilStatus','smStiPre', 'smStiPreHypp', 'SymptVarighRyggHof', 
               'SympVarighUtstr', 'saardren', 'tidlOpr', 'tidlOprAntall','uforetrygdPre', 'utd', 'underkat')
+ variable <- c('SympVarighUtstr', 'SymptVarighRyggHof','saardren' )
 
 for (valgtVar in variable) {
       print(valgtVar)
       outfile <- paste0(valgtVar, '.png')
-      utdata <- RyggFigAndeler(RegData <- RegData, valgtVar = valgtVar,  
+      utdata <- RyggFigAndeler(RegData <- RegData, valgtVar = valgtVar, datoFra = datoFra, datoTil = datoTil,
                            outfile = outfile, reshID=reshID)
 }
 		 

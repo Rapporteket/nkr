@@ -46,8 +46,8 @@ RyggVarTilrettelegg  <- function(RegData=NULL, valgtVar, ktr=0, hovedkat=99, fig
       
       
       #ktr kan ha verdiene 0, 1 eller 2
-      if ((valgtVar %in% c('nytte')) & (ktr==0)) {ktr <- 1}
-      ktrtxt <- c('før operasjon', ', 3 mnd etter', ', 12 mnd. etter')[ktr+1]
+      if ((valgtVar %in% c('fornoydhet', 'nytte')) & (ktr==0)) {ktr <- 1}
+      ktrtxt <- c('før operasjon', ' (3 mnd etter)', '(12 mnd. etter)')[ktr+1]
       trekkfraDager <- c(0,90,365)[ktr+1]
       
       
@@ -303,7 +303,7 @@ RyggVarTilrettelegg  <- function(RegData=NULL, valgtVar, ktr=0, hovedkat=99, fig
             retn <- 'H'
             flerevar <- 1
             subtxt <- '(Komplikasjoner rapporteres kun f.o.m. 2010)'
-            RegData <- RegData[which(dato > as.POSIXlt('2009-12-31')), ]
+            #RegData <- RegData[which(dato > as.POSIXlt('2009-12-31')), ]
             #Andel kun av de som har svart på 3 mnd ktr:
             RegData <- RegData[which(RegData$Utfylt3Mnd==1), ]
             variable <- c('KpInfOverfla3Mnd','KpInfDyp3Mnd', 'KpMiktProb3Mnd','KpUVI3Mnd',
@@ -541,26 +541,20 @@ RyggVarTilrettelegg  <- function(RegData=NULL, valgtVar, ktr=0, hovedkat=99, fig
       }
       
       
-      if (valgtVar %in% c('SymptVarighRyggHof','SympVarighUtstr')) {
-            grtxt <- c('Ingen', '<3 mnd', '3-12 mnd', '1-2 år', '> 2 år', 'Ukjent')
-            #grtxt <- c('Ingen smerter', 'Under 3 mnd', '3-12 mnd', '1-2 år', 'Mer enn 2 år', 'Ukjent')
-            RegData$Variabel <- RegData[,valgtVar]
-            RegData$VariabelGr <- 9
-            indDum <- which(RegData$Variabel %in% 1:5)
-            RegData$VariabelGr[indDum] <- RegData$Variabel[indDum]
-            RegData$VariabelGr <- factor(RegData$VariabelGr, levels = c(1:5,9)) 
-            tittel <- switch(valgtVar, 
-                             SymptVarighRyggHof = 'Varighet av rygg-/hoftesmerter',
-                             SympVarighUtstr = 'Varighet av utstrålende smerter'
-            )
-      }
-      
       if (valgtVar == 'saardren') { #AndelGrVar
             #LegeSkjema. Andel med Saardren=1
             #Kode 0,1,tom: Nei, Ja Ukjent
+            grtxt <- c('Nei', 'Ja', 'Ukjent')
+            RegData$VariabelGr <- 9
+            indDum <- which(RegData$Saardren %in% 0:1)
+            RegData$VariabelGr[indDum] <- RegData$Saardren[indDum]
+            RegData$VariabelGr <- factor(RegData$VariabelGr, levels = c(0:1,9)) 
+            tittel <- 'Sårdren'
+            if (figurtype %in% c('andelGrVar', 'andelTid')){
             RegData <- RegData[which(RegData$Saardren %in% 0:1), ]
             RegData$Variabel <- RegData$Saardren
             tittel <- 'Andel som får sårdren (%)'
+            }
       }
       if (valgtVar=='smBeinEndr') {#gjsnGrVar
             RegData$Variabel <- switch(as.character(ktr), 
@@ -587,39 +581,29 @@ RyggVarTilrettelegg  <- function(RegData=NULL, valgtVar, ktr=0, hovedkat=99, fig
             sortAvtagende <- F
       }
       
-      if (valgtVar == 'SymptVarighRyggHof') { #AndelGrVar
-            #PasientSkjema. Andel med SymptVarighRyggHof 4 el 5
-            #Kode 1:5,tom: 'Ingen', '<3 mnd', '3-12 mnd', '1-2 år', '>2 år', 'Ukjent'
-            RegData <- RegData[which(RegData$SymptVarighRyggHof %in% 1:5), ]
-            RegData$Variabel[which(RegData[ ,valgtVar] %in% 4:5)] <- 1
-            varTxt <- 'med varighet minst 1 år'
-            tittel <- 'Varighet av rygg-/hoftesmerter minst ett år'
-            sortAvtagende <- F
+      if (valgtVar %in% c('SymptVarighRyggHof','SympVarighUtstr')) {
+            grtxt <- c('Ingen', '<3 mnd', '3-12 mnd', '1-2 år', '> 2 år', 'Ukjent')
+            #grtxt <- c('Ingen smerter', 'Under 3 mnd', '3-12 mnd', '1-2 år', 'Mer enn 2 år', 'Ukjent')
+            #RegData$Variabel <- RegData[,valgtVar]
+            RegData$VariabelGr <- 9
+            indDum <- which(RegData[,valgtVar] %in% 1:5)
+            RegData$VariabelGr[indDum] <- RegData[indDum, valgtVar]
+            RegData$VariabelGr <- factor(RegData$VariabelGr, levels = c(1:5,9)) 
+            tittel <- switch(valgtVar, 
+                             SymptVarighRyggHof = 'Varighet av rygg-/hoftesmerter',
+                             SympVarighUtstr = 'Varighet av utstrålende smerter'
+            )
+            if (figurtype %in% c('andelGrVar', 'andelTid')) {
+                  RegData <- RegData[indDum, ]
+                  RegData$Variabel[which(RegData[ ,valgtVar] %in% 4:5)] <- 1
+                  varTxt <- 'med varighet minst 1 år'
+                  tittel <- switch(valgtVar, 
+                                   SymptVarighRyggHof ='Varighet av rygg-/hoftesmerter minst ett år',
+                                   SympVarighUtstr = 'Varighet av utstrålende smerter minst ett år')
+                  sortAvtagende <- F}
+            if (valgtVar == 'SympVarighUtstr') {KImaalGrenser <- c(0,20,40)}
       }
       
-      if (valgtVar == 'SympVarighUtstr') { #AndelGrVar
-            #PasientSkjema. Andel med SympVarighUtstr 4 el 5
-            #Kode 1:5,tom: 'Ingen', '<3 mnd', '3-12 mnd', '1-2 år', '>2 år', 'Ukjent'
-            RegData <- RegData[which(RegData$SympVarighUtstr %in% 1:5), ]
-            RegData$Variabel[which(RegData[ ,valgtVar] %in% 4:5)] <- 1
-            varTxt <- 'med varighet minst 1år'
-            tittel <- 'Varighet av utstrålende smerter minst ett år'
-            sortAvtagende <- F
-            #KImaalRetn <- 'lav'
-            KImaalGrenser <- c(0,20,40) 
-      }
-      if (valgtVar == 'saardren') {
-            #grtxt <- c('Nei', 'Ja', 'Ukjent')
-            #RegData$VariabelGr <- 9
-            #indDum <- which(RegData$Saardren %in% 0:1)
-            #indDum <- which(RegData$Saardren %in% 0:1)
-            #RegData$VariabelGr[indDum] <- RegData$Saardren[indDum]
-            #RegData$VariabelGr <- factor(RegData$VariabelGr, levels = c(0:1,9)) 
-            tittel <- 'Sårdren'
-            grtxt <- c('Nei', 'Ja')
-            RegData$VariabelGr <- 0
-            RegData$VariabelGr[which(RegData$Saardren==1)] <- 1
-      }
       if (valgtVar == 'sivilStatus') {
             tittel <- 'Sivilstatus'
             grtxt <- c('Gift', 'Samboer', 'Enslig', 'Ukjent')
