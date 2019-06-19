@@ -100,15 +100,6 @@ if (valgtVar %in% c('EQ5DPre', 'OswTotPre', 'SmBePre', 'SmRyPre')) {
             GrNavn[AntGr] <- '0.8+'
             retn <- 2	
       }
-	if (valgtVar=='Liggedogn') {
-		#For opphold registrert som dagkirurgi uten at liggedogn er reg., settes liggedogn=0
-		dagind <- which( (is.na(RegData$Liggedogn) | is.nan(RegData$Liggedogn))  & RegData$Dagkirurgi==1)
-		RegData$Liggedogn[dagind]<-0
-		RegData$Variabel <- RegData$Liggedogn
-		TittelVar <- 'Liggetid ved operasjon'
-		ytxt1 <- 'liggetid'
-		KIekstrem <- c(0, 20)
-		} 
       if (valgtVar %in% c('OswEndr', 'OswEndrPre')) {
 		t1 <- 'Oswestry '
 		RegData$Pre <- RegData$OswTotPre	#Forbedring=lavere Oswestry

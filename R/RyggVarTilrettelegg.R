@@ -209,14 +209,104 @@ RyggVarTilrettelegg  <- function(RegData=NULL, valgtVar, ktr=0, hovedkat=99, fig
             tittel <- 'Degenerativ spondylolistese og sentral spinal stenose'
             sortAvtagende <- FALSE
       }
-      if (valgtVar=='EQ5DEndr') {#gjsnGrVar
+      if (valgtVar=='EQ5DEndr') {#gjsnGrVar, gjsnTid
             RegData$Variabel <- switch(as.character(ktr), 
                                        '1'= (RegData$EQ5D3mnd - RegData$EQ5DPre),
                                        '2'= (RegData$EQ5D12mnd - RegData$EQ5DPre))
             RegData <- RegData[which(!is.na(RegData$Variabel)),]
-            tittel <- paste0('forbedring av EQ5D', ktrtxt)#gjsnGrVar
+            tittel <- paste0('forbedring av EQ5D', ktrtxt)#gjsnGrVar, gjsnTid
             
       }
+	  if (valgtVar == 'EQ5DPre') {#gjsnPre (gjsnBox)
+	  tittel <- 'EQ5D før operasjonen')
+	  RegData$Variabel <- RegData[ ,valgtVar]
+	  KIekstrem <- c(0, 1.6)
+	  }
+	  
+	  if (valgtVar == 'EQ5DEndrPre') {#gjsnPre (gjsnBox)
+	  tittel <- paste0('forbedring av EQ5D', ktrtxt)
+	  RegData$Variabel <- switch(as.character(ktr), 
+                                       '1'= (RegData$EQ5D3mnd - RegData$EQ5DPre),
+                                       '2'= (RegData$EQ5D12mnd - RegData$EQ5DPre))
+	  			Xlab <- 'EQ5D før operasjon'
+            gr <- c(round(seq(-0.6,0.8,0.2),1),1.6)	#round(seq(-0.6,1.6,0.3),1)}
+            RegData$Gr <- cut(RegData$Pre, gr, right=F)
+            GrNavn <- levels(RegData$Gr)
+            AntGr <- length(GrNavn)
+            GrNavn[AntGr] <- '0.8+'
+			KIekstrem <- c(0, 1.6)
+			}
+			
+	    if (valgtVar == 'OswEndr')) {
+		#Forbedring=lavere Oswestry
+		tittel <- paste0('forbedring av ODI', ktrtxt)
+		RegData$Variabel <- -switch(as.character(ktr), 
+                                       '1'= (RegData$OswTot3mnd - RegData$OswTotPre),
+                                       '2'= (RegData$OswTot12mnd - RegData$OswTotPre))
+		KIekstrem <- c(-100, 100)
+		}
+     if (valgtVar == 'OswEndrPre') {
+		#Forbedring=lavere Oswestry
+		tittel <- paste0('forbedring av ODI', ktrtxt)
+		RegData$Variabel <- -switch(as.character(ktr), 
+                                       '1'= (RegData$OswTot3mnd - RegData$OswTotPre),
+                                       '2'= (RegData$OswTot12mnd - RegData$OswTotPre))
+		KIekstrem <- c(-100, 100)
+					Xlab <- 'Oswestry før operasjon'
+            gr <- c(seq(0,90,10), 101)
+            RegData$Gr <- cut(RegData$Pre, gr, right=F)
+            GrNavn <- levels(RegData$Gr)
+            AntGr <- length(GrNavn)
+            GrNavn[AntGr] <- '[90,100]'
+		}
+
+	 if (valgtVar == 'OswTotPre') {
+	RegData$Variabel <- RegData[ ,valgtVar]
+	tittel <- 'oswestryskår før operasjonen')
+	xAkseTxt <- 'skår'
+	KIekstrem <- c(0, 100)
+	} 	
+	if (valgtVar == 'SmBeinEndr') {
+	tittel <- paste0('endring i beinsmerter ',ktrtxt)
+ 		RegData$Variabel <- -switch(as.character(ktr), 
+                                       '1'= (RegData$SmBe3mnd - RegData$SmBePre),
+                                       '2'= (RegData$SmBe12mnd - RegData$SmBePre))
+		KIekstrem <- c(-10,10)							   
+}
+	if (valgtVar == 'SmBeinEndrPre') {
+	tittel <- 'endring i beinsmerter'
+ 		RegData$Variabel <- -switch(as.character(ktr), 
+                                       '1'= (RegData$SmBe3mnd - RegData$SmBePre),
+                                       '2'= (RegData$SmBe12mnd - RegData$SmBePre))
+		KIekstrem <- c(-10,10)
+		}
+	 if (valgtVar == 'SmBePre') {
+	RegData$Variabel <- RegData[ ,valgtVar]
+	tittel <- 'beinsmerter før operasjonen')
+	xAkseTxt <- 'skår'
+	KIekstrem <- c(0, 10)
+	} 	
+	if (valgtVar == 'SmRyggEndr') {
+	tittel <- paste0('forbedring av  ryggsmerter', ktrtxt)
+	      RegData$Variabel <- -switch(as.character(ktr), 
+                                       '1'= (RegData$SmRy3mnd - RegData$SmRyPre),
+                                       '2'= (RegData$SmRy12mnd - RegData$SmRyPre))
+	      KIekstrem <- c(-10,10)
+	}
+	if (valgtVar == 'SmRyggEndrPre')) {
+	tittel <- paste0('forbedring av ryggsmerter', ktrtxt)
+	      RegData$Variabel <- -switch(as.character(ktr), 
+                                       '1'= (RegData$SmRy3mnd - RegData$SmRyPre),
+                                       '2'= (RegData$SmRy12mnd - RegData$SmRyPre))
+	      KIekstrem <- c(-10,10)
+	}
+if (valgtVar == 'SmRyPre') {
+	RegData$Variabel <- RegData[ ,valgtVar]
+	tittel <- 'ryggsmerter før operasjonen')
+	ytxt1 <- paste0('prescore av ', t1)
+	} 	
+
+			
       if (valgtVar == 'EQangstPre') {#fordeling
             tittel <- 'Helsetilstand: Angst'
             RegData$VariabelGr <- 9
@@ -335,6 +425,25 @@ RyggVarTilrettelegg  <- function(RegData=NULL, valgtVar, ktr=0, hovedkat=99, fig
             if (hovedkat == 1) {KImaalGrenser <- c(0,2)}
             if (hovedkat == 8) {KImaalGrenser <- c(0,3)}
       }
+      if (valgtVar=='liggedogn') {#fordeling, gjsnGrVar, andeler, gjsnTid
+            #liggedogn
+            #For opphold registrert som dagkirurgi uten at liggedogn er reg., settes liggedogn=0
+            tittel <- 'Liggetid ved operasjon'
+            dagind <- which( (is.na(RegData$Liggedogn) | is.nan(RegData$Liggedogn))  & RegData$Dagkirurgi==1)
+            RegData$Liggedogn[dagind]<-0
+            RegData <- RegData[which(RegData$Liggedogn>=0),]
+            RegData$Variabel <- RegData$Liggedogn #gjsnGrVar
+            gr <- c(0:7,100)	
+            RegData$VariabelGr <- cut(RegData$Liggedogn, breaks=gr, include.lowest=TRUE, right=FALSE)
+            grtxt <- c(0:6, '7+')
+            xAkseTxt <- 'Antall liggedøgn' #(subtxt
+            subtxt <- 'døgn'
+            if (figurtype=='gjsnGrVar') {tittel <- 'liggetid'}
+            sortAvtagende <- 'F'
+            TittelVar <- 'Liggetid ved operasjon'
+            ytxt1 <- 'liggetid'
+            KIekstrem <- c(0, 20)
+      }
       if (valgtVar == 'Misfornoyd') { #AndelGrVar	#%in% c('Misfor3mnd','Misfor12mnd')) { #AndelGrVar
             #3/12mndSkjema. Andel med Misfornøyd/litt misfornøyd (1,2)
             #Kode 1:5,9: 'Fornøyd', 'Litt fornøyd', 'Verken eller', 'Litt misfornøyd', 'Misfornøyd', 'Ukjent')
@@ -384,22 +493,6 @@ RyggVarTilrettelegg  <- function(RegData=NULL, valgtVar, ktr=0, hovedkat=99, fig
                   tittel <- paste0('Helt bra eller mye bedre' , ktrtxt)
             }}
       
-      if (valgtVar=='liggedogn') {#fordelinggjsnGrVar, andeler
-            #liggedogn
-            #For opphold registrert som dagkirurgi uten at liggedogn er reg., settes liggedogn=0
-            tittel <- 'Liggetid ved operasjon'
-            dagind <- which( (is.na(RegData$Liggedogn) | is.nan(RegData$Liggedogn))  & RegData$Dagkirurgi==1)
-            RegData$Liggedogn[dagind]<-0
-            RegData <- RegData[which(RegData$Liggedogn>=0),]
-            RegData$Variabel <- RegData$Liggedogn #gjsnGrVar
-            gr <- c(0:7,100)	
-            RegData$VariabelGr <- cut(RegData$Liggedogn, breaks=gr, include.lowest=TRUE, right=FALSE)
-            grtxt <- c(0:6, '7+')
-            xAkseTxt <- 'Antall liggedøgn' #(subtxt
-            subtxt <- 'døgn'
-            if (figurtype=='gjsnGrVar') {tittel <- 'liggetid'}
-            sortAvtagende <- 'F'
-      }
       if (valgtVar=='opInd') { #fordeling
             tittel <- 'Operasjonsindikasjon'
             retn <- 'H'
