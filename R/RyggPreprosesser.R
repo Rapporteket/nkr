@@ -17,10 +17,16 @@ RyggPreprosess <- function(RegData=RegData)
 
 	#Riktig datoformat og hoveddato
 	RegData$InnDato <- as.POSIXlt(RegData$OpDato, format="%d.%m.%Y")
-	#RegData$Aar <- 1900 + strptime(RegData$InnDato, format="%Y")$year
-
+	
 	#Endre variabelnavn:
-	#names(RegData)[which(names(RegData) == 'OpAar')] <- 'Aar'
+	names(RegData)[which(names(RegData) == 'OpAar')] <- 'Aar'
+
+	# Nye variable:
+	RegData$MndNum <- RegData$InnDato$mon +1
+	RegData$MndAar <- format(RegData$InnDato, '%b%y')
+	RegData$Kvartal <- ceiling(RegData$MndNum/3)
+	RegData$Halvaar <- ceiling(RegData$MndNum/6)
+	#RegData$Aar <- 1900 + RegData$InnDato$year #strptime(RegData$InnDato, format="%Y")$year
 	
 	#Variabel som identifiserer avdelingas resh
 	names(RegData)[which(names(RegData) == 'AvdReshID')] <- 'ReshId'
@@ -41,6 +47,7 @@ RyggPreprosess <- function(RegData=RegData)
 	RegData$SympVarighUtstr <- factor(RegData$SympVarighUtstr, levels=1:5)
 	RegData$OpKat <- factor(RegData$OpKat, levels=1:3)
 
+	
 #Legge til underkategori for hovedkategori.
 #	if (is.na(match("Inngrep", names(opdata))) != 'TRUE') {	#Hvis har variabelen Inngrep
 #	      #if (match("Inngrep", names(opdata))) {	#Hvis har variabelen Inngrep

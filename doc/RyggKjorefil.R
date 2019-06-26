@@ -1,5 +1,4 @@
 
-#------NB NB: Alle variabele for fordeling må testes!!
 #________________________________________________________________________________________
 ##_________________________________________________________________________________________
 
@@ -85,10 +84,10 @@ enhetsUtvalg <- 1 #	0-hele landet, 1-egen enhet mot resten av landet, 2-egen enh
 #					6–egen enhet mot egen region, 7–egen region, 8–egen region mot resten
 ktr <- 2			#1. el 2. kontroll. '3mnd' - 3mnd kontroll, '12mnd' - 12 mnd kontroll
 tittel <- 1
-tidlOp <- 4			#Tidl.operert: 1-sm, 2-annet, 3, sm+annet, 4-primær, Standard: 0, dvs. alle operasjoner
+tidlOp <- 0		#Tidl.operert: 1-sm, 2-annet, 3, sm+annet, 4-primær, Standard: 0, dvs. alle operasjoner
 grVar <- 'ShNavn'  #ShNavn, Fylke, BoHF, BoRHF
 valgtMaal <- 'Gjsn'
-aar <- 2010:2016	#Standard: 0, dvs. alle år
+aar <- 0	#Standard: 0, dvs. alle år
 tidsenhet <- 'Mnd' #Oppløsning på tidsaksen: 'Aar' (standard), 'Halvaar', 'Kvartal','Mnd'
 offData <- 0
 Ngrense <- 10
@@ -151,10 +150,10 @@ for (valgtVar in variable) {
 }
 		 
 #                   RyggFigGjsnBox
-#----------------------------------------------------------
-#Endring i effektmål som funksjon av tid eller prescore
+#---------- GjsnBox -------------------------
+#------- Endring i effektmål som funksjon av tid eller prescore
 
-valgtVar <- 'Liggedogn' #
+valgtVar <- 'liggedogn' #
 outfile <- ''#paste0(valgtVar,enhetsUtvalg, '.png')	#paste0(valgtVar,enhetsUtvalg, '.pdf')
 
 utdata <- RyggFigGjsnBox(RegData=RegData, outfile=outfile, valgtVar=valgtVar, tidlOp=tidlOp, erMann=erMann, 
@@ -167,11 +166,12 @@ utdata <- RyggFigGjsnBox(RegData=RegData, outfile=outfile, valgtVar=valgtVar, ti
 
 
 variable <- c('EQ5DPre', 'OswTotPre', 'SmBePre', 'SmRyPre', 
-              'EQ5DEndr', 'Liggedogn', 'OswEndr', 'SmRyggEndr', 'SmBeinEndr', 
+              'EQ5DEndr', 'liggedogn', 'OswEndr', 'SmRyggEndr', 'SmBeinEndr', 
               'EQ5DEndrPre', 'OswEndrPre', 'SmRyggEndrPre', 'SmBeinEndrPre')
 for (var in variable) {
-      outfile <- paste0(var, 'GjsnTid.png')
-      RyggFigGjsnBox(valgtVar=var, RegData=RegData, datoFra='2010-01-01', ktr=1, outfile=outfile)
+      (outfile <- paste0(var, 'GjsnBox.png'))
+      RyggFigGjsnBox(valgtVar=var, RegData=RegData, datoFra='2017-01-01', 
+                     tidsenhet = 'Kvartal', ktr=1, outfile=outfile)
 }
 
 #----------------------------------------------------------

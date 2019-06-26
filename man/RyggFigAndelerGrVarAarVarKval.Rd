@@ -7,8 +7,8 @@
 RyggFigAndelerGrVarAarVarKval(RegData, valgtVar, datoFra = "2007-01-01",
   datoTil = "3000-12-31", minald = 0, maxald = 130, erMann = "",
   hovedkat = 99, tidlOp = "", opKat = 99, hentData = 0,
-  preprosess = 1, grVar = "ShNavn", tittel = 1, ktr = 0, outfile = "",
-  AKjust = 0)
+  preprosess = 1, grVar = "ShNavn", tittel = 1, ktr = 0,
+  outfile = "", AKjust = 0)
 }
 \arguments{
 \item{RegData}{En dataramme med alle nødvendige variabler fra registeret}
@@ -27,7 +27,20 @@ RyggFigAndelerGrVarAarVarKval(RegData, valgtVar, datoFra = "2007-01-01",
 0: Kvinner
 1: Menn}
 
-\item{hovedkat}{Hvilken type hovedinngrep, numerisk 0-7, standard: 99, dvs. alle}
+\item{hovedkat}{Hvilken type hovedinngrep, numerisk 0-9, standard: 99, dvs. alle. Valgmuligheter:
+\itemize{
+ \item 0:'Operasjonskategori: "ukjent"',    #hkat=0
+ \item 1:'Prolapskirurgi',
+ \item 2:'Foramenotomi',
+ \item 3:'Laminektomi',
+ \item 4:'Interspinøst implantat',    
+ \item 5:'Fusjonskirurgi',
+ \item 6:'Skiveprotese',
+ \item 7:'Fjerning/rev. av implantat',
+ \item 8:'Spinal stenose',
+ \item 9:'Degen. spondylolistese'
+ \item 99: Alle
+ }}
 
 \item{tidlOp}{Tidligere operert, numerisk 1-4. Alt annet gir alle data uten utvalg.
        1: Tidl. operert samme nivå, 
@@ -50,8 +63,6 @@ ShNavn-sykehus/avdeling
 Fylke- Pasienten bor i det akutelle fylket
 BoHF - Pasienten bor i boområdene til det angitte HF.
 BoRHF - Pasienten bor i boområdene til det angitte RHF.}
-
-\item{tittel}{Vise tittel i figuren eller ikke (0/1). standard:1}
 
 \item{outfile}{Navn på fil figuren skrives til. Standard: '' (Figur skrives
 til systemets standard utdataenhet (som regel skjerm))}

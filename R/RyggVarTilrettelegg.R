@@ -46,7 +46,9 @@ RyggVarTilrettelegg  <- function(RegData=NULL, valgtVar, ktr=0, hovedkat=99, fig
       
       
       #ktr kan ha verdiene 0, 1 eller 2
-      if ((valgtVar %in% c('fornoydhet', 'nytte')) & (ktr==0)) {ktr <- 1}
+      if ((valgtVar %in% c('fornoydhet', 'nytte', 'EQ5DEndr','EQ5DEndr', 
+                           'OswEndr', 'SmBeinEndr', 'SmRyEndr',
+                           'OswEndrPre', 'SmBeinEndrPre', 'SmRyEndrPre')) & (ktr==0)) {ktr <- 1}
       ktrtxt <- c('før operasjon', ' (3 mnd etter)', '(12 mnd. etter)')[ktr+1]
       trekkfraDager <- c(0,90,365)[ktr+1]
       
@@ -218,7 +220,7 @@ RyggVarTilrettelegg  <- function(RegData=NULL, valgtVar, ktr=0, hovedkat=99, fig
             
       }
 	  if (valgtVar == 'EQ5DPre') {#gjsnPre (gjsnBox)
-	  tittel <- 'EQ5D før operasjonen')
+	  tittel <- 'EQ5D før operasjonen'
 	  RegData$Variabel <- RegData[ ,valgtVar]
 	  KIekstrem <- c(0, 1.6)
 	  }
@@ -237,7 +239,7 @@ RyggVarTilrettelegg  <- function(RegData=NULL, valgtVar, ktr=0, hovedkat=99, fig
 			KIekstrem <- c(0, 1.6)
 			}
 			
-	    if (valgtVar == 'OswEndr')) {
+	    if (valgtVar == 'OswEndr') {
 		#Forbedring=lavere Oswestry
 		tittel <- paste0('forbedring av ODI', ktrtxt)
 		RegData$Variabel <- -switch(as.character(ktr), 
@@ -262,7 +264,7 @@ RyggVarTilrettelegg  <- function(RegData=NULL, valgtVar, ktr=0, hovedkat=99, fig
 
 	 if (valgtVar == 'OswTotPre') {
 	RegData$Variabel <- RegData[ ,valgtVar]
-	tittel <- 'oswestryskår før operasjonen')
+	tittel <- 'oswestryskår før operasjonen'
 	xAkseTxt <- 'skår'
 	KIekstrem <- c(0, 100)
 	} 	
@@ -282,28 +284,30 @@ RyggVarTilrettelegg  <- function(RegData=NULL, valgtVar, ktr=0, hovedkat=99, fig
 		}
 	 if (valgtVar == 'SmBePre') {
 	RegData$Variabel <- RegData[ ,valgtVar]
-	tittel <- 'beinsmerter før operasjonen')
+	tittel <- 'beinsmerter før operasjonen'
 	xAkseTxt <- 'skår'
 	KIekstrem <- c(0, 10)
-	} 	
+	 } 	
+      
 	if (valgtVar == 'SmRyggEndr') {
 	tittel <- paste0('forbedring av  ryggsmerter', ktrtxt)
-	      RegData$Variabel <- -switch(as.character(ktr), 
-                                       '1'= (RegData$SmRy3mnd - RegData$SmRyPre),
-                                       '2'= (RegData$SmRy12mnd - RegData$SmRyPre))
+	      RegData$Variabel <- switch(as.character(ktr), 
+                                       '1'= RegData$SmRyPre - RegData$SmRy3mnd,
+                                       '2'= RegData$SmRyPre - RegData$SmRy12mnd)
 	      KIekstrem <- c(-10,10)
 	}
-	if (valgtVar == 'SmRyggEndrPre')) {
+      
+	if (valgtVar == 'SmRyggEndrPre') {
 	tittel <- paste0('forbedring av ryggsmerter', ktrtxt)
-	      RegData$Variabel <- -switch(as.character(ktr), 
-                                       '1'= (RegData$SmRy3mnd - RegData$SmRyPre),
-                                       '2'= (RegData$SmRy12mnd - RegData$SmRyPre))
+	      RegData$Variabel <- switch(as.character(ktr), 
+                                       '1'= (RegData$SmRyPre - RegData$SmRy3mnd),
+                                       '2'= (RegData$SmRyPre - RegData$SmRy12mnd))
 	      KIekstrem <- c(-10,10)
 	}
 if (valgtVar == 'SmRyPre') {
 	RegData$Variabel <- RegData[ ,valgtVar]
-	tittel <- 'ryggsmerter før operasjonen')
-	ytxt1 <- paste0('prescore av ', t1)
+	tittel <- 'ryggsmerter før operasjonen'
+	ytxt1 <- 'prescore, ryggsmerter '
 	} 	
 
 			
@@ -849,7 +853,8 @@ if (valgtVar == 'SmRyPre') {
       
       UtData <- list(RegData=RegData, grtxt=grtxt, cexgr=cexgr, varTxt=varTxt, xAkseTxt=xAkseTxt, 
                      KImaalGrenser=KImaalGrenser, retn=retn, subtxt=subtxt, #KImaal=KImaalRetn, 
-                     tittel=tittel, flerevar=flerevar, variable=variable, sortAvtagende=sortAvtagende)
+                     tittel=tittel,
+                     flerevar=flerevar, variable=variable, sortAvtagende=sortAvtagende)
       #RegData inneholder nå variablene 'Variabel' og 'VariabelGr'
       return(invisible(UtData)) 
       

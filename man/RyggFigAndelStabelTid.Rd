@@ -5,9 +5,9 @@
 \title{Søylediagram med en søyle for hvert år hvor variabelens kategorier er stablet oppå hverandre.}
 \usage{
 RyggFigAndelStabelTid(RegData, outfile, valgtVar, hovedkat = 99,
-  preprosess = 0, hentData = 0, minald = 0, maxald = 130, erMann = 99,
-  ktr = 1, tidlOp = 0, aar = 0, enhetsUtvalg = 0, tittel = 1,
-  reshID = 0)
+  preprosess = 0, hentData = 0, minald = 0, maxald = 130,
+  erMann = 99, ktr = 1, tidlOp = 0, aar = 0, enhetsUtvalg = 0,
+  tittel = 1, reshID = 0)
 }
 \arguments{
 \item{RegData}{En dataramme med alle nødvendige variabler fra registeret}
@@ -17,7 +17,20 @@ til systemets standard utdataenhet (som regel skjerm))}
 
 \item{valgtVar}{Hvilken variabel som skal visualiseres. Se \strong{Details} for oversikt.}
 
-\item{hovedkat}{Hvilken type hovedinngrep, numerisk 0-7, standard: 99, dvs. alle}
+\item{hovedkat}{Hvilken type hovedinngrep, numerisk 0-9, standard: 99, dvs. alle. Valgmuligheter:
+\itemize{
+ \item 0:'Operasjonskategori: "ukjent"',    #hkat=0
+ \item 1:'Prolapskirurgi',
+ \item 2:'Foramenotomi',
+ \item 3:'Laminektomi',
+ \item 4:'Interspinøst implantat',    
+ \item 5:'Fusjonskirurgi',
+ \item 6:'Skiveprotese',
+ \item 7:'Fjerning/rev. av implantat',
+ \item 8:'Spinal stenose',
+ \item 9:'Degen. spondylolistese'
+ \item 99: Alle
+ }}
 
 \item{preprosess}{Preprosesser data
 0: Nei
@@ -43,9 +56,9 @@ til systemets standard utdataenhet (som regel skjerm))}
 3: Tidl. operert annet og sm. nivå,
 4: Primæroperasjon}
 
-\item{enhetsUtvalg}{Gjør gruppeutvalg med eller uten sammenlikning. Se \strong{Details} for oversikt.}
+\item{aar}{- Operasjonsår}
 
-\item{tittel}{Vise tittel i figuren eller ikke (0/1). standard:1}
+\item{enhetsUtvalg}{Gjør gruppeutvalg med eller uten sammenlikning. Se \strong{Details} for oversikt.}
 
 \item{reshID}{Parameter følger fra innlogging helseregister.no og angir
 hvilken enhet i spesialisthelsetjenesten brukeren tilhører}

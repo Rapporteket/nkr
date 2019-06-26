@@ -5,10 +5,11 @@
 \title{Tidstrend av andel opphold}
 \usage{
 RyggFigAndelTid(RegData, valgtVar, datoFra = "2011-01-01",
-  datoTil = "3000-12-31", aar = 0, tidsenhet = "Aar", hovedkat = 99,
-  ktr = 2, tidlOp = 99, tittel = 1, minald = 0, maxald = 130,
-  erMann = 99, reshID = 0, outfile = "", opKat = 99, enhetsUtvalg = 1,
-  preprosess = 1, hentData = 0, lagFig = 1, offData = 0)
+  datoTil = "3000-12-31", aar = 0, tidsenhet = "Aar",
+  hovedkat = 99, ktr = 2, tidlOp = 99, tittel = 1, minald = 0,
+  maxald = 130, erMann = 99, reshID = 0, outfile = "",
+  opKat = 99, enhetsUtvalg = 0, preprosess = 1, hentData = 0,
+  lagFig = 1, offData = 0)
 }
 \arguments{
 \item{RegData}{En dataramme med alle nødvendige variabler fra registeret}
@@ -19,17 +20,30 @@ RyggFigAndelTid(RegData, valgtVar, datoFra = "2011-01-01",
 
 \item{datoTil}{Seneste operasjonsdato i utvalget (vises alltid i figuren).}
 
+\item{aar}{- Operasjonsår}
+
 \item{tidsenhet}{Oppløsning på tidsaksen. Verdier: 'Aar' (standard), 'Halvaar', 'Kvartal','Mnd'}
 
-\item{hovedkat}{Hvilken type hovedinngrep, numerisk 0-7, standard: 99, dvs. alle}
+\item{hovedkat}{Hvilken type hovedinngrep, numerisk 0-9, standard: 99, dvs. alle. Valgmuligheter:
+\itemize{
+ \item 0:'Operasjonskategori: "ukjent"',    #hkat=0
+ \item 1:'Prolapskirurgi',
+ \item 2:'Foramenotomi',
+ \item 3:'Laminektomi',
+ \item 4:'Interspinøst implantat',    
+ \item 5:'Fusjonskirurgi',
+ \item 6:'Skiveprotese',
+ \item 7:'Fjerning/rev. av implantat',
+ \item 8:'Spinal stenose',
+ \item 9:'Degen. spondylolistese'
+ \item 99: Alle
+ }}
 
 \item{tidlOp}{Tidligere operert, numerisk 1-4. Alt annet gir alle data uten utvalg.
        1: Tidl. operert samme nivå, 
        2: Tidl. operert annet nivå, 
 3: Tidl. operert annet og sm. nivå,
 4: Primæroperasjon}
-
-\item{tittel}{Vise tittel i figuren eller ikke (0/1). standard:1}
 
 \item{minald}{Alder, fra og med (Standardverdi: 0)}
 

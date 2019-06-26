@@ -6,8 +6,9 @@
 \usage{
 RyggFigAndeler(RegData, valgtVar, datoFra = "2007-01-01",
   datoTil = "2999-12-31", aar = 0, hentData = 0, preprosess = 1,
-  minald = 0, maxald = 130, erMann = "", hovedkat = 99, opKat = 99,
-  tidlOp = "", tittel = 1, outfile = "", reshID = 0, enhetsUtvalg = 0)
+  minald = 0, maxald = 130, erMann = "", hovedkat = 99,
+  opKat = 99, tidlOp = "", ktr = 0, tittelMed = 1, outfile = "",
+  reshID = 0, enhetsUtvalg = 0)
 }
 \arguments{
 \item{RegData}{En dataramme med alle nødvendige variabler fra registeret}
@@ -17,6 +18,8 @@ RyggFigAndeler(RegData, valgtVar, datoFra = "2007-01-01",
 \item{datoFra}{Tidligste operasjonsdato i utvalget (vises alltid i figuren).}
 
 \item{datoTil}{Seneste operasjonsdato i utvalget (vises alltid i figuren).}
+
+\item{aar}{- Operasjonsår}
 
 \item{hentData}{Gjør spørring mot database
 0: Nei, RegData gis som input til funksjonen (Standard)
@@ -34,7 +37,20 @@ RyggFigAndeler(RegData, valgtVar, datoFra = "2007-01-01",
 0: Kvinner
 1: Menn}
 
-\item{hovedkat}{Hvilken type hovedinngrep, numerisk 0-7, standard: 99, dvs. alle}
+\item{hovedkat}{Hvilken type hovedinngrep, numerisk 0-9, standard: 99, dvs. alle. Valgmuligheter:
+\itemize{
+ \item 0:'Operasjonskategori: "ukjent"',    #hkat=0
+ \item 1:'Prolapskirurgi',
+ \item 2:'Foramenotomi',
+ \item 3:'Laminektomi',
+ \item 4:'Interspinøst implantat',    
+ \item 5:'Fusjonskirurgi',
+ \item 6:'Skiveprotese',
+ \item 7:'Fjerning/rev. av implantat',
+ \item 8:'Spinal stenose',
+ \item 9:'Degen. spondylolistese'
+ \item 99: Alle
+ }}
 
 \item{opKat}{Hastegrad av operasjon 1: Elektivt, 2: Akutt, 3: Halvøyeblikkelig}
 
@@ -44,7 +60,7 @@ RyggFigAndeler(RegData, valgtVar, datoFra = "2007-01-01",
 3: Tidl. operert annet og sm. nivå,
 4: Primæroperasjon}
 
-\item{tittel}{Vise tittel i figuren eller ikke (0/1). standard:1}
+\item{tittelMed}{Vise tittel i figuren eller ikke (0/1). standard:1}
 
 \item{outfile}{Navn på fil figuren skrives til. Standard: '' (Figur skrives
 til systemets standard utdataenhet (som regel skjerm))}
@@ -64,45 +80,41 @@ av valgt variabel filtrert på de utvalg som er gjort.
 \details{
 Argumentet \emph{valgtVar} har følgende valgmuligheter:
    \itemize{
-    \item Alder: Aldersfordeling 
-    \item AntDagerInnl: Liggetid 
-    \item Antibiotika: Er det gitt antibiotikaprofylakse?
-    \item AntNivOpr: Antall nivå operert'
-    \item ArbstatusPre: Arbeidsstatus før operasjon'
-    \item Arbstatus3mnd: Arbeidsstatus 3 mnd. etter operasjon
-    \item Arbstatus12mnd: Arbeidsstatus 12 mnd. etter operasjon
+    \item alder: Aldersfordeling 
+    \item antDagerInnl: Liggetid 
+    \item antibiotika: Er det gitt antibiotikaprofylakse?
+    \item antNivOpr: Antall nivå operert'
+    \item arbstatus: Arbeidsstatus før, 3 el. 12 mnd. etter operasjon
     \item ASA: ASA-grad
     \item BMI: Pasientenes BMI (Body Mass Index)
-    \item EqangstPre: Helsetilstand: Angst
-    \item EqgangePre: Helsetilstand: Gange
-    \item ErstatningPre: Har pasienten søkt erstatning?
-    \item Fornoyd3mnd: Fornøydhet 3 mnd etter operasjon
-    \item Fornoyd12mnd: Fornøydhet 12 mnd etter operasjon
-    \item HovedInngrep: Hovedinngrep
-    \item Komorbiditet: Komorbiditet
-    \item KomplPer: Peroperative komplikasjoner
-    \item KomplPost: Pasientrapporterte komplikasjoner
-    \item Liggedogn: Liggetid ved operasjon
-    \item Morsmal: Morsmål
-    \item Nytte3mnd: Hvilken nytte har du hatt av operasjonen? (svar 3 måneder etter)
-    \item Nytte12mnd: Hvilken nytte har du hatt av operasjonen? (svar 12 måneder etter)
-    \item OpInd: Operasjonsindikasjon
-    \item OpIndPareseGrad: Operasjonsindikasjon, paresegrad
-    \item OpIndSmeType: Operasjonsindikasjon, smertetype
-    \item OpKat: Operasjonskategori 
-    \item RadUnders: Radiologisk undersøkelse
-    \item Roker: Røyker du?
-    \item Saardren: Sårdren
-    \item SivilStatus: Sivilstatus
-    \item SmHyppPre: Hyppighet av smertestillende før operasjonen
-    \item SmStiPre: Bruk av smertestillende før operasjonen
+    \item EQangstPre: Helsetilstand: Angst
+    \item EQgangePre: Helsetilstand: Gange
+    \item erstatningPre: Har pasienten søkt erstatning?
+    \item fornoydhet: Fornøydhet 3 eller 12 mnd etter operasjon
+    \item hovedInngrep: Hovedinngrep
+    \item komorbiditet: Komorbiditet
+    \item komplPer: Peroperative komplikasjoner
+    \item komplPost: Pasientrapporterte komplikasjoner
+    \item liggedogn: Liggetid ved operasjon
+    \item morsmal: Morsmål
+    \item nytte: Hvilken nytte har du hatt av operasjonen? (svar 3 eller 12 måneder etter)
+    \item opInd: Operasjonsindikasjon
+    \item opIndPareseGrad: Operasjonsindikasjon, paresegrad
+    \item opIndSmeType: Operasjonsindikasjon, smertetype
+    \item opKat: Operasjonskategori 
+    \item radUnders: Radiologisk undersøkelse
+    \item roker: Røyker du?
+    \item saardren: Sårdren
+    \item sivilStatus: Sivilstatus
+    \item smHyppPre: Hyppighet av smertestillende før operasjonen
+    \item smStiPre: Bruk av smertestillende før operasjonen
     \item SymptVarighRyggHof: Varighet av rygg-/hoftesmerter
-    \item SympVarighUtstr: Varighet av utstrålende smerter
-    \item TidlOpr: Tidligere ryggoperert?
-    \item TidlOprAntall: Antall tidligere operasjoner
-    \item UforetrygdPre: Har pasienten søkt uføretrygd?
-    \item Underkat: Fordeling av inngrepstyper. NB: hovedkategori MÅ velges
-    \item Utd: Høyeste fullførte utdanning
+    \item SymptVarighUtstr: Varighet av utstrålende smerter
+    \item tidlOpr: Tidligere ryggoperert?
+    \item tidlOprAntall: Antall tidligere operasjoner
+    \item uforetrygdPre: Har pasienten søkt uføretrygd?
+    \item underkat: Fordeling av inngrepstyper. NB: hovedkategori MÅ velges
+    \item utd: Høyeste fullførte utdanning
    }
 Argumentet \emph{hovedkat} har følgende valgmuligheter:
    \itemize{

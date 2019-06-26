@@ -72,7 +72,7 @@ if (enhetsUtvalg %in% c(2,3,4,6,7)) {	#Ta med 2,4 og 7? Oppr. 3 og 6
 Ninn <- dim(RegData)[1]
 
 indAld <- which(RegData$Alder >= minald & RegData$Alder <= maxald)
-indAar <- if (aar[1] > 2000) {which(RegData$OpAar %in% as.numeric(aar))} else {indAar <- 1:Ninn}
+indAar <- if (aar[1] > 2000) {which(RegData$Aar %in% as.numeric(aar))} else {indAar <- 1:Ninn}
 indDato <- which(RegData$InnDato >= as.POSIXlt(datoFra) & RegData$InnDato <= as.POSIXlt(datoTil))
 indKj <- if (erMann %in% 0:1) {which(RegData$ErMann == erMann)} else {indKj <- 1:Ninn}
 #Hovedkategori, flervalgsutvalg
@@ -94,7 +94,7 @@ indKj <- if (erMann %in% 0:1) {which(RegData$ErMann == erMann)} else {indKj <- 1
 
 indTidlOp <- if (tidlOp %in% 1:4) {which(RegData$TidlOpr==tidlOp)} else {indTidlOp <- 1:Ninn}
 indOpKat <- if (opKat %in% 1:3) {which(RegData$OpKat == opKat)} else {1:Ninn}
-indMed <- indAld %i% indDato %i% indAar %i% indKj %i% indHovedInngr %i% indTidlOp %i% indOpKat
+indMed <- indAld %i% indDato %i% indAar  %i% indKj %i% indHovedInngr %i% indTidlOp %i% indOpKat
 RegData <- RegData[indMed,]
 
 #Definifjon av spinal stenose:
@@ -124,7 +124,7 @@ utvalgTxt <- c(paste0('Operasjonsdato: ', if (N>0) {min(RegData$InnDato, na.rm=T
 			' til ', if (N>0) {max(RegData$InnDato, na.rm=T)} else {datoTil}),
 	#År, flervalgsutvalg, ikke ha med egen tekst for dette?
 #	if (aar[1] > 2000 ){
-#	      AarMed <- min(RegData$OpAar, na.rm=T):max(RegData$OpAar, na.rm=T)
+#	      AarMed <- min(RegData$Aar, na.rm=T):max(RegData$Aar, na.rm=T)
 #	      if (length(AarMed)>1) {paste0('År: ', AarMed[1], ':', max(AarMed))} else {paste0('År: ', AarMed)}},
 	if ((minald>0) | (maxald<130)) {paste0('Pasienter fra ', if (N>0) {min(RegData$Alder, na.rm=T)} else {minald}, 
 						' til ', if (N>0) {max(RegData$Alder, na.rm=T)} else {maxald}, ' år')},
