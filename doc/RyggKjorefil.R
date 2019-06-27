@@ -72,14 +72,14 @@ load('A:/Rygg/Rygg2010-2018aarsrapp.Rdata') #TESTER FØRST MED gamle data
 #__Inndata til RyggFigAndeler.R:
 tittel=1
 reshID <- 601161 #999999	#601161 #100133	#111065 #105783	#103618	#102949	#   #Må sendes med til funksjon
-datoFra <- '2017-01-01'
+datoFra <- '2018-01-01'
 datoTil <- '2019-12-31'
 minald <- 0		#alder, fra og med
 maxald <- 130	#alder, til og med
 erMann <- 99			#kjønn, 1-menn, 0-kvinner, standard: '' (alt annet enn 0 og 1), dvs. begge
-hovedkat <- 1 		#HovedInngrep, 0-7, Standard: 99, dvs alle op
-opKat <- 1 #Hastegrad, 1-3
-enhetsUtvalg <- 1 #	0-hele landet, 1-egen enhet mot resten av landet, 2-egen enhet
+hovedkat <- 99		#HovedInngrep, 0-7, Standard: 99, dvs alle op
+opKat <- 1 #Elektivt/Akutt, 1-2
+enhetsUtvalg <- 0 #	0-hele landet, 1-egen enhet mot resten av landet, 2-egen enhet
 #					3–egen enhet mot egen shusgruppe, 4–egen shusgruppe, 5–egen shusgruppe mot resten
 #					6–egen enhet mot egen region, 7–egen region, 8–egen region mot resten
 ktr <- 2			#1. el 2. kontroll. '3mnd' - 3mnd kontroll, '12mnd' - 12 mnd kontroll
@@ -88,7 +88,7 @@ tidlOp <- 0		#Tidl.operert: 1-sm, 2-annet, 3, sm+annet, 4-primær, Standard: 0, 
 grVar <- 'ShNavn'  #ShNavn, Fylke, BoHF, BoRHF
 valgtMaal <- 'Gjsn'
 aar <- 0	#Standard: 0, dvs. alle år
-tidsenhet <- 'Mnd' #Oppløsning på tidsaksen: 'Aar' (standard), 'Halvaar', 'Kvartal','Mnd'
+tidsenhet <- 'Aar' #Oppløsning på tidsaksen: 'Aar' (standard), 'Halvaar', 'Kvartal','Mnd'
 offData <- 0
 Ngrense <- 10
 medKI <- 1
@@ -156,9 +156,9 @@ for (valgtVar in variable) {
 valgtVar <- 'EQ5DPre' #
 outfile <- ''#paste0(valgtVar,enhetsUtvalg, '.png')	#paste0(valgtVar,enhetsUtvalg, '.pdf')
 
-utdata <- RyggFigGjsnBox(RegData=RegData, outfile=outfile, valgtVar=valgtVar, tidlOp=tidlOp, erMann=erMann, 
+utdata <- RyggFigGjsnBox(RegData=RegData, outfile=outfile, valgtVar=valgtVar, tidlOp=tidlOp, erMann=erMann, opKat = opKat,
 		hovedkat=hovedkat, minald=minald, maxald=maxald, ktr=ktr, tittel=tittel, valgtMaal=valgtMaal, 
-		datoFra=datoFra, datoTil=datoTil, enhetsUtvalg=1, tidsenhet = tidsenhet, reshID=reshID) #aar=aar, 
+		datoFra=datoFra, datoTil=datoTil, enhetsUtvalg=enhetsUtvalg, tidsenhet = tidsenhet, reshID=reshID) #aar=aar, 
 #RyggFigGjsnBox
 #RegData=0, outfile=outfile, valgtVar=valgtVar,valgtMaal=valgtMaal, enhetsUtvalg=enhetsUtvalg, 
 #datoFra=datoFra, datoTil=datoTil, hovedkat=hovedkat, tidlOp=tidlOp,  ktr=ktr, erMann=erMann, 
