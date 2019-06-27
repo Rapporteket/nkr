@@ -28,7 +28,7 @@
 #'                2: Tidl. operert annet nivå, 
 #'			3: Tidl. operert annet og sm. nivå,
 #'			4: Primæroperasjon
-#' @param opKat Hastegrad av operasjon 1: Elektivt, 2: Akutt, 3: Halvøyeblikkelig
+#' @param opKat Hastegrad av operasjon 1: Elektivt, 2: Akutt, 3: Halvøyeblikkelig. Slår sammen 1 og 3 til elektiv
 #' @param aar - Operasjonsår 
 #' @param hovedkat Hvilken type hovedinngrep, numerisk 0-9, standard: 99, dvs. alle. Valgmuligheter:
 #'    \itemize{
@@ -93,7 +93,9 @@ indKj <- if (erMann %in% 0:1) {which(RegData$ErMann == erMann)} else {indKj <- 1
       if (!(hovedkat %in% 0:9)) {indHovedInngr <- 1:Ninn}
 
 indTidlOp <- if (tidlOp %in% 1:4) {which(RegData$TidlOpr==tidlOp)} else {indTidlOp <- 1:Ninn}
-indOpKat <- if (opKat %in% 1:3) {which(RegData$OpKat == opKat)} else {1:Ninn}
+indOpKat <- if (opKat %in% 1:2) {
+      RegData$OpKat[RegData$OpKat==3] <- 1
+      which(RegData$OpKat == opKat)} else {1:Ninn}
 indMed <- indAld %i% indDato %i% indAar  %i% indKj %i% indHovedInngr %i% indTidlOp %i% indOpKat
 RegData <- RegData[indMed,]
 
@@ -116,7 +118,7 @@ hkatnavn <- c( #0:9
 	'Degen. spondylolistese')
 
 TidlOprtxt <-	c('Tidl. operert samme nivå', 'Tidl. operert annet nivå', 'Tidl. operert annet og sm. nivå', 'Primæroperasjon')
-OpKatTxt <- paste0('Operasjonskategori: ', c('Elektiv', 'Akutt', '1/2-Akutt'))
+OpKatTxt <- paste0('Operasjonskategori: ', c('Elektiv', 'Akutt')) #, '1/2-Akutt'))
 
 N <- dim(RegData)[1]
 
@@ -130,7 +132,7 @@ utvalgTxt <- c(paste0('Operasjonsdato: ', if (N>0) {min(RegData$InnDato, na.rm=T
 						' til ', if (N>0) {max(RegData$Alder, na.rm=T)} else {maxald}, ' år')},
 	if (erMann %in% 0:1) {paste0('Kjønn: ', c('Kvinner', 'Menn')[erMann+1])},
 	if (hovedkat[1] %in% 0:9) {paste0('Hovedinngrep: ', paste(hkatnavn[as.numeric(hovedkat)+1], collapse=','))},
-      if (opKat %in% 1:3) {OpKatTxt[opKat]},
+      if (opKat %in% 1:2) {OpKatTxt[opKat]},
       if (tidlOp %in% 1:4) {TidlOprtxt[tidlOp]}
 	)
 	

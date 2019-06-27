@@ -62,8 +62,9 @@ RyggFigGjsnBox <- function(RegData, outfile, valgtVar, tidlOp='', erMann='', hov
 
   #--------------- Definere variable ------------------------------
   
-  RyggVarSpes <- RyggVarTilrettelegg(RegData=RegData, valgtVar=valgtVar, figurtype='gjsnGrVar')
+  RyggVarSpes <- RyggVarTilrettelegg(RegData=RegData, valgtVar=valgtVar, ktr=ktr, figurtype='gjsnGrVar')
   RegData <- RyggVarSpes$RegData
+  KIekstrem <- RyggVarSpes$KIekstrem
   
   
   RyggUtvalg <- RyggUtvalgEnh(RegData=RegData, datoFra=datoFra, datoTil=datoTil, reshID=reshID,
@@ -73,22 +74,21 @@ RyggFigGjsnBox <- function(RegData, outfile, valgtVar, tidlOp='', erMann='', hov
   utvalgTxt <- RyggUtvalg$utvalgTxt
   medSml <- RyggUtvalg$medSml
 #------------------------Klargjøre tidsenhet--------------
-  N <- list(Hoved = dim(RegData)[1], Rest=0)
+#  AggVerdier <- list(Hoved = 0, Rest =0)
+  ind <- RyggUtvalg$ind
+  N <- list(Hoved = length(ind$Hoved), Rest =length(ind$Rest))
+  Ngr <- list(Hoved = 0, Rest =0)
   if (N$Hoved>9) {
             RegDataFunk <- SorterOgNavngiTidsEnhet(RegData=RegData, tidsenhet = tidsenhet)
             RegData <- RegDataFunk$RegData
             tidNum <- min(RegData$TidsEnhetSort, na.rm=T):max(RegData$TidsEnhetSort, na.rm = T) #as.numeric(levels(RegData$TidsEnhetSort))
             
 #--------------- Gjøre beregninger ------------------------------
-KIekstrem <- NULL
 
-AggVerdier <- list(Hoved = 0, Rest =0)
-ind <- RyggUtvalg$ind
-Ngr <- list(Hoved = length(ind$Hoved), Rest =length(ind$Rest))
 
 
 #Resultat for hovedgruppe
-N <- tapply(RegData[ind$Hoved ,'Variabel'], RegData[ind$Hoved, 'TidsEnhet'], length)
+Ngr$Hoved <- tapply(RegData[ind$Hoved ,'Variabel'], RegData[ind$Hoved, 'TidsEnhet'], length)
 if (valgtMaal=='Med') {
 	MedIQR <- plot(RegData$TidsEnhet[ind$Hoved],RegData$Variabel[ind$Hoved],  notch=TRUE, plot=FALSE)
 	Midt <- as.numeric(MedIQR$stats[3, ])	#as.numeric(MedIQR$stats[3, sortInd])
@@ -104,9 +104,10 @@ if (valgtMaal=='Med') {
 } else {	#Gjennomsnitt blir standard.
 	Midt <- tapply(RegData[ind$Hoved ,'Variabel'], RegData[ind$Hoved, 'TidsEnhet'], mean, na.rm=T)
 	SD <- tapply(RegData[ind$Hoved ,'Variabel'], RegData[ind$Hoved, 'TidsEnhet'], sd, na.rm=T)
-	Konf <- rbind(Midt - 2*SD/sqrt(N), Midt + 2*SD/sqrt(N))
+	Konf <- rbind(Midt - 2*SD/sqrt(Ngr$Hoved), Midt + 2*SD/sqrt(Ngr$Hoved))
 }
 
+            
 if (length(KIekstrem) == 0) {	#Hvis ikke KIekstrem definert i variabeldefinisjonen
 	KIekstrem <- c(0,max(RegData$Variabel, na.rm=T))
 }
@@ -117,7 +118,7 @@ if (length(KIekstrem) == 0) {	#Hvis ikke KIekstrem definert i variabeldefinisjon
 MidtRest <- NULL
 KonfRest <- NULL
 if (medSml ==  1) {
-Nrest <- tapply(RegData[ind$Rest ,'Variabel'], RegData[ind$Rest, 'TidsEnhet'], length)
+Ngr$Rest <- tapply(RegData[ind$Rest ,'Variabel'], RegData[ind$Rest, 'TidsEnhet'], length)
 	if (valgtMaal=='Med') {
 		MedIQRrest <- plot(RegData$TidsEnhet[ind$Rest],RegData$Variabel[ind$Rest],  notch=TRUE, plot=FALSE)
 		MidtRest <- as.numeric(MedIQRrest$stats[3, ])
@@ -125,8 +126,8 @@ Nrest <- tapply(RegData[ind$Rest ,'Variabel'], RegData[ind$Rest, 'TidsEnhet'], l
 	} else {
 	MidtRest <- tapply(RegData[ind$Rest,'Variabel'], RegData[ind$Rest, 'TidsEnhet'], mean)	#ind$Rest
 	SDRest <- tapply(RegData[ind$Rest,'Variabel'], RegData[ind$Rest, 'TidsEnhet'], sd)
-	Nrest <- tapply(RegData[ind$Rest,'Variabel'], RegData[ind$Rest, 'TidsEnhet'], length)
-	KonfRest <- rbind(MidtRest - 2*SDRest/sqrt(Nrest), MidtRest + 2*SDRest/sqrt(Nrest))
+	Ngr$Rest <- tapply(RegData[ind$Rest,'Variabel'], RegData[ind$Rest, 'TidsEnhet'], length)
+	KonfRest <- rbind(MidtRest - 2*SDRest/sqrt(Ngr$Rest), MidtRest + 2*SDRest/sqrt(Ngr$Rest))
 	}
 }
 
@@ -196,7 +197,7 @@ fargeRestRes <- farger[4]
 plot(tidNum,Midt, xlim= c(xmin, xmax), ylim=c(ymin, ymax), type='n', frame.plot=FALSE, #ylim=c(ymin-0.05*ymax, ymax),
 		#cex=0.8, cex.lab=0.9, cex.axis=0.9,	
 		ylab=c(ytxt,'med 95% konfidensintervall'), 
-		xlab='Innleggelsesår', xaxt='n', 
+		xlab='Operasjonstidspunkt', xaxt='n', 
 		sub='(Tall i boksene angir antall operasjoner)', cex.sub=cexgr)	#, axes=F)
 axis(side=1, at = tidNum, labels = levels(RegData$TidsEnhet))	
 #Sammenlikning:
@@ -207,19 +208,19 @@ if (medSml==1) {
 		c(KonfRest[1,c(1,1:AntTidsenh, AntTidsenh)], KonfRest[2,c(AntTidsenh,AntTidsenh:1,1)]), 
 			col=fargeRestRes, border=NA)
 	legend('top', bty='n', fill=fargeRestRes, border=fargeRestRes, cex=cexgr,
-		paste0('95% konfidensintervall for ', RyggUtvalg$smltxt, ', N=', sum(Nrest, na.rm=T)))
+		paste0('95% konfidensintervall for ', RyggUtvalg$smltxt, ', N=', N$Rest)) #sum(Ngr$Rest, na.rm=T)
 }
 h <- strheight(1, cex=cexgr)*0.7	#,  units='figure',
-b <- 1.1*strwidth(max(N, na.rm=T), cex=cexgr)/2	#length(tidNum)/30
+b <- 1.1*strwidth(max(c(Ngr$Hoved, Ngr$Rest), na.rm=T), cex=cexgr)/2	#length(tidNum)/30
 rect(tidNum-b, Midt-h, tidNum+b, Midt+h, border = fargeHovedRes, lwd=1)	#border=farger[4], col=farger[4]
-text(tidNum, Midt, N, col=fargeHovedRes, cex=cexgr) 	
+text(tidNum, Midt, Ngr$Hoved, col=fargeHovedRes, cex=cexgr) 	
 
 #Konfidensintervall:
-ind <- which(Konf[1, ] > Midt-h) #Konfidensintervall som er tilnærmet 0
+indKonf <- which(Konf[1, ] > Midt-h) #Konfidensintervall som er tilnærmet 0
 options('warn'=-1)
 arrows(x0=tidNum, y0=Midt-h, x1=tidNum, length=0.08, code=2, angle=90, 
-		y1=replace(Konf[1, ], ind, Midt[ind]-h), col=fargeHovedRes, lwd=1.5)
-arrows(x0=tidNum, y0=Midt+h, x1=tidNum, y1=replace(Konf[2, ], ind, Midt[ind]+h), 
+		y1=replace(Konf[1, ], indKonf, Midt[indKonf]-h), col=fargeHovedRes, lwd=1.5)
+arrows(x0=tidNum, y0=Midt+h, x1=tidNum, y1=replace(Konf[2, ], indKonf, Midt[indKonf]+h), 
 		length=0.08, code=2, angle=90, col=fargeHovedRes, lwd=1.5)
 
 title(main=c(tittel, RyggUtvalg$hovedgrTxt), font.main=1, line=1)

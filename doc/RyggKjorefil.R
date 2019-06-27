@@ -153,12 +153,12 @@ for (valgtVar in variable) {
 #---------- GjsnBox -------------------------
 #------- Endring i effektmål som funksjon av tid eller prescore
 
-valgtVar <- 'liggedogn' #
+valgtVar <- 'EQ5DPre' #
 outfile <- ''#paste0(valgtVar,enhetsUtvalg, '.png')	#paste0(valgtVar,enhetsUtvalg, '.pdf')
 
 utdata <- RyggFigGjsnBox(RegData=RegData, outfile=outfile, valgtVar=valgtVar, tidlOp=tidlOp, erMann=erMann, 
 		hovedkat=hovedkat, minald=minald, maxald=maxald, ktr=ktr, tittel=tittel, valgtMaal=valgtMaal, 
-		datoFra=datoFra, datoTil=datoTil, enhetsUtvalg=1, reshID=reshID) #aar=aar, 
+		datoFra=datoFra, datoTil=datoTil, enhetsUtvalg=1, tidsenhet = tidsenhet, reshID=reshID) #aar=aar, 
 #RyggFigGjsnBox
 #RegData=0, outfile=outfile, valgtVar=valgtVar,valgtMaal=valgtMaal, enhetsUtvalg=enhetsUtvalg, 
 #datoFra=datoFra, datoTil=datoTil, hovedkat=hovedkat, tidlOp=tidlOp,  ktr=ktr, erMann=erMann, 
@@ -169,8 +169,9 @@ variable <- c('EQ5DPre', 'OswTotPre', 'SmBePre', 'SmRyPre',
               'EQ5DEndr', 'liggedogn', 'OswEndr', 'SmRyggEndr', 'SmBeinEndr', 
               'EQ5DEndrPre', 'OswEndrPre', 'SmRyggEndrPre', 'SmBeinEndrPre')
 for (var in variable) {
-      (outfile <- paste0(var, 'GjsnBox.png'))
+      (outfile <- paste0(var, 'MedBox.png'))
       RyggFigGjsnBox(valgtVar=var, RegData=RegData, datoFra='2017-01-01', 
+                     enhetsUtvalg = 1, reshID = reshID, valgtMaal = 'Med',
                      tidsenhet = 'Kvartal', ktr=1, outfile=outfile)
 }
 

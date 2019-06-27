@@ -43,13 +43,19 @@ RyggVarTilrettelegg  <- function(RegData=NULL, valgtVar, ktr=0, hovedkat=99, fig
       #Kan her definere opp alle aktuelle grupperingsvariable og deres tekst, eller 
       #sende inn grupperingsvariabel og så gjøre beregninger. (Ulempe: Ekstra avhengigheter)
       #Sentralt spm: Hvor skal det avgjøres hvilken figurtype som vises??? her
-      
+      KIekstrem <- NULL
       
       #ktr kan ha verdiene 0, 1 eller 2
-      if ((valgtVar %in% c('fornoydhet', 'nytte', 'EQ5DEndr','EQ5DEndr', 
-                           'OswEndr', 'SmBeinEndr', 'SmRyEndr',
-                           'OswEndrPre', 'SmBeinEndrPre', 'SmRyEndrPre')) & (ktr==0)) {ktr <- 1}
-      ktrtxt <- c('før operasjon', ' (3 mnd etter)', '(12 mnd. etter)')[ktr+1]
+      varPrePost <- c('fornoydhet', 'nytte', 'EQ5DEndr','EQ5DEndr', 
+                      'OswEndr', 'SmBeinEndr', 'SmRyggEndr',
+                      'OswEndrPre', 'SmBeinEndrPre', 'SmRyggEndrPre')
+      if ((valgtVar %in% varPrePost) & (ktr==0)) 
+      {ktr <- 1}
+      if (valgtVar %in% varPrePost){
+            if (ktr == 1) {RegData <- RegData[which(RegData$Utfylt3Mnd==1), ]}
+            if (ktr == 2) {RegData <- RegData[which(RegData$Utfylt12Mnd==1), ]}
+      }
+      ktrtxt <- c(' før operasjon', ' (3 mnd etter)', ' (12 mnd. etter)')[ktr+1]
       trekkfraDager <- c(0,90,365)[ktr+1]
       
       
@@ -217,100 +223,106 @@ RyggVarTilrettelegg  <- function(RegData=NULL, valgtVar, ktr=0, hovedkat=99, fig
                                        '2'= (RegData$EQ5D12mnd - RegData$EQ5DPre))
             RegData <- RegData[which(!is.na(RegData$Variabel)),]
             tittel <- paste0('forbedring av EQ5D', ktrtxt)#gjsnGrVar, gjsnTid
-            
+            KIekstrem <- c(-1.6, 1.6)
       }
-	  if (valgtVar == 'EQ5DPre') {#gjsnPre (gjsnBox)
-	  tittel <- 'EQ5D før operasjonen'
-	  RegData$Variabel <- RegData[ ,valgtVar]
-	  KIekstrem <- c(0, 1.6)
-	  }
-	  
-	  if (valgtVar == 'EQ5DEndrPre') {#gjsnPre (gjsnBox)
-	  tittel <- paste0('forbedring av EQ5D', ktrtxt)
-	  RegData$Variabel <- switch(as.character(ktr), 
+      if (valgtVar == 'EQ5DPre') {#gjsnPre (gjsnBox)
+            RegData <- RegData[which(RegData$EQ5DPre > -0.6),]
+            tittel <- 'EQ5D før operasjonen'
+            RegData$Variabel <- RegData[ ,valgtVar]
+            KIekstrem <- c(-0.6, 1)
+      }
+      
+      if (valgtVar == 'EQ5DEndrPre') {#gjsnPre (gjsnBox)
+            tittel <- paste0('forbedring av EQ5D', ktrtxt)
+            RegData$Variabel <- switch(as.character(ktr), 
                                        '1'= (RegData$EQ5D3mnd - RegData$EQ5DPre),
                                        '2'= (RegData$EQ5D12mnd - RegData$EQ5DPre))
-	  			Xlab <- 'EQ5D før operasjon'
+            RegData <- RegData[which(!is.na(RegData$Variabel)),]
+            Xlab <- 'EQ5D før operasjon'
             gr <- c(round(seq(-0.6,0.8,0.2),1),1.6)	#round(seq(-0.6,1.6,0.3),1)}
-            RegData$Gr <- cut(RegData$Pre, gr, right=F)
+            RegData$Gr <- cut(RegData$EQ5DPre, gr, right=F)
             GrNavn <- levels(RegData$Gr)
             AntGr <- length(GrNavn)
             GrNavn[AntGr] <- '0.8+'
-			KIekstrem <- c(0, 1.6)
-			}
-			
-	    if (valgtVar == 'OswEndr') {
-		#Forbedring=lavere Oswestry
-		tittel <- paste0('forbedring av ODI', ktrtxt)
-		RegData$Variabel <- -switch(as.character(ktr), 
-                                       '1'= (RegData$OswTot3mnd - RegData$OswTotPre),
-                                       '2'= (RegData$OswTot12mnd - RegData$OswTotPre))
-		KIekstrem <- c(-100, 100)
-		}
-     if (valgtVar == 'OswEndrPre') {
-		#Forbedring=lavere Oswestry
-		tittel <- paste0('forbedring av ODI', ktrtxt)
-		RegData$Variabel <- -switch(as.character(ktr), 
-                                       '1'= (RegData$OswTot3mnd - RegData$OswTotPre),
-                                       '2'= (RegData$OswTot12mnd - RegData$OswTotPre))
-		KIekstrem <- c(-100, 100)
-					Xlab <- 'Oswestry før operasjon'
+            KIekstrem <- c(-1.6, 1.6)
+      }
+      
+      if (valgtVar == 'OswEndr') {
+            #Forbedring=lavere Oswestry
+            tittel <- paste0('forbedring av ODI', ktrtxt)
+            RegData$Variabel <- -switch(as.character(ktr), 
+                                        '1'= (RegData$OswTot3mnd - RegData$OswTotPre),
+                                        '2'= (RegData$OswTot12mnd - RegData$OswTotPre))
+            RegData <- RegData[which(!is.na(RegData$Variabel)),]
+            KIekstrem <- c(-100, 100)
+      }
+      if (valgtVar == 'OswEndrPre') {
+            #Forbedring=lavere Oswestry
+            tittel <- paste0('forbedring av ODI', ktrtxt)
+            RegData$Variabel <- switch(as.character(ktr), 
+                                       '1'= (RegData$OswTotPre - RegData$OswTot3mnd),
+                                       '2'= (RegData$OswTotPre - RegData$OswTot12mnd))
+            RegData <- RegData[which(!is.na(RegData$Variabel)),]
+            KIekstrem <- c(-100, 100)
+            Xlab <- 'Oswestry før operasjon'
             gr <- c(seq(0,90,10), 101)
-            RegData$Gr <- cut(RegData$Pre, gr, right=F)
+            RegData$Gr <- cut(RegData$OswTotPre, gr, right=F)
             GrNavn <- levels(RegData$Gr)
             AntGr <- length(GrNavn)
             GrNavn[AntGr] <- '[90,100]'
-		}
-
-	 if (valgtVar == 'OswTotPre') {
-	RegData$Variabel <- RegData[ ,valgtVar]
-	tittel <- 'oswestryskår før operasjonen'
-	xAkseTxt <- 'skår'
-	KIekstrem <- c(0, 100)
-	} 	
-	if (valgtVar == 'SmBeinEndr') {
-	tittel <- paste0('endring i beinsmerter ',ktrtxt)
- 		RegData$Variabel <- -switch(as.character(ktr), 
-                                       '1'= (RegData$SmBe3mnd - RegData$SmBePre),
-                                       '2'= (RegData$SmBe12mnd - RegData$SmBePre))
-		KIekstrem <- c(-10,10)							   
-}
-	if (valgtVar == 'SmBeinEndrPre') {
-	tittel <- 'endring i beinsmerter'
- 		RegData$Variabel <- -switch(as.character(ktr), 
-                                       '1'= (RegData$SmBe3mnd - RegData$SmBePre),
-                                       '2'= (RegData$SmBe12mnd - RegData$SmBePre))
-		KIekstrem <- c(-10,10)
-		}
-	 if (valgtVar == 'SmBePre') {
-	RegData$Variabel <- RegData[ ,valgtVar]
-	tittel <- 'beinsmerter før operasjonen'
-	xAkseTxt <- 'skår'
-	KIekstrem <- c(0, 10)
-	 } 	
+      }
       
-	if (valgtVar == 'SmRyggEndr') {
-	tittel <- paste0('forbedring av  ryggsmerter', ktrtxt)
-	      RegData$Variabel <- switch(as.character(ktr), 
+      if (valgtVar == 'OswTotPre') {
+            RegData$Variabel <- RegData[ ,valgtVar]
+            RegData <- RegData[which(!is.na(RegData$Variabel)),]
+            tittel <- 'oswestryskår før operasjonen'
+            xAkseTxt <- 'skår'
+            KIekstrem <- c(0, 100)
+      } 	
+      if (valgtVar == 'SmBeinEndr') {
+            tittel <- paste0('bedring av beinsmerter ',ktrtxt)
+            RegData$Variabel <- switch(as.character(ktr), 
+                                       '1'= (RegData$SmBePre - RegData$SmBe3mnd),
+                                       '2'= (RegData$SmBePre - RegData$SmBe12mnd))
+            RegData <- RegData[which(!is.na(RegData$Variabel)),]
+            KIekstrem <- c(-10,10)							   
+      }
+      if (valgtVar == 'SmBeinEndrPre') {
+            tittel <- 'endring i beinsmerter'
+            RegData$Variabel <- switch(as.character(ktr), 
+                                       '1'= (RegData$SmBePre - RegData$SmBe3mnd),
+                                       '2'= (RegData$SmBePre - RegData$SmBe12mnd))
+            KIekstrem <- c(-10,10)
+      }
+      if (valgtVar == 'SmBePre') {
+            RegData$Variabel <- RegData[ ,valgtVar]
+            tittel <- 'beinsmerter før operasjonen'
+            xAkseTxt <- 'skår'
+            KIekstrem <- c(0, 10)
+      } 	
+      
+      if (valgtVar == 'SmRyggEndr') {
+            tittel <- paste0('forbedring av  ryggsmerter', ktrtxt)
+            RegData$Variabel <- switch(as.character(ktr), 
                                        '1'= RegData$SmRyPre - RegData$SmRy3mnd,
                                        '2'= RegData$SmRyPre - RegData$SmRy12mnd)
-	      KIekstrem <- c(-10,10)
-	}
+            KIekstrem <- c(-10,10)
+      }
       
-	if (valgtVar == 'SmRyggEndrPre') {
-	tittel <- paste0('forbedring av ryggsmerter', ktrtxt)
-	      RegData$Variabel <- switch(as.character(ktr), 
+      if (valgtVar == 'SmRyggEndrPre') {
+            tittel <- paste0('forbedring av ryggsmerter', ktrtxt)
+            RegData$Variabel <- switch(as.character(ktr), 
                                        '1'= (RegData$SmRyPre - RegData$SmRy3mnd),
                                        '2'= (RegData$SmRyPre - RegData$SmRy12mnd))
-	      KIekstrem <- c(-10,10)
-	}
-if (valgtVar == 'SmRyPre') {
-	RegData$Variabel <- RegData[ ,valgtVar]
-	tittel <- 'ryggsmerter før operasjonen'
-	ytxt1 <- 'prescore, ryggsmerter '
-	} 	
-
-			
+            KIekstrem <- c(-10,10)
+      }
+      if (valgtVar == 'SmRyPre') {
+            RegData$Variabel <- RegData[ ,valgtVar]
+            tittel <- 'ryggsmerter før operasjonen'
+            ytxt1 <- 'prescore, ryggsmerter '
+      } 	
+      
+      
       if (valgtVar == 'EQangstPre') {#fordeling
             tittel <- 'Helsetilstand: Angst'
             RegData$VariabelGr <- 9
@@ -648,9 +660,9 @@ if (valgtVar == 'SmRyPre') {
             RegData$VariabelGr <- factor(RegData$VariabelGr, levels = c(0:1,9)) 
             tittel <- 'Sårdren'
             if (figurtype %in% c('andelGrVar', 'andelTid')){
-            RegData <- RegData[which(RegData$Saardren %in% 0:1), ]
-            RegData$Variabel <- RegData$Saardren
-            tittel <- 'Andel som får sårdren (%)'
+                  RegData <- RegData[which(RegData$Saardren %in% 0:1), ]
+                  RegData$Variabel <- RegData$Saardren
+                  tittel <- 'Andel som får sårdren (%)'
             }
       }
       if (valgtVar=='smBeinEndr') {#gjsnGrVar
@@ -764,31 +776,31 @@ if (valgtVar == 'SmRyPre') {
             RegData$VariabelGr[indDum] <- RegData$UforetrygdPre[indDum]
             RegData$VariabelGr <- factor(RegData$VariabelGr, levels = c(1:4,9)) 
             if (figurtype %in% c('andelGrVar', 'andelTid')){
-            RegData <- RegData[which(RegData$UforetrygdPre %in% 1:4), ]
-            RegData$Variabel[which(RegData[ ,valgtVar] %in% c(1,3))] <- 1
-            varTxt <- 'søkt/planlagt å søke'
-            tittel <- 'Har søkt eller planlegger å søke uføretrygd'
-            sortAvtagende <- F}
+                  RegData <- RegData[which(RegData$UforetrygdPre %in% 1:4), ]
+                  RegData$Variabel[which(RegData[ ,valgtVar] %in% c(1,3))] <- 1
+                  varTxt <- 'søkt/planlagt å søke'
+                  tittel <- 'Har søkt eller planlegger å søke uføretrygd'
+                  sortAvtagende <- F}
       }
-
+      
       if (valgtVar=='underkat'){
             RegData$Variabel <- RegData$Inngrep 
             tittel <- 'Fordeling av inngrepstyper'
             if (hovedkat==99){hovedkat <- 1} 
             #if (hovedkat %in% 0:7) {
-                  gr_nr <- c(0:19)
-                  txt <- c('Annet','Mikro','Makro','Tubekirurgi','Udefinert',
-                           'Mikro','Makro','Tubekirurgi', 'Udefinert',
-                           'Laminektomi', 'Interspinøst impl.',
-                           'PLF','PLIF','TLIF','ALIF', 'Udefinert fusjon', 
-                           'Skiveprotese','Fjern interspinøst impl.','Fjerne ostemat.','Revisjon ostemat.')
-                  hgr <- c(0,1,1,1,1,2,2,2,2,3,4,5,5,5,5,5,6,7,7,7)
-                  kat <- data.frame(hgr, gr_nr, txt)	#hkatnavn[hgr+1], 
-                  underkat_num <- kat$gr_nr[kat$hgr==hovedkat]
-                  
-                  RegData <- RegData[which(RegData$Inngrep %in% underkat_num), ]
-                  grtxt <- as.character(kat$txt[underkat_num+1])
-                  RegData$VariabelGr <- factor(RegData$Inngrep, levels = underkat_num) 
+            gr_nr <- c(0:19)
+            txt <- c('Annet','Mikro','Makro','Tubekirurgi','Udefinert',
+                     'Mikro','Makro','Tubekirurgi', 'Udefinert',
+                     'Laminektomi', 'Interspinøst impl.',
+                     'PLF','PLIF','TLIF','ALIF', 'Udefinert fusjon', 
+                     'Skiveprotese','Fjern interspinøst impl.','Fjerne ostemat.','Revisjon ostemat.')
+            hgr <- c(0,1,1,1,1,2,2,2,2,3,4,5,5,5,5,5,6,7,7,7)
+            kat <- data.frame(hgr, gr_nr, txt)	#hkatnavn[hgr+1], 
+            underkat_num <- kat$gr_nr[kat$hgr==hovedkat]
+            
+            RegData <- RegData[which(RegData$Inngrep %in% underkat_num), ]
+            grtxt <- as.character(kat$txt[underkat_num+1])
+            RegData$VariabelGr <- factor(RegData$Inngrep, levels = underkat_num) 
             #}
       }
       
@@ -850,10 +862,11 @@ if (valgtVar == 'SmRyPre') {
             cexgr <- 0.9	#Kan endres for enkeltvariable
       }
       
+      RegData <- RegData[which(!is.na(RegData$Variabel)),]
       
       UtData <- list(RegData=RegData, grtxt=grtxt, cexgr=cexgr, varTxt=varTxt, xAkseTxt=xAkseTxt, 
-                     KImaalGrenser=KImaalGrenser, retn=retn, subtxt=subtxt, #KImaal=KImaalRetn, 
-                     tittel=tittel,
+                     KImaalGrenser=KImaalGrenser, KIekstrem=KIekstrem, #KImaal=KImaalRetn, 
+                     retn=retn, subtxt=subtxt, tittel=tittel,
                      flerevar=flerevar, variable=variable, sortAvtagende=sortAvtagende)
       #RegData inneholder nå variablene 'Variabel' og 'VariabelGr'
       return(invisible(UtData)) 
