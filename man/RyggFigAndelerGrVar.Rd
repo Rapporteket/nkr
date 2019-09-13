@@ -58,7 +58,7 @@ RyggFigAndelerGrVar(RegData, valgtVar, datoFra = "2007-01-01",
 0: Nei
 1: Ja (Standard)}
 
-\item{opKat}{Hastegrad av operasjon 1: Elektivt, 2: Akutt, 3: Halvøyeblikkelig}
+\item{opKat}{Hastegrad av operasjon 1: Elektivt, 2: Akutt, 3: Halvøyeblikkelig. Slår sammen 1 og 3 til elektiv}
 
 \item{enhetsUtvalg}{Gjør gruppeutvalg med eller uten sammenlikning. Se \strong{Details} for oversikt.}
 

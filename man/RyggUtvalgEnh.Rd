@@ -41,7 +41,7 @@ RyggUtvalgEnh(RegData, datoFra = "2009-01-01", datoTil = "3000-01-01",
 
 \item{aar}{- Operasjonsår}
 
-\item{opKat}{Hastegrad av operasjon 1: Elektivt, 2: Akutt, 3: Halvøyeblikkelig}
+\item{opKat}{Hastegrad av operasjon 1: Elektivt, 2: Akutt, 3: Halvøyeblikkelig. Slår sammen 1 og 3 til elektiv}
 
 \item{tidlOp}{Tidligere operert, numerisk 1-4. Alt annet gir alle data uten utvalg.
        1: Tidl. operert samme nivå, 

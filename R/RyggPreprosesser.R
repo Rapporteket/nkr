@@ -19,18 +19,20 @@ RyggPreprosess <- function(RegData=RegData)
 	RegData$InnDato <- as.POSIXlt(RegData$OpDato, format="%d.%m.%Y")
 	
 	#Endre variabelnavn:
-	names(RegData)[which(names(RegData) == 'OpAar')] <- 'Aar'
+	#names(RegData)[which(names(RegData) == 'OpAar')] <- 'Aar'
 
 	# Nye variable:
 	RegData$MndNum <- RegData$InnDato$mon +1
 	RegData$MndAar <- format(RegData$InnDato, '%b%y')
 	RegData$Kvartal <- ceiling(RegData$MndNum/3)
 	RegData$Halvaar <- ceiling(RegData$MndNum/6)
-	#RegData$Aar <- 1900 + RegData$InnDato$year #strptime(RegData$InnDato, format="%Y")$year
+	RegData$Aar <- 1900 + RegData$InnDato$year #strptime(RegData$InnDato, format="%Y")$year
 	
 	#Variabel som identifiserer avdelingas resh
 	names(RegData)[which(names(RegData) == 'AvdReshID')] <- 'ReshId'
+	#names(RegData)[which(names(RegData) == 'AvdRESH')] <- 'ReshId'
 	names(RegData)[which(names(RegData) == 'AvdNavn')] <- 'ShNavn'
+	#names(RegData)[which(names(RegData) == 'SykehusNavn')] <- 'ShNavn'
 	class(RegData$ReshId) <- 'numeric'
 	
 	#Formatering

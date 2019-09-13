@@ -48,7 +48,7 @@ RyggFigAndelerGrVarAarVarKval(RegData, valgtVar, datoFra = "2007-01-01",
 3: Tidl. operert annet og sm. nivå,
 4: Primæroperasjon}
 
-\item{opKat}{Hastegrad av operasjon 1: Elektivt, 2: Akutt, 3: Halvøyeblikkelig}
+\item{opKat}{Hastegrad av operasjon 1: Elektivt, 2: Akutt, 3: Halvøyeblikkelig. Slår sammen 1 og 3 til elektiv}
 
 \item{hentData}{Gjør spørring mot database
 0: Nei, RegData gis som input til funksjonen (Standard)
