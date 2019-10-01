@@ -192,7 +192,7 @@ if (medSml==1) {
 #if (dim(RegData)[1] < 10 | (length(which(RegData$ReshId == reshID))<5 & egenavd==1)) {
 if ((valgtVar=='Underkat' & all(hovedkat != c(1,2,5,7))) | N$Hoved < 10 | 
 		(medSml ==1 & N$Rest<10)) {
-FigTypUt <- rapbase::figtype(outfile, fargepalett=RyggUtvalg$fargepalett)
+FigTypUt <- rapFigurer::figtype(outfile, fargepalett=RyggUtvalg$fargepalett)
 farger <- FigTypUt$farger
 	plot.new()
 	title(tittel)	#, line=-6)
@@ -211,7 +211,7 @@ farger <- FigTypUt$farger
 
 
 #Plottspesifikke parametre:
-FigTypUt <- rapbase::figtype(outfile, fargepalett=RyggUtvalg$fargepalett)
+FigTypUt <- rapFigurer::figtype(outfile, fargepalett=RyggUtvalg$fargepalett)
 #Tilpasse marger for å kunne skrive utvalgsteksten
 NutvTxt <- length(utvalgTxt)
 antDesTxt <- paste0('%.', antDes, 'f')

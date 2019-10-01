@@ -61,7 +61,7 @@ table(SkjemaOversikt[indPasientskjema, c('Sykehusnavn','MndAar', "SkjemaStatus")
 #""""""""""""""""""""""""""""" F I G U R F U N K S J O N E R """"""""""""""""""""""""""""""""""""" 
 #_________________________________________________________________________________________
 
-#-----------------------------Data og Parametre
+#-----------------------------Data og Parametre------------
 library(nkr)
 #  Laste data og parametre
 rm(list=ls())
@@ -72,8 +72,8 @@ load('A:/Rygg/Rygg2010-2018aarsrapp.Rdata') #TESTER FØRST MED gamle data
 #__Inndata til RyggFigAndeler.R:
 tittel=1
 reshID <- 601161 #999999	#601161 #100133	#111065 #105783	#103618	#102949	#   #Må sendes med til funksjon
-datoFra <- '2018-01-01'
-datoTil <- '2019-12-31'
+datoFra <- '2011-01-01'
+datoTil <- '2018-12-31'
 minald <- 0		#alder, fra og med
 maxald <- 130	#alder, til og med
 erMann <- 99			#kjønn, 1-menn, 0-kvinner, standard: '' (alt annet enn 0 og 1), dvs. begge
@@ -105,7 +105,7 @@ RyggFigAndelerGrVar(RegData = RegData, valgtVar='Morsmal', outfile = '')
 #-------------------------------------------------------	
 #---------AndelTid
 #-------------------------------------------------------	
-valgtVar <- 'OswEndr20'	#alder70, degSponFusj, KpInf3Mnd, OswEndr20
+valgtVar <- 'degSponFusj'	#alder70, degSponFusj, KpInf3Mnd, OswEndr20
 outfile <- ''#paste0(valgtVar, '.png')	#Navn angis av Jasper
 
 
@@ -415,7 +415,7 @@ FordPrePost(opdata=opdata, outfile=outfile, reshID=reshID, egenavd=egenavd,
 #----------------------------------------------------------
 
 rm(list=ls())
-library(RODBC)
+#library(RODBC)
 query = 'select OswTotPre, OswTot3mnd, OswTot12mnd, EQ5DPre, EQ5D3mnd, EQ5D12mnd,
 		Alder, Kjonn, HovedInngrep, HovedInngreptxt, TidlOpr, Inngrep, Inngreptxt, 
 			AvdID, AvdReshID, AvdNavn, OpDato, ASA, Utd from Uttrekk_Rapport'

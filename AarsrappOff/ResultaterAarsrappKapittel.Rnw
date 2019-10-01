@@ -282,7 +282,7 @@ Andel70 <- sprintf('%.0f',sum(RegData1aar$Alder>=70, na.rm=T)/sum(RegData1aar$Al
 Andel70startAar <- sprintf('%.1f',sum(RegData1aar$Alder>=70, na.rm=T)/sum(RegData1aar$Alder > -1, na.rm=T)*100)
 #Alder70 <- tapply(RegData1aar$Alder>=70, RegData$OpAar, sum, na.rm=T)
 
-AlderFord <- RyggFigAndeler(RegData=RegData1aar, valgtVar='Alder', datoFra=datoFra1aar, datoTil=datoTil, enhetsUtvalg=0, outfile='Figurer/FigAlderFord.pdf', tittel=1)
+AlderFord <- RyggFigAndeler(RegData=RegData1aar, valgtVar='Alder', datoFra=datoFra1aar, datoTil=datoTil, enhetsUtvalg=0, outfile='Figurer/FigAlderFord.pdf')
 
 # AlderTab <- rbind(paste0(round(AlderFord$Andeler[1,], 1), '%'), AlderFord$Antall[1,])
 # rownames(AlderTab) <- c('Andeler','Antall')
@@ -376,7 +376,7 @@ Norge.}
 
 <<FigUtd, echo=FALSE>>=
 Utdanning <- RyggFigAndeler(RegData=RegData1aar, valgtVar='Utd', datoFra=datoFra1aar, datoTil=datoTil, 
-                            outfile='Figurer/FigUtd.pdf', tittel=1)
+                            outfile='Figurer/FigUtd.pdf')
 #AndelHoyUtd <- sprintf('%.1f', rowSums(Utdanning$Andeler[1 ,4:5]))
 
 HoyUtdAvd <- RyggFigAndelerGrVar(RegData=RegData1aar, valgtVar='Utd', Ngrense = 10,
@@ -646,7 +646,7 @@ Tilsvarende tall for lumbal spinal stenose var en økning fra \Sexpr{BruktMikroA
 <<AntHovedInngrep,results='asis', echo=FALSE>>=	
 
 HovedInngrep <- RyggFigAndeler(RegData=RegData1aar, valgtVar='HovedInngrep', datoFra=datoFra1aar, datoTil=datoTil, 
-                               enhetsUtvalg=enhetsUtvalg, outfile='Figurer/HovedInngrep.pdf', tittel=1)
+                               enhetsUtvalg=enhetsUtvalg, outfile='Figurer/HovedInngrep.pdf')
 indSS1aar <- intersect(which(RegData$OpAar==rappAar), indSS)
 AndelSSrappaar <- round(100*length(indSS1aar)/dim(RegData1aar)[1])
 @

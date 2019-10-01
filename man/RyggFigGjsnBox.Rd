@@ -4,10 +4,11 @@
 \alias{RyggFigGjsnBox}
 \title{Utvikling over tid for gjennomsnitt/median av valgt variabel}
 \usage{
-RyggFigGjsnBox(RegData, outfile, valgtVar, tidlOp = "", erMann = "",
-  hovedkat = 99, aar = 0, tidsenhet = "Mnd", opKat = 99,
-  minald = 0, maxald = 130, ktr = 0, tittel = 1,
-  datoFra = "2007-01-01", datoTil = "3000-01-01", valgtMaal = "Gjsn",
+RyggFigGjsnBox(RegData, outfile = "", valgtVar = "Alder",
+  tidlOp = "", erMann = "", hovedkat = 99, aar = 0,
+  tidsenhet = "Mnd", opKat = 99, minald = 0, maxald = 130,
+  ktr = 0, tittel = 1, datoFra = "2007-01-01",
+  datoTil = "3000-01-01", lagFig = 1, valgtMaal = "Gjsn",
   enhetsUtvalg = 0, hentData = 0, preprosess = 1, reshID = 0)
 }
 \arguments{

@@ -71,7 +71,7 @@ RyggFigAndelerGrVar <- function(RegData, valgtVar, datoFra='2007-01-01', datoTil
             RegData <- RyggPreprosess(RegData=RegData)
       }
       #------- Tilrettelegge variable
-      RyggVarSpes <- RyggVarTilrettelegg(RegData=RegData, valgtVar=valgtVar, ktr=ktr, figurtype = 'andelGrVar')
+      RyggVarSpes <- RyggVarTilrettelegg(RegData=RegData, valgtVar=valgtVar, hovedkat = hovedkat, ktr=ktr, figurtype = 'andelGrVar')
       RegData <- RyggVarSpes$RegData
       sortAvtagende <- RyggVarSpes$sortAvtagende
       #varTxt <- RyggVarSpes$varTxt
@@ -155,7 +155,7 @@ RyggFigAndelerGrVar <- function(RegData, valgtVar, datoFra='2007-01-01', datoTil
       
       #-----------Figur---------------------------------------
       if 	( max(Ngr) < Ngrense)	{#Dvs. hvis ALLE er mindre enn grensa.
-            FigTypUt <- rapbase::figtype(outfile)
+            FigTypUt <- rapFigurer::figtype(outfile)
             farger <- FigTypUt$farger
             plot.new()
             if (!is.null(dim(RegData))) { #>0
@@ -173,7 +173,7 @@ RyggFigAndelerGrVar <- function(RegData, valgtVar, datoFra='2007-01-01', datoTil
             #----------- Figurparametre ------------------------------
             cexShNavn <- 1 #0.85
             
-            FigTypUt <- figtype(outfile, height=3*800, fargepalett=fargepalett)
+            FigTypUt <- rapFigurer::figtype(outfile, height=3*800, fargepalett=fargepalett)
             farger <- FigTypUt$farger
             #Tilpasse marger for å kunne skrive utvalgsteksten
             NutvTxt <- length(utvalgTxt)
@@ -185,6 +185,7 @@ RyggFigAndelerGrVar <- function(RegData, valgtVar, datoFra='2007-01-01', datoTil
             pos <- rev(barplot(rev(as.numeric(AndelerGrSort)), horiz=T, border=NA, col=farger[4], #main=Tittel,
                                xlim=c(0,xmax), ylim=c(0.05, 1.25)*length(GrNavnSort), font.main=1, #xlab='Andel (%)', 
                                las=1, cex.names=cexShNavn*0.9))
+            overPos <- max(pos)+0.4*log(max(pos))
             #Legge på målnivå
             if (!is.na(KImaalGrenser[1])) {
                   antMaalNivaa <- length(KImaalGrenser)-1
@@ -194,7 +195,8 @@ RyggFigAndelerGrVar <- function(RegData, valgtVar, datoFra='2007-01-01', datoTil
                   maalOppTxt <- c('Høy', 'Moderat', 'Lav')[rekkef]
                   rect(xleft=KImaalGrenser[1:antMaalNivaa], ybottom=0, xright=KImaalGrenser[2:(antMaalNivaa+1)], 
                        ytop=max(pos)+0.4, col = fargerMaalNiva[1:antMaalNivaa], border = NA) #add = TRUE, #pos[AntGrNgr+1], 
-                  legend(x=0, y=-4, pch=c(NA,rep(15, antMaalNivaa)), col=c(NA, fargerMaalNiva[1:antMaalNivaa]), 
+                  legend(x=0, y=overPos, yjust=0.5, pch=c(NA,rep(15, antMaalNivaa)), #x=0, y=-4, 
+                         col=c(NA, fargerMaalNiva[1:antMaalNivaa]), 
                          ncol=antMaalNivaa+1, 
                          xpd=TRUE, border=NA, box.col='white',cex=0.8, pt.cex=1.5, 
                          legend=c('Måloppnåelse:', maalOppTxt[1:antMaalNivaa])) #,  

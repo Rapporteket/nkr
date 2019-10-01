@@ -45,9 +45,9 @@
 #' @return Linjediagram som viser utvikling over tid for valgt variabel
 #'
 #' @export
-RyggFigGjsnBox <- function(RegData, outfile, valgtVar, tidlOp='', erMann='', hovedkat=99, aar=0, 
+RyggFigGjsnBox <- function(RegData, outfile='', valgtVar='Alder', tidlOp='', erMann='', hovedkat=99, aar=0, 
                            tidsenhet = 'Mnd', opKat=99, minald=0, maxald=130, ktr=0, tittel=1, 
-                           datoFra='2007-01-01', datoTil='3000-01-01', 
+                           datoFra='2007-01-01', datoTil='3000-01-01', lagFig=1,
                            valgtMaal='Gjsn',enhetsUtvalg=0, hentData=0, preprosess=1, reshID=0){
       
       if (hentData == 1) {		
@@ -154,10 +154,10 @@ FigDataParam <- list(AggVerdier=ResData,
                      grtxt=levels(RegData$TidsEnhet),
                      #grtxt2=grtxt2, 
                      #varTxt=varTxt,
-                     #tidtxt=tidtxt, #RyggVarSpes$grtxt,
-                     tittel=RyggVarSpes$tittel, 
+                     tidtxt=levels(RegData$TidsEnhet), #RyggVarSpes$grtxt,
+                     tittel=tittel, 
                     # xAkseTxt=xAkseTxt,
-                     #yAkseTxt=yAkseTxt,
+                     yAkseTxt=maaltxt,
                      utvalgTxt=utvalgTxt, 
                      fargepalett=RyggUtvalg$fargepalett, 
                      medSml=medSml,
@@ -165,10 +165,10 @@ FigDataParam <- list(AggVerdier=ResData,
                      smltxt=RyggUtvalg$smltxt)
 
 
-
+if (lagFig==1){
     #-----------Figur---------------------------------------
 if (length(ind$Hoved)<10 | ((medSml == 1) & (length(ind$Rest) < 10))) {
-figtype(outfile)
+rapFigurer::figtype(outfile)
 	plot.new()
 	title(main=tittel)
 	text(0.5, 0.65, 'Færre enn 10 registreringer i hoved-', cex=1.2)
@@ -183,9 +183,8 @@ cexgr <- 0.9	#Kan endres for enkeltvariable
 ymin <- 0.9*min(KonfRest, Konf, na.rm=TRUE)	#ymin1 - 2*h
 ymax <- 1.1*max(KonfRest, Konf, na.rm=TRUE)	#ymax1 + 2*h
 ytxt <- maaltxt #paste0(maaltxt, ytxt1, sep='')
-
 #Plottspesifikke parametre:
-FigTypUt <- figtype(outfile, fargepalett=RyggUtvalg$fargepalett)
+FigTypUt <- rapFigurer::figtype(outfile, fargepalett=RyggUtvalg$fargepalett)
 #Tilpasse marger for å kunne skrive utvalgsteksten
 NutvTxt <- length(utvalgTxt)
 par('fig'=c(0, 1, 0, 1-0.02*(max((NutvTxt-1),0))))	
@@ -230,7 +229,8 @@ mtext(utvalgTxt, side=3, las=1, cex=0.9, adj=0, col=farger[1], line=c(3+0.8*((Nu
 
 if ( outfile != '') {dev.off()}
 
-return(invisible(FigDataParam))
 
 }	#end if statement for 0 observations
+} #end lagFig
+return(invisible(FigDataParam))
 }	#end function

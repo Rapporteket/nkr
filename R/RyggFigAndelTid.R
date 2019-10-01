@@ -43,15 +43,14 @@ RyggFigAndelTid <- function(RegData, valgtVar, datoFra='2011-01-01', datoTil='30
       #------- Tilrettelegge variable
       varTxt <- ''
       if (offData == 0) {
-            RyggVarSpes <- RyggVarTilrettelegg(RegData=RegData, valgtVar=valgtVar, 
-                                               ktr=ktr, figurtype = 'andelTid')
+            RyggVarSpes <- RyggVarTilrettelegg(RegData=RegData, valgtVar=valgtVar, hovedkat = hovedkat,
+                                               datoTil = datoTil, ktr=ktr, figurtype = 'andelTid')
             RegData <- RyggVarSpes$RegData
             sortAvtagende <- RyggVarSpes$sortAvtagende
             varTxt <- RyggVarSpes$varTxt
-            KImaal <- RyggVarSpes$KImaal
+            KImaalGrenser <- RyggVarSpes$KImaalGrenser
             tittel <- RyggVarSpes$tittel
       } 
-      
       
       #------- Gjøre utvalg
       smltxt <- ''
@@ -133,7 +132,7 @@ RyggFigAndelTid <- function(RegData, valgtVar, datoFra='2011-01-01', datoTil='30
       
       FigDataParam <- list(AggVerdier=AggVerdier, N=N, 
                            Ngr=Ngr,	
-                           KImaal <- KImaal,
+                           KImaalGrenser = KImaalGrenser,
                            #soyletxt=soyletxt,
                            grtxt2=grtxt2, 
                            varTxt=varTxt,
@@ -151,7 +150,7 @@ RyggFigAndelTid <- function(RegData, valgtVar, datoFra='2011-01-01', datoTil='30
       
       if (lagFig == 1) {
 #            RyggFigTidAndel(RegData, AggVerdier, Ngr, tittel=tittel, hovedgrTxt=RyggUtvalg$hovedgrTxt, 
-#                           smltxt=RyggUtvalg$smltxt, Ngr = Ngr, KImaal = KImaal, N=N, retn='V', 
+#                           smltxt=RyggUtvalg$smltxt, Ngr = Ngr, KImaalGrenser = KImaalGrenser, N=N, retn='V', 
 #                           utvalgTxt=utvalgTxt, tidtxt=tidtxt, varTxt=varTxt, grtxt2=grtxt2, medSml=medSml, 
 #                           xAkseTxt=xAkseTxt, yAkseTxt=yAkseTxt,
 #                           outfile=outfile)	
@@ -160,7 +159,7 @@ RyggFigAndelTid <- function(RegData, valgtVar, datoFra='2011-01-01', datoTil='30
                   #-----------Figur---------------------------------------
                   #Hvis for f? observasjoner..
                   if (N$Hoved < 10 | (medSml ==1 & N$Rest<10)) {
-                        FigTypUt <- figtype(outfile)
+                        FigTypUt <- rapFigurer::figtype(outfile)
                         farger <- FigTypUt$farger
                         plot.new()
                         title(main=paste0('variabel: ', valgtVar))	#, line=-6)
@@ -172,7 +171,7 @@ RyggFigAndelTid <- function(RegData, valgtVar, datoFra='2011-01-01', datoTil='30
                   } else {
                         
                         #Plottspesifikke parametre:
-                        FigTypUt <- figtype(outfile, fargepalett=RyggUtvalg$fargepalett)
+                        FigTypUt <- rapFigurer::figtype(outfile, fargepalett=RyggUtvalg$fargepalett)
                         farger <- FigTypUt$farger
                         fargeHoved <- farger[3]
                         fargeRest <- farger[1]
@@ -188,7 +187,7 @@ RyggFigAndelTid <- function(RegData, valgtVar, datoFra='2011-01-01', datoTil='30
                         ymax <- min(119, 1.25*max(c(AggVerdier$Hoved, AggVerdier$Rest),na.rm=T))
                         plot(xskala, AggVerdier$Hoved,  font.main=1,  type='o', pch="'", col='white', #type='o', 
                              xlim= c(0.9,xmax+0.1), xaxt='n', frame.plot = FALSE,  #xaxp=c(min(tidtxt), max(tidtxt),length(tidtxt)-1)
-                             cex=2, xlab='Operasjonsår', ylab="Andel (%)", ylim=c(0,ymax), yaxs = 'i') 	
+                             cex=2, xlab='Operasjonsår', ylab=yAkseTxt, ylim=c(0,ymax), yaxs = 'i') 	
                         
                         #Legge på linjer i plottet. 
                         grid(nx = NA, ny = NULL, col = farger[4], lty = "solid")
@@ -206,9 +205,10 @@ RyggFigAndelTid <- function(RegData, valgtVar, datoFra='2011-01-01', datoTil='30
                         points(xskala, AggVerdier$Rest, pch="'", cex=2, col=fargeRest)
                         }
                         #KImål
-                        if (valgtVar=='SympVarighUtstr') {
-                        lines(xskala, rep(KImaal[2],length(xskala)), col= '#FF7260', lwd=3)
-                        text(max(xskala), KImaal[2], pos=4, 'Mål', cex=0.9, col='#FF7260')
+                        #if (valgtVar=='SympVarighUtstr') {
+                        if (!is.na(KImaalGrenser[1])) {
+                           lines(xskala, rep(KImaalGrenser[2],length(xskala)), col= '#4fc63f', lwd=3) #col='#FF7260'
+                           text(max(xskala), KImaalGrenser[2], pos=4, 'Mål', cex=0.9, col = '#4fc63f')
                         }
                         
                         Ttxt <- paste0('(Tall ved punktene angir antall ', varTxt, ')') 

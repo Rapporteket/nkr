@@ -135,7 +135,7 @@ AndelerHoved <- prop.table(NVarAar,2)*100
 #Hvis for få observasjoner..
 #if (dim(RegData)[1] < 10 | (length(which(RegData$ReshId == reshID))<5 & egenavd==1)) {
 if ((length(ind$Hoved) < 10) | (medSml ==1 & length(ind$Rest)<10)) {
-FigTypUt <- rapbase::figtype(outfile, fargepalett=RyggUtvalg$fargepalett)
+FigTypUt <- rapFigurer::figtype(outfile, fargepalett=RyggUtvalg$fargepalett)
 farger <- FigTypUt$farger
 	plot.new()
 	title(TittelUt)	#, line=-6)
@@ -148,7 +148,7 @@ farger <- FigTypUt$farger
 
 #-----------Figur---------------------------------------
 #Plottspesifikke parametre:
-FigTypUt <- rapbase::figtype(outfile, fargepalett=RyggUtvalg$fargepalett)
+FigTypUt <- rapFigurer::figtype(outfile, fargepalett=RyggUtvalg$fargepalett)
 farger <- c(rev(FigTypUt$farger),'black')
 #Tilpasse marger for å kunne skrive utvalgsteksten
 NutvTxt <- length(utvalgTxt)

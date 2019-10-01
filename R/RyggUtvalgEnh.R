@@ -49,7 +49,7 @@
 #' @export
 
 RyggUtvalgEnh <- function(RegData, datoFra='2009-01-01', datoTil='3000-01-01', minald=0, maxald=130, 
-                          erMann='', hovedkat=99, aar=0, opKat=99, tidlOp='', hastegrad='', 
+                          erMann='', hovedkat=99, aar=0, opKat=99, tidlOp='', #hastegrad='', 
                           enhetsUtvalg=0, reshID=0, fargepalett='BlaaOff') {
 
 # Definer intersect-operator

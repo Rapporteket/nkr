@@ -16,7 +16,7 @@
 #' @export
 #'
 
-RyggVarTilrettelegg  <- function(RegData=NULL, valgtVar, ktr=0, hovedkat=99, figurtype='andeler'){ #grVar='', 
+RyggVarTilrettelegg  <- function(RegData=NULL, valgtVar, ktr=0, hovedkat=99, datoTil=Sys.Date(), figurtype='andeler'){ #grVar='', 
       
       
       "%i%" <- intersect
@@ -247,38 +247,6 @@ RyggVarTilrettelegg  <- function(RegData=NULL, valgtVar, ktr=0, hovedkat=99, fig
             KIekstrem <- c(-1.6, 1.6)
       }
       
-      if (valgtVar == 'OswEndr') {
-            #Forbedring=lavere Oswestry
-            tittel <- paste0('forbedring av ODI', ktrtxt)
-            RegData$Variabel <- -switch(as.character(ktr), 
-                                        '1'= (RegData$OswTot3mnd - RegData$OswTotPre),
-                                        '2'= (RegData$OswTot12mnd - RegData$OswTotPre))
-            RegData <- RegData[which(!is.na(RegData$Variabel)),]
-            KIekstrem <- c(-100, 100)
-      }
-      if (valgtVar == 'OswEndrPre') {
-            #Forbedring=lavere Oswestry
-            tittel <- paste0('forbedring av ODI', ktrtxt)
-            RegData$Variabel <- switch(as.character(ktr), 
-                                       '1'= (RegData$OswTotPre - RegData$OswTot3mnd),
-                                       '2'= (RegData$OswTotPre - RegData$OswTot12mnd))
-            RegData <- RegData[which(!is.na(RegData$Variabel)),]
-            KIekstrem <- c(-100, 100)
-            Xlab <- 'Oswestry før operasjon'
-            gr <- c(seq(0,90,10), 101)
-            RegData$Gr <- cut(RegData$OswTotPre, gr, right=F)
-            GrNavn <- levels(RegData$Gr)
-            AntGr <- length(GrNavn)
-            GrNavn[AntGr] <- '[90,100]'
-      }
-      
-      if (valgtVar == 'OswTotPre') {
-            RegData$Variabel <- RegData[ ,valgtVar]
-            RegData <- RegData[which(!is.na(RegData$Variabel)),]
-            tittel <- 'oswestryskår før operasjonen'
-            xAkseTxt <- 'skår'
-            KIekstrem <- c(0, 100)
-      } 	
       if (valgtVar == 'SmBeinEndr') {
             tittel <- paste0('bedring av beinsmerter ',ktrtxt)
             RegData$Variabel <- switch(as.character(ktr), 
@@ -366,7 +334,7 @@ RyggVarTilrettelegg  <- function(RegData=NULL, valgtVar, ktr=0, hovedkat=99, fig
             ind <- switch(as.character(ktr), 
                           '0' = dim(RegData)[1],
                           '1' = which(RegData$Utfylt3Mnd==1),
-                          '2' = which(RegData$Utfylt12Mnd == 2))
+                          '2' = which(RegData$Utfylt12Mnd == 1))
             RegData <- RegData[ind, ]
             RegData$Fornoyd <- switch(as.character(ktr), 
                                       '1'= RegData$Fornoyd3mnd,
@@ -439,7 +407,7 @@ RyggVarTilrettelegg  <- function(RegData=NULL, valgtVar, ktr=0, hovedkat=99, fig
             xAkseTxt <- 'Andel sårinfeksjoner (%)'
             #KImaalRetn <- 'lav'
             if (hovedkat == 1) {KImaalGrenser <- c(0,2)}
-            if (hovedkat == 8) {KImaalGrenser <- c(0,3)}
+            if (hovedkat %in% c(5,8)) {KImaalGrenser <- c(0,3)}
       }
       if (valgtVar=='liggedogn') {#fordeling, gjsnGrVar, andeler, gjsnTid
             #liggedogn
@@ -551,9 +519,32 @@ RyggVarTilrettelegg  <- function(RegData=NULL, valgtVar, ktr=0, hovedkat=99, fig
                                        '2'= (RegData$OswTotPre - RegData$OswTot12mnd))
             RegData <- RegData[which(!is.na(RegData$Variabel)),]
             tittel <- paste0('forbedring av Oswestry', ktrtxt)#gjsnGrVar
-            
+            KImaalGrenser <- if (hovedkat==9) {NA} else {'TotGjsn'}
+         KIekstrem <- c(-100, 100)
+      }
+      if (valgtVar == 'OswEndrPre') {
+         #Forbedring=lavere Oswestry
+         tittel <- paste0('forbedring av ODI', ktrtxt)
+         RegData$Variabel <- switch(as.character(ktr), 
+                                    '1'= (RegData$OswTotPre - RegData$OswTot3mnd),
+                                    '2'= (RegData$OswTotPre - RegData$OswTot12mnd))
+         RegData <- RegData[which(!is.na(RegData$Variabel)),]
+         KIekstrem <- c(-100, 100)
+         Xlab <- 'Oswestry før operasjon'
+         gr <- c(seq(0,90,10), 101)
+         RegData$Gr <- cut(RegData$OswTotPre, gr, right=F)
+         GrNavn <- levels(RegData$Gr)
+         AntGr <- length(GrNavn)
+         GrNavn[AntGr] <- '[90,100]'
       }
       
+      if (valgtVar == 'OswTotPre') {
+         RegData$Variabel <- RegData[ ,valgtVar]
+         RegData <- RegData[which(!is.na(RegData$Variabel)),]
+         tittel <- 'oswestryskår før operasjonen'
+         xAkseTxt <- 'skår'
+         KIekstrem <- c(0, 100)
+      } 	
       if (valgtVar == 'OswEndrLav') { #AndelGrVar
             #Mislykkede operasjoner
             RegData$OswEndr <- switch(as.character(ktr), 
@@ -622,7 +613,7 @@ RyggVarTilrettelegg  <- function(RegData=NULL, valgtVar, ktr=0, hovedkat=99, fig
             xAkseTxt <- 'Andel durarift (%)'
             #KImaalRetn <- 'lav'
             if (hovedkat == 1) {KImaalGrenser <- c(0,2)}
-            if (hovedkat == 8) {KImaalGrenser <- c(0,3)}
+            if (hovedkat %in% c(5,8)) {KImaalGrenser <- c(0,3)}
       }
       if (valgtVar=='radUnders') {
             tittel <- 'Radiologisk undersøkelse'

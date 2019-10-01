@@ -57,7 +57,7 @@
 #' @export
 
 RyggFigAndelerGrVarAar <- function(RegData, valgtVar, datoFra='2007-01-01', datoTil='3000-12-31', 
-                                   minald=0, maxald=130, erMann='', hovedkat=99, tidlOp='', hastegrad=99, 
+                                   minald=0, maxald=130, erMann='', hovedkat=99, tidlOp='', opKat=99, 
                                    hentData=0, preprosess=1,enhetsUtvalg=0, grVar='ShNavn', tittel=1, 
                                    ktr=0, reshID=0, aar=0,tidlAar=0,  Ngrense=10, AKjust=0, outfile='') {
       
@@ -91,7 +91,7 @@ RyggFigAndelerGrVarAar <- function(RegData, valgtVar, datoFra='2007-01-01', dato
       if (reshID==0) {enhetsUtvalg <- 0}
       RyggUtvalg <- RyggUtvalgEnh(RegData=RegData, reshID=reshID, datoFra=datoFra, datoTil=datoTil, 
                                   minald=minald, maxald=maxald, erMann=erMann, aar=as.numeric(c(tidlAar, aar)),
-                                  hovedkat=hovedkat, hastegrad=hastegrad, tidlOp=tidlOp,enhetsUtvalg=enhetsUtvalg)
+                                  hovedkat=hovedkat, opKat=opKat, tidlOp=tidlOp,enhetsUtvalg=enhetsUtvalg)
       
       smltxt <- RyggUtvalg$smltxt
       medSml <- RyggUtvalg$medSml 
@@ -193,7 +193,7 @@ RyggFigAndelerGrVarAar <- function(RegData, valgtVar, datoFra='2007-01-01', dato
       #-----------Figur---------------------------------------
       # Lager ikke figur hvis ALLE N er mindre enn grensa eller hvis ugyldig parameterkombinasjon.
       if 	( max(Ngr) < Ngrense) { 
-            FigTypUt <- rapbase::figtype(outfile)
+            FigTypUt <- rapFigurer::figtype(outfile)
             farger <- FigTypUt$farger
             plot.new()
             if (dim(RegData)[1]>0) {
@@ -211,7 +211,7 @@ RyggFigAndelerGrVarAar <- function(RegData, valgtVar, datoFra='2007-01-01', dato
             #----------- Figurparametre ------------------------------
             cexShNavn <- 1 #0.85
             hoyde <- ifelse(grVar=='BoHF', 3*600, 3*800)
-            FigTypUt <- rapbase::figtype(outfile, height=3*800, fargepalett=RyggUtvalg$fargepalett)
+            FigTypUt <- rapFigurer::figtype(outfile, height=3*800, fargepalett=RyggUtvalg$fargepalett)
             farger <- FigTypUt$farger
             soyleFarger <- farger[4] #rep(farger[3], AntGrNgr)
             prikkFarge <- farger[3]
@@ -257,8 +257,10 @@ RyggFigAndelerGrVarAar <- function(RegData, valgtVar, datoFra='2007-01-01', dato
                                paste0(AarTxt, ' (', sprintf('%.1f', ResAar[2]), '%, ', 'N=', Naar[2],')'),
                                paste0('Hele landet, ',AarTxt)) 
                   )
+                  overPos <- max(pos)+0.4*log(max(pos))
                   if (!is.na(KImaalGrenser[1])) {
-                  legend(x=0, y=-2.5, pch=c(NA,rep(15, antMaalNivaa)), col=c(NA, fargerMaalNiva[1:antMaalNivaa]), 
+                     legend(x=0, y=overPos, yjust=0.5, pch=c(NA,rep(15, antMaalNivaa)), #x=0, y=-2.5
+                            col=c(NA, fargerMaalNiva[1:antMaalNivaa]), 
                          ncol=antMaalNivaa+1, 
                          xpd=TRUE, border=NA, box.col='white',cex=0.8, pt.cex=1.5, 
                          legend=c('Måloppnåelse:', maalOppTxt[1:antMaalNivaa])) #,  
@@ -269,8 +271,7 @@ RyggFigAndelerGrVarAar <- function(RegData, valgtVar, datoFra='2007-01-01', dato
                   #        legend=c('Måloppnåelse:', maalOppTxt[1:antMaalNivaa])) #,  
                   
                   mtext(xAkseTxt, side=1, las=1, cex=cexShNavn, adj=0.5, line=1.8)
-                  mtext(signTxt, line=4, side=1, las=1, cex=cexShNavn, adj=0, col='#FF7260') #line=3.8, 
-                  overPos <- max(pos)+0.4*log(max(pos))
+                  mtext(signTxt, line=3, side=1, las=1, cex=cexShNavn, adj=0, col='#FF7260') #line=3.8, 
                   mtext(at=overPos, paste0('(N, ', AarTxt, ')'), side=2, las=1, cex=cexShNavn, adj=1, line=0.25)	
             } else {
                   legend('topright', xjust=1, cex=1, lwd=2, col=farger[2],
